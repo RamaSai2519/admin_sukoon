@@ -1,0 +1,18 @@
+ /* src/index.css */
+
+ @font-face {
+   font-family: 'Custom Font';
+   src: url('./components/assets/futura light bt.ttf') format('truetype');
+ }
+
+ body {
+   background-color: #fff;
+   margin: 0;
+   font-family:'Custom Font';
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+ }
+
+ code {
+   font-family: 'Custom Font';
+ }

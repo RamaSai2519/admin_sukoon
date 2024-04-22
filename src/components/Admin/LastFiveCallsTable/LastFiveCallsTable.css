@@ -1,0 +1,31 @@
+.successful-row {
+  background-color: #a9e6c3;
+  /* Green */
+}
+
+.initiated-row {
+  background-color: #fdfd96;
+  /* Yellow */
+}
+
+.default-row {
+  background-color: #eb4b3f;
+  /* Default color */
+}
+
+.last-five-calls-table th,
+.last-five-calls-table td {
+  padding: 10px;
+}
+
+.last-five-calls-table th {
+  text-align: center;
+}
+
+.last-five-calls-table td {
+  text-align: left;
+}
+
+.last-five-calls-table tbody tr:not(:first-child) {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,12 @@
+.online-table-container {
+    padding: 0;
+    margin: 0;
+}
+
+.online-table {
+    width: 100%;
+}
+
+.status {
+    text-align: right;
+}
