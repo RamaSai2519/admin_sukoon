@@ -16,8 +16,8 @@ const UsersTab = () => {
     const fetchData = async () => {
       try {
         const [usersResponse, successfulCallsResponse] = await Promise.all([
-          axios.get('http://15.206.127.248/api/users'),
-          axios.get('http://15.206.127.248/api/successful-calls')
+          axios.get('/api/users'),
+          axios.get('/api/successful-calls')
         ]);
 
         const usersData = usersResponse.data;
@@ -44,7 +44,7 @@ const UsersTab = () => {
         const activeUsersCount = uniqueUsers.size;
         setActiveUsers(activeUsersCount);
 
-        const userNamesResponse = await axios.get('http://15.206.127.248/api/users');
+        const userNamesResponse = await axios.get('/api/users');
         const userNamesData = userNamesResponse.data;
 
         const oneCallUserNames = userNamesData

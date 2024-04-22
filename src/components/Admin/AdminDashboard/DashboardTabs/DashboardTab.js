@@ -16,8 +16,8 @@ const DashboardTab = () => {
   const fetchData = useCallback(async () => {
     try {
       const [callsResponse, successfulCallsResponse] = await Promise.all([
-        axios.get('http://15.206.127.248/api/calls'),
-        axios.get('http://15.206.127.248/api/successful-calls')
+        axios.get('/api/calls'),
+        axios.get('/api/successful-calls')
       ]);
 
       const callsData = callsResponse.data;

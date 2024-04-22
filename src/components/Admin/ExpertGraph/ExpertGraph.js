@@ -34,7 +34,7 @@ const ExpertGraph = () => {
 
   const fetchCallData = async () => {
     try {
-      const response = await fetch('http://15.206.127.248/api/successful-calls');
+      const response = await fetch('/api/successful-calls');
       if (!response.ok) {
         throw new Error('Failed to fetch call data');
       }
@@ -48,7 +48,7 @@ const ExpertGraph = () => {
 
   const fetchExpertData = async () => {
     try {
-      const response = await fetch('http://15.206.127.248/api/experts');
+      const response = await fetch('/api/experts');
       if (!response.ok) {
         throw new Error('Failed to fetch expert data');
       }

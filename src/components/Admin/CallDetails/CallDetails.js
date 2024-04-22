@@ -11,7 +11,7 @@ const CallDetails = () => {
 
     useEffect(() => {
         // Fetch details of the specific call using callId
-        axios.get(`http://15.206.127.248/api/calls/${callId}`)
+        axios.get(`/api/calls/${callId}`)
             .then(response => {
                 setCall(response.data);
             })

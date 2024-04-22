@@ -10,7 +10,7 @@ const SaarthisTab = () => {
     useEffect(() => {
         const fetchOnlineSaarthis = async () => {
             try {
-                const response = await axios.get('http://15.206.127.248/api/online-saarthis');
+                const response = await axios.get('/api/online-saarthis');
                 setOnlineSaarthis(response.data);
             } catch (error) {
                 console.error('Error fetching online Saarthis:', error);
