@@ -1,6 +1,7 @@
 import React, { Suspense, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 import Header from './components/Header/Header';
 import AdminLogin from './components/Admin/AdminLogin/AdminLogin';
 import AdminDashboard from './components/Admin/AdminDashboard/AdminDashboard';
@@ -46,6 +47,7 @@ const App = () => {
           </Routes>
         </Suspense>
       </div>
+      <Analytics />
       <SpeedInsights />
     </div>
   );
