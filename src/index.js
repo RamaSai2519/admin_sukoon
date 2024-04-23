@@ -13,10 +13,8 @@ ReactGA.initialize('G-X1P4R644F2');
 ReactDOM.render(
   <Router>
     <Helmet>
-      {/* Add meta tags */}
       <title>Sukoon Admin</title>
       <meta name="description" content="Discover engaging narratives, diverse languages, and the essence of heartfelt conversations in senior living on the sukoon.love. Embrace the wisdom of elders and nurture authentic connections through our enriching content." />
-      {/* Add more meta tags as needed */}
     </Helmet>
     <App />
   </Router>,
