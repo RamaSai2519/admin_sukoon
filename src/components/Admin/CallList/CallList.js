@@ -5,7 +5,7 @@ import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import './CallList.css';
 
 const CallsTable = () => {
-  const [lastFiveCalls, setLastFiveCalls] = useState([]);
+  const [Calls, setCalls] = useState([]);
   const [filters, setFilters] = useState({
     user: '',
     expert: '',
@@ -23,7 +23,7 @@ const CallsTable = () => {
   const fetchAllCalls = async () => {
     try {
       const response = await axios.get('/api/all-calls');
-      setLastFiveCalls(response.data.reverse());
+      setCalls(response.data.reverse());
     } catch (error) {
       console.error('Error fetching all calls:', error);
     }
@@ -57,7 +57,7 @@ const CallsTable = () => {
   };
 
   // Filter the calls based on the filters state
-  let filteredCalls = lastFiveCalls.filter((call) => {
+  let filteredCalls = Calls.filter((call) => {
     return (
       call.userName.toLowerCase().includes(filters.user.toLowerCase()) &&
       call.expertName.toLowerCase().includes(filters.expert.toLowerCase()) &&
@@ -88,7 +88,7 @@ const CallsTable = () => {
 
   return (
     <div className="table-container">
-      <table className="last-five-calls-table">
+      <table className="calls-table">
         <thead>
           <tr className="filter-row">
             <td>

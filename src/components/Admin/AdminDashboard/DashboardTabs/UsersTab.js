@@ -43,17 +43,14 @@ const UsersTab = () => {
 
         setCurrentDayTotalUsers(currentDayTotalUsersCount);
 
-        // Calculate active users
         const uniqueUsers = new Set(successfulCallsData.map(call => call.user));
         const activeUsersCount = uniqueUsers.size;
         setActiveUsers(activeUsersCount);
 
-        // Prepare active users list
         const activeUsersIds = Array.from(uniqueUsers);
         const activeUsersListData = usersData.filter(user => activeUsersIds.includes(user._id));
         setActiveUsersList(activeUsersListData);
 
-        // Calculate users with specific call counts
         const callCounts = {};
         successfulCallsData.forEach(call => {
           const userId = call.user;
@@ -69,7 +66,7 @@ const UsersTab = () => {
         setMoreThanTwoCallsUsers(moreThanTwoCallsUsersList);
 
         setTotalUsers(usersData.length);
-        setUsersData(usersData); // Set usersData for Histograms
+        setUsersData(usersData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -90,7 +87,7 @@ const UsersTab = () => {
     <div className="users-tab">
       <div className="dashboard-tile">
         <div className="grid-row">
-          <div className="grid-tile-1" onClick={() => openPopup('Users with One Call', oneCallUsers)}>
+          <div className="grid-tile-1">
             <h3>User Signups</h3>
             <h1>{totalUsers}</h1>
             <h4>Today: {currentDayTotalUsers}</h4>
@@ -116,7 +113,7 @@ const UsersTab = () => {
           </div>
         </div>
       </div>
-      <Histograms usersData={usersData} /> {/* Render Histograms with usersData */}
+      <Histograms usersData={usersData} />
       {popupContent.title && (
         <Popup
           title={popupContent.title}

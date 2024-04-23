@@ -15,13 +15,13 @@
 }
 
 /* Table styles */
-.last-five-calls-table {
+.calls-table {
     border-spacing: 0 10px;
     width: 100%;
 }
 
-.last-five-calls-table th,
-.last-five-calls-table td {
+.calls-table th,
+.calls-table td {
     text-align: left;
 }
 
@@ -42,7 +42,6 @@
     background-color: #000;
     color: #fff;
     border-color: #333;
-    /* Change border color on hover */
 }
 
 .table-container {
@@ -51,7 +50,7 @@
     padding: 20px;
 }
 
-.last-five-calls-table thead {
+.calls-table thead {
     position: sticky;
     top: 80px;
     background-color: #fff;
@@ -59,7 +58,7 @@
     z-index: 999;
 }
 
-.last-five-calls-table th {
+.calls-table th {
     cursor: pointer;
     margin: 0;
 }
