@@ -129,14 +129,14 @@ const CallsTable = () => {
             <th onClick={() => handleSort('expertName')}>
               Expert {renderSortArrow('expertName')}
             </th>
-            <th style={{cursor: 'default'}}>Time</th>
+            <th>Time</th>
             <th onClick={() => handleSort('duration')}>
               Duration {renderSortArrow('duration')}
             </th>
-            <th style={{textAlign: 'center'}} onClick={() => handleSort('status')}>
+            <th onClick={() => handleSort('status')}>
               Status {renderSortArrow('status')}
             </th>
-            <th style={{cursor: 'default'}}>Details</th>
+            <th>Details</th>
           </tr>
 
         </thead>

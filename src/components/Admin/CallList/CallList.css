@@ -16,16 +16,25 @@
 
 /* Table styles */
 .calls-table {
+    border-collapse: separate;
     border-spacing: 0 10px;
     width: 100%;
 }
 
 .calls-table th,
 .calls-table td {
+    padding: 10px;
+}
+
+.calls-table th {
     text-align: left;
 }
 
-.last-five-calls-table tbody tr {
+.calls-table td {
+    text-align: left;
+}
+
+.calls-table tbody tr:not(:first-child) {
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -42,39 +51,12 @@
     background-color: #000;
     color: #fff;
     border-color: #333;
+    /* Change border color on hover */
 }
 
 .table-container {
     max-width: 1200px;
+    /* Adjust max-width according to your preference */
     margin: 0 auto;
     padding: 20px;
-}
-
-.calls-table thead {
-    position: sticky;
-    top: 80px;
-    background-color: #fff;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-}
-
-.calls-table th {
-    cursor: pointer;
-    margin: 0;
-}
-
-.filter-row {
-    margin: 0;
-    padding: 0;
-}
-
-.filter-row td {
-    background-color: #fff;
-}
-
-/* Add this CSS to style the filter row */
-.filter-row input {
-    width: fit-content;
-    padding: 5px;
-    box-sizing: border-box;
 }

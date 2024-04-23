@@ -1,3 +1,4 @@
+/* Define row styles */
 .successful-row {
   background-color: #a9e6c3;
   /* Green */
@@ -13,13 +14,20 @@
   /* Default color */
 }
 
+/* Table styles */
+.last-five-calls-table {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  width: 100%;
+}
+
 .last-five-calls-table th,
 .last-five-calls-table td {
   padding: 10px;
 }
 
 .last-five-calls-table th {
-  text-align: center;
+  text-align: left;
 }
 
 .last-five-calls-table td {
@@ -28,4 +36,27 @@
 
 .last-five-calls-table tbody tr:not(:first-child) {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.view-details-link {
+  text-decoration: none;
+  color: inherit;
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.view-details-link:hover {
+  background-color: #000;
+  color: #fff;
+  border-color: #333;
+  /* Change border color on hover */
+}
+
+.table-container {
+  max-width: 1200px;
+  /* Adjust max-width according to your preference */
+  margin: 0 auto;
+  padding: 20px;
 }
