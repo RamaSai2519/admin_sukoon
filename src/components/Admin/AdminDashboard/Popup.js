@@ -10,11 +10,15 @@ const Popup = ({ title, users, onClose }) => {
           <button className="close-btn" onClick={onClose}>Close</button>
         </div>
         <div className="popup-body">
-          <ul>
-            {users.map((userId, index) => (
-              <li key={index}>{userId}</li>
-            ))}
-          </ul>
+          {users.length > 0 ? (
+            <ul>
+              {users.map(user => (
+                <li key={user._id}>{user.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No users to display</p>
+          )}
         </div>
       </div>
     </div>

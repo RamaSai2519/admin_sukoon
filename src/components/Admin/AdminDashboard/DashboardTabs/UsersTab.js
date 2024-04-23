@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Popup from '../Popup';
+import Histograms from './Histograms'; // Import the Histograms component
 
 const UsersTab = () => {
   const [totalUsers, setTotalUsers] = useState(0);
@@ -11,6 +12,8 @@ const UsersTab = () => {
   const [twoCallsUsers, setTwoCallsUsers] = useState([]);
   const [moreThanTwoCallsUsers, setMoreThanTwoCallsUsers] = useState([]);
   const [popupContent, setPopupContent] = useState({ title: '', users: [] });
+  const [activeUsersList, setActiveUsersList] = useState([]);
+  const [usersData, setUsersData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,30 +43,33 @@ const UsersTab = () => {
 
         setCurrentDayTotalUsers(currentDayTotalUsersCount);
 
+        // Calculate active users
         const uniqueUsers = new Set(successfulCallsData.map(call => call.user));
         const activeUsersCount = uniqueUsers.size;
         setActiveUsers(activeUsersCount);
 
-        const userNamesResponse = await axios.get('/api/users');
-        const userNamesData = userNamesResponse.data;
+        // Prepare active users list
+        const activeUsersIds = Array.from(uniqueUsers);
+        const activeUsersListData = usersData.filter(user => activeUsersIds.includes(user._id));
+        setActiveUsersList(activeUsersListData);
 
-        const oneCallUserNames = userNamesData
-          .filter(user => oneCallUsers.includes(user._id))
-          .map(user => user.name);
+        // Calculate users with specific call counts
+        const callCounts = {};
+        successfulCallsData.forEach(call => {
+          const userId = call.user;
+          callCounts[userId] = (callCounts[userId] || 0) + 1;
+        });
 
-        const twoCallsUserNames = userNamesData
-          .filter(user => twoCallsUsers.includes(user._id))
-          .map(user => user.name);
+        const oneCallUsersList = usersData.filter(user => callCounts[user._id] === 1);
+        const twoCallsUsersList = usersData.filter(user => callCounts[user._id] === 2);
+        const moreThanTwoCallsUsersList = usersData.filter(user => callCounts[user._id] > 2);
 
-        const moreThanTwoCallsUserNames = userNamesData
-          .filter(user => moreThanTwoCallsUsers.includes(user._id))
-          .map(user => user.name);
-
-        setOneCallUsers(oneCallUserNames);
-        setTwoCallsUsers(twoCallsUserNames);
-        setMoreThanTwoCallsUsers(moreThanTwoCallsUserNames);
+        setOneCallUsers(oneCallUsersList);
+        setTwoCallsUsers(twoCallsUsersList);
+        setMoreThanTwoCallsUsers(moreThanTwoCallsUsersList);
 
         setTotalUsers(usersData.length);
+        setUsersData(usersData); // Set usersData for Histograms
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -89,8 +95,8 @@ const UsersTab = () => {
             <h1>{totalUsers}</h1>
             <h4>Today: {currentDayTotalUsers}</h4>
           </div>
-          <div className="grid-tile-1" onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
-            <h3>Active users</h3>
+          <div className="grid-tile-1" onClick={() => openPopup('Active Users', activeUsersList)}>
+            <h3>Active Users</h3>
             <h1>{activeUsers}</h1>
             <p style={{ textAlign: 'right', margin: '0' }}>&gt;2m</p>
           </div>
@@ -110,6 +116,7 @@ const UsersTab = () => {
           </div>
         </div>
       </div>
+      <Histograms usersData={usersData} /> {/* Render Histograms with usersData */}
       {popupContent.title && (
         <Popup
           title={popupContent.title}

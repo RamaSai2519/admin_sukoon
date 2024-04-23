@@ -1,5 +1,3 @@
-// CallList.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -11,22 +9,40 @@ const CallsTable = () => {
   const [filters, setFilters] = useState({
     user: '',
     expert: '',
-    time: '',
-    duration: '',
     status: '',
+  });
+  const [sortConfig, setSortConfig] = useState({
+    key: '',
+    direction: '',
   });
 
   useEffect(() => {
-    fetchLastFiveCalls();
+    fetchAllCalls();
   }, []);
 
-  const fetchLastFiveCalls = async () => {
+  const fetchAllCalls = async () => {
     try {
       const response = await axios.get('/api/all-calls');
       setLastFiveCalls(response.data.reverse());
     } catch (error) {
-      console.error('Error fetching last five calls:', error);
+      console.error('Error fetching all calls:', error);
     }
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({
+      ...filters,
+      [name]: value,
+    });
+  };
+
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
   };
 
   const getStatusColor = (status) => {
@@ -40,79 +56,104 @@ const CallsTable = () => {
     }
   };
 
-  const handleFilterChange = (e, column) => {
-    const value = e.target.value;
-    setFilters({
-      ...filters,
-      [column]: value,
-    });
-  };
-
-  const applyFilters = (call) => {
-    const { user, expert, time, duration, status } = filters;
+  // Filter the calls based on the filters state
+  let filteredCalls = lastFiveCalls.filter((call) => {
     return (
-      call.userName.toLowerCase().includes(user.toLowerCase()) &&
-      call.expertName.toLowerCase().includes(expert.toLowerCase()) &&
-      new Date(call.initiatedTime).toLocaleString().includes(time) &&
-      call.duration.toString().includes(duration) &&
-      call.status.toLowerCase().includes(status.toLowerCase())
+      call.userName.toLowerCase().includes(filters.user.toLowerCase()) &&
+      call.expertName.toLowerCase().includes(filters.expert.toLowerCase()) &&
+      call.status.toLowerCase().includes(filters.status.toLowerCase())
     );
+  });
+
+  // Sorting the filtered calls based on sortConfig state
+  if (sortConfig.key) {
+    filteredCalls.sort((a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  // Function to render sort arrow
+  const renderSortArrow = (key) => {
+    if (sortConfig.key === key) {
+      return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
+    }
+    return null;
   };
 
   return (
     <div className="table-container">
       <table className="last-five-calls-table">
         <thead>
-          <tr>
-            <th>
+          <tr className="filter-row">
+            <td>
               <input
                 type="text"
                 placeholder="Filter User"
+                name="user"
                 value={filters.user}
-                onChange={(e) => handleFilterChange(e, 'user')}
+                onChange={handleFilterChange}
               />
-            </th>
-            <th>
+            </td>
+            <td>
               <input
                 type="text"
                 placeholder="Filter Expert"
+                name="expert"
                 value={filters.expert}
-                onChange={(e) => handleFilterChange(e, 'expert')}
+                onChange={handleFilterChange}
               />
-            </th>
-            <th>
-              Time
-            </th>
-            <th>
-              Duration
-            </th>
-            <th>
+            </td>
+            <td></td>
+            <td></td>
+            <td>
               <input
                 type="text"
                 placeholder="Filter Status"
+                name="status"
                 value={filters.status}
-                onChange={(e) => handleFilterChange(e, 'status')}
+                onChange={handleFilterChange}
               />
-            </th>
-            <th>Details</th>
+            </td>
+            <td></td>
           </tr>
+          <tr>
+            <th onClick={() => handleSort('userName')}>
+              User {renderSortArrow('userName')}
+            </th>
+            <th onClick={() => handleSort('expertName')}>
+              Expert {renderSortArrow('expertName')}
+            </th>
+            <th style={{cursor: 'default'}}>Time</th>
+            <th onClick={() => handleSort('duration')}>
+              Duration {renderSortArrow('duration')}
+            </th>
+            <th style={{textAlign: 'center'}} onClick={() => handleSort('status')}>
+              Status {renderSortArrow('status')}
+            </th>
+            <th style={{cursor: 'default'}}>Details</th>
+          </tr>
+
         </thead>
         <tbody>
-          {lastFiveCalls.map((call, index) => (
-            applyFilters(call) && (
-              <tr key={call._id} className={getStatusColor(call.status)}>
-                <td>{call.userName}</td>
-                <td>{call.expertName}</td>
-                <td>{new Date(call.initiatedTime).toLocaleString()}</td>
-                <td>{call.duration} min</td>
-                <td>{call.status}</td>
-                <td>
-                  <Link to={`/calls/${call.callId}`} className="view-details-link">
-                    View
-                  </Link>
-                </td>
-              </tr>
-            )
+          {filteredCalls.map((call) => (
+            <tr key={call._id} className={getStatusColor(call.status)}>
+              <td>{call.userName}</td>
+              <td>{call.expertName}</td>
+              <td>{new Date(call.initiatedTime).toLocaleString()}</td>
+              <td>{call.duration} min</td>
+              <td style={{textAlign: 'center'}}>{call.status}</td>
+              <td>
+                <Link to={`/calls/${call.callId}`} className="view-details-link">
+                  View
+                </Link>
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>

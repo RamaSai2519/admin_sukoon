@@ -1,5 +1,4 @@
-// src/components/Admin/AdminDashboard/AdminDashboard.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DashboardTab from './DashboardTabs/DashboardTab';
 import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
@@ -14,11 +13,21 @@ const Tab = ({ label, onClick, active }) => (
 );
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(
+    localStorage.getItem('adminActiveTab') || 'dashboard'
+  );
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+    localStorage.setItem('adminActiveTab', tab);
   };
+
+  useEffect(() => {
+    const lastActiveTab = localStorage.getItem('adminActiveTab');
+    if (lastActiveTab) {
+      setActiveTab(lastActiveTab);
+    }
+  }, []);
 
   return (
     <div className="admin-dashboard-container">
@@ -45,7 +54,6 @@ const AdminDashboard = () => {
       {activeTab === 'dashboard' && <DashboardTab />}
       {activeTab === 'onlineSaarthis' && <OnlineSaarthisTab />}
       {activeTab === 'users' && <UsersTab />}
-
 
       <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
         <h1 className="calls-button">View All Calls</h1>
