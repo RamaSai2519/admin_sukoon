@@ -60,3 +60,30 @@
     margin: 0 auto;
     padding: 20px;
 }
+
+.calls-table thead {
+    position: sticky;
+    top: 80px;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+}
+
+.calls-table th {
+    cursor: pointer;
+}
+
+.filter-row {
+    margin: 0;
+    padding: 0;
+}
+
+.filter-row td {
+    background-color: #fff;
+}
+
+.filter-row input {
+    width: fit-content;
+    padding: 5px;
+    box-sizing: border-box;
+}
