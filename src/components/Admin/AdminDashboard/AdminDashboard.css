@@ -28,6 +28,7 @@
 
 .grid-tile-1 {
     margin: 10px;
+    margin-bottom: 0;
     padding: 20px;
     background-color: #fff;
     border-radius: 20px;
