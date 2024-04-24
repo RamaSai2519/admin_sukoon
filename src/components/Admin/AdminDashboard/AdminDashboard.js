@@ -32,7 +32,12 @@ const AdminDashboard = () => {
     }
 
     // Connect to the Socket.IO server
-    const socket = socketIOClient('http://15.206.127.248/');
+    const socket = socketIOClient({
+      path: '/socket.io',
+      hostname: 'your-vercel-app.vercel.app',
+      port: '443',
+      secure: true,
+    });
 
     // Listen for error notifications from the server
     socket.on('error_notification', (data) => {
