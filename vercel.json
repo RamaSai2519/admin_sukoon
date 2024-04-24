@@ -5,7 +5,7 @@
       "dest": "http://15.206.127.248/api/$1"
     },
     {
-      "src": "/socket.io",
+      "src": "/socket",
       "dest": "http://15.206.127.248/"
     }
   ]

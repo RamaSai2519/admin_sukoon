@@ -32,12 +32,7 @@ const AdminDashboard = () => {
     }
 
     // Connect to the Socket.IO server
-    const socket = socketIOClient({
-      path: '/socket.io',
-      hostname: 'admin-sukoon.vercel.app',
-      port: '443',
-      secure: true,
-    });
+    const socket = socketIOClient('/socket');
 
     // Listen for error notifications from the server
     socket.on('error_notification', (data) => {
