@@ -4,6 +4,7 @@ import DashboardTab from './DashboardTabs/DashboardTab';
 import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
 import UsersTab from './DashboardTabs/UsersTab';
 import ScrollBottom from './ScrollBottom';
+import Popup from './Popup'; // Import the Popup component
 import './AdminDashboard.css';
 
 const Tab = ({ label, onClick, active }) => (
@@ -17,6 +18,8 @@ const AdminDashboard = () => {
     localStorage.getItem('adminActiveTab') || 'dashboard'
   );
 
+  const [errorNotification, setErrorNotification] = useState('');
+
   const handleTabClick = (tab) => {
     setActiveTab(tab);
     localStorage.setItem('adminActiveTab', tab);
@@ -28,6 +31,10 @@ const AdminDashboard = () => {
       setActiveTab(lastActiveTab);
     }
   }, []);
+
+  const handleClosePopup = () => {
+    setErrorNotification('');
+  };
 
   return (
     <div className="admin-dashboard-container">
@@ -50,6 +57,8 @@ const AdminDashboard = () => {
           active={activeTab === 'onlineSaarthis'}
         />
       </div>
+
+      {errorNotification && <Popup message={errorNotification} onClose={handleClosePopup} />} {/* Render the Popup component if there's a notification */}
 
       {activeTab === 'dashboard' && <DashboardTab />}
       {activeTab === 'onlineSaarthis' && <OnlineSaarthisTab />}
