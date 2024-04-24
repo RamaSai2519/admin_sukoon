@@ -34,7 +34,7 @@ const AdminDashboard = () => {
     // Connect to the Socket.IO server
     const socket = socketIOClient({
       path: '/socket.io',
-      hostname: 'your-vercel-app.vercel.app',
+      hostname: 'admin-sukoon.vercel.app',
       port: '443',
       secure: true,
     });
