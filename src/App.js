@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -7,9 +7,6 @@ import AdminLogin from './components/Admin/AdminLogin/AdminLogin';
 import AdminDashboard from './components/Admin/AdminDashboard/AdminDashboard';
 import CallList from './components/Admin/CallList/CallList';
 import CallDetails from './components/Admin/CallDetails/CallDetails';
-import io from 'socket.io-client';
-
-const socket = io('http://15.206.127.248/'); // Replace with your WebSocket server URL
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -37,7 +34,7 @@ const App = () => {
                 <Route path="/" element={<Navigate to="/calls/dashboard" />} />
                 <Route path="/calls" element={<CallList />} />
                 <Route path="/calls/:callId" element={<CallDetails />} />
-                <Route path="/calls/dashboard" element={<AdminDashboard socket={socket} />} /> {/* Pass socket as prop to AdminDashboard */}
+                <Route path="/calls/dashboard" element={<AdminDashboard />} />
                 <Route path="*" element={<Navigate to="/calls/dashboard" />} />
               </>
             ) : (
