@@ -64,7 +64,7 @@ const AdminDashboard = () => {
         console.log('Error retrieving token:', err);
       });
 
-    const socket = socketIOClient('http://15.206.127.248/');
+    const socket = socketIOClient('wss://admin-sukoon.vercel.app/');
 
     // Listen for error notifications from the server
     socket.on('error_notification', (data) => {
@@ -87,7 +87,7 @@ const AdminDashboard = () => {
   };
 
   const sendFCMTokenToServer = (token) => {
-    fetch('http://15.206.127.248/api/save-fcm-token', {
+    fetch('/api/save-fcm-token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
