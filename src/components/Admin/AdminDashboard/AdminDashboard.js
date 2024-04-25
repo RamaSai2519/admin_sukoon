@@ -64,10 +64,11 @@ const AdminDashboard = () => {
         console.log('Error retrieving token:', err);
       });
 
-    const socket = socketIOClient('/api/socket');
+    const socket = socketIOClient('http://15.206.127.248/');
 
     // Listen for error notifications from the server
     socket.on('error_notification', (data) => {
+      console.log('Received error notification:', data);
       setErrors((prevErrors) => [...prevErrors, data]);
     });
 
