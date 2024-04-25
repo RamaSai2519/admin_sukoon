@@ -64,7 +64,7 @@ const AdminDashboard = () => {
         console.log('Error retrieving token:', err);
       });
 
-    const socket = socketIOClient('wss://admin-sukoon.vercel.app/');
+    const socket = socketIOClient('/api/socket');
 
     // Listen for error notifications from the server
     socket.on('error_notification', (data) => {
