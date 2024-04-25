@@ -22,7 +22,7 @@ const CallsTable = () => {
 
   const fetchAllCalls = async () => {
     try {
-      const response = await axios.get('https://df1b-15-206-127-248.ngrok-free.app/api/all-calls');
+      const response = await axios.get('/api/all-calls');
       setCalls(response.data.reverse());
     } catch (error) {
       console.error('Error fetching all calls:', error);
