@@ -22,7 +22,7 @@ const CallsTable = () => {
 
   const fetchAllCalls = async () => {
     try {
-      const response = await axios.get('/api/all-calls');
+      const response = await axios.get('https://admin-server-virid.vercel.app/api/all-calls');
       setCalls(response.data.reverse());
     } catch (error) {
       console.error('Error fetching all calls:', error);
