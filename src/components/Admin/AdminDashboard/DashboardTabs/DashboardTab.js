@@ -98,7 +98,7 @@ const DashboardTab = () => {
               <h1>{successfulCalls.length}</h1>
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
                 <h4 style={{margin: 0}}>Today: {currentDaySuccessfulCalls}</h4>
-                <p style={{margin: 0}}>&gt;2m</p>
+                <p style={{margin: 0}}>&gt;1m</p>
               </div>
             </div>
             <div className="grid-tile-1">
@@ -109,7 +109,7 @@ const DashboardTab = () => {
             <div className="grid-tile-1">
               <h3>Avg. Duration</h3>
               <h1>{formatDuration(averageCallDuration)}</h1>
-              <p style={{textAlign: 'right', margin: '0'}}>&gt;2m</p>
+              <p style={{textAlign: 'right', margin: '0'}}>&gt;1m</p>
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@ const DashboardTab = () => {
             <div className='grid-tile-1'>
               <h3>Expert Graph</h3>
               <ExpertGraph />
-              <p style={{textAlign: 'right', margin: '0'}}>&gt;2m</p>
+              <p style={{textAlign: 'right', margin: '0'}}>&gt;1m</p>
             </div>
           </div>
         </div>

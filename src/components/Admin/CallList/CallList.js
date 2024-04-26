@@ -43,6 +43,13 @@ const CallsTable = () => {
       direction = 'descending';
     }
     setSortConfig({ key, direction });
+
+    if (key === 'ConversationScore') {
+      if (sortConfig.key === key) {
+        direction = sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
+      }
+    }
+    setSortConfig({ key, direction });
   };
 
   const getStatusColor = (status) => {
@@ -111,15 +118,8 @@ const CallsTable = () => {
             </td>
             <td></td>
             <td></td>
-            <td>
-              <input
-                type="text"
-                placeholder="Filter Status"
-                name="status"
-                value={filters.status}
-                onChange={handleFilterChange}
-              />
-            </td>
+            <td></td>
+            <td></td>
             <td></td>
           </tr>
           <tr>
@@ -133,8 +133,11 @@ const CallsTable = () => {
             <th onClick={() => handleSort('duration')}>
               Duration {renderSortArrow('duration')}
             </th>
-            <th onClick={() => handleSort('status')}>
+            <th style={{ textAlign: 'center' }} onClick={() => handleSort('status')}>
               Status {renderSortArrow('status')}
+            </th>
+            <th onClick={() => handleSort('ConversationScore')}>
+              Score {renderSortArrow('ConversationScore')}
             </th>
             <th>Details</th>
           </tr>
@@ -147,7 +150,8 @@ const CallsTable = () => {
               <td>{call.expertName}</td>
               <td>{new Date(call.initiatedTime).toLocaleString()}</td>
               <td>{call.duration} min</td>
-              <td style={{textAlign: 'center'}}>{call.status}</td>
+              <td style={{ textAlign: 'center' }}>{call.status}</td>
+              <td>{call.ConversationScore}</td>
               <td>
                 <Link to={`/calls/${call.callId}`} className="view-details-link">
                   View
