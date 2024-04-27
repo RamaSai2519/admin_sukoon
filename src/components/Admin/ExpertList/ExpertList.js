@@ -6,9 +6,8 @@ const ExpertList = () => {
   const [experts, setExperts] = useState([]);
   const [filters, setFilters] = useState({
     name: '',
-    phoneNumber: '',
-    status: ''
   });
+
   const [sortConfig, setSortConfig] = useState({
     key: '',
     direction: ''
@@ -45,9 +44,7 @@ const ExpertList = () => {
 
   let filteredExperts = experts.filter((expert) => {
     return (
-      expert.name.toLowerCase().includes(filters.name.toLowerCase()) &&
-      expert.phoneNumber.includes(filters.phoneNumber) &&
-      expert.status.toLowerCase().includes(filters.status.toLowerCase())
+      expert.name.toLowerCase().includes(filters.name.toLowerCase())
     );
   });
 
@@ -84,15 +81,7 @@ const ExpertList = () => {
                 onChange={handleFilterChange}
               />
             </td>
-            <td>
-              <input
-                type="text"
-                placeholder="Filter Number"
-                name="number"
-                value={filters.phoneNumber}
-                onChange={handleFilterChange}
-              />
-            </td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

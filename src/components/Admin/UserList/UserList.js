@@ -105,15 +105,7 @@ const UsersList = () => {
                 onChange={handleFilterChange}
               />
             </td>
-            <td>
-              <input
-                type="text"
-                placeholder="Filter Number"
-                name="number"
-                value={filters.phoneNumber}
-                onChange={handleFilterChange}
-              />
-            </td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
