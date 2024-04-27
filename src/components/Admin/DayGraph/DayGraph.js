@@ -69,8 +69,8 @@ const DayGraph = () => {
                     datasets: [{
                         label: 'Number of Calls',
                         data: dayData,
-                        backgroundColor: '#FF6384',
-                        borderColor: '#FF6384',
+                        backgroundColor: 'rgba(69, 120, 249, 1)',
+                        borderColor: 'rgba(69, 120, 249, 1)',
                         borderWidth: 0,
                         borderRadius: 20,
                         barPercentage: 0.7,
