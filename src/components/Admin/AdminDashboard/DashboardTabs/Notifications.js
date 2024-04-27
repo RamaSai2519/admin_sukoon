@@ -7,8 +7,8 @@ const ErrorLogsComponent = () => {
     useEffect(() => {
         const fetchErrorLogs = async () => {
             try {
-                const response = await axios.get('/api/errorlogs');
-                setErrorLogs(response.data);
+                const response = await axios.get('http://15.206.127.248/api/errorlogs');
+                setErrorLogs(response.data.reverse());
             } catch (error) {
                 console.error('Error fetching error logs:', error);
             }
@@ -24,7 +24,7 @@ const ErrorLogsComponent = () => {
                         {errorLogs.map((log, index) => (
                             <div className="grid-tile-1">
                             <li key={index} style={{padding: '10px'}}>
-                                <strong>Time:</strong> {log.time} - <strong>Error Message:</strong> {log.message}
+                                <strong>Time:</strong> {log.time} <br /><br /> <strong>Error Message:</strong> {log.message}
                             </li>
                             </div>
                         ))}

@@ -86,7 +86,7 @@ const HourCallChart = () => {
             setChart(new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: Array.from({ length: 13 }, (_, index) => `${(index + 9) % 24}:00 IST`),
+                    labels: Array.from({ length: 12 }, (_, index) => `${(index + 9) % 24}:00 IST`),
                     datasets: [{
                         label: 'Number of Calls',
                         data: hourData,

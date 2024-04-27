@@ -1,6 +1,7 @@
 // src/components/Admin/CallDetails.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import axios from 'axios';
 import './CallDetails.css'; // Import CSS file
 
@@ -43,7 +44,7 @@ const CallDetails = () => {
     };
 
     return (
-        <div className="whole-container"> {/* Add class for flex container */}
+        <div className="whole-container">
             <h2>Call Details</h2>
             <div className="details-container">
                 <div className="details-box">
@@ -58,7 +59,7 @@ const CallDetails = () => {
                     <h3>Conversation Score</h3>
                     <h1>{call["Conversation Score"]}</h1>
                 </div>
-                <div className="small-tiles"> {/* Change to column layout */}
+                <div className="small-tiles">
                     <div className="details-box">
                         <button onClick={toggleBreakup} className='popup-button'>Score Breakup</button>
                         {showBreakup && (
@@ -87,12 +88,29 @@ const CallDetails = () => {
                     <p>User Callback: {formatValue(call["User Callback"])}</p>
                 </div>
                 <div className="details-box">
+                    <h2>Topics</h2>
+                    <p>{formatValue(call.Topics)}</p>
+                </div>
+                <div className="details-box">
                     <p>Recording URL: <a href={formattedRecordingURL} target="_blank" rel="noopener noreferrer">{formattedRecordingURL}</a></p>
+                </div>
+                <div className="details-box">
+                    <p>Transcript URL: <a href={call.transcript_url} target="_blank" rel="noopener noreferrer">{call.transcript_url}</a></p>
                 </div>
                 <div className="details-box">
                     <p>Initiated Time: {call.initiatedTime}</p>
                 </div>
             </div>
+            <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <h1 className="experts-button">View All Experts</h1>
+            </Link>
+            <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <h1 className="calls-button">View All Calls</h1>
+            </Link>
+            <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <h1 className="users-button">View All Users</h1>
+            </Link>
+            <ScrollBottom />
         </div>
     );
 }
