@@ -1,6 +1,7 @@
 // components/Admin/AdminDashboard/DashboardTab.js
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import OnlineSaarthisTable from '../../OnlineSaarthisTable/OnlineSaarthisTable';
 import CallGraph from '../../CallGraph/CallGraph';
 import HourCallChart from '../../HourCallChart/HourCallChart';
 import ExpertGraph from '../../ExpertGraph/ExpertGraph';
@@ -9,6 +10,7 @@ import LastFiveCallsTable from '../../LastFiveCallsTable/LastFiveCallsTable';
 import '../AdminDashboard.css';
 
 const DashboardTab = () => {
+  const [onlineSaarthis, setOnlineSaarthis] = useState([]);
   const [totalCalls, setTotalCalls] = useState([]);
   const [successfulCalls, setSuccessfulCalls] = useState([]);
   const [currentDaySuccessfulCalls, setCurrentDaySuccessfulCalls] = useState(0);
@@ -73,6 +75,19 @@ const DashboardTab = () => {
     fetchData();
   }, [fetchData]);
 
+  useEffect(() => {
+    const fetchOnlineSaarthis = async () => {
+        try {
+            const response = await axios.get('/api/online-saarthis');
+            setOnlineSaarthis(response.data);
+        } catch (error) {
+            console.error('Error fetching online Saarthis:', error);
+        }
+    };
+
+    fetchOnlineSaarthis();
+}, []);
+
   const formatDuration = (durationInSeconds) => {
     const hours = Math.floor(durationInSeconds / 3600);
     const minutes = Math.floor((durationInSeconds % 3600) / 60);
@@ -112,6 +127,10 @@ const DashboardTab = () => {
               <h3>Avg. Duration</h3>
               <h1>{formatDuration(averageCallDuration)}</h1>
               <p style={{ textAlign: 'right', margin: '0' }}>&gt;1m</p>
+            </div>
+            <div className="grid-tile-1">
+              <h3>Online Saarthis</h3>
+              <OnlineSaarthisTable onlineSaarthis={onlineSaarthis} />
             </div>
           </div>
         </div>

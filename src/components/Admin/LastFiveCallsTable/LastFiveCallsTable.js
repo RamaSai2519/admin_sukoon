@@ -18,6 +18,7 @@ const LastFiveCallsTable = () => {
     try {
       const response = await axios.get('/api/last-five-calls');
       setLastFiveCalls(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching last five calls:', error);
     }

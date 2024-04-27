@@ -1,37 +1,36 @@
-// components/Admin/AdminDashboard/OnlineSaarthisTab.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import OnlineSaarthisTable from '../../OnlineSaarthisTable/OnlineSaarthisTable';
-import '../AdminDashboard.css';
+import React, { useState, useEffect } from "react";
+import ExpertTotalList from "./ExpertTotalList";
+import ExpertDayList from "./ExpertDayList";
 
 const SaarthisTab = () => {
-    const [onlineSaarthis, setOnlineSaarthis] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(() => {
+    return localStorage.getItem("selectedOption") || "all";
+  });
 
-    useEffect(() => {
-        const fetchOnlineSaarthis = async () => {
-            try {
-                const response = await axios.get('/api/online-saarthis');
-                setOnlineSaarthis(response.data);
-            } catch (error) {
-                console.error('Error fetching online Saarthis:', error);
-            }
-        };
+  useEffect(() => {
+    localStorage.setItem("selectedOption", selectedOption);
+  }, [selectedOption]);
 
-        fetchOnlineSaarthis();
-    }, []);
+  const handleChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
 
-    return (
-        <div className="dashboard-tiles">
-            <div className='dashboard-tile'>
-                <div className="grid">
-                    <div className="grid-tile-1">
-                        <h3>Online Saarthis</h3>
-                        <OnlineSaarthisTable onlineSaarthis={onlineSaarthis} />
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="saarthis-tab">
+      <div className='idk' style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <h1 className="experts-heading">Experts</h1>
+        <div className='drop-down'>
+          <label>
+            <select value={selectedOption} onChange={handleChange}>
+              <option value="day">Day</option>
+              <option value="all">All</option>
+            </select>
+          </label>
         </div>
-    );
+      </div>
+      {selectedOption === "all" ? <ExpertTotalList /> : <ExpertDayList />}
+    </div>
+  );
 };
 
 export default SaarthisTab;

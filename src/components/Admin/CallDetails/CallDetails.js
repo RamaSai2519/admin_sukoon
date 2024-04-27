@@ -1,34 +1,58 @@
-// src/components/Admin/CallDetails.js
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import axios from 'axios';
-import './CallDetails.css'; // Import CSS file
+import './CallDetails.css';
 
 const CallDetails = () => {
     const { callId } = useParams();
     const [call, setCall] = useState(null);
     const [showBreakup, setShowBreakup] = useState(false); // State for pop-up visibility
+    const [editConversationScore, setEditConversationScore] = useState(false); // State for enabling edit mode
+    const [newConversationScore, setNewConversationScore] = useState('');
 
     useEffect(() => {
-        // Fetch details of the specific call using callId
         axios.get(`/api/calls/${callId}`)
             .then(response => {
                 setCall(response.data);
+                setNewConversationScore(response.data.ConversationScore); // Set default value for input field
+                console.log(response.data);
             })
             .catch(error => {
                 console.error('Error fetching call details:', error);
-            });
+            })
     }, [callId]);
+
+    const handleScoreChange = () => {
+        axios.put(`/api/calls/${callId}`, {
+            ConversationScore: newConversationScore
+        })
+            .then(response => {
+                setCall(prevCall => ({
+                    ...prevCall,
+                    "Conversation Score": response.newConversationScore
+                }));
+                setEditConversationScore(false);
+                window.alert("Conversation Score updated successfully!");
+            })
+            .catch(error => {
+                console.error('Error updating Conversation Score:', error);
+            });
+    };
+
+    const cancelEdit = () => {
+        // Reset newConversationScore to the existing score
+        setNewConversationScore(call.ConversationScore);
+        // Disable edit mode
+        setEditConversationScore(false);
+    };
 
     if (!call) {
         return <div>Loading...</div>;
     }
 
-    // Replace %3D with =
     const formattedRecordingURL = call.recording_url.replace(/%3D/g, '=');
 
-    // Helper function to format values with \n for line breaks
     const formatValue = (value) => {
         if (!value) return null;
         return value.split('\n').map((line, index) => (
@@ -57,7 +81,24 @@ const CallDetails = () => {
                 </div>
                 <div className="details-box">
                     <h3>Conversation Score</h3>
-                    <h1>{call["Conversation Score"]}</h1>
+                    <div className='ScoreEdit'>
+                        {editConversationScore ? (
+                            <>
+                                <input
+                                    type="number"
+                                    value={newConversationScore}
+                                    onChange={(e) => setNewConversationScore(e.target.value)}
+                                />
+                                <button className='popup-button' onClick={handleScoreChange}>Update</button>
+                                <button className='popup-button' onClick={cancelEdit}>Cancel</button>
+                            </>
+                        ) : (
+                            <>
+                                <h1>{call.ConversationScore}</h1>
+                                <button className='popup-button' onClick={() => setEditConversationScore(true)}>Edit</button>
+                            </>
+                        )}
+                    </div>
                 </div>
                 <div className="small-tiles">
                     <div className="details-box">
