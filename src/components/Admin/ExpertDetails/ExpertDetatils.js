@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import './ExpertDetails.css'
 
 const ExpertDetails = () => {
   const { expertId } = useParams();
@@ -9,12 +10,16 @@ const ExpertDetails = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [topics, setTopics] = useState('');
   const [description, setDescription] = useState('');
-  const [categories, setCategories] = useState('');
+  const [categories, setCategories] = useState([]);
   const [profile, setProfile] = useState('');
   const [languages, setLanguages] = useState([]);
   const [score, setScore] = useState('');
   const [repeatScore, setRepeatScore] = useState('');
   const [totalScore, setTotalScore] = useState('');
+  const [allCategories, setAllCategories] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     // Fetch expert details
@@ -25,17 +30,56 @@ const ExpertDetails = () => {
         setPhoneNumber(response.data.phoneNumber);
         setTopics(response.data.topics);
         setDescription(response.data.description);
-        setCategories(response.data.categories.join(', '));
+        setCategories(response.data.categories);
         setProfile(response.data.profile);
-        setLanguages(response.data.languages.join(', '));
+        setLanguages(response.data.languages);
         setScore(response.data.score);
         setRepeatScore(response.data.repeat_score);
         setTotalScore(response.data.total_score);
+        // Fetch all categories
+        fetchAllCategories();
       })
       .catch(error => {
         console.error('Error fetching expert details:', error);
       });
+
+    // Add event listener to detect clicks outside the dropdown
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [expertId]);
+
+  const fetchAllCategories = () => {
+    // Assuming an API endpoint to fetch all categories
+    axios.get('/api/categories')
+      .then(response => {
+        setAllCategories(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching categories:', error);
+      });
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  };
+
+  const handleCategoryChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked && categories.length < 3) {
+      setCategories(prevCategories => [...prevCategories, value]);
+    } else if (!checked) {
+      setCategories(prevCategories => prevCategories.filter(category => category !== value));
+    }
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown(prevShowDropdown => !prevShowDropdown);
+  };
 
   const handleUpdate = () => {
     axios.put(`/api/experts/${expertId}`, {
@@ -43,9 +87,9 @@ const ExpertDetails = () => {
       phoneNumber,
       topics,
       description,
-      categories: categories.split(', ').map(cat => cat.trim()),
+      categories,
       profile,
-      languages: languages.split(',').map(lang => lang.trim()),
+      languages,
       score,
       repeat_score: repeatScore,
       total_score: totalScore
@@ -60,24 +104,58 @@ const ExpertDetails = () => {
   };
 
   return (
-    <div>
+    <div className='details-container'>
       {expert && (
-        <div>
+        <div className='content-container'>
           <h2>Expert Details</h2>
-          <p>Name: <input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
-          <p>Phone Number: <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
-          <p>Topics: <input type="text" value={topics} onChange={(e) => setTopics(e.target.value)} /></p>
-          <p>Description: <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} /></p>
-          <p>Categories: <input type="text" value={categories} onChange={(e) => setCategories(e.target.value)} /></p>
-          <p>Languages: <input type="text" value={languages} onChange={(e) => setLanguages(e.target.value)} /></p>
-          <p>Score: <input type="number" value={score} onChange={(e) => setScore(e.target.value)} /></p>
-          <p>Repeat Score: <input type="number" value={repeatScore} onChange={(e) => setRepeatScore(e.target.value)} /></p>
-          <p>Total Score: <input type="number" value={totalScore} onChange={(e) => setTotalScore(e.target.value)} /></p>
-          <button onClick={handleUpdate}>Update Details</button>
+          <div className="grid-container">
+            <div className="grid-tile-1">
+              <a>
+                <img src={profile} alt="Expert Profile" />
+              </a>
+            </div>
+            <div className="grid-item">
+              <h3>Name</h3>
+              <p><input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
+              <h3>Phone Number</h3>
+              <p><input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
+              <h3>Score</h3>
+              <p><input type="number" value={score} onChange={(e) => setScore(e.target.value)} /></p>
+              <h3>Repeat Score</h3>
+              <p><input type="number" value={repeatScore} onChange={(e) => setRepeatScore(e.target.value)} /></p>
+              <h3>Total Score</h3>
+              <p><input type="number" value={totalScore} onChange={(e) => setTotalScore(e.target.value)} /></p>
+            </div>
+          </div>
+          <h3>Categories</h3>
+          <div ref={dropdownRef}>
+            <div>
+              <span onClick={toggleDropdown} className="dropdown-span">
+                {categories.length > 0 ? categories.join(', ') : 'Select Categories'}
+              </span>
+              {showDropdown && (
+                <div className='dropdown'>
+                  {allCategories.map(category => (
+                    <label className='dropdown-item' key={category}>
+                      <input type="checkbox" value={category} checked={categories.includes(category)} onChange={handleCategoryChange} />
+                      <span className="category-text">{category}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <h3>Languages</h3>
+          <p><input type="text" value={languages} onChange={(e) => setLanguages(e.target.value)} /></p>
+          <h3>Topics</h3>
+          <p><input type="text" value={topics} onChange={(e) => setTopics(e.target.value)} /></p>
+          <h3>Description</h3>
+          <p><input type="text" value={description} onChange={(e) => setDescription(e.target.value)} /></p>
+          <button className='update-button' onClick={handleUpdate}>Update Details</button>
         </div>
       )}
     </div>
   );
-};
+}
 
 export default ExpertDetails;

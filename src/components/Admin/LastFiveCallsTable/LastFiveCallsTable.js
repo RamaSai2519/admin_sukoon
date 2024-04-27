@@ -5,11 +5,6 @@ import './LastFiveCallsTable.css'; // Import the CSS file
 
 const LastFiveCallsTable = () => {
   const [lastFiveCalls, setLastFiveCalls] = useState([]);
-  const [filters, setFilters] = useState({
-    user: '',
-    expert: '',
-    status: '',
-  });
   const [sortConfig, setSortConfig] = useState({
     key: '',
     direction: '',
@@ -53,14 +48,6 @@ const LastFiveCallsTable = () => {
         return 'default-row';
     }
   };
-
-  let filteredCalls = lastFiveCalls.filter((call) => {
-    return (
-      call.userName.toLowerCase().includes(filters.user.toLowerCase()) &&
-      call.expertName.toLowerCase().includes(filters.expert.toLowerCase()) &&
-      call.status.toLowerCase().includes(filters.status.toLowerCase())
-    );
-  });
 
   // Sorting the filtered calls based on sortConfig state
   if (sortConfig.key) {

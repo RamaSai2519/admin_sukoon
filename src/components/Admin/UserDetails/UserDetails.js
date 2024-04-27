@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import './UserDetails.css';
 
 const UserDetails = () => {
   const { userId } = useParams();
@@ -37,24 +38,41 @@ const UserDetails = () => {
       .then(response => {
         setUser(response.data);
         console.log('User details updated successfully.');
+        window.alert('User details updated successfully.');
       })
       .catch(error => {
         console.error('Error updating user details:', error);
+        window.alert('Error updating user details.:', error);
       });
   };
 
   return (
-    <div>
+    <div className='details-container'>
       {user && (
-        <div>
-          <h2>User Details</h2>
-          <p>Name: <input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
-          <p>Phone Number: <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
-          <p>City: <input type="text" value={city} onChange={(e) => setCity(e.target.value)} /></p>
-          <p>Birth Date: <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} /></p>
-          <p>Number of Calls: <input type="number" value={numberOfCalls} onChange={(e) => setNumberOfCalls(e.target.value)} /></p>
-          <button onClick={handleUpdate}>Update Details</button>
-        </div>
+        <div className='content-container'>
+          <h1>User Details</h1>
+          <div className='grid-tile-1'>
+            <h3>Name</h3>
+            <p><input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
+          </div>
+          <div className='grid-tile-1'>
+            <h3>Phone Number</h3>
+            <p><input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
+          </div>
+          <div className='grid-tile-1'>
+            <h3>City</h3>
+            <p><input type="text" value={city} onChange={(e) => setCity(e.target.value)} /></p>
+          </div>
+          <div className='grid-tile-1'>
+            <h3>Birth Date</h3>
+            <p><input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} /></p>
+          </div>
+          <div className='grid-tile-1'>
+            <h3>Number of Calls</h3>
+            <p><input type="number" value={numberOfCalls} onChange={(e) => setNumberOfCalls(e.target.value)} /></p>
+          </div>
+            <button className='update-button' onClick={handleUpdate}>Update Details</button>
+          </div>
       )}
     </div>
   );
