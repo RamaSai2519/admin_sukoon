@@ -131,7 +131,7 @@ const Histograms = ({ usersData }) => {
 
     const horizontalOptions = {
         ...options,
-        indexAxis: 'y',
+        indexAxis: 'x',
         plugins: {
             legend: {
                 display: false
