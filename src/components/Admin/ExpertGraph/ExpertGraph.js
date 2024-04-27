@@ -1,11 +1,13 @@
 // ExpertGraph.js
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
+import './ExpertGraph.css'; // Import CSS file for styling
 
 const ExpertGraph = () => {
   const [callData, setCallData] = useState([]);
   const [expertData, setExpertData] = useState({});
   const [chart, setChart] = useState(null);
+  const [timeframe, setTimeframe] = useState('year'); // Default timeframe is 'year'
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +32,7 @@ const ExpertGraph = () => {
       renderChart(callData, expertData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callData, expertData]); // Ignoring the missing dependencies warning
+  }, [callData, expertData, timeframe]); // Update the chart when timeframe changes
 
   const fetchCallData = async () => {
     try {
@@ -39,11 +41,30 @@ const ExpertGraph = () => {
         throw new Error('Failed to fetch call data');
       }
       const callData = await response.json();
-      return callData;
+      return filterCallDataByTimeframe(callData);
     } catch (error) {
       console.error('Error fetching call data:', error);
       return [];
     }
+  };
+
+  const filterCallDataByTimeframe = (callData) => {
+    let startDate = new Date();
+    switch (timeframe) {
+      case 'week':
+        startDate.setDate(startDate.getDate() - 7);
+        break;
+      case 'month':
+        startDate.setMonth(startDate.getMonth() - 1);
+        break;
+      case 'year':
+        startDate.setFullYear(startDate.getFullYear() - 1);
+        break;
+      default:
+        startDate.setFullYear(startDate.getFullYear() - 1);
+        break;
+    }
+    return callData.filter(call => new Date(call.initiatedTime) > startDate);
   };
 
   const fetchExpertData = async () => {
@@ -64,9 +85,11 @@ const ExpertGraph = () => {
   };
 
   const renderChart = (callData, expertData) => {
+    const filteredCallData = filterCallDataByTimeframe(callData);
+
     const expertCalls = {};
 
-    callData.forEach((call) => {
+    filteredCallData.forEach((call) => {
       const expertId = call.expert;
       const expert = expertData[expertId];
       if (expert) {
@@ -138,11 +161,25 @@ const ExpertGraph = () => {
     }
   };
 
+  const handleTimeframeChange = (event) => {
+    setTimeframe(event.target.value);
+  };
 
   return (
-    <div style={{ width: "100%" }}>
-      <h2>Number of Calls per Expert</h2>
-      <div style={{ height: '100%', width: 'auto' }}>
+    <div className="chart-container">
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <h2 style={{margin: "0"}}>Number of Calls per Expert</h2>
+        <div className='drop-down'>
+          <label>
+            <select value={timeframe} onChange={handleTimeframeChange}>
+              <option value="week">Week</option>
+              <option value="month">Month</option>
+              <option value="year">Year</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div className="chart-wrapper">
         <canvas id="expertCallChart"></canvas>
       </div>
     </div>

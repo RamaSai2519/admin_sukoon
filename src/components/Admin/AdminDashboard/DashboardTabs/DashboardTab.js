@@ -2,7 +2,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import CallGraph from '../../CallGraph/CallGraph';
+import HourCallChart from '../../HourCallChart/HourCallChart';
 import ExpertGraph from '../../ExpertGraph/ExpertGraph';
+import DayGraph from '../../DayGraph/DayGraph';
 import LastFiveCallsTable from '../../LastFiveCallsTable/LastFiveCallsTable';
 import '../AdminDashboard.css';
 
@@ -96,9 +98,9 @@ const DashboardTab = () => {
             <div className="grid-tile-1">
               <h3>Successful Calls</h3>
               <h1>{successfulCalls.length}</h1>
-              <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                <h4 style={{margin: 0}}>Today: {currentDaySuccessfulCalls}</h4>
-                <p style={{margin: 0}}>&gt;1m</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <h4 style={{ margin: 0 }}>Today: {currentDaySuccessfulCalls}</h4>
+                <p style={{ margin: 0 }}>&gt;1m</p>
               </div>
             </div>
             <div className="grid-tile-1">
@@ -109,7 +111,7 @@ const DashboardTab = () => {
             <div className="grid-tile-1">
               <h3>Avg. Duration</h3>
               <h1>{formatDuration(averageCallDuration)}</h1>
-              <p style={{textAlign: 'right', margin: '0'}}>&gt;1m</p>
+              <p style={{ textAlign: 'right', margin: '0' }}>&gt;1m</p>
             </div>
           </div>
         </div>
@@ -122,12 +124,19 @@ const DashboardTab = () => {
             <div className='grid-tile-1'>
               <h3>Expert Graph</h3>
               <ExpertGraph />
-              <p style={{textAlign: 'right', margin: '0'}}>&gt;1m</p>
+              <p style={{ textAlign: 'right', margin: '0' }}>&gt;1m</p>
+            </div>
+            <div className='grid-tile-1'>
+              <HourCallChart />
+            </div>
+            <div className='grid-tile-1'>
+              <DayGraph />
             </div>
           </div>
         </div>
+
         <div className="dashboard-tile">
-          <div className='grid-tile-1'>
+          <div className='latest-wrapper'>
             <LastFiveCallsTable />
           </div>
         </div>

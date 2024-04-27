@@ -85,33 +85,36 @@ const UsersTab = () => {
 
   return (
     <div className="users-tab">
-      <div className="dashboard-tile">
-        <div className="grid-row">
-          <div className="grid-tile-1">
-            <h3>User Signups</h3>
-            <h1>{totalUsers}</h1>
-            <h4>Today: {currentDayTotalUsers}</h4>
+      <div className="dashboard-tiles">
+        <div className="dashboard-tile">
+          <div className="grid-row">
+            <div className="grid-tile-1">
+              <h3>User Signups</h3>
+              <h1>{totalUsers}</h1>
+              <h4>Today: {currentDayTotalUsers}</h4>
+            </div>
+            <div className="grid-tile-1" onClick={() => openPopup('Active Users', activeUsersList)}>
+              <h3>Active Users</h3>
+              <h1>{activeUsers}</h1>
+              <p style={{ textAlign: 'right', margin: '0' }}>&gt;2m</p>
+            </div>
           </div>
-          <div className="grid-tile-1" onClick={() => openPopup('Active Users', activeUsersList)}>
-            <h3>Active Users</h3>
-            <h1>{activeUsers}</h1>
-            <p style={{ textAlign: 'right', margin: '0' }}>&gt;2m</p>
+          <div className="grid-row">
+            <div className="grid-tile-1" onClick={() => openPopup('Users with One Call', oneCallUsers)}>
+              <h3>Users with One Call</h3>
+              <h1>{oneCallUsers.length}</h1>
+            </div>
+            <div className="grid-tile-1" onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
+              <h3>Users with Two Calls</h3>
+              <h1>{twoCallsUsers.length}</h1>
+            </div>
+            <div className="grid-tile-1" onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
+              <h3>Users with More than Two Calls</h3>
+              <h1>{moreThanTwoCallsUsers.length}</h1>
+            </div>
           </div>
         </div>
-        <div className="grid-row">
-          <div className="grid-tile-1" onClick={() => openPopup('Users with One Call', oneCallUsers)}>
-            <h3>Users with One Call</h3>
-            <h1>{oneCallUsers.length}</h1>
-          </div>
-          <div className="grid-tile-1" onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
-            <h3>Users with Two Calls</h3>
-            <h1>{twoCallsUsers.length}</h1>
-          </div>
-          <div className="grid-tile-1" onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
-            <h3>Users with More than Two Calls</h3>
-            <h1>{moreThanTwoCallsUsers.length}</h1>
-          </div>
-        </div>
+        
       </div>
       <Histograms usersData={usersData} />
       {popupContent.title && (

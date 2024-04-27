@@ -1,0 +1,5 @@
+/* ExpertGraph.css */
+
+.chart-wrapper canvas {
+    min-height: 250px;
+}

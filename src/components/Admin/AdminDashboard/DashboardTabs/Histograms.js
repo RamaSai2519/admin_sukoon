@@ -108,13 +108,15 @@ const Histograms = ({ usersData }) => {
         <div className="admin-dashboard-container">
             <div className="dashboard-tiles">
                 <div className="dashboard-tile">
-                    <div className="grid-tile-1">
-                        <h3>Users per City</h3>
-                        <Bar data={cityData} />
-                    </div>
-                    <div className="grid-tile-1">
-                        <h3>Users per Age</h3>
-                        <Bar data={ageGroupData} />
+                    <div className='grid'>
+                        <div className="grid-tile-1">
+                            <h3>Users per City</h3>
+                            <Bar data={cityData} />
+                        </div>
+                        <div className="grid-tile-1">
+                            <h3>Users per Age</h3>
+                            <Bar data={ageGroupData} />
+                        </div>
                     </div>
                 </div>
             </div>

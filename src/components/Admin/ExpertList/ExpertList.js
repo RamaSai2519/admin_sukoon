@@ -1,0 +1,136 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
+const ExpertList = () => {
+  const [experts, setExperts] = useState([]);
+  const [filters, setFilters] = useState({
+    name: '',
+    phoneNumber: '',
+    status: ''
+  });
+  const [sortConfig, setSortConfig] = useState({
+    key: '',
+    direction: ''
+  });
+
+  useEffect(() => {
+    fetchAllExperts();
+  }, []);
+
+  const fetchAllExperts = async () => {
+    try {
+      const response = await axios.get('/api/experts');
+      setExperts(response.data);
+    } catch (error) {
+      console.error('Error fetching all experts:', error);
+    }
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({
+      ...filters,
+      [name]: value
+    });
+  };
+
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  let filteredExperts = experts.filter((expert) => {
+    return (
+      expert.name.toLowerCase().includes(filters.name.toLowerCase()) &&
+      expert.phoneNumber.includes(filters.phoneNumber) &&
+      expert.status.toLowerCase().includes(filters.status.toLowerCase())
+    );
+  });
+
+  if (sortConfig.key) {
+    filteredExperts.sort((a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  const renderSortArrow = (key) => {
+    if (sortConfig.key === key) {
+      return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
+    }
+    return null;
+  };
+
+  return (
+    <div className="table-container">
+      <table className="users-table">
+        <thead>
+          <tr className="filter-row">
+            <td>
+              <input
+                type="text"
+                placeholder="Filter User"
+                name="user"
+                value={filters.name}
+                onChange={handleFilterChange}
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="Filter Number"
+                name="number"
+                value={filters.phoneNumber}
+                onChange={handleFilterChange}
+              />
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <th onClick={() => handleSort('name')}>
+              Expert {renderSortArrow('name')}
+            </th>
+            <th onClick={() => handleSort('phoneNumber')}>
+              Number {renderSortArrow('phoneNumber')}
+            </th>
+            <th onClick={() => handleSort('score')}>
+              Score {renderSortArrow('score')}
+            </th>
+            <th onClick={() => handleSort('status')}>
+              Status {renderSortArrow('status')}
+            </th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredExperts.map((expert) => (
+            <tr key={expert._id} className="row">
+              <td>{expert.name}</td>
+              <td>{expert.phoneNumber}</td>
+              <td>{expert.score}</td>
+              <td>{expert.status}</td>
+              <td>
+                <Link to={`/experts/${expert._id}`} className="view-details-link">
+                  View
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default ExpertList;

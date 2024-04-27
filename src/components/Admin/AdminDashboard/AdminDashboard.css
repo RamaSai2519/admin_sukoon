@@ -1,14 +1,12 @@
 /* AdminDashboard.css */
-
 .admin-dashboard-container {
-    max-width: 1200px;
+    max-width: 1550px;
     margin-left: auto;
     margin-right: auto;
 }
 
 .Title {
-    margin-left: 20px;
-    margin-top: 0;
+    margin: 20px;
 }
 
 .grid {
@@ -27,6 +25,15 @@
 }
 
 .grid-tile-1 {
+    margin: 10px;
+    padding: 20px;
+    max-width: 700px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+}
+
+.latest-wrapper {
     margin: 10px;
     padding: 20px;
     background-color: #fff;
@@ -59,7 +66,7 @@
 
 .calls-button {
     position: fixed;
-    bottom: 5px;
+    bottom: 95px;
     right: 20px;
     background-color: white;
     color: black;
@@ -71,6 +78,40 @@
 }
 
 .calls-button:hover {
+    background-color: grey;
+}
+
+.users-button {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 18px;
+    text-decoration: none;
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+}
+
+.users-button:hover {
+    background-color: grey;
+}
+
+.experts-button {
+    position: fixed;
+    bottom: 5px;
+    right: 20px;
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 18px;
+    text-decoration: none;
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+}
+
+.experts-button:hover {
     background-color: grey;
 }
 
@@ -91,7 +132,7 @@
     cursor: pointer;
     background-color: #fff;
     border-radius: 20px;
-    margin-right: 10px;
+    margin-right: 20px;
     font-size: large;
     font-weight: bold;
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
@@ -107,7 +148,7 @@
 
 .scroll-to-bottom-button {
     position: fixed;
-    bottom: 70px;
+    bottom: 155px;
     right: 20px;
     background-color: white;
     color: black;

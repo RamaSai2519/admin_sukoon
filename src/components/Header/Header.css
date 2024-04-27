@@ -4,12 +4,8 @@ header {
   justify-content: space-between; /* Align children to the start and end of the header */
   align-items: center;
   padding-top: 10px;
-  max-width: 1650px;
+  max-width: 1550px;
   margin: 0 auto;
-}
-
-.logo_svg {
-  margin: 0px;
 }
 
 nav ul {
@@ -17,11 +13,11 @@ nav ul {
   padding: 0px;
   font-size: large;
   font-weight: bold;
-  margin: 0px; /* Remove default margin */
+  margin: 0px;
 }
 
 nav ul li {
-  padding: 0.4rem 1.5rem; /* Adjust padding as needed */
+  padding: 10px;
   display: inline;
   margin-left: 0rem;
 }

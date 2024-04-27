@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import DashboardTab from './DashboardTabs/DashboardTab';
 import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
 import UsersTab from './DashboardTabs/UsersTab';
@@ -27,10 +27,22 @@ const Tab = ({ label, onClick, active }) => (
 );
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState(
-    localStorage.getItem('adminActiveTab') || 'dashboard'
-  );
+  const location = useLocation();
   const [errors, setErrors] = useState([]);
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  useEffect(() => {
+    const storedTab = localStorage.getItem('adminActiveTab');
+    if (location.state && location.state.activeTab) {
+      setActiveTab(location.state.activeTab);
+    } else if (storedTab) {
+      setActiveTab(storedTab);
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    localStorage.setItem('adminActiveTab', activeTab);
+  }, [activeTab]);
 
   useEffect(() => {
     // Register a service worker
@@ -64,7 +76,7 @@ const AdminDashboard = () => {
         console.log('Error retrieving token:', err);
       });
 
-    const socket = socketIOClient('https://9143-15-206-127-248.ngrok-free.app');
+    const socket = socketIOClient('http://15.206.127.248/');
 
     // Listen for error notifications from the server
     socket.on('error_notification', (data) => {
@@ -77,6 +89,10 @@ const AdminDashboard = () => {
       socket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('adminActiveTab', activeTab);
+  }, [activeTab]);
 
   // Function to close an error message
   const handleCloseError = (index) => {
@@ -140,8 +156,14 @@ const AdminDashboard = () => {
       {activeTab === 'users' && <UsersTab />}
       {activeTab === 'notifications' && <ErrorLogsComponent />}
 
+      <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <h1 className="experts-button">View All Experts</h1>
+      </Link>
       <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
         <h1 className="calls-button">View All Calls</h1>
+      </Link>
+      <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <h1 className="users-button">View All Users</h1>
       </Link>
 
       <ScrollBottom />

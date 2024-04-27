@@ -119,7 +119,6 @@ const CallGraph = () => {
               },
               ticks: {
                 callback: (value, index, values) => {
-                  // Custom callback to format y-axis labels
                   return formatDateLabel(value);
                 }
               }
@@ -157,7 +156,7 @@ const CallGraph = () => {
   return (
     <div className='calls-table' style={{ height: 'auto', width: '100%' }}>
       <div className='idk' style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h2>Number of Calls Over Time</h2>
+        <h2 style={{margin: "0"}}>Number of Calls Over Time</h2>
         <div className='drop-down'>
           <label>
             <select value={timeframe} onChange={handleTimeframeChange}>
@@ -168,8 +167,10 @@ const CallGraph = () => {
           </label>
         </div>
       </div>
-      <div className='call-chart'>
-        <canvas id="callChart"></canvas>
+      <div className="chart-container">
+        <div className="chart-wrapper">
+          <canvas id="callChart"></canvas>
+        </div>
       </div>
     </div>
   );

@@ -19,11 +19,14 @@ const Header = ({ isLoggedIn, onLogout }) => {
         <nav>
           <ul>
             <li key="home">
-              <Link to="/" className='outlined-button' aria-label="Navigate to the Dashboard">
+              <Link
+                to={{ pathname: '/', state: { activeTab: 'dashboard' } }}
+                className='outlined-button' aria-label="Navigate to the Dashboard"
+                onClick={() => localStorage.setItem('adminActiveTab', 'dashboard')}
+              >
                 <span>Dashboard</span>
               </Link>
             </li>
-            {/* Conditional rendering of login/logout button */}
             {isLoggedIn ? (
               <li key="logout">
                 <button className='outlined-button' onClick={onLogout} aria-label="Log out">

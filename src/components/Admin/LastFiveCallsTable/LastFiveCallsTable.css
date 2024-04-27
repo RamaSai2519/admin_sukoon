@@ -51,12 +51,10 @@
   background-color: #000;
   color: #fff;
   border-color: #333;
-  /* Change border color on hover */
 }
 
 .table-container {
   max-width: 1200px;
-  /* Adjust max-width according to your preference */
   margin: 0 auto;
   padding: 20px;
 }
