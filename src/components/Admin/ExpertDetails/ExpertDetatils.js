@@ -12,6 +12,7 @@ const ExpertDetails = () => {
   const [description, setDescription] = useState('');
   const [categories, setCategories] = useState([]);
   const [profile, setProfile] = useState('');
+  const [status, setStatus] = useState('');
   const [languages, setLanguages] = useState([]);
   const [score, setScore] = useState('');
   const [repeatScore, setRepeatScore] = useState('');
@@ -32,18 +33,17 @@ const ExpertDetails = () => {
         setDescription(response.data.description);
         setCategories(response.data.categories);
         setProfile(response.data.profile);
+        setStatus(response.data.status);
         setLanguages(response.data.languages);
         setScore(response.data.score);
         setRepeatScore(response.data.repeat_score);
         setTotalScore(response.data.total_score);
-        // Fetch all categories
         fetchAllCategories();
       })
       .catch(error => {
         console.error('Error fetching expert details:', error);
       });
 
-    // Add event listener to detect clicks outside the dropdown
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
@@ -52,7 +52,6 @@ const ExpertDetails = () => {
   }, [expertId]);
 
   const fetchAllCategories = () => {
-    // Assuming an API endpoint to fetch all categories
     axios.get('/api/categories')
       .then(response => {
         setAllCategories(response.data);
@@ -89,6 +88,7 @@ const ExpertDetails = () => {
       description,
       categories,
       profile,
+      status,
       languages,
       score,
       repeat_score: repeatScore,
@@ -151,6 +151,8 @@ const ExpertDetails = () => {
           <p><input type="text" value={topics} onChange={(e) => setTopics(e.target.value)} /></p>
           <h3>Description</h3>
           <p><input type="text" value={description} onChange={(e) => setDescription(e.target.value)} /></p>
+          <h3>Status</h3>
+          <p><input type="text" value={status} onChange={(e) => setStatus(e.target.value)} /></p>
           <button className='update-button' onClick={handleUpdate}>Update Details</button>
         </div>
       )}
