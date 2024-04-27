@@ -21,21 +21,17 @@ const ExpertDayList = () => {
             const expertsData = expertsResponse.data;
             const callsData = callsResponse.data;
 
-            // Get current date
             const currentDate = new Date().toISOString().split('T')[0];
 
-            // Filter calls data for the current date
             const callsDataCurrentDay = callsData.filter(call => {
                 const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
                 return callDate === currentDate;
             });
 
-            // Calculate successful and failed calls for each expert based on the current day
             const expertsWithCallsData = expertsData.map(expert => {
                 const expertCalls = callsDataCurrentDay.filter(call => call.expert === expert._id);
                 const successfulCalls = expertCalls.filter(call => call.status === 'successfull').length;
                 const failedCalls = expertCalls.filter(call => call.status !== 'successfull').length;
-                // Calculate average calls per day
                 const avgCallsPerDay = calculateAvgCallsPerDay(expertCalls);
                 return { ...expert, successfulCalls, failedCalls, avgCallsPerDay };
             });
@@ -110,6 +106,7 @@ const ExpertDayList = () => {
                         <th onClick={() => handleSort('loggedInHours')}>
                             Logged In Hours {renderSortArrow('loggedInHours')}
                         </th>
+                        <th>Status</th>
                         <th>Details</th>
                     </tr>
                 </thead>
@@ -122,6 +119,7 @@ const ExpertDayList = () => {
                             <td>{expert.avgCallsPerDay.toFixed(2)}</td>
                             <td>{expert.score}</td>
                             <td>{expert.loggedInHours !== undefined ? expert.loggedInHours.toFixed(2) : '-'}</td>
+                            <td>{expert.status}</td>
                             <td>
                                 <Link to={`/experts/${expert._id}`} className="view-details-link">
                                     View

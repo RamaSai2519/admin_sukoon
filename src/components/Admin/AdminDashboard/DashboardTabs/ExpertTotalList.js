@@ -99,6 +99,7 @@ const ExpertTotalList = () => {
                         <th onClick={() => handleSort('score')}>
                             Score {renderSortArrow('score')}
                         </th>
+                        <th>Status</th>
                         <th>Details</th>
                     </tr>
                 </thead>
@@ -110,6 +111,7 @@ const ExpertTotalList = () => {
                             <td>{expert.failedCalls}</td>
                             <td>{expert.avgCallsPerDay.toFixed(2)}</td>
                             <td>{expert.score}</td>
+                            <td>{expert.status}</td>
                             <td>
                                 <Link to={`/experts/${expert._id}`} className="view-details-link">
                                     View
@@ -119,9 +121,6 @@ const ExpertTotalList = () => {
                     ))}
                 </tbody>
             </table>
-            <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <h1 className="experts-button">View All Experts</h1>
-            </Link>
             <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <h1 className="calls-button">View All Calls</h1>
             </Link>

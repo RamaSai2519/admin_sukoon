@@ -93,13 +93,11 @@ const UsersTab = () => {
               <h1>{totalUsers}</h1>
               <h4>Today: {currentDayTotalUsers}</h4>
             </div>
-            <div className="grid-tile-1" onClick={() => openPopup('Active Users', activeUsersList)}>
+            {/* <div className="grid-tile-1" onClick={() => openPopup('Active Users', activeUsersList)}>
               <h3>Active Users</h3>
               <h1>{activeUsers}</h1>
               <p style={{ textAlign: 'right', margin: '0' }}>&gt;2m</p>
-            </div>
-          </div>
-          <div className="grid-row">
+            </div> */}
             <div className="grid-tile-1" onClick={() => openPopup('Users with One Call', oneCallUsers)}>
               <h3>Users with One Call</h3>
               <h1>{oneCallUsers.length}</h1>
