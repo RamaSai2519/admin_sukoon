@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -16,6 +16,17 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1024); // Adjust threshold as needed
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 768); // Adjust threshold as needed
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -26,6 +37,13 @@ const App = () => {
     setIsLoggedIn(false);
     localStorage.removeItem('isLoggedIn');
   };
+
+  if (!isDesktop) {
+    return <div style={{margin: "150px", marginLeft: "20px", marginRight: "5px"}}>
+      <h1>Please use a Laptop or a Desktop to visit this Website.</h1>
+      <h1>Will have the mobile version ready after my leave.</h1>
+    </div>;
+  }
 
   return (
     <div>
