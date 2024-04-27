@@ -21,14 +21,11 @@ const Histograms = ({ usersData }) => {
             cityCounts[city] = (cityCounts[city] || 0) + 1;
         });
 
-        // Sort cities by count, then alphabetically
         const sortedCities = Object.keys(cityCounts).sort((a, b) => {
-            // Compare counts first
             const countComparison = cityCounts[b] - cityCounts[a];
             if (countComparison !== 0) {
                 return countComparison;
             }
-            // If counts are equal, sort alphabetically
             return a.localeCompare(b);
         });
 
@@ -86,7 +83,11 @@ const Histograms = ({ usersData }) => {
                 data: Object.values(usersPerCity),
                 backgroundColor: '#FF6384',
                 borderColor: '#FF6384',
-                borderWidth: 1,
+                borderWidth: 0,
+                borderRadius: 20,
+                barPercentage: 0.7,
+                categoryPercentage: 0.7,
+                borderSkipped: false,
             },
         ],
     };
@@ -97,11 +98,50 @@ const Histograms = ({ usersData }) => {
             {
                 label: 'Users per Age Group',
                 data: Object.values(usersPerAgeGroup),
-                backgroundColor: '#36A2EB',
-                borderColor: '#36A2EB',
-                borderWidth: 1,
+                backgroundColor: 'rgba(69, 120, 249, 1)',
+                borderColor: 'rgba(69, 120, 249, 1)',
+                borderWidth: 0,
+                borderRadius: 20,
+                barPercentage: 0.7,
+                categoryPercentage: 0.7,
+                borderSkipped: false,
             },
         ],
+    };
+
+    const options = {
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                grid: {
+                    display: false
+                }
+            }
+        },
+    };
+
+    const horizontalOptions = {
+        ...options,
+        indexAxis: 'y',
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        elements: {
+            bar: {
+                borderWidth: 2,
+            }
+        }
     };
 
     return (
@@ -111,11 +151,13 @@ const Histograms = ({ usersData }) => {
                     <div className='grid'>
                         <div className="grid-tile-1">
                             <h3>Users per City</h3>
-                            <Bar data={cityData} />
+                            <div className="chart-wrapper">
+                                <Bar data={cityData} options={horizontalOptions} />
+                            </div>
                         </div>
                         <div className="grid-tile-1">
                             <h3>Users per Age</h3>
-                            <Bar data={ageGroupData} />
+                            <Bar data={ageGroupData} options={options} />
                         </div>
                     </div>
                 </div>

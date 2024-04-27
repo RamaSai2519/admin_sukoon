@@ -65,7 +65,7 @@
 
 .calls-button {
     position: fixed;
-    bottom: 95px;
+    bottom: 102px;
     right: 20px;
     background-color: white;
     color: black;
@@ -82,7 +82,7 @@
 
 .users-button {
     position: fixed;
-    bottom: 50px;
+    bottom: 53px;
     right: 20px;
     background-color: white;
     color: black;
@@ -147,7 +147,7 @@
 
 .scroll-to-bottom-button {
     position: fixed;
-    bottom: 155px;
+    bottom: 162px;
     right: 20px;
     background-color: white;
     color: black;

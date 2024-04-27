@@ -130,7 +130,7 @@ const ExpertGraph = () => {
                 borderRadius: 20,
                 barPercentage: 0.7,
                 categoryPercentage: 0.7,
-                borderSkipped: false, // Round the bottom of the bars
+                borderSkipped: false,
               },
             ],
           },

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import './UserDetails.css';
 
@@ -74,6 +74,15 @@ const UserDetails = () => {
             <button className='update-button' onClick={handleUpdate}>Update Details</button>
           </div>
       )}
+      <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <h1 className="experts-button">View All Experts</h1>
+      </Link>
+      <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <h1 className="calls-button">View All Calls</h1>
+      </Link>
+      <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <h1 className="users-button">View All Users</h1>
+      </Link>
     </div>
   );
 };

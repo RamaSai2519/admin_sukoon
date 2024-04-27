@@ -90,8 +90,13 @@ const HourCallChart = () => {
                     datasets: [{
                         label: 'Number of Calls',
                         data: hourData,
-                        backgroundColor: 'rgba(69, 120, 249, 1)',
-                        borderWidth: 0
+                        backgroundColor: '#FF6384',
+                        borderColor: '#FF6384',
+                        borderWidth: 0,
+                        borderRadius: 20,
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.7,
+                        borderSkipped: false,
                     }]
                 },
                 options: {
