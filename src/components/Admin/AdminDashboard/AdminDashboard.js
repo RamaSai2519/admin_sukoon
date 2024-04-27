@@ -76,7 +76,7 @@ const AdminDashboard = () => {
         console.log('Error retrieving token:', err);
       });
 
-    const socket = socketIOClient('http://15.206.127.248/');
+    const socket = socketIOClient('/');
 
     // Listen for error notifications from the server
     socket.on('error_notification', (data) => {
