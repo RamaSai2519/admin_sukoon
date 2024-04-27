@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom';
 
 const ExpertList = () => {
   const [experts, setExperts] = useState([]);
-  const [filters, setFilters] = useState({
-    name: '',
-  });
-
   const [sortConfig, setSortConfig] = useState({
     key: '',
     direction: ''
@@ -26,14 +22,6 @@ const ExpertList = () => {
     }
   };
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value
-    });
-  };
-
   const handleSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -42,14 +30,8 @@ const ExpertList = () => {
     setSortConfig({ key, direction });
   };
 
-  let filteredExperts = experts.filter((expert) => {
-    return (
-      expert.name.toLowerCase().includes(filters.name.toLowerCase())
-    );
-  });
-
   if (sortConfig.key) {
-    filteredExperts.sort((a, b) => {
+    experts.sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) {
         return sortConfig.direction === 'ascending' ? -1 : 1;
       }
@@ -71,21 +53,6 @@ const ExpertList = () => {
     <div className="table-container">
       <table className="users-table">
         <thead>
-          <tr className="filter-row">
-            <td>
-              <input
-                type="text"
-                placeholder="Filter User"
-                name="user"
-                value={filters.name}
-                onChange={handleFilterChange}
-              />
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
           <tr>
             <th onClick={() => handleSort('name')}>
               Expert {renderSortArrow('name')}
@@ -103,7 +70,7 @@ const ExpertList = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredExperts.map((expert) => (
+          {experts.map((expert) => (
             <tr key={expert._id} className="row">
               <td>{expert.name}</td>
               <td>{expert.phoneNumber}</td>

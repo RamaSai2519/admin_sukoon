@@ -9,7 +9,6 @@ const UsersList = () => {
   const [filters, setFilters] = useState({
     user: '',
     city: '',
-    phoneNumber: '',
   });
   const [sortConfig, setSortConfig] = useState({
     key: '',
@@ -56,8 +55,7 @@ const UsersList = () => {
   let filteredUsers = Users.filter((user) => {
     return (
       user.name.toLowerCase().includes(filters.user.toLowerCase()) &&
-      user.city.toLowerCase().includes(filters.city.toLowerCase()) &&
-      user.phoneNumber.toLowerCase().includes(filters.phoneNumber.toLowerCase())
+      user.city.toLowerCase().includes(filters.city.toLowerCase())
     );
   });
 
