@@ -5,7 +5,7 @@ import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import './CallList.css';
 
 const CallsTable = () => {
-  const [Calls, setCalls] = useState([]);
+  const [calls, setCalls] = useState([]);
   const [filters, setFilters] = useState({
     user: '',
     expert: '',
@@ -17,17 +17,43 @@ const CallsTable = () => {
   });
 
   useEffect(() => {
-    fetchAllCalls();
+    const cachedCalls = JSON.parse(localStorage.getItem('calls'));
+    if (cachedCalls) {
+      setCalls(cachedCalls);
+      fetchNewCalls(cachedCalls);
+    } else {
+      fetchAllCalls();
+    }
   }, []);
 
   const fetchAllCalls = async () => {
     try {
       const response = await axios.get('/api/all-calls');
       setCalls(response.data.reverse());
+      localStorage.setItem('calls', JSON.stringify(response.data));
+      console.log('All calls fetched');
     } catch (error) {
       console.error('Error fetching all calls:', error);
     }
   };
+
+  const fetchNewCalls = async (cachedCalls) => {
+    const latestTimestamp = cachedCalls.length > 0 ? cachedCalls[0].initiatedTime : 0;
+    try {
+      const response = await axios.get(`/api/new-calls?timestamp=${latestTimestamp}`);
+      const newData = response.data;
+
+      if (newData.length > 0) {
+        const mergedData = [...newData, ...calls].sort((a, b) => b.initiatedTime - a.initiatedTime);
+        setCalls(mergedData);
+        localStorage.setItem('calls', JSON.stringify(mergedData));
+        console.log('New calls fetched');
+      }
+    } catch (error) {
+      console.error('Error fetching new calls:', error);
+    }
+  };
+
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -63,8 +89,7 @@ const CallsTable = () => {
     }
   };
 
-  // Filter the calls based on the filters state
-  let filteredCalls = Calls.filter((call) => {
+  let filteredCalls = calls.filter((call) => {
     return (
       call.userName.toLowerCase().includes(filters.user.toLowerCase()) &&
       call.expertName.toLowerCase().includes(filters.expert.toLowerCase()) &&
@@ -143,7 +168,7 @@ const CallsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredCalls.map((call) => (
+          {filteredCalls.reverse().map((call) => (
             <tr key={call._id} className={getStatusColor(call.status)}>
               <td>{call.userName}</td>
               <td>{call.expertName}</td>

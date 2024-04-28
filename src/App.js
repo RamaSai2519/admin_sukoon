@@ -11,22 +11,13 @@ import CallList from './components/Admin/CallList/CallList';
 import CallDetails from './components/Admin/CallDetails/CallDetails';
 import UserDetails from './components/Admin/UserDetails/UserDetails';
 import ExpertDetails from './components/Admin/ExpertDetails/ExpertDetatils';
+import ClearCacheButton from './components/ClearCacheButton';
+import './App.css';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1024); // Adjust threshold as needed
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth > 768); // Adjust threshold as needed
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -37,13 +28,6 @@ const App = () => {
     setIsLoggedIn(false);
     localStorage.removeItem('isLoggedIn');
   };
-
-  if (!isDesktop) {
-    return <div style={{margin: "150px", marginLeft: "20px", marginRight: "5px"}}>
-      <h1>Please use a Laptop or a Desktop to visit this Website.</h1>
-      <h1>Will have the mobile version ready after my leave.</h1>
-    </div>;
-  }
 
   return (
     <div>
@@ -75,6 +59,7 @@ const App = () => {
       </div>
       <Analytics />
       <SpeedInsights />
+      <ClearCacheButton />
     </div>
   );
 };

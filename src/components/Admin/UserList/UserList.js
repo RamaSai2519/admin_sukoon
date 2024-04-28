@@ -5,7 +5,7 @@ import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import './UserList.css'
 
 const UsersList = () => {
-  const [Users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [filters, setFilters] = useState({
     user: '',
     city: '',
@@ -16,15 +16,40 @@ const UsersList = () => {
   });
 
   useEffect(() => {
-    fetchAllUsers();
+    const cachedUsers = JSON.parse(localStorage.getItem('users'));
+    if (cachedUsers) {
+      setUsers(cachedUsers);
+      fetchNewUsers(cachedUsers);
+    } else {
+      fetchAllUsers();
+    }
   }, []);
 
   const fetchAllUsers = async () => {
     try {
       const response = await axios.get('/api/users');
       setUsers(response.data.reverse());
+      localStorage.setItem('users', JSON.stringify(response.data.reverse()));
     } catch (error) {
-      console.error('Error fetching all Users:', error);
+      console.error('Error fetching all users:', error);
+    }
+  };
+
+  const fetchNewUsers = async (cachedUsers) => {
+    const latestTimestamp = cachedUsers.length > 0 ? cachedUsers[0].createdDate : 0;
+    try {
+      const response = await axios.get(`/api/new-users?timestamp=${latestTimestamp}`);
+      const newData = response.data;
+
+      if (newData.length > 0) {
+        // Sort the merged data in descending order by createdDate
+        const mergedData = [...newData, ...users].sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+        setUsers(mergedData);
+        localStorage.setItem('users', JSON.stringify(mergedData));
+        console.log('New users fetched');
+      }
+    } catch (error) {
+      console.error('Error fetching new users:', error);
     }
   };
 
@@ -52,7 +77,7 @@ const UsersList = () => {
   };
 
   // Filter the Users based on the filters state
-  let filteredUsers = Users.filter((user) => {
+  let filteredUsers = users.filter((user) => {
     return (
       user.name.toLowerCase().includes(filters.user.toLowerCase()) &&
       user.city.toLowerCase().includes(filters.city.toLowerCase())
@@ -79,7 +104,7 @@ const UsersList = () => {
     }
     return null;
   };
-  
+
   return (
     <div className="table-container">
       <table className="users-table">
@@ -128,7 +153,7 @@ const UsersList = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredUsers.map((user) => (
+          {filteredUsers.reverse().map((user) => (
             <tr key={user._id} className="row">
               <td>{user.name}</td>
               <td>{user.city}</td>

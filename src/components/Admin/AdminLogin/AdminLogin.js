@@ -1,7 +1,7 @@
 // AdminLogin.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './AdminLogin.css'; // Import CSS file for styling
+import './AdminLogin.css';
 
 const AdminLogin = ({ onLogin }) => {
     const navigate = useNavigate();
