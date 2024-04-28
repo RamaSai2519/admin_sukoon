@@ -5,7 +5,6 @@ import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
 import UsersTab from './DashboardTabs/UsersTab';
 import ScrollBottom from './ScrollBottom';
 import './AdminDashboard.css';
-import socketIOClient from 'socket.io-client';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import ErrorLogsComponent from './DashboardTabs/Notifications';
@@ -45,13 +44,9 @@ const AdminDashboard = () => {
   }, [activeTab]);
 
   useEffect(() => {
-    // Register a service worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/firebase-messaging-sw.js')
-          .then((registration) => {
-            console.log('Service worker registered: ', registration);
-          })
           .catch((err) => {
             console.error('Service worker registration failed: ', err);
           });
@@ -60,13 +55,9 @@ const AdminDashboard = () => {
 
     const app = initializeApp(firebaseConfig);
     const messaging = getMessaging(app);
-    onMessage(messaging, (payload) => {
-      console.log('Message received. ', payload);
-    });
     getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
       .then((currentToken) => {
         if (currentToken) {
-          console.log('Current token:', currentToken);
           sendFCMTokenToServer(currentToken);
         } else {
           console.log('No token found.');
@@ -76,25 +67,12 @@ const AdminDashboard = () => {
         console.log('Error retrieving token:', err);
       });
 
-    const socket = socketIOClient('/');
-
-    // Listen for error notifications from the server
-    socket.on('error_notification', (data) => {
-      console.log('Received error notification:', data);
-      setErrors((prevErrors) => [...prevErrors, data]);
-    });
-
-    // Clean up on component unmount
-    return () => {
-      socket.disconnect();
-    };
   }, []);
 
   useEffect(() => {
     localStorage.setItem('adminActiveTab', activeTab);
   }, [activeTab]);
 
-  // Function to close an error message
   const handleCloseError = (index) => {
     setErrors((prevErrors) => {
       const updatedErrors = [...prevErrors];
@@ -113,7 +91,6 @@ const AdminDashboard = () => {
     })
       .then((response) => {
         if (response.ok) {
-          console.log('FCM token sent to server successfully');
         } else {
           console.error('Failed to send FCM token to server');
         }

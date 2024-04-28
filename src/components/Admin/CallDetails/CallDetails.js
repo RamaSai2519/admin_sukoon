@@ -7,16 +7,15 @@ import './CallDetails.css';
 const CallDetails = () => {
     const { callId } = useParams();
     const [call, setCall] = useState(null);
-    const [showBreakup, setShowBreakup] = useState(false); // State for pop-up visibility
-    const [editConversationScore, setEditConversationScore] = useState(false); // State for enabling edit mode
+    const [showBreakup, setShowBreakup] = useState(false);
+    const [editConversationScore, setEditConversationScore] = useState(false);
     const [newConversationScore, setNewConversationScore] = useState('');
 
     useEffect(() => {
         axios.get(`/api/calls/${callId}`)
             .then(response => {
                 setCall(response.data);
-                setNewConversationScore(response.data.ConversationScore); // Set default value for input field
-                console.log(response.data);
+                setNewConversationScore(response.data.ConversationScore);
             })
             .catch(error => {
                 console.error('Error fetching call details:', error);
@@ -34,6 +33,7 @@ const CallDetails = () => {
                 }));
                 setEditConversationScore(false);
                 window.alert("Conversation Score updated successfully!");
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Error updating Conversation Score:', error);
@@ -41,9 +41,7 @@ const CallDetails = () => {
     };
 
     const cancelEdit = () => {
-        // Reset newConversationScore to the existing score
         setNewConversationScore(call.ConversationScore);
-        // Disable edit mode
         setEditConversationScore(false);
     };
 

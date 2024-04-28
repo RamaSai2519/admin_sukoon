@@ -1,47 +1,17 @@
-// DayGraph.js
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
-import 'chartjs-adapter-luxon';
+import useCallsData from '../../../services/useCallsData';
 
-const DayGraph = () => {
+const DaysGraph = () => {
+    const { calls } = useCallsData();
+
     const [chart, setChart] = useState(null);
-    const [callData, setCallData] = useState([]);
-    const [timeframe, setTimeframe] = useState('year'); // Default timeframe is 'year'
+    const [timeframe, setTimeframe] = useState('year'); 
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const callData = await fetchCallData();
-                setCallData(callData);
-                renderChart(callData);
-            } catch (error) {
-                console.error('Error fetching call data:', error);
-            }
-        };
-
-        fetchData();
-
-        return () => {
-            if (chart) {
-                chart.destroy();
-            }
-        };
+        renderChart(calls);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeframe]);
-
-    const fetchCallData = async () => {
-        try {
-            const response = await fetch('/api/calls');
-            if (!response.ok) {
-                throw new Error('Failed to fetch call data');
-            }
-            const callData = await response.json();
-            return callData;
-        } catch (error) {
-            console.error('Error fetching call data:', error);
-            return [];
-        }
-    };
+    }, [calls, timeframe]);
 
     const renderChart = (callData) => {
         const filteredData = filterDataByTimeframe(callData);
@@ -103,7 +73,7 @@ const DayGraph = () => {
                     },
                     plugins: {
                         legend: {
-                            display: false, // Hide legend
+                            display: false,
                         },
                     },
                 }
@@ -153,4 +123,4 @@ const DayGraph = () => {
     );
 };
 
-export default DayGraph;
+export default DaysGraph;

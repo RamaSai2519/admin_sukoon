@@ -1,26 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import useExpertManagement from '../../../services/useExpertManagement';
 
 const ExpertList = () => {
-  const [experts, setExperts] = useState([]);
+  const { experts } = useExpertManagement();
   const [sortConfig, setSortConfig] = useState({
     key: '',
-    direction: ''
+    direction: '',
   });
 
   useEffect(() => {
-    fetchAllExperts();
   }, []);
-
-  const fetchAllExperts = async () => {
-    try {
-      const response = await axios.get('/api/experts');
-      setExperts(response.data);
-    } catch (error) {
-      console.error('Error fetching all experts:', error);
-    }
-  };
 
   const handleSort = (key) => {
     let direction = 'ascending';
@@ -30,17 +20,15 @@ const ExpertList = () => {
     setSortConfig({ key, direction });
   };
 
-  if (sortConfig.key) {
-    experts.sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
-      }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
-    });
-  }
+  experts.sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === 'ascending' ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === 'ascending' ? 1 : -1;
+    }
+    return 0;
+  });
 
   const renderSortArrow = (key) => {
     if (sortConfig.key === key) {

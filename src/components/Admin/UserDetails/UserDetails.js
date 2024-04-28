@@ -11,6 +11,7 @@ const UserDetails = () => {
   const [city, setCity] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [numberOfCalls, setNumberOfCalls] = useState('');
+  const [editMode, setEditMode] = useState(false); // State to track edit mode
 
   useEffect(() => {
     axios.get(`/api/users/${userId}`)
@@ -37,8 +38,8 @@ const UserDetails = () => {
     })
       .then(response => {
         setUser(response.data);
-        console.log('User details updated successfully.');
         window.alert('User details updated successfully.');
+        setEditMode(false); // Exiting edit mode after successful update
       })
       .catch(error => {
         console.error('Error updating user details:', error);
@@ -53,26 +54,53 @@ const UserDetails = () => {
           <h1>User Details</h1>
           <div className='grid-tile-1'>
             <h3>Name</h3>
-            <p><input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
+            {editMode ? (
+              <p><input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
+            ) : (
+              <h2>{name}</h2>
+            )}
           </div>
           <div className='grid-tile-1'>
             <h3>Phone Number</h3>
-            <p><input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
+            {editMode ? (
+              <p><input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
+            ) : (
+              <h2>{phoneNumber}</h2>
+            )}
           </div>
           <div className='grid-tile-1'>
             <h3>City</h3>
-            <p><input type="text" value={city} onChange={(e) => setCity(e.target.value)} /></p>
+            {editMode ? (
+              <p><input type="text" value={city} onChange={(e) => setCity(e.target.value)} /></p>
+            ) : (
+              <h2>{city}</h2>
+            )}
           </div>
           <div className='grid-tile-1'>
             <h3>Birth Date</h3>
-            <p><input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} /></p>
+            {editMode ? (
+              <p><input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} /></p>
+            ) : (
+              <h2>{birthDate}</h2>
+            )}
           </div>
           <div className='grid-tile-1'>
             <h3>Number of Calls</h3>
-            <p><input type="number" value={numberOfCalls} onChange={(e) => setNumberOfCalls(e.target.value)} /></p>
+            {editMode ? (
+              <p><input type="number" value={numberOfCalls} onChange={(e) => setNumberOfCalls(e.target.value)} /></p>
+            ) : (
+              <h2>{numberOfCalls}</h2>
+            )}
           </div>
-            <button className='update-button' onClick={handleUpdate}>Update Details</button>
+          <div className='edit-button-container'>
+            {editMode ? (
+              <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
+            ) : (
+              <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
+            )}
+            {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
           </div>
+        </div>
       )}
       <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
         <h1 className="experts-button">View All Experts</h1>

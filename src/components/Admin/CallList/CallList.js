@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import './CallList.css';
+import useCallsData from '../../../services/useCallsData';
 
 const CallsTable = () => {
-  const [calls, setCalls] = useState([]);
+  const { calls } = useCallsData();
   const [filters, setFilters] = useState({
     user: '',
     expert: '',
@@ -15,45 +15,6 @@ const CallsTable = () => {
     key: '',
     direction: '',
   });
-
-  useEffect(() => {
-    const cachedCalls = JSON.parse(localStorage.getItem('calls'));
-    if (cachedCalls) {
-      setCalls(cachedCalls);
-      fetchNewCalls(cachedCalls);
-    } else {
-      fetchAllCalls();
-    }
-  }, []);
-
-  const fetchAllCalls = async () => {
-    try {
-      const response = await axios.get('/api/all-calls');
-      setCalls(response.data.reverse());
-      localStorage.setItem('calls', JSON.stringify(response.data));
-      console.log('All calls fetched');
-    } catch (error) {
-      console.error('Error fetching all calls:', error);
-    }
-  };
-
-  const fetchNewCalls = async (cachedCalls) => {
-    const latestTimestamp = cachedCalls.length > 0 ? cachedCalls[0].initiatedTime : 0;
-    try {
-      const response = await axios.get(`/api/new-calls?timestamp=${latestTimestamp}`);
-      const newData = response.data;
-
-      if (newData.length > 0) {
-        const mergedData = [...newData, ...calls].sort((a, b) => b.initiatedTime - a.initiatedTime);
-        setCalls(mergedData);
-        localStorage.setItem('calls', JSON.stringify(mergedData));
-        console.log('New calls fetched');
-      }
-    } catch (error) {
-      console.error('Error fetching new calls:', error);
-    }
-  };
-
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -97,7 +58,6 @@ const CallsTable = () => {
     );
   });
 
-  // Sorting the filtered calls based on sortConfig state
   if (sortConfig.key) {
     filteredCalls.sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -110,7 +70,6 @@ const CallsTable = () => {
     });
   }
 
-  // Function to render sort arrow
   const renderSortArrow = (key) => {
     if (sortConfig.key === key) {
       return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
@@ -168,8 +127,8 @@ const CallsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredCalls.reverse().map((call) => (
-            <tr key={call._id} className={getStatusColor(call.status)}>
+          {filteredCalls.map((call) => (
+            <tr key={call.callId} className={getStatusColor(call.status)}>
               <td>{call.userName}</td>
               <td>{call.expertName}</td>
               <td>{new Date(call.initiatedTime).toLocaleString()}</td>

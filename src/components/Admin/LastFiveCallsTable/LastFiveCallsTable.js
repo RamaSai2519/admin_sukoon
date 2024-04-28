@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import './LastFiveCallsTable.css'; // Import the CSS file
+import './LastFiveCallsTable.css';
+import useCallsData from '../../../services/useCallsData';
 
 const LastFiveCallsTable = () => {
+  const { calls } = useCallsData();
   const [lastFiveCalls, setLastFiveCalls] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: '',
@@ -11,30 +12,13 @@ const LastFiveCallsTable = () => {
   });
 
   useEffect(() => {
-    fetchLastFiveCalls();
-  }, []);
-
-  const fetchLastFiveCalls = async () => {
-    try {
-      const response = await axios.get('/api/last-five-calls');
-      setLastFiveCalls(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error fetching last five calls:', error);
-    }
-  };
+    setLastFiveCalls(calls.slice(0, 5));
+  }, [calls]);
 
   const handleSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-
-    if (key === 'ConversationScore') {
-      if (sortConfig.key === key) {
-        direction = sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
-      }
     }
     setSortConfig({ key, direction });
   };
@@ -50,7 +34,6 @@ const LastFiveCallsTable = () => {
     }
   };
 
-  // Sorting the filtered calls based on sortConfig state
   if (sortConfig.key) {
     lastFiveCalls.sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -63,7 +46,6 @@ const LastFiveCallsTable = () => {
     });
   }
 
-  // Function to render sort arrow
   const renderSortArrow = (key) => {
     if (sortConfig.key === key) {
       return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
@@ -96,7 +78,7 @@ const LastFiveCallsTable = () => {
       </thead>
       <tbody>
         {lastFiveCalls.map((call) => (
-          <tr key={call._id} className={getStatusColor(call.status)}>
+          <tr key={call.callId} className={getStatusColor(call.status)}>
             <td>{call.userName}</td>
             <td>{call.expertName}</td>
             <td>{new Date(call.initiatedTime).toLocaleString()}</td>

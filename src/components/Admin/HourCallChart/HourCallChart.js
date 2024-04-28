@@ -1,49 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
-import 'chartjs-adapter-luxon';
+import useCallsData from '../../../services/useCallsData';
 
 const HourCallChart = () => {
+    const { calls } = useCallsData();
     const [chart, setChart] = useState(null);
-    const [callData, setCallData] = useState([]);
     const [timeframe, setTimeframe] = useState('year');
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const callData = await fetchCallData();
-                setCallData(callData);
-                renderChart(callData);
-            } catch (error) {
-                console.error('Error fetching call data:', error);
-            }
-        };
-
-        fetchData();
-
-        return () => {
-            if (chart) {
-                chart.destroy();
-            }
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeframe]);
-
-    const fetchCallData = async () => {
-        try {
-            const response = await fetch('/api/calls');
-            if (!response.ok) {
-                throw new Error('Failed to fetch call data');
-            }
-            const callData = await response.json();
-            return callData;
-        } catch (error) {
-            console.error('Error fetching call data:', error);
-            return [];
-        }
-    };
+        renderChart(calls);
+    }, [calls, timeframe]);
 
     const renderChart = (callData) => {
-        // Filter call data based on selected timeframe
         let startDate = new Date();
         switch (timeframe) {
             case 'week':
@@ -62,11 +30,11 @@ const HourCallChart = () => {
         const filteredData = callData.filter(call => {
             const callTime = new Date(call.initiatedTime);
             const callHour = callTime.getHours();
-            return callHour >= 9 && callHour <= 22; // 9am to 10pm
+            return callHour >= 9 && callHour <= 22;
         });
 
         const hourData = Array.from({ length: 14 }, (_, index) => {
-            const hour = (index + 9) % 24; // 9am to 10pm
+            const hour = (index + 9) % 24;
             const callsWithinHour = filteredData.filter(call => {
                 const callTime = new Date(call.initiatedTime);
                 const callHour = callTime.getHours();
@@ -124,7 +92,7 @@ const HourCallChart = () => {
                     },
                     plugins: {
                         legend: {
-                            display: false, // Hide legend
+                            display: false,
                         },
                     },
                 }

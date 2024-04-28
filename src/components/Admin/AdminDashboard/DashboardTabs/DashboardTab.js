@@ -1,15 +1,17 @@
-// components/Admin/AdminDashboard/DashboardTab.js
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import OnlineSaarthisTable from '../../OnlineSaarthisTable/OnlineSaarthisTable';
 import CallGraph from '../../CallGraph/CallGraph';
 import HourCallChart from '../../HourCallChart/HourCallChart';
 import ExpertGraph from '../../ExpertGraph/ExpertGraph';
-import DayGraph from '../../DayGraph/DayGraph';
+import DayGraph from '../../DaysGraph/DaysGraph';
 import LastFiveCallsTable from '../../LastFiveCallsTable/LastFiveCallsTable';
 import '../AdminDashboard.css';
-
+import useCallsData from '../../../../services/useCallsData';
+import useExpertManagement from '../../../../services/useExpertManagement';
 const DashboardTab = () => {
+  const { calls } = useCallsData();
+  const { experts } = useExpertManagement();
+
   const [onlineSaarthis, setOnlineSaarthis] = useState([]);
   const [totalCalls, setTotalCalls] = useState([]);
   const [successfulCalls, setSuccessfulCalls] = useState([]);
@@ -17,76 +19,43 @@ const DashboardTab = () => {
   const [currentDayTotalCalls, setCurrentDayTotalCalls] = useState(0);
   const [averageCallDuration, setAverageCallDuration] = useState(0);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const [callsResponse, successfulCallsResponse] = await Promise.all([
-        axios.get('/api/calls'),
-        axios.get('/api/successful-calls')
-      ]);
+  const fetchOnlineSaarthis = useCallback(() => {
+    const onlineExperts = experts.filter(expert => expert.status === 'online');
+    setOnlineSaarthis(onlineExperts);
+  }, [experts]);
 
-      const callsData = callsResponse.data;
-      const successfulCallsData = successfulCallsResponse.data;
+  const calculateStatistics = useCallback(() => {
+    const currentDate = new Date().toLocaleDateString('en-US');
+    const currentDaySuccessfulCallsCount = calls.filter(call => {
+      const callDate = new Date(call.initiatedTime).toLocaleDateString('en-US');
+      return callDate === currentDate && call.status === 'successfull';
+    }).length;
 
-      setTotalCalls(callsData);
-      setSuccessfulCalls(successfulCallsData);
+    const currentDayTotalCallsCount = calls.filter(call => {
+      const callDate = new Date(call.initiatedTime).toLocaleDateString('en-US');
+      return callDate === currentDate;
+    }).length;
 
-      const currentDate = new Date().toLocaleString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      }).split(',')[0];
+    setCurrentDaySuccessfulCalls(currentDaySuccessfulCallsCount);
+    setCurrentDayTotalCalls(currentDayTotalCallsCount);
 
-      const currentDaySuccessfulCallsCount = successfulCallsData.filter(call => {
-        const callDate = new Date(call.initiatedTime).toLocaleString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        }).split(',')[0];
-        return callDate === currentDate;
-      }).length;
+    const successfulCallsData = calls.filter(call => call.status === 'successfull');
+    const totalDurationSeconds = successfulCallsData.reduce((total, call) => {
+      const [hours, minutes, seconds] = call.duration.split(':').map(Number);
+      const durationInSeconds = hours * 3600 + minutes * 60 + seconds;
+      return total + durationInSeconds;
+    }, 0);
 
-      const currentDayTotalCallsCount = callsData.filter(call => {
-        const callDate = new Date(call.initiatedTime).toLocaleString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        }).split(',')[0];
-        return callDate === currentDate;
-      }).length;
-
-      setCurrentDaySuccessfulCalls(currentDaySuccessfulCallsCount);
-      setCurrentDayTotalCalls(currentDayTotalCallsCount);
-
-      const totalDurationSeconds = successfulCallsData.reduce((total, call) => {
-        const [hours, minutes, seconds] = call.duration.split(':').map(Number);
-        const durationInSeconds = hours * 3600 + minutes * 60 + seconds;
-        return total + durationInSeconds;
-      }, 0);
-
-      const averageDuration = totalDurationSeconds / successfulCallsData.length;
-      setAverageCallDuration(averageDuration);
-
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }, []);
+    const averageDuration = totalDurationSeconds / successfulCallsData.length;
+    setAverageCallDuration(averageDuration);
+    setTotalCalls(calls);
+    setSuccessfulCalls(successfulCallsData);
+  }, [calls]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  useEffect(() => {
-    const fetchOnlineSaarthis = async () => {
-        try {
-            const response = await axios.get('/api/online-saarthis');
-            setOnlineSaarthis(response.data);
-        } catch (error) {
-            console.error('Error fetching online Saarthis:', error);
-        }
-    };
-
     fetchOnlineSaarthis();
-}, []);
+    calculateStatistics();
+  }, [fetchOnlineSaarthis, calculateStatistics]);
 
   const formatDuration = (durationInSeconds) => {
     const hours = Math.floor(durationInSeconds / 3600);

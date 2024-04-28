@@ -10,14 +10,12 @@ const ScrollToBottomButton = () => {
         const windowHeight = window.innerHeight;
         const scrollHeight = document.documentElement.scrollHeight;
 
-        // Check if user has scrolled past half the window height
         if (scrollTop > windowHeight / 2) {
             setShowUpArrow(true);
         } else {
             setShowUpArrow(false);
         }
 
-        // Check if user has scrolled to the bottom
         if (scrollTop + windowHeight >= scrollHeight) {
             setShowUpArrow(true);
         } else {

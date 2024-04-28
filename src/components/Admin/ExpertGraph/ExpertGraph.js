@@ -1,54 +1,24 @@
 // ExpertGraph.js
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
-import './ExpertGraph.css'; // Import CSS file for styling
+import './ExpertGraph.css';
+import useExpertManagement from '../../../services/useExpertManagement';
+import useCallsData from '../../../services/useCallsData';
 
 const ExpertGraph = () => {
-  const [callData, setCallData] = useState([]);
-  const [expertData, setExpertData] = useState({});
+  const { experts, fetchNewExperts } = useExpertManagement();
+  const { calls } = useCallsData();
   const [chart, setChart] = useState(null);
-  const [timeframe, setTimeframe] = useState('year'); // Default timeframe is 'year'
+  const [timeframe, setTimeframe] = useState('year');
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [callDataResponse, expertDataResponse] = await Promise.all([
-          fetchCallData(),
-          fetchExpertData()
-        ]);
-
-        setCallData(callDataResponse);
-        setExpertData(expertDataResponse);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (callData.length > 0 && Object.keys(expertData).length > 0) {
-      renderChart(callData, expertData);
+    if (calls.length > 0 && experts.length > 0) {
+      renderChart(calls, experts);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callData, expertData, timeframe]); // Update the chart when timeframe changes
+  }, [calls, experts, timeframe]);
 
-  const fetchCallData = async () => {
-    try {
-      const response = await fetch('/api/successful-calls');
-      if (!response.ok) {
-        throw new Error('Failed to fetch call data');
-      }
-      const callData = await response.json();
-      return filterCallDataByTimeframe(callData);
-    } catch (error) {
-      console.error('Error fetching call data:', error);
-      return [];
-    }
-  };
-
-  const filterCallDataByTimeframe = (callData) => {
+  const filterCallsByTimeframe = (callData) => {
     let startDate = new Date();
     switch (timeframe) {
       case 'week':
@@ -67,47 +37,25 @@ const ExpertGraph = () => {
     return callData.filter(call => new Date(call.initiatedTime) > startDate);
   };
 
-  const fetchExpertData = async () => {
-    try {
-      const response = await fetch('/api/experts');
-      if (!response.ok) {
-        throw new Error('Failed to fetch expert data');
-      }
-      const expertData = await response.json();
-      return expertData.reduce((acc, expert) => {
-        acc[expert._id] = expert; // Assuming expert._id is unique
-        return acc;
-      }, {});
-    } catch (error) {
-      console.error('Error fetching expert data:', error);
-      return {};
-    }
-  };
-
   const renderChart = (callData, expertData) => {
-    const filteredCallData = filterCallDataByTimeframe(callData);
+    const filteredCalls = filterCallsByTimeframe(callData);
+    const successfulCalls = filteredCalls.filter(call => call.status === 'successfull');
 
     const expertCalls = {};
 
-    filteredCallData.forEach((call) => {
+    successfulCalls.forEach((call) => {
       const expertId = call.expert;
-      const expert = expertData[expertId];
+      const expert = expertData.find(expert => expert._id === expertId);
       if (expert) {
         const expertName = expert.name;
         expertCalls[expertName] = (expertCalls[expertName] || 0) + 1;
       }
     });
 
-    // Convert object to array for sorting
     const chartData = Object.entries(expertCalls);
-
-    // Sort the chart data in descending order of counts
     chartData.sort((a, b) => b[1] - a[1]);
-
-    // Extract labels and counts after sorting
     const labels = chartData.map((data) => data[0]);
     const counts = chartData.map((data) => data[1]);
-
     const ctx = document.getElementById('expertCallChart');
 
     if (chart) {
@@ -117,7 +65,7 @@ const ExpertGraph = () => {
     if (ctx) {
       setChart(
         new Chart(ctx, {
-          type: 'bar', // Change type to horizontalBar
+          type: 'bar',
           data: {
             labels: labels,
             datasets: [
@@ -168,7 +116,7 @@ const ExpertGraph = () => {
   return (
     <div className="chart-container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h2 style={{margin: "0"}}>Number of Calls per Expert</h2>
+        <h2 style={{margin: "0"}}>Number of Successful Calls per Expert</h2>
         <div className='drop-down'>
           <label>
             <select value={timeframe} onChange={handleTimeframeChange}>

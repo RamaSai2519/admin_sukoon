@@ -24,7 +24,7 @@ const ErrorLogsComponent = () => {
                         {errorLogs.map((log, index) => (
                             <div className="grid-tile-1">
                             <li key={index} style={{padding: '10px'}}>
-                                <strong>Time:</strong> {log.time} <br /><br /> <strong>Error Message:</strong> {log.message}
+                                <strong>Time:</strong> {log.time} <br /><br /> <strong></strong> {log.message}
                             </li>
                             </div>
                         ))}

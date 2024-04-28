@@ -1,46 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import useCallsData from '../../../../services/useCallsData';
+import useExpertManagement from '../../../../services/useExpertManagement';
 
 const ExpertDayList = () => {
-    const [experts, setExperts] = useState([]);
+    const { experts } = useExpertManagement();
+    const { calls } = useCallsData();
     const [sortConfig, setSortConfig] = useState({
         key: '',
         direction: ''
     });
 
     useEffect(() => {
-        fetchAllExperts();
     }, []);
-
-    const fetchAllExperts = async () => {
-        try {
-            const expertsResponse = await axios.get('/api/experts');
-            const callsResponse = await axios.get('/api/all-calls');
-
-            const expertsData = expertsResponse.data;
-            const callsData = callsResponse.data;
-
-            const currentDate = new Date().toISOString().split('T')[0];
-
-            const callsDataCurrentDay = callsData.filter(call => {
-                const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
-                return callDate === currentDate;
-            });
-
-            const expertsWithCallsData = expertsData.map(expert => {
-                const expertCalls = callsDataCurrentDay.filter(call => call.expert === expert._id);
-                const successfulCalls = expertCalls.filter(call => call.status === 'successfull').length;
-                const failedCalls = expertCalls.filter(call => call.status !== 'successfull').length;
-                const avgCallsPerDay = calculateAvgCallsPerDay(expertCalls);
-                return { ...expert, successfulCalls, failedCalls, avgCallsPerDay };
-            });
-
-            setExperts(expertsWithCallsData);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
 
     const handleSort = (key) => {
         let direction = 'ascending';
@@ -111,22 +83,33 @@ const ExpertDayList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {experts.map((expert) => (
-                        <tr key={expert._id} className="row">
-                            <td>{expert.name}</td>
-                            <td>{expert.successfulCalls}</td>
-                            <td>{expert.failedCalls}</td>
-                            <td>{expert.avgCallsPerDay.toFixed(2)}</td>
-                            <td>{expert.score}</td>
-                            <td>{expert.loggedInHours !== undefined ? expert.loggedInHours.toFixed(2) : '-'}</td>
-                            <td>{expert.status}</td>
-                            <td>
-                                <Link to={`/experts/${expert._id}`} className="view-details-link">
-                                    View
-                                </Link>
-                            </td>
-                        </tr>
-                    ))}
+                    {experts.map((expert) => {
+                        const currentDate = new Date().toISOString().split('T')[0];
+                        const expertCalls = calls.filter(call => call.expert === expert._id);
+                        const callsDataCurrentDay = expertCalls.filter(call => {
+                            const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
+                            return callDate === currentDate;
+                        });
+                        const successfulCalls = callsDataCurrentDay.filter(call => call.status === 'successfull').length;
+                        const failedCalls = callsDataCurrentDay.filter(call => call.status !== 'successfull').length;
+                        const avgCallsPerDay = calculateAvgCallsPerDay(expertCalls);
+                        return (
+                            <tr key={expert._id} className="row">
+                                <td>{expert.name}</td>
+                                <td>{successfulCalls}</td>
+                                <td>{failedCalls}</td>
+                                <td>{avgCallsPerDay.toFixed(2)}</td>
+                                <td>{expert.score}</td>
+                                <td>{expert.loggedInHours !== undefined ? expert.loggedInHours.toFixed(2) : '-'}</td>
+                                <td>{expert.status}</td>
+                                <td>
+                                    <Link to={`/experts/${expert._id}`} className="view-details-link">
+                                        View
+                                    </Link>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
             <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>

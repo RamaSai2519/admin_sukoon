@@ -28,7 +28,15 @@ const AdminLogin = ({ onLogin }) => {
                 </div>
                 <div>
                     <label>Password:</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleLogin(); // Assuming handleLogin is a function to handle login
+                            }
+                        }}
+                    />
                 </div>
                 <button onClick={handleLogin}>Login</button>
                 {error && <p>{error}</p>}

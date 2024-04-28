@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
-import './UserList.css'
+import './UserList.css';
+import useUserManagement from '../../../services/useUserManagement';
 
 const UsersList = () => {
-  const [users, setUsers] = useState([]);
+  const { users, fetchNewUsers } = useUserManagement();
   const [filters, setFilters] = useState({
     user: '',
     city: '',
@@ -14,44 +14,6 @@ const UsersList = () => {
     key: '',
     direction: '',
   });
-
-  useEffect(() => {
-    const cachedUsers = JSON.parse(localStorage.getItem('users'));
-    if (cachedUsers) {
-      setUsers(cachedUsers);
-      fetchNewUsers(cachedUsers);
-    } else {
-      fetchAllUsers();
-    }
-  }, []);
-
-  const fetchAllUsers = async () => {
-    try {
-      const response = await axios.get('/api/users');
-      setUsers(response.data.reverse());
-      localStorage.setItem('users', JSON.stringify(response.data.reverse()));
-    } catch (error) {
-      console.error('Error fetching all users:', error);
-    }
-  };
-
-  const fetchNewUsers = async (cachedUsers) => {
-    const latestTimestamp = cachedUsers.length > 0 ? cachedUsers[0].createdDate : 0;
-    try {
-      const response = await axios.get(`/api/new-users?timestamp=${latestTimestamp}`);
-      const newData = response.data;
-
-      if (newData.length > 0) {
-        // Sort the merged data in descending order by createdDate
-        const mergedData = [...newData, ...users].sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-        setUsers(mergedData);
-        localStorage.setItem('users', JSON.stringify(mergedData));
-        console.log('New users fetched');
-      }
-    } catch (error) {
-      console.error('Error fetching new users:', error);
-    }
-  };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +38,6 @@ const UsersList = () => {
     setSortConfig({ key, direction });
   };
 
-  // Filter the Users based on the filters state
   let filteredUsers = users.filter((user) => {
     return (
       user.name.toLowerCase().includes(filters.user.toLowerCase()) &&
@@ -84,7 +45,6 @@ const UsersList = () => {
     );
   });
 
-  // Sorting the filtered Users based on sortConfig state
   if (sortConfig.key) {
     filteredUsers.sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -97,7 +57,6 @@ const UsersList = () => {
     });
   }
 
-  // Function to render sort arrow
   const renderSortArrow = (key) => {
     if (sortConfig.key === key) {
       return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';

@@ -29,6 +29,11 @@
 .details-container h3 {
     margin-bottom: 10px;
     font-size: 20px;
+    color:darkgrey;
+}
+
+.details-container h2 {
+    margin-bottom: 0;
 }
 
 .update-button {
