@@ -20,6 +20,7 @@ const ErrorLogsComponent = () => {
         setDarkMode(newDarkMode);
         // Store darkMode in localStorage
         localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+        window.location.reload();
     };
 
     useEffect(() => {
