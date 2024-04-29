@@ -33,7 +33,7 @@ const AdminLogin = ({ onLogin }) => {
                         onChange={(e) => setPassword(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                handleLogin(); // Assuming handleLogin is a function to handle login
+                                handleLogin();
                             }
                         }}
                     />

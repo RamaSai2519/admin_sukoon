@@ -9,10 +9,10 @@ const HourCallChart = () => {
 
     useEffect(() => {
         renderChart(calls);
-    }, [calls, timeframe]); // Added timeframe as a dependency
+    }, [calls, timeframe]);
 
     const renderChart = (callData) => {
-        const filteredData = filterDataByTimeframe(callData); // Filter data based on timeframe
+        const filteredData = filterDataByTimeframe(callData);
 
         const hourData = Array.from({ length: 14 }, (_, index) => {
             const hour = (index + 9) % 24;

@@ -68,7 +68,7 @@ const CallGraph = () => {
   }, []);
 
   useEffect(() => {
-    if (chart && chart.canvas) { // Ensure chart and chart canvas exist
+    if (chart && chart.canvas) { 
       const filteredData = filterData(calls);
       const { labels, counts } = processChartData(filteredData);
 
@@ -76,10 +76,9 @@ const CallGraph = () => {
       chart.data.datasets[0].data = counts;
       chart.update();
     }
-  }, [calls, chart]); // Added chart as a dependency
+  }, [calls, chart]); 
 
   useEffect(() => {
-    // Call the update function when timeframe changes
     if (chart && chart.canvas) {
       const filteredData = filterData(calls);
       const { labels, counts } = processChartData(filteredData);
@@ -88,7 +87,7 @@ const CallGraph = () => {
       chart.data.datasets[0].data = counts;
       chart.update();
     }
-  }, [timeframe]); // Added timeframe as a dependency
+  }, [timeframe]);
 
   const filterData = (callData) => {
     let startDate = new Date();

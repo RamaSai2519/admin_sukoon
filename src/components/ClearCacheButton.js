@@ -1,5 +1,7 @@
 // ClearCacheButton.js
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
 const ClearCacheButton = () => {
   const handleClearCache = () => {
@@ -15,7 +17,9 @@ const ClearCacheButton = () => {
   };
 
   return (
-    <button className="clear-cache-button" onClick={handleClearCache}>.</button>
+    <button className="clear-cache-button" onClick={handleClearCache}>
+      <FontAwesomeIcon icon={faSyncAlt} />
+    </button>
   );
 };
 

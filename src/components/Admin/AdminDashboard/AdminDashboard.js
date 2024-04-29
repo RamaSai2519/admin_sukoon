@@ -5,6 +5,7 @@ import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
 import UsersTab from './DashboardTabs/UsersTab';
 import ScrollBottom from './ScrollBottom';
 import './AdminDashboard.css';
+import socketIOClient from 'socket.io-client';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import ErrorLogsComponent from './DashboardTabs/Notifications';
@@ -67,6 +68,16 @@ const AdminDashboard = () => {
         console.log('Error retrieving token:', err);
       });
 
+    const socket = socketIOClient('/api');
+
+    socket.on('error_notification', (data) => {
+      console.log('Received error notification:', data);
+      setErrors((prevErrors) => [...prevErrors, data]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {

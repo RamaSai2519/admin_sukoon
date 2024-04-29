@@ -21,7 +21,6 @@ const ExpertDetails = () => {
   const [allCategories, setAllCategories] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [isOnline, setIsOnline] = useState(false); // New state for status toggle
 
   const dropdownRef = useRef(null);
 
@@ -83,7 +82,7 @@ const ExpertDetails = () => {
     setShowDropdown(prevShowDropdown => !prevShowDropdown);
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (newStatus) => {
     axios.put(`/api/experts/${expertId}`, {
       name,
       phoneNumber,
@@ -91,7 +90,7 @@ const ExpertDetails = () => {
       description,
       categories,
       profile,
-      status,
+      status: newStatus,
       languages,
       score,
       calls_share: callsShare,
@@ -100,8 +99,10 @@ const ExpertDetails = () => {
     })
       .then(response => {
         setExpert(response.data);
-        window.alert('Expert details updated successfuly!');
         setEditMode(false);
+        setStatus(newStatus);
+        window.alert('Expert details updated successfuly!');
+        localStorage.removeItem('experts');
       })
       .catch(error => {
         console.error('Error updating expert details:', error);
@@ -222,9 +223,13 @@ const ExpertDetails = () => {
             <div className='grid-tile-1'>
               <h3>Status</h3>
               <div className="toggle-container">
-              <h2 className="status-label">{isOnline ? 'Online' : 'Offline'}</h2>
+                <h2 className="status-label">{status === 'online' ? 'Online' : 'Offline'}</h2>
                 <label className="switch">
-                  <input type="checkbox" checked={isOnline} onChange={handleUpdate} />
+                  <input
+                    type="checkbox"
+                    checked={status === 'online'}
+                    onChange={() => handleUpdate(status === 'offline' ? 'online' : 'offline')}
+                  />
                   <span className="slider round"></span>
                 </label>
               </div>
