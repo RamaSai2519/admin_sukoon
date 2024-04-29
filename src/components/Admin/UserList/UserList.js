@@ -5,7 +5,7 @@ import './UserList.css';
 import useUserManagement from '../../../services/useUserManagement';
 
 const UsersList = () => {
-  const { users, fetchNewUsers } = useUserManagement();
+  const { users } = useUserManagement();
   const [filters, setFilters] = useState({
     user: '',
     city: '',
@@ -40,8 +40,8 @@ const UsersList = () => {
 
   let filteredUsers = users.filter((user) => {
     return (
-      user.name.toLowerCase().includes(filters.user.toLowerCase()) &&
-      user.city.toLowerCase().includes(filters.city.toLowerCase())
+      (user.name && user.name.toLowerCase().includes(filters.user.toLowerCase())) &&
+    (user.city && user.city.toLowerCase().includes(filters.city.toLowerCase()))
     );
   });
 

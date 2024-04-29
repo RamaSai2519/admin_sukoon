@@ -57,7 +57,7 @@ const useUserManagement = () => {
 
 
 
-  return { users, fetchNewUsers };
+  return { users };
 };
 
 export default useUserManagement;
