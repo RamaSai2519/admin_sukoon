@@ -3,23 +3,29 @@ import axios from 'axios';
 
 const ErrorLogsComponent = () => {
     const [errorLogs, setErrorLogs] = useState([]);
-    // Retrieve darkMode from localStorage or default to false
-    const [darkMode, setDarkMode] = useState(
-        localStorage.getItem('darkMode') === 'true'
-    );
+    // Retrieve darkMode from localStorage or default to the device theme
+    const [darkMode, setDarkMode] = useState(() => {
+        const localStorageDarkMode = localStorage.getItem('darkMode');
+        // Check if dark mode is explicitly set in localStorage
+        if (localStorageDarkMode !== null) {
+            return JSON.parse(localStorageDarkMode);
+        } else {
+            // Otherwise, use the device theme
+            return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+    });
 
     const toggleDarkMode = () => {
         const newDarkMode = !darkMode;
         setDarkMode(newDarkMode);
+        // Store darkMode in localStorage
         localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
-        document.body.classList.toggle('dark-mode', newDarkMode);
-        window.location.reload();
     };
 
     useEffect(() => {
         const fetchErrorLogs = async () => {
             try {
-                const response = await axios.get('/api/errorlogs');
+                const response = await axios.get('http://15.206.127.248/api/errorlogs');
                 setErrorLogs(response.data.reverse());
             } catch (error) {
                 console.error('Error fetching error logs:', error);

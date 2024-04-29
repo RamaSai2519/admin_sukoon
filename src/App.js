@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -19,10 +19,17 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
-  // Retrieve darkMode from localStorage or default to false
-  const [darkMode, setDarkMode] = useState(
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+  // Retrieve darkMode from localStorage or default to the device theme
+  const [darkMode, setDarkMode] = useState(() => {
+    const localStorageDarkMode = localStorage.getItem('darkMode');
+    // Check if dark mode is explicitly set in localStorage
+    if (localStorageDarkMode !== null) {
+      return JSON.parse(localStorageDarkMode);
+    } else {
+      // Otherwise, use the device theme
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+  });
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -38,6 +45,7 @@ const App = () => {
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
+    // Store darkMode in localStorage
     localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
   };
 
@@ -54,29 +62,27 @@ const App = () => {
     <div className={darkMode ? 'App dark-mode' : 'App'}>
       <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       <div>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            {isLoggedIn ? (
-              <>
-                <Route path="/" element={<Navigate to="/calls/dashboard" />} />
-                <Route path="/calls" element={<CallList />} />
-                <Route path="/users" element={<UsersList />} />
-                <Route path="/experts" element={<ExpertsList />} />
-                <Route path="/calls/:callId" element={<CallDetails />} />
-                <Route path="/users/:userId" element={<UserDetails />} />
-                <Route path="/experts/:expertId" element={<ExpertDetails />} />
-                <Route path="/calls/dashboard" element={<AdminDashboard />} />
-                <Route path="*" element={<Navigate to="/calls/dashboard" />} />
-              </>
-            ) : (
-              <>
-                <Route path="/" element={<AdminLogin onLogin={handleLogin} />} />
-                <Route path="/calls/*" element={<Navigate to="/" />} />
-                <Route path="*" element={<Navigate to="/" />} />
-              </>
-            )}
-          </Routes>
-        </Suspense>
+        <Routes>
+          {isLoggedIn ? (
+            <>
+              <Route path="/" element={<Navigate to="/calls/dashboard" />} />
+              <Route path="/calls" element={<CallList />} />
+              <Route path="/users" element={<UsersList />} />
+              <Route path="/experts" element={<ExpertsList />} />
+              <Route path="/calls/:callId" element={<CallDetails />} />
+              <Route path="/users/:userId" element={<UserDetails />} />
+              <Route path="/experts/:expertId" element={<ExpertDetails />} />
+              <Route path="/calls/dashboard" element={<AdminDashboard />} />
+              <Route path="*" element={<Navigate to="/calls/dashboard" />} />
+            </>
+          ) : (
+            <>
+              <Route path="/" element={<AdminLogin onLogin={handleLogin} />} />
+              <Route path="/calls/*" element={<Navigate to="/" />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </>
+          )}
+        </Routes>
       </div>
       <Analytics />
       <SpeedInsights />
