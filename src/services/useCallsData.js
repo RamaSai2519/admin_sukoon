@@ -29,11 +29,11 @@ const useCallsData = () => {
     try {
       const response = await axios.get(`/api/new-calls?timestamp=${latestTimestamp}`);
       const newData = response.data;
-      if (newData.length > 0) {
-        const filteredNewData = newData.filter(newCall => !cachedCalls.some(oldCall => oldCall.id === newCall.id));
+      console.log(newData);
+      const filteredNewData = newData.filter(newCall => !cachedCalls.some(cachedCall => cachedCall.initiatedTime === newCall.initiatedTime));
+      if (filteredNewData.length > 0) {
         const mergedData = [...cachedCalls, ...filteredNewData];
         mergedData.sort((a, b) => b.initiatedTime - a.initiatedTime);
-
         setCalls(mergedData);
         localStorage.setItem('calls', JSON.stringify(mergedData));
       }
@@ -41,6 +41,7 @@ const useCallsData = () => {
       console.error('Error fetching new calls:', error);
     }
   };
+
 
 
   return { calls };
