@@ -40,6 +40,7 @@ const UserDetails = () => {
         setUser(response.data);
         window.alert('User details updated successfuly.');
         setEditMode(false);
+        localStorage.removeItem('users')
       })
       .catch(error => {
         console.error('Error updating user details:', error);
