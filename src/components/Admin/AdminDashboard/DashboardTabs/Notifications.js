@@ -13,6 +13,7 @@ const ErrorLogsComponent = () => {
         setDarkMode(newDarkMode);
         localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
         document.body.classList.toggle('dark-mode', newDarkMode);
+        window.location.reload();
     };
 
     useEffect(() => {

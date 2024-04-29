@@ -21,8 +21,7 @@ const App = () => {
   );
   // Retrieve darkMode from localStorage or default to false
   const [darkMode, setDarkMode] = useState(
-    window.matchMedia('(prefers-color-scheme: dark)').matches &&
-    localStorage.getItem('darkMode') === 'true'
+    window.matchMedia('(prefers-color-scheme: dark)').matches
   );
 
   const handleLogin = () => {
