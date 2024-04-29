@@ -90,8 +90,8 @@ const ExpertDayList = () => {
                             const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
                             return callDate === currentDate;
                         });
-                        const successfulCalls = callsDataCurrentDay.filter(call => call.status === 'successfull').length;
-                        const failedCalls = callsDataCurrentDay.filter(call => call.status !== 'successfull').length;
+                        const successfulCalls = callsDataCurrentDay.filter(call => call.status === 'successful').length;
+                        const failedCalls = callsDataCurrentDay.filter(call => call.status !== 'successful').length;
                         const avgCallsPerDay = calculateAvgCallsPerDay(expertCalls);
                         return (
                             <tr key={expert._id} className="row">

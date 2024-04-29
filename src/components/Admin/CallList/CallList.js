@@ -41,7 +41,7 @@ const CallsTable = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'successfull':
+      case 'successful':
         return 'successful-row';
       case 'initiated':
         return 'initiated-row';

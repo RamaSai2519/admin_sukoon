@@ -9,29 +9,10 @@ const HourCallChart = () => {
 
     useEffect(() => {
         renderChart(calls);
-    }, [calls, timeframe]);
+    }, [calls, timeframe]); // Added timeframe as a dependency
 
     const renderChart = (callData) => {
-        let startDate = new Date();
-        switch (timeframe) {
-            case 'week':
-                startDate.setDate(startDate.getDate() - 7);
-                break;
-            case 'month':
-                startDate.setMonth(startDate.getMonth() - 1);
-                break;
-            case 'year':
-                startDate.setFullYear(startDate.getFullYear() - 1);
-                break;
-            default:
-                startDate.setFullYear(startDate.getFullYear() - 1);
-                break;
-        }
-        const filteredData = callData.filter(call => {
-            const callTime = new Date(call.initiatedTime);
-            const callHour = callTime.getHours();
-            return callHour >= 9 && callHour <= 22;
-        });
+        const filteredData = filterDataByTimeframe(callData); // Filter data based on timeframe
 
         const hourData = Array.from({ length: 14 }, (_, index) => {
             const hour = (index + 9) % 24;
@@ -98,6 +79,25 @@ const HourCallChart = () => {
                 }
             }));
         }
+    };
+
+    const filterDataByTimeframe = (callData) => {
+        let startDate = new Date();
+        switch (timeframe) {
+            case 'week':
+                startDate.setDate(startDate.getDate() - 7);
+                break;
+            case 'month':
+                startDate.setMonth(startDate.getMonth() - 1);
+                break;
+            case 'year':
+                startDate.setFullYear(startDate.getFullYear() - 1);
+                break;
+            default:
+                startDate.setFullYear(startDate.getFullYear() - 1);
+                break;
+        }
+        return callData.filter(call => new Date(call.initiatedTime) > startDate);
     };
 
     const handleTimeframeChange = (event) => {

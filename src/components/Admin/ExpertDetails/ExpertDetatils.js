@@ -100,7 +100,7 @@ const ExpertDetails = () => {
     })
       .then(response => {
         setExpert(response.data);
-        window.alert('Expert details updated successfully!');
+        window.alert('Expert details updated successfuly!');
         setEditMode(false);
       })
       .catch(error => {

@@ -82,8 +82,8 @@ const ExpertTotalList = () => {
                 <tbody>
                     {experts.map((expert) => {
                         const expertCalls = calls.filter(call => call.expert === expert._id);
-                        const successfulCalls = expertCalls.filter(call => call.status === 'successfull').length;
-                        const failedCalls = expertCalls.filter(call => call.status !== 'successfull').length;
+                        const successfulCalls = expertCalls.filter(call => call.status === 'successful').length;
+                        const failedCalls = expertCalls.filter(call => call.status !== 'successful').length;
                         const avgCallsPerDay = calculateAvgCallsPerDay(expertCalls);
                         return (
                             <tr key={expert._id} className="row">

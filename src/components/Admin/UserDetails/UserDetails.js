@@ -11,7 +11,7 @@ const UserDetails = () => {
   const [city, setCity] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [numberOfCalls, setNumberOfCalls] = useState('');
-  const [editMode, setEditMode] = useState(false); // State to track edit mode
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     axios.get(`/api/users/${userId}`)
@@ -38,8 +38,8 @@ const UserDetails = () => {
     })
       .then(response => {
         setUser(response.data);
-        window.alert('User details updated successfully.');
-        setEditMode(false); // Exiting edit mode after successful update
+        window.alert('User details updated successfuly.');
+        setEditMode(false);
       })
       .catch(error => {
         console.error('Error updating user details:', error);

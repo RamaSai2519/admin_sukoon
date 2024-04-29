@@ -157,7 +157,9 @@ const Histograms = ({ usersData }) => {
                         </div>
                         <div className="grid-tile-1">
                             <h3>Users per Age</h3>
+                            <div className="chart-wrapper">
                             <Bar data={ageGroupData} options={options} />
+                            </div>
                         </div>
                     </div>
                 </div>

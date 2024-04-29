@@ -23,7 +23,7 @@ const UsersTab = () => {
     const callCounts = {};
     calls.forEach(call => {
       const userId = call.user;
-      if (call.status === 'successfull') {
+      if (call.status === 'successful') {
         callCounts[userId] = (callCounts[userId] || 0) + 1;
       }
     });

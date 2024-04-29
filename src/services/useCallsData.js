@@ -16,7 +16,8 @@ const useCallsData = () => {
     };
 
     const cachedCalls = JSON.parse(localStorage.getItem('calls'));
-    if (cachedCalls) {
+    console.log(cachedCalls);
+    if (cachedCalls != null) {
       setCalls(cachedCalls);
       fetchNewCalls(cachedCalls);
     } else {
@@ -29,7 +30,6 @@ const useCallsData = () => {
     try {
       const response = await axios.get(`/api/new-calls?timestamp=${latestTimestamp}`);
       const newData = response.data;
-      console.log(newData);
       const filteredNewData = newData.filter(newCall => !cachedCalls.some(cachedCall => cachedCall.initiatedTime === newCall.initiatedTime));
       if (filteredNewData.length > 0) {
         const mergedData = [...cachedCalls, ...filteredNewData];

@@ -39,7 +39,7 @@ const ExpertGraph = () => {
 
   const renderChart = (callData, expertData) => {
     const filteredCalls = filterCallsByTimeframe(callData);
-    const successfulCalls = filteredCalls.filter(call => call.status === 'successfull');
+    const successfulCalls = filteredCalls.filter(call => call.status === 'successful');
 
     const expertCalls = {};
 

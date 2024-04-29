@@ -28,7 +28,7 @@ const DashboardTab = () => {
     const currentDate = new Date().toLocaleDateString('en-US');
     const currentDaySuccessfulCallsCount = calls.filter(call => {
       const callDate = new Date(call.initiatedTime).toLocaleDateString('en-US');
-      return callDate === currentDate && call.status === 'successfull';
+      return callDate === currentDate && call.status === 'successful';
     }).length;
 
     const currentDayTotalCallsCount = calls.filter(call => {
@@ -39,7 +39,7 @@ const DashboardTab = () => {
     setCurrentDaySuccessfulCalls(currentDaySuccessfulCallsCount);
     setCurrentDayTotalCalls(currentDayTotalCallsCount);
 
-    const successfulCallsData = calls.filter(call => call.status === 'successfull');
+    const successfulCallsData = calls.filter(call => call.status === 'successful');
     const totalDurationSeconds = successfulCallsData.reduce((total, call) => {
       const [hours, minutes, seconds] = call.duration.split(':').map(Number);
       const durationInSeconds = hours * 3600 + minutes * 60 + seconds;
@@ -79,7 +79,7 @@ const DashboardTab = () => {
       <div className="dashboard-tiles">
         <div className="dashboard-tile">
           <div className="grid-row">
-            <div className="grid-tile-1">
+            <div className="grid-tile-1" style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
               <h3>Successful Calls</h3>
               <h1>{successfulCalls.length}</h1>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -87,12 +87,12 @@ const DashboardTab = () => {
                 <p style={{ margin: 0 }}>&gt;1m</p>
               </div>
             </div>
-            <div className="grid-tile-1">
+            <div className="grid-tile-1" style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
               <h3>Total Calls</h3>
               <h1>{totalCalls.length}</h1>
               <h4>Today: {currentDayTotalCalls}</h4>
             </div>
-            <div className="grid-tile-1">
+            <div className="grid-tile-1" style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
               <h3>Avg. Duration</h3>
               <h1>{formatDuration(averageCallDuration)}</h1>
               <p style={{ textAlign: 'right', margin: '0' }}>&gt;1m</p>
@@ -106,11 +106,9 @@ const DashboardTab = () => {
         <div className='dashboard-tile'>
           <div className="grid">
             <div className='grid-tile-1'>
-              <h3>Call Graph</h3>
               <CallGraph />
             </div>
             <div className='grid-tile-1'>
-              <h3>Expert Graph</h3>
               <ExpertGraph />
               <p style={{ textAlign: 'right', margin: '0' }}>&gt;1m</p>
             </div>

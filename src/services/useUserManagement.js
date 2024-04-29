@@ -43,11 +43,10 @@ const useUserManagement = () => {
     try {
       const response = await axios.get(`/api/new-users?timestamp=${latestTimestamp}`);
       const newData = response.data;
-      if (newData.length > 0) {
-        const filteredNewData = newData.filter(newUser => !cachedUsers.some(oldUser => oldUser.id === newUser.id));
+      const filteredNewData = newData.filter(newUser => !cachedUsers.some(cachedUser => cachedUser.id === newUser.id));
+      if (filteredNewData.length > 0) {
         const mergedData = [...cachedUsers, ...filteredNewData];
         mergedData.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-
         setUsers(mergedData.reverse());
         localStorage.setItem('users', JSON.stringify(mergedData));
       }

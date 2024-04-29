@@ -12,7 +12,21 @@ const LastFiveCallsTable = () => {
   });
 
   useEffect(() => {
-    setLastFiveCalls(calls.slice(0, 5));
+    const todayCalls = calls.filter(call => {
+      const callDate = new Date(call.initiatedTime);
+      const today = new Date();
+      return (
+        callDate.getDate() === today.getDate() &&
+        callDate.getMonth() === today.getMonth() &&
+        callDate.getFullYear() === today.getFullYear()
+      );
+    });
+
+    if (todayCalls.length > 0) {
+      setLastFiveCalls(todayCalls);
+    } else {
+      setLastFiveCalls(calls.slice(0, 5));
+    }
   }, [calls]);
 
   const handleSort = (key) => {
@@ -25,7 +39,7 @@ const LastFiveCallsTable = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'successfull':
+      case 'successful':
         return 'successful-row';
       case 'initiated':
         return 'initiated-row';

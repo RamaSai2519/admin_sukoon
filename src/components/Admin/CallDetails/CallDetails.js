@@ -32,7 +32,7 @@ const CallDetails = () => {
                     "Conversation Score": response.newConversationScore
                 }));
                 setEditConversationScore(false);
-                window.alert("Conversation Score updated successfully!");
+                window.alert("Conversation Score updated successfuly!");
                 window.location.reload();
             })
             .catch(error => {

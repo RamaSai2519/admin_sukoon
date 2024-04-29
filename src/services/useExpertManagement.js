@@ -46,7 +46,7 @@ const useExpertManagement = () => {
       const response = await axios.get(`/api/new-experts?timestamp=${latestTimestamp}`);
       const newExperts = response.data;
       if (newExperts.length > 0) {
-        const mergedData = [...cachedExperts, ...newExperts];
+        const mergedData = [...cachedExperts, ...newExperts  ];
         mergedData.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
         setExperts(mergedData);
         localStorage.setItem('experts', JSON.stringify(mergedData));

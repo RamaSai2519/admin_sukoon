@@ -4,18 +4,18 @@ import React from 'react';
 const ClearCacheButton = () => {
   const handleClearCache = () => {
     const confirmation = window.confirm(
-      "Are you sure you want to clear all cached data? This will log you out."
+      "Are you sure you want to refresh all data?"
     );
     if (confirmation) {
-      localStorage.clear();
+      localStorage.removeItem('users');
+      localStorage.removeItem('experts');
+      localStorage.removeItem('calls');
       window.location.reload();
     }
   };
 
   return (
-    <button className="clear-cache-button" onClick={handleClearCache}>
-      .
-    </button>
+    <button className="clear-cache-button" onClick={handleClearCache}>.</button>
   );
 };
 

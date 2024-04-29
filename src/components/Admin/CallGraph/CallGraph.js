@@ -44,7 +44,7 @@ const CallGraph = () => {
               display: false,
             },
             ticks: {
-              callback: (value, index, values) => {
+              callback: (value) => {
                 return formatDateLabel(value);
               }
             }
@@ -68,15 +68,27 @@ const CallGraph = () => {
   }, []);
 
   useEffect(() => {
-    if (!chart) return;
+    if (chart && chart.canvas) { // Ensure chart and chart canvas exist
+      const filteredData = filterData(calls);
+      const { labels, counts } = processChartData(filteredData);
 
-    const filteredData = filterData(calls);
-    const { labels, counts } = processChartData(filteredData);
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = counts;
+      chart.update();
+    }
+  }, [calls, chart]); // Added chart as a dependency
 
-    chart.data.labels = labels;
-    chart.data.datasets[0].data = counts;
-    chart.update();
-  }, [calls, chart]);
+  useEffect(() => {
+    // Call the update function when timeframe changes
+    if (chart && chart.canvas) {
+      const filteredData = filterData(calls);
+      const { labels, counts } = processChartData(filteredData);
+
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = counts;
+      chart.update();
+    }
+  }, [timeframe]); // Added timeframe as a dependency
 
   const filterData = (callData) => {
     let startDate = new Date();
