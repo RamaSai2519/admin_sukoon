@@ -66,6 +66,7 @@ const UsersList = () => {
 
   return (
     <div className="table-container">
+      <div className='latest-wrapper'>
       <table className="users-table">
         <thead>
           <tr className="filter-row">
@@ -138,6 +139,7 @@ const UsersList = () => {
       <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
         <h1 className="users-button">View All Users</h1>
       </Link>
+      </div>
     </div>
   );
 };

@@ -1,11 +1,13 @@
-// components/Admin/AdminDashboard/Histograms.js
-import React, { useState, useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
-import '../AdminDashboard.css';
+import { useState, useEffect } from "react";
+import Chart from "chart.js/auto";
 
 const Histograms = ({ usersData }) => {
     const [usersPerCity, setUsersPerCity] = useState({});
     const [usersPerAgeGroup, setUsersPerAgeGroup] = useState({});
+    const [cityChart, setCityChart] = useState(null);
+    const [ageGroupChart, setAgeGroupChart] = useState(null);
+    const [showCounts, setShowCounts] = useState(false);
+    const [othersCities, setOthersCities] = useState([]);
 
     useEffect(() => {
         if (usersData && usersData.length > 0) {
@@ -14,20 +16,35 @@ const Histograms = ({ usersData }) => {
         }
     }, [usersData]);
 
+    // Function to calculate users per city
     const calculateUsersPerCity = (users) => {
         const cityCounts = {};
+        const othersCities = []; // Array to store cities grouped into "Others"
+
         users.forEach(user => {
             const city = user.city || 'Unknown';
             cityCounts[city] = (cityCounts[city] || 0) + 1;
         });
 
-        const sortedCities = Object.keys(cityCounts).sort((a, b) => {
-            const countComparison = cityCounts[b] - cityCounts[a];
-            if (countComparison !== 0) {
-                return countComparison;
-            }
-            return a.localeCompare(b);
-        });
+        const MIN_USERS_COUNT = 2;
+        let othersCount = 0;
+        const sortedCities = Object.keys(cityCounts)
+            .sort((a, b) => a.localeCompare(b))
+            .filter(city => {
+                if (cityCounts[city] === 1) {
+                    othersCount += 1;
+                    othersCities.push(city); // Store cities grouped into "Others"
+                    delete cityCounts[city];
+                    return false;
+                }
+                return true;
+            });
+
+        if (othersCount > 0) {
+            cityCounts['Others'] = othersCount;
+            sortedCities.push('Others');
+            othersCities.push(`Others (${othersCount})`);
+        }
 
         const sortedCityCounts = {};
         sortedCities.forEach(city => {
@@ -35,8 +52,11 @@ const Histograms = ({ usersData }) => {
         });
 
         setUsersPerCity(sortedCityCounts);
+        setOthersCities(othersCities); // Set state to store cities grouped into "Others"
     };
 
+
+    // Function to calculate users per age group
     const calculateUsersPerAgeGroup = (users) => {
         const ageGroupCounts = {
             'Under 40': 0,
@@ -75,73 +95,134 @@ const Histograms = ({ usersData }) => {
         setUsersPerAgeGroup(ageGroupCounts);
     };
 
-    const cityData = {
-        labels: Object.keys(usersPerCity),
-        datasets: [
-            {
-                label: 'Users per City',
-                data: Object.values(usersPerCity),
-                backgroundColor: '#FF6384',
-                borderColor: '#FF6384',
-                borderWidth: 0,
-                borderRadius: 20,
-                barPercentage: 0.7,
-                categoryPercentage: 0.7,
-                borderSkipped: false,
-            },
-        ],
-    };
+    useEffect(() => {
+        destroyCharts();
+        renderCharts();
+    }, [usersPerCity, usersPerAgeGroup]);
 
-    const ageGroupData = {
-        labels: Object.keys(usersPerAgeGroup),
-        datasets: [
-            {
-                label: 'Users per Age Group',
-                data: Object.values(usersPerAgeGroup),
-                backgroundColor: 'rgba(69, 120, 249, 1)',
-                borderColor: 'rgba(69, 120, 249, 1)',
-                borderWidth: 0,
-                borderRadius: 20,
-                barPercentage: 0.7,
-                categoryPercentage: 0.7,
-                borderSkipped: false,
-            },
-        ],
-    };
-
-    const options = {
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                }
-            },
-            y: {
-                grid: {
-                    display: false
-                }
-            }
-        },
-    };
-
-    const horizontalOptions = {
-        ...options,
-        indexAxis: 'x',
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        elements: {
-            bar: {
-                borderWidth: 2,
-            }
+    // Function to destroy charts
+    const destroyCharts = () => {
+        if (cityChart) {
+            cityChart.destroy();
+            setCityChart(null);
         }
+        if (ageGroupChart) {
+            ageGroupChart.destroy();
+            setAgeGroupChart(null);
+        }
+    };
+
+    // Function to render charts
+    const renderCharts = () => {
+        const cityChartCanvas = document.getElementById('cityChart');
+        const ageGroupChartCanvas = document.getElementById('ageGroupChart');
+
+        setCityChart(renderCityChart(cityChartCanvas));
+        setAgeGroupChart(renderAgeGroupChart(ageGroupChartCanvas));
+    };
+
+    // Function to render city chart
+    const renderCityChart = (canvas) => {
+        const ctx = canvas.getContext('2d');
+        return new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(usersPerCity),
+                datasets: [{
+                    label: 'Users per City',
+                    data: Object.values(usersPerCity),
+                    backgroundColor: '#FF6384',
+                    borderColor: '#FF6384',
+                    borderWidth: 0,
+                    borderRadius: 20,
+                    barPercentage: 0.7,
+                    categoryPercentage: 0.7,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+            }
+        });
+    };
+
+    // Function to render age group chart
+    const renderAgeGroupChart = (canvas) => {
+        const ctx = canvas.getContext('2d');
+        return new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(usersPerAgeGroup),
+                datasets: [{
+                    label: 'Users per Age Group',
+                    data: Object.values(usersPerAgeGroup),
+                    backgroundColor: 'rgba(69, 120, 249, 1)',
+                    borderColor: 'rgba(69, 120, 249, 1)',
+                    borderWidth: 0,
+                    borderRadius: 20,
+                    barPercentage: 0.7,
+                    categoryPercentage: 0.7,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+            }
+        });
+    };
+
+    const renderCityTable = () => {
+        if (!showCounts) return null;
+        const othersEntries = othersCities.map((city, index) => (
+            <tr key={index}>
+                <td>{city}</td>
+            </tr>
+        ));
+
+        return (
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cities with one User only</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {othersEntries}
+                </tbody>
+            </table>
+        );
     };
 
     return (
@@ -150,15 +231,21 @@ const Histograms = ({ usersData }) => {
                 <div className="dashboard-tile">
                     <div className='grid'>
                         <div className="grid-tile-1">
-                            <h3>Users per City</h3>
-                            <div className="chart-wrapper">
-                                <Bar data={cityData} options={horizontalOptions} />
+                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <h3>Users per City</h3>
+                                <button className="popup-button"
+                                    onClick={() => setShowCounts(!showCounts)}>
+                                    Show Others</button>
                             </div>
+                            <div className="chart-wrapper">
+                                <canvas id="cityChart"></canvas>
+                            </div>
+                            {renderCityTable()}
                         </div>
                         <div className="grid-tile-1">
                             <h3>Users per Age</h3>
                             <div className="chart-wrapper">
-                            <Bar data={ageGroupData} options={options} />
+                                <canvas id="ageGroupChart"></canvas>
                             </div>
                         </div>
                     </div>

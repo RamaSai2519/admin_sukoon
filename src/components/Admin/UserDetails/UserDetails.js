@@ -94,12 +94,12 @@ const UserDetails = () => {
             )}
           </div>
           <div className='edit-button-container'>
+          {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
             {editMode ? (
               <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
             ) : (
               <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
             )}
-            {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
           </div>
         </div>
       )}

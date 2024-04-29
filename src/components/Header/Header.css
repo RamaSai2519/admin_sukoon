@@ -1,11 +1,16 @@
 /* src/components/Header/Header.css */
 header {
   display: flex;
-  justify-content: space-between; /* Align children to the start and end of the header */
+  justify-content: space-between;
   align-items: center;
   padding-top: 10px;
   max-width: 1550px;
+  min-width: 475px;
   margin: 0 auto;
+}
+
+.logo {
+  margin-left: 20px;
 }
 
 nav ul {
@@ -13,13 +18,14 @@ nav ul {
   padding: 0px;
   font-size: large;
   font-weight: bold;
-  margin: 0px;
+  margin: 0;
 }
 
 nav ul li {
   padding: 10px;
   display: inline;
-  margin-left: 0rem;
+  margin-left: 0;
+  width: fit-content;
 }
 
 .outlined-button {
@@ -27,16 +33,24 @@ nav ul li {
   border: 2px solid black;
   border-radius: .6em;
   color: #000;
+  background-color: inherit;
   font-family: 'Custom Font';
   font-size: large;
   font-weight: bold;
   text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Transition for smooth color change */
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  /* Transition for smooth color change */
 }
 
 .outlined-button:hover {
   background-color: #000;
   color: #fff;
-  border-color: #333; /* Change border color on hover */
+  border-color: #333;
+  /* Change border color on hover */
+}
+
+.dark-mode .outlined-button {
+  color: white;
+  border: 2px solid white;
 }
 

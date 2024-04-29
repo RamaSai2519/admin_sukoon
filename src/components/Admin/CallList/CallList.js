@@ -79,81 +79,83 @@ const CallsTable = () => {
 
   return (
     <div className="table-container">
-      <table className="calls-table">
-        <thead>
-          <tr className="filter-row">
-            <td>
-              <input
-                type="text"
-                placeholder="Filter User"
-                name="user"
-                value={filters.user}
-                onChange={handleFilterChange}
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                placeholder="Filter Expert"
-                name="expert"
-                value={filters.expert}
-                onChange={handleFilterChange}
-              />
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <th onClick={() => handleSort('userName')}>
-              User {renderSortArrow('userName')}
-            </th>
-            <th onClick={() => handleSort('expertName')}>
-              Expert {renderSortArrow('expertName')}
-            </th>
-            <th>Time</th>
-            <th onClick={() => handleSort('duration')}>
-              Duration {renderSortArrow('duration')}
-            </th>
-            <th style={{ textAlign: 'center' }} onClick={() => handleSort('status')}>
-              Status {renderSortArrow('status')}
-            </th>
-            <th onClick={() => handleSort('ConversationScore')}>
-              Score {renderSortArrow('ConversationScore')}
-            </th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCalls.map((call) => (
-            <tr key={call.callId} className={getStatusColor(call.status)}>
-              <td>{call.userName}</td>
-              <td>{call.expertName}</td>
-              <td>{new Date(call.initiatedTime).toLocaleString()}</td>
-              <td>{call.duration} min</td>
-              <td style={{ textAlign: 'center' }}>{call.status}</td>
-              <td>{call.ConversationScore}</td>
+      <div className='latest-wrapper'>
+        <table className="calls-table">
+          <thead>
+            <tr className="filter-row">
               <td>
-                <Link to={`/calls/${call.callId}`} className="view-details-link">
-                  View
-                </Link>
+                <input
+                  type="text"
+                  placeholder="Filter User"
+                  name="user"
+                  value={filters.user}
+                  onChange={handleFilterChange}
+                />
               </td>
+              <td>
+                <input
+                  type="text"
+                  placeholder="Filter Expert"
+                  name="expert"
+                  value={filters.expert}
+                  onChange={handleFilterChange}
+                />
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="experts-button">View All Experts</h1>
-      </Link>
-      <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="calls-button">View All Calls</h1>
-      </Link>
-      <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="users-button">View All Users</h1>
-      </Link>
-      <ScrollBottom />
+            <tr>
+              <th onClick={() => handleSort('userName')}>
+                User {renderSortArrow('userName')}
+              </th>
+              <th onClick={() => handleSort('expertName')}>
+                Expert {renderSortArrow('expertName')}
+              </th>
+              <th>Time</th>
+              <th onClick={() => handleSort('duration')}>
+                Duration {renderSortArrow('duration')}
+              </th>
+              <th style={{ textAlign: 'center' }} onClick={() => handleSort('status')}>
+                Status {renderSortArrow('status')}
+              </th>
+              <th onClick={() => handleSort('ConversationScore')}>
+                Score {renderSortArrow('ConversationScore')}
+              </th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredCalls.map((call) => (
+              <tr key={call.callId} className={getStatusColor(call.status)}>
+                <td>{call.userName}</td>
+                <td>{call.expertName}</td>
+                <td>{new Date(call.initiatedTime).toLocaleString()}</td>
+                <td>{call.duration} min</td>
+                <td style={{ textAlign: 'center' }}>{call.status}</td>
+                <td>{call.ConversationScore}</td>
+                <td>
+                  <Link to={`/calls/${call.callId}`} className="view-details-link">
+                    View
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <h1 className="experts-button">View All Experts</h1>
+        </Link>
+        <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <h1 className="calls-button">View All Calls</h1>
+        </Link>
+        <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <h1 className="users-button">View All Users</h1>
+        </Link>
+        <ScrollBottom />
+      </div>
     </div>
   );
 };

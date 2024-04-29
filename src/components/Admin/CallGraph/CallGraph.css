@@ -4,9 +4,19 @@
     font-size: 1.5em;
     font-weight: bold;
     outline: none;
-    background-color: white;
+    color: inherit;
+    background-color: inherit;
 }
 
 .drop-down {
-    background-color: white;
+    background-color: inherit;
+}
+
+
+.drop-down select option {
+    background-color: #fff;
+}
+
+.dark-mode .drop-down select option {
+    background-color: #212121;
 }

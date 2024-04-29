@@ -5,7 +5,11 @@
     padding: 30px;
     border-radius: 5px;
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
+    background-color: white;
+}
+
+.dark-mode .admin-login-container {
+    background-color: #212121;
 }
 
 .admin-login-container h1 {

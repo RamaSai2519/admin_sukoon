@@ -17,6 +17,7 @@ const SaarthisTab = () => {
 
   return (
     <div className="saarthis-tab">
+      <div className="latest-wrapper">
       <div className='idk' style={{ display: 'flex', padding: '0 20px' ,justifyContent: 'space-between', maxWidth: '1200px', margin: "0 auto"}}>
         <h1 className="experts-heading">Experts</h1>
         <div className='drop-down'>
@@ -29,6 +30,7 @@ const SaarthisTab = () => {
         </div>
       </div>
       {selectedOption === "all" ? <ExpertTotalList /> : <ExpertDayList />}
+      </div>
     </div>
   );
 };

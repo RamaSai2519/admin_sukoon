@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useCallsData from '../../../../services/useCallsData';
 import useExpertManagement from '../../../../services/useExpertManagement';
+import * as XLSX from 'xlsx';
 
 const ExpertTotalList = () => {
     const { experts } = useExpertManagement();
     const { calls } = useCallsData();
     const [sortConfig, setSortConfig] = useState({
-        key: '',
-        direction: ''
+        key: 'createdDate',
+        direction: 'descending'
     });
 
     useEffect(() => {
@@ -55,25 +56,65 @@ const ExpertTotalList = () => {
         return avgCallsPerDay;
     };
 
+    const downloadExcel = () => {
+        const wb = XLSX.utils.book_new(); // Create a new Excel Workbook
+        const wsData = [
+            ['Expert', 'Successful', 'Failed', 'Avg.', 'C.Score', 'Share', 'Repeat %', 'T.Score', 'Status'] // Header row
+        ];
+        experts.forEach((expert) => {
+            const expertCalls = calls.filter(call => call.expert === expert._id);
+            const successfulCalls = expertCalls.filter(call => call.status === 'successful').length;
+            const failedCalls = expertCalls.filter(call => call.status !== 'successful').length;
+            const avgCallsPerDay = calculateAvgCallsPerDay(expertCalls);
+            wsData.push([
+                expert.name,
+                successfulCalls,
+                failedCalls,
+                avgCallsPerDay.toFixed(2),
+                expert.score * 20,
+                expert.callsShare + '%',
+                expert.repeatRate + '%',
+                expert.totalScore,
+                expert.status
+            ]);
+        });
+
+        const ws = XLSX.utils.aoa_to_sheet(wsData); // Convert array of arrays to worksheet
+        XLSX.utils.book_append_sheet(wb, ws, 'Expert_Data'); // Append worksheet to workbook
+
+        // Save the workbook as an Excel file
+        XLSX.writeFile(wb, 'ExpertTotalLists.xlsx');
+    };
+
     return (
         <div className="table-container">
             <table className="users-table">
                 <thead>
                     <tr>
                         <th onClick={() => handleSort('name')}>
-                            Expert {renderSortArrow('name')}
+                            Expert{renderSortArrow('name')}
                         </th>
                         <th onClick={() => handleSort('successfulCalls')}>
-                            Successful Calls {renderSortArrow('successfulCalls')}
+                            Successful{renderSortArrow('successfulCalls')}
                         </th>
                         <th onClick={() => handleSort('failedCalls')}>
-                            Failed Calls {renderSortArrow('failedCalls')}
+                            Failed{renderSortArrow('failedCalls')}
                         </th>
                         <th onClick={() => handleSort('avgCallsPerDay')}>
-                            Avg Calls/Day {renderSortArrow('avgCallsPerDay')}
+                            Avg.{renderSortArrow('avgCallsPerDay')}
                         </th>
                         <th onClick={() => handleSort('score')}>
-                            Score {renderSortArrow('score')}
+                            C.Score{renderSortArrow('score')}
+                        </th>
+                        
+                        <th onClick={() => handleSort('callsShare')}>
+                            Share{renderSortArrow('callsShare')}
+                        </th>
+                        <th onClick={() => handleSort('repeatRate')}>
+                            Repeat %{renderSortArrow('repeatRate')}
+                        </th>
+                        <th onClick={() => handleSort('totalScore')}>
+                            T.Score{renderSortArrow('totalScore')}
                         </th>
                         <th>Status</th>
                         <th>Details</th>
@@ -91,7 +132,10 @@ const ExpertTotalList = () => {
                                 <td>{successfulCalls}</td>
                                 <td>{failedCalls}</td>
                                 <td>{avgCallsPerDay.toFixed(2)}</td>
-                                <td>{expert.score}</td>
+                                <td>{expert.score*20}</td>
+                                <td>{expert.callsShare}%</td>
+                                <td>{expert.repeatRate}%</td>
+                                <td>{expert.totalScore}</td>
                                 <td>{expert.status}</td>
                                 <td>
                                     <Link to={`/experts/${expert._id}`} className="view-details-link">
@@ -103,6 +147,7 @@ const ExpertTotalList = () => {
                     })}
                 </tbody>
             </table>
+            <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
             <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <h1 className="calls-button">View All Calls</h1>
             </Link>

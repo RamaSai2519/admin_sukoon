@@ -16,7 +16,6 @@ const useCallsData = () => {
     };
 
     const cachedCalls = JSON.parse(localStorage.getItem('calls'));
-    console.log(cachedCalls);
     if (cachedCalls != null) {
       setCalls(cachedCalls);
       fetchNewCalls(cachedCalls);

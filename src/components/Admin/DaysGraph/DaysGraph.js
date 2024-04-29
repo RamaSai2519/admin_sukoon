@@ -107,7 +107,7 @@ const DaysGraph = () => {
     return (
         <div className='day-graph'>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <h3 style={{ margin: "0" }}>Daily Call Graph</h3>
+                <h3 style={{ margin: "0" }}>Calls per Day</h3>
                 <div className='drop-down'>
                     <label>
                         <select value={timeframe} onChange={handleTimeframeChange}>

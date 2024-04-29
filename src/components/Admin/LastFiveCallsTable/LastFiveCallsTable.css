@@ -1,20 +1,27 @@
-/* Define row styles */
 .successful-row {
   background-color: #a9e6c3;
-  /* Green */
 }
 
 .initiated-row {
   background-color: #fdfd96;
-  /* Yellow */
 }
 
 .default-row {
   background-color: #eb4b3f;
-  /* Default color */
 }
 
-/* Table styles */
+.dark-mode .default-row {
+  background-color: red;
+}
+
+.dark-mode .successful-row {
+  background-color: green;
+}
+
+.dark-mode .initiated-row {
+  background-color: yellow;
+}
+
 .last-five-calls-table {
   border-collapse: separate;
   border-spacing: 0 10px;
@@ -24,18 +31,27 @@
 .last-five-calls-table th,
 .last-five-calls-table td {
   padding: 10px;
-}
-
-.last-five-calls-table th {
   text-align: left;
 }
 
-.last-five-calls-table td {
-  text-align: left;
+.last-five-calls-table tr {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
-.last-five-calls-table tbody tr:not(:first-child) {
+.last-five-calls-table td:first-child {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.last-five-calls-table td:last-child {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.last-five-calls-table tbody tr {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
 }
 
 .view-details-link {

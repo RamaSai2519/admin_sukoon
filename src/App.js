@@ -15,8 +15,14 @@ import ClearCacheButton from './components/ClearCacheButton';
 import './App.css';
 
 const App = () => {
+  // Retrieve isLoggedIn from localStorage or default to false
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
+  );
+  // Retrieve darkMode from localStorage or default to false
+  const [darkMode, setDarkMode] = useState(
+    window.matchMedia('(prefers-color-scheme: dark)').matches &&
+    localStorage.getItem('darkMode') === 'true'
   );
 
   const handleLogin = () => {
@@ -29,9 +35,25 @@ const App = () => {
     localStorage.removeItem('isLoggedIn');
   };
 
+  // Function to toggle dark mode
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+  };
+
+  // Apply dark mode class to body
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [darkMode]);
+
   return (
-    <div>
-      <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+    <div className={darkMode ? 'App dark-mode' : 'App'}>
+      <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       <div>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
