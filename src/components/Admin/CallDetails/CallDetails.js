@@ -124,7 +124,7 @@ const CallDetails = () => {
                 </div>
                 <div className="details-box">
                     <h2>User Callback</h2>
-                    <p>User Callback: {formatValue(call["User Callback"])}</p>
+                    <p>{formatValue(call["User Callback"])}</p>
                 </div>
                 <div className="details-box">
                     <h2>Topics</h2>

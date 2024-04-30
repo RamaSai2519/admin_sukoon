@@ -70,7 +70,7 @@
 
 .users-table thead {
     position: sticky;
-    top: 80px;
+    top: 40px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     z-index: 999;

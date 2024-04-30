@@ -28,6 +28,7 @@ const ErrorLogsComponent = () => {
             try {
                 const response = await axios.get('/api/errorlogs');
                 setErrorLogs(response.data.reverse());
+                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching error logs:', error);
             }
@@ -43,7 +44,7 @@ const ErrorLogsComponent = () => {
                     {errorLogs.map((log, index) => (
                         <div className="grid-tile-1">
                             <li key={index} style={{ padding: '10px' }}>
-                                <strong>Time:</strong> {log.time} <br /><br /> <strong></strong> {log.message}
+                                <strong>Time:</strong> {new Date(log.time).toLocaleString()} <br /><br /> <strong></strong> {log.message}
                             </li>
                         </div>
                     ))}

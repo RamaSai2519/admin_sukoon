@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import CallReceivedIcon from '@mui/icons-material/CallReceived';
+import CallMissedIcon from '@mui/icons-material/CallMissed';
+import { red, pink, green, yellow } from '@mui/material/colors';
 import './LastFiveCallsTable.css';
 import useCallsData from '../../../services/useCallsData';
 
@@ -37,17 +42,6 @@ const LastFiveCallsTable = () => {
     setSortConfig({ key, direction });
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'successful':
-        return 'successful-row';
-      case 'initiated':
-        return 'initiated-row';
-      default:
-        return 'default-row';
-    }
-  };
-
   if (sortConfig.key) {
     lastFiveCalls.sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -66,6 +60,19 @@ const LastFiveCallsTable = () => {
     }
     return null;
   };
+
+  const renderStatusIcon = (status) => {
+    switch (status) {
+      case 'failed':
+        return <CloseIcon sx={{ color: red[500] }} />;
+      case 'missed':
+        return <CallMissedIcon sx={{ color: pink[500] }} />;
+      case 'successful':
+        return <CheckIcon sx={{ color: green[500] }} />;
+      default:
+        return <CallReceivedIcon sx={{ color: yellow[500] }} />;
+    }
+  }
 
   return (
     <table className="last-five-calls-table">
@@ -92,8 +99,8 @@ const LastFiveCallsTable = () => {
       </thead>
       <tbody>
         {lastFiveCalls.map((call) => (
-          <tr key={call.callId} className={getStatusColor(call.status)}>
-            <td>{call.userName}</td>
+          <tr key={call.callId} className='default-row'>
+            <td>{renderStatusIcon(call.status)} {call.userName}</td>
             <td>{call.expertName}</td>
             <td>{new Date(call.initiatedTime).toLocaleString()}</td>
             <td>{call.duration} min</td>

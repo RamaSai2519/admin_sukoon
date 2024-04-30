@@ -32,7 +32,7 @@ const useCallsData = () => {
       const filteredNewData = newData.filter(newCall => !cachedCalls.some(cachedCall => cachedCall.initiatedTime === newCall.initiatedTime));
       if (filteredNewData.length > 0) {
         const mergedData = [...cachedCalls, ...filteredNewData];
-        mergedData.sort((a, b) => b.initiatedTime - a.initiatedTime);
+        mergedData.sort((a, b) => new Date(b.initiatedTime).getTime() - new Date(a.initiatedTime).getTime());
         setCalls(mergedData);
         localStorage.setItem('calls', JSON.stringify(mergedData));
       }

@@ -5,7 +5,7 @@ header {
   align-items: center;
   padding-top: 10px;
   max-width: 1550px;
-  min-width: 475px;
+  min-width: 425px;
   margin: 0 auto;
 }
 
@@ -28,6 +28,13 @@ nav ul li {
   width: fit-content;
 }
 
+@media screen and (max-width: 560px) {
+  nav ul li {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
 .outlined-button {
   padding: 0.5rem 1rem;
   border: 2px solid black;
@@ -39,14 +46,12 @@ nav ul li {
   font-weight: bold;
   text-decoration: none;
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  /* Transition for smooth color change */
 }
 
 .outlined-button:hover {
   background-color: #000;
   color: #fff;
   border-color: #333;
-  /* Change border color on hover */
 }
 
 .dark-mode .outlined-button {

@@ -5,9 +5,13 @@
    src: url('./components/assets/futura light bt.ttf') format('truetype');
  }
 
+ html {
+   min-width: 425px;
+ }
+
  body {
    margin: 0;
-   font-family:'Custom Font';
+   font-family: 'Custom Font';
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
  }

@@ -37,6 +37,10 @@
     height: max-content;
 }
 
+.dark-mode .details-box {
+    background-color: #212121;
+}
+
 .details-box p {
     margin: 0;
 }

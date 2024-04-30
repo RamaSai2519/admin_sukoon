@@ -58,58 +58,59 @@ const ExpertList = () => {
     const ws = XLSX.utils.aoa_to_sheet(wsData); // Convert array of arrays to worksheet
     XLSX.utils.book_append_sheet(wb, ws, 'Expert_Data'); // Append worksheet to workbook
 
-    // Save the workbook as an Excel file
     XLSX.writeFile(wb, 'ExpertList.xlsx');
   };
 
   return (
     <div className="table-container">
-      <div className='latest-wrapper'>
-        <table className="users-table">
-          <thead>
-            <tr>
-              <th onClick={() => handleSort('name')}>
-                Expert {renderSortArrow('name')}
-              </th>
-              <th onClick={() => handleSort('phoneNumber')}>
-                Number {renderSortArrow('phoneNumber')}
-              </th>
-              <th onClick={() => handleSort('score')}>
-                Score {renderSortArrow('score')}
-              </th>
-              <th onClick={() => handleSort('status')}>
-                Status {renderSortArrow('status')}
-              </th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            {experts.map((expert) => (
-              <tr key={expert._id} className="row">
-                <td>{expert.name}</td>
-                <td>{expert.phoneNumber}</td>
-                <td>{expert.score}</td>
-                <td>{expert.status}</td>
-                <td>
-                  <Link to={`/experts/${expert._id}`} className="view-details-link">
-                    View
-                  </Link>
-                </td>
+      <div className="dashboard-tile">
+        <div className='latest-wrapper'>
+          <table className="users-table">
+            <thead>
+              <tr>
+                <th onClick={() => handleSort('name')}>
+                  Expert {renderSortArrow('name')}
+                </th>
+                <th onClick={() => handleSort('phoneNumber')}>
+                  Number {renderSortArrow('phoneNumber')}
+                </th>
+                <th onClick={() => handleSort('score')}>
+                  Score {renderSortArrow('score')}
+                </th>
+                <th onClick={() => handleSort('status')}>
+                  Status {renderSortArrow('status')}
+                </th>
+                <th>Details</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <h1 className="experts-button">View All Experts</h1>
-        </Link>
-        <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <h1 className="calls-button">View All Calls</h1>
-        </Link>
-        <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <h1 className="users-button">View All Users</h1>
-        </Link>
+            </thead>
+            <tbody>
+              {experts.map((expert) => (
+                <tr key={expert._id} className="row">
+                  <td>{expert.name}</td>
+                  <td>{expert.phoneNumber}</td>
+                  <td>{expert.score}</td>
+                  <td>{expert.status}</td>
+                  <td>
+                    <Link to={`/experts/${expert._id}`} className="view-details-link">
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <h1 className="experts-button">View All Experts</h1>
+          </Link>
+          <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <h1 className="calls-button">View All Calls</h1>
+          </Link>
+          <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <h1 className="users-button">View All Users</h1>
+          </Link>
+        </div>
+        <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
       </div>
-      <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
     </div>
   );
 };

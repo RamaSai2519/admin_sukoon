@@ -1,25 +1,9 @@
-.successful-row {
-  background-color: #a9e6c3;
-}
-
-.initiated-row {
-  background-color: #fdfd96;
-}
-
 .default-row {
-  background-color: #eb4b3f;
+  background-color: #fff;
 }
 
 .dark-mode .default-row {
-  background-color: red;
-}
-
-.dark-mode .successful-row {
-  background-color: green;
-}
-
-.dark-mode .initiated-row {
-  background-color: yellow;
+  background-color: #141414;
 }
 
 .last-five-calls-table {

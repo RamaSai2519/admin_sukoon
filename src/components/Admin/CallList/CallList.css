@@ -4,6 +4,13 @@
     width: 100%;
 }
 
+@media screen and (max-width: 560px) {
+    .calls-table {
+        overflow: scroll;
+        max-width: 425px;
+    }
+}
+
 .calls-table th,
 .calls-table td {
     padding: 10px;
@@ -62,8 +69,7 @@
 }
 
 .calls-table thead {
-    position: sticky;
-    top: 80px;
+    top: 40px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     z-index: 999;

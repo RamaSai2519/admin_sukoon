@@ -1,5 +1,3 @@
-/* App.cs */
-
 @font-face {
   font-family: 'Custom Font';
   src: url('./components/assets/futura light bt.ttf') format('truetype');
@@ -28,7 +26,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
+  .logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }

@@ -41,7 +41,7 @@ const UsersList = () => {
   let filteredUsers = users.filter((user) => {
     return (
       (user.name && user.name.toLowerCase().includes(filters.user.toLowerCase())) &&
-    (user.city && user.city.toLowerCase().includes(filters.city.toLowerCase()))
+      (user.city && user.city.toLowerCase().includes(filters.city.toLowerCase()))
     );
   });
 
@@ -66,79 +66,81 @@ const UsersList = () => {
 
   return (
     <div className="table-container">
-      <div className='latest-wrapper'>
-      <table className="users-table">
-        <thead>
-          <tr className="filter-row">
-            <td>
-              <input
-                type="text"
-                placeholder="Filter User"
-                name="user"
-                value={filters.name}
-                onChange={handleFilterChange}
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                placeholder="Filter City"
-                name="city"
-                value={filters.city}
-                onChange={handleFilterChange}
-              />
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <th onClick={() => handleSort('name')}>
-              User {renderSortArrow('name')}
-            </th>
-            <th onClick={() => handleSort('city')}>
-              City {renderSortArrow('city')}
-            </th>
-            <th style={{ textAlign: 'center' }} onClick={() => handleSort('phoneNumber')}>
-              Number {renderSortArrow('phoneNumber')}
-            </th>
-            <th onClick={() => handleSort('createdDate')}>
-              Joined Date {renderSortArrow('createdDate')}
-            </th>
-            <th onClick={() => handleSort('numberOfCalls')}>
-              Balance {renderSortArrow('numberOfCalls')}
-            </th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.reverse().map((user) => (
-            <tr key={user._id} className="row">
-              <td>{user.name}</td>
-              <td>{user.city}</td>
-              <td style={{ textAlign: 'center' }}>{user.phoneNumber}</td>
-              <td>{new Date(user.createdDate).toLocaleDateString()}</td>
-              <td>{user.numberOfCalls}</td>
-              <td>
-                <Link to={`/users/${user._id}`} className="view-details-link">
-                  View
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <ScrollBottom />
-      <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="experts-button">View All Experts</h1>
-      </Link>
-      <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="calls-button">View All Calls</h1>
-      </Link>
-      <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="users-button">View All Users</h1>
-      </Link>
+      <div className="dashboard-tile">
+        <div className='latest-wrapper'>
+          <table className="users-table">
+            <thead>
+              <tr className="filter-row">
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Filter User"
+                    name="user"
+                    value={filters.name}
+                    onChange={handleFilterChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Filter City"
+                    name="city"
+                    value={filters.city}
+                    onChange={handleFilterChange}
+                  />
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th onClick={() => handleSort('name')}>
+                  User {renderSortArrow('name')}
+                </th>
+                <th onClick={() => handleSort('city')}>
+                  City {renderSortArrow('city')}
+                </th>
+                <th style={{ textAlign: 'center' }} onClick={() => handleSort('phoneNumber')}>
+                  Number {renderSortArrow('phoneNumber')}
+                </th>
+                <th onClick={() => handleSort('createdDate')}>
+                  Joined Date {renderSortArrow('createdDate')}
+                </th>
+                <th onClick={() => handleSort('numberOfCalls')}>
+                  Balance {renderSortArrow('numberOfCalls')}
+                </th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.reverse().map((user) => (
+                <tr key={user._id} className="row">
+                  <td>{user.name}</td>
+                  <td>{user.city}</td>
+                  <td style={{ textAlign: 'center' }}>{user.phoneNumber}</td>
+                  <td>{new Date(user.createdDate).toLocaleDateString()}</td>
+                  <td>{user.numberOfCalls}</td>
+                  <td>
+                    <Link to={`/users/${user._id}`} className="view-details-link">
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <ScrollBottom />
+          <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <h1 className="experts-button">View All Experts</h1>
+          </Link>
+          <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <h1 className="calls-button">View All Calls</h1>
+          </Link>
+          <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <h1 className="users-button">View All Users</h1>
+          </Link>
+        </div>
       </div>
     </div>
   );
