@@ -7,7 +7,6 @@
 @media screen and (max-width: 560px) {
     .calls-table {
         overflow: scroll;
-        max-width: 425px;
     }
 }
 

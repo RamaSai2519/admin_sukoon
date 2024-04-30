@@ -15,18 +15,14 @@ import ClearCacheButton from './components/ClearCacheButton';
 import './App.css';
 
 const App = () => {
-  // Retrieve isLoggedIn from localStorage or default to false
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
-  // Retrieve darkMode from localStorage or default to the device theme
   const [darkMode, setDarkMode] = useState(() => {
     const localStorageDarkMode = localStorage.getItem('darkMode');
-    // Check if dark mode is explicitly set in localStorage
     if (localStorageDarkMode !== null) {
       return JSON.parse(localStorageDarkMode);
     } else {
-      // Otherwise, use the device theme
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
   });
@@ -41,15 +37,22 @@ const App = () => {
     localStorage.removeItem('isLoggedIn');
   };
 
-  // Function to toggle dark mode
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
-    // Store darkMode in localStorage
     localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
   };
 
-  // Apply dark mode class to body
+  useEffect(() => {
+    const storedVersion = localStorage.getItem('appVersion');
+    const currentVersion = process.env.REACT_APP_VERSION;
+
+    if (storedVersion !== currentVersion) {
+      clearAllCaches();
+      localStorage.setItem('appVersion', currentVersion);
+    }
+  }, []);
+
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add('dark-mode');
@@ -57,6 +60,11 @@ const App = () => {
       document.body.classList.remove('dark-mode');
     }
   }, [darkMode]);
+
+  const clearAllCaches = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+  };
 
   return (
     <div className={darkMode ? 'App dark-mode' : 'App'}>

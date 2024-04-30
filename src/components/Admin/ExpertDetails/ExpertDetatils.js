@@ -25,7 +25,7 @@ const ExpertDetails = () => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    axios.get(`/api/experts/${expertId}`)
+    axios.get(`http://15.206.127.248/api/experts/${expertId}`)
       .then(response => {
         setExpert(response.data);
         setName(response.data.name);
@@ -54,7 +54,7 @@ const ExpertDetails = () => {
   }, [expertId]);
 
   const fetchAllCategories = () => {
-    axios.get('/api/categories')
+    axios.get('http://15.206.127.248/api/categories')
       .then(response => {
         setAllCategories(response.data);
       })
@@ -83,7 +83,7 @@ const ExpertDetails = () => {
   };
 
   const handleUpdate = (newStatus) => {
-    axios.put(`/api/experts/${expertId}`, {
+    axios.put(`http://15.206.127.248/api/experts/${expertId}`, {
       name,
       phoneNumber,
       topics,

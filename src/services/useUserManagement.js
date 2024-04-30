@@ -21,7 +21,7 @@ const useUserManagement = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const response = await axios.get('/api/users');
+        const response = await axios.get('http://15.206.127.248/api/users');
         setUsers(response.data);
         localStorage.setItem('users', JSON.stringify(response.data));
       } catch (error) {
@@ -41,7 +41,7 @@ const useUserManagement = () => {
   const fetchNewUsers = async (cachedUsers) => {
     const latestTimestamp = findLatestTimestamp(cachedUsers);
     try {
-      const response = await axios.get(`/api/new-users?timestamp=${latestTimestamp}`);
+      const response = await axios.get(`http://15.206.127.248/api/new-users?timestamp=${latestTimestamp}`);
       const newData = response.data;
       const filteredNewData = newData.filter(newUser => !cachedUsers.some(cachedUser => cachedUser.id === newUser.id));
       if (filteredNewData.length > 0) {

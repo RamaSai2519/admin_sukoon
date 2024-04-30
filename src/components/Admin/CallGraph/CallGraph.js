@@ -142,7 +142,7 @@ const CallGraph = () => {
   };
 
   return (
-    <div className='calls-table' style={{ height: 'auto', width: '100%' }}>
+    <div className='calls-table'>
       <div className='idk' style={{ display: 'flex', justifyContent: 'space-between' }}>
         <h2 style={{ margin: "0" }}>Calls Over Time</h2>
         <div className='drop-down'>

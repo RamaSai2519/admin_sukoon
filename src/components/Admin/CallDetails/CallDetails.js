@@ -12,7 +12,7 @@ const CallDetails = () => {
     const [newConversationScore, setNewConversationScore] = useState('');
 
     useEffect(() => {
-        axios.get(`/api/calls/${callId}`)
+        axios.get(`http://15.206.127.248/api/calls/${callId}`)
             .then(response => {
                 setCall(response.data);
                 setNewConversationScore(response.data.ConversationScore);
@@ -23,7 +23,7 @@ const CallDetails = () => {
     }, [callId]);
 
     const handleScoreChange = () => {
-        axios.put(`/api/calls/${callId}`, {
+        axios.put(`http://15.206.127.248/api/calls/${callId}`, {
             ConversationScore: newConversationScore
         })
             .then(response => {

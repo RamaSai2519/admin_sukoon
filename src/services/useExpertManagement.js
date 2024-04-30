@@ -23,7 +23,7 @@ const useExpertManagement = () => {
   useEffect(() => {
     const fetchAllExperts = async () => {
       try {
-        const response = await axios.get('/api/experts');
+        const response = await axios.get('http://15.206.127.248/api/experts');
         setExperts(response.data);
         localStorage.setItem('experts', JSON.stringify(response.data));
       } catch (error) {
@@ -43,7 +43,7 @@ const useExpertManagement = () => {
   const fetchNewExperts = async (cachedExperts) => {
     const latestTimestamp = findLatestTimestamp(cachedExperts);
     try {
-      const response = await axios.get(`/api/new-experts?timestamp=${latestTimestamp}`);
+      const response = await axios.get(`http://15.206.127.248/api/new-experts?timestamp=${latestTimestamp}`);
       const newExperts = response.data;
       const filteredNewExperts = newExperts.filter(newExpert => !cachedExperts.some(cachedExpert => cachedExpert.id === newExpert.id));
       if (newExperts.length > 0) {

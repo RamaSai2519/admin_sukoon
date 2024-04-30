@@ -14,7 +14,7 @@ const UserDetails = () => {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    axios.get(`/api/users/${userId}`)
+    axios.get(`http://15.206.127.248/api/users/${userId}`)
       .then(response => {
         setUser(response.data);
         setName(response.data.name);
@@ -29,7 +29,7 @@ const UserDetails = () => {
   }, [userId]);
 
   const handleUpdate = () => {
-    axios.put(`/api/users/${userId}`, {
+    axios.put(`http://15.206.127.248/api/users/${userId}`, {
       name,
       phoneNumber,
       city,

@@ -68,7 +68,7 @@ const AdminDashboard = () => {
         console.log('Error retrieving token:', err);
       });
 
-    const socket = socketIOClient('/api');
+    const socket = socketIOClient('http://15.206.127.248/api');
 
     socket.on('error_notification', (data) => {
       console.log('Received error notification:', data);
@@ -93,7 +93,7 @@ const AdminDashboard = () => {
   };
 
   const sendFCMTokenToServer = (token) => {
-    fetch('/api/save-fcm-token', {
+    fetch('http://15.206.127.248/api/save-fcm-token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
