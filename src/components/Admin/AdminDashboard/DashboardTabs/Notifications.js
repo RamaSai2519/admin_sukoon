@@ -26,7 +26,7 @@ const ErrorLogsComponent = () => {
     useEffect(() => {
         const fetchErrorLogs = async () => {
             try {
-                const response = await axios.get('http://15.206.127.248/api/errorlogs');
+                const response = await axios.get('/api/errorlogs');
                 setErrorLogs(response.data.reverse());
                 console.log(response.data);
             } catch (error) {

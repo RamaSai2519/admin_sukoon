@@ -27,6 +27,7 @@ const App = () => {
     }
   });
 
+  const appVersion = '2.2.1';
   const handleLogin = () => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
@@ -45,11 +46,9 @@ const App = () => {
 
   useEffect(() => {
     const storedVersion = localStorage.getItem('appVersion');
-    const currentVersion = process.env.REACT_APP_VERSION;
-
-    if (storedVersion !== currentVersion) {
+    if (storedVersion !== appVersion) {
       clearAllCaches();
-      localStorage.setItem('appVersion', currentVersion);
+      localStorage.setItem('appVersion', appVersion);
     }
   }, []);
 

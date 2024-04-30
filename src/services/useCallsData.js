@@ -7,7 +7,7 @@ const useCallsData = () => {
   useEffect(() => {
     const fetchCalls = async () => {
       try {
-        const response = await axios.get('http://15.206.127.248/api/calls');
+        const response = await axios.get('/api/calls');
         setCalls(response.data.reverse());
         localStorage.setItem('calls', JSON.stringify(response.data));
       } catch (error) {
@@ -27,7 +27,7 @@ const useCallsData = () => {
   const fetchNewCalls = async (cachedCalls) => {
     const latestTimestamp = cachedCalls.length > 0 ? cachedCalls[0].initiatedTime : 0;
     try {
-      const response = await axios.get(`http://15.206.127.248/api/new-calls?timestamp=${latestTimestamp}`);
+      const response = await axios.get(`/api/new-calls?timestamp=${latestTimestamp}`);
       const newData = response.data;
       const filteredNewData = newData.filter(newCall => !cachedCalls.some(cachedCall => cachedCall.initiatedTime === newCall.initiatedTime));
       if (filteredNewData.length > 0) {
