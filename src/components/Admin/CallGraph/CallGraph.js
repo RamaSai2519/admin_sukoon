@@ -144,7 +144,7 @@ const CallGraph = () => {
   return (
     <div className='calls-table'>
       <div className='idk' style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h2 style={{ margin: "0" }}>Calls Over Time</h2>
+        <h2 style={{ margin: "0" }}>Calls Over Time (All)</h2>
         <div className='drop-down'>
           <label>
             <select value={timeframe} onChange={handleTimeframeChange}>
