@@ -253,7 +253,7 @@ const ExpertDetails = () => {
               }}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <button className='update-button'>View Expert Report</button>
+              <button className='update-button'>View Detailed Scores</button>
             </Link>
           </div>
         </div>
