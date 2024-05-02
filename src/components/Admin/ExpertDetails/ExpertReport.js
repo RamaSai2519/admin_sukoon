@@ -77,7 +77,7 @@ const ExpertDetails = () => {
       {expert && (
         <div className='report-content-container'>
           <div style={{ margin: '20px', fontSize: '18px' }}>
-            <h2>Report Card</h2>
+            <h2>Detailed Scores</h2>
           </div>
           <div className="report-grid-container">
             <div className="report-grid-item">
@@ -111,7 +111,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -139,7 +139,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -168,7 +168,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -188,7 +188,10 @@ const ExpertDetails = () => {
               <div className='report-grid-2'>
                 <div className='report-grid-tile-1'>
                   {editMode ? (
-                    <p><input type="number" value={openingGreeting} onChange={(e) => setScore(e.target.value)} /></p>
+                    <div>
+                      <p>Opening Greeting</p>
+                      <p><input type="number" value={openingGreeting} onChange={(e) => setScore(e.target.value)} /></p>
+                    </div>
                   ) : (
                     <div className='score-container'>
                       <h2>Opening</h2>
@@ -203,7 +206,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -214,7 +217,10 @@ const ExpertDetails = () => {
                 </div>
                 <div className='report-grid-tile-1'>
                   {editMode ? (
-                    <p><input type="number" value={flow} onChange={(e) => setScore(e.target.value)} /></p>
+                    <div>
+                      <p>Flow Score</p>
+                      <p><input type="number" value={flow} onChange={(e) => setScore(e.target.value)} /></p>
+                    </div>
                   ) : (
                     <div className='score-container'>
                       <h2>Flow</h2>
@@ -229,7 +235,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -240,7 +246,10 @@ const ExpertDetails = () => {
                 </div>
                 <div className='report-grid-tile-1'>
                   {editMode ? (
-                    <p><input type="number" value={tonality} onChange={(e) => setScore(e.target.value)} /></p>
+                    <div>
+                      <p>Tonality Score</p>
+                      <p><input type="number" value={tonality} onChange={(e) => setScore(e.target.value)} /></p>
+                    </div>
                   ) : (
                     <div className='score-container'>
                       <h2>Tonality</h2>
@@ -255,7 +264,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -266,7 +275,10 @@ const ExpertDetails = () => {
                 </div>
                 <div className='report-grid-tile-1'>
                   {editMode ? (
-                    <p><input type="number" value={timeSplit} onChange={(e) => setScore(e.target.value)} /></p>
+                    <div>
+                      <p>Time Split Score</p>
+                      <p><input type="number" value={timeSplit} onChange={(e) => setScore(e.target.value)} /></p>
+                    </div>
                   ) : (
                     <div className='score-container'>
                       <h2>Time Split</h2>
@@ -281,7 +293,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -293,7 +305,10 @@ const ExpertDetails = () => {
 
                 <div className='report-grid-tile-1'>
                   {editMode ? (
-                    <p><input type="number" value={userSentiment} onChange={(e) => setScore(e.target.value)} /></p>
+                    <div>
+                      <p>User Sentiment Score</p>
+                      <p><input type="number" value={userSentiment} onChange={(e) => setScore(e.target.value)} /></p>
+                    </div>
                   ) : (
                     <div className='score-container'>
                       <h2>Sentiment</h2>
@@ -308,7 +323,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -319,7 +334,10 @@ const ExpertDetails = () => {
                 </div>
                 <div className='report-grid-tile-1'>
                   {editMode ? (
-                    <p><input type="number" value={timeSpent} onChange={(e) => setScore(e.target.value)} /></p>
+                    <div>
+                      <p>Time Spent Score</p>
+                      <p><input type="number" value={timeSpent} onChange={(e) => setScore(e.target.value)} /></p>
+                    </div>
                   ) : (
                     <div className='score-container'>
                       <h2>Time Spent</h2>
@@ -334,7 +352,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -345,7 +363,10 @@ const ExpertDetails = () => {
                 </div>
                 <div className='report-grid-tile-1'>
                   {editMode ? (
-                    <p><input type="number" value={probability} onChange={(e) => setScore(e.target.value)} /></p>
+                    <div>
+                      <p>User Callback Probability</p>
+                      <p><input type="number" value={probability} onChange={(e) => setScore(e.target.value)} /></p>
+                    </div>
                   ) : (
                     <div className='score-container'>
                       <h2>Probability</h2>
@@ -360,7 +381,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -371,7 +392,10 @@ const ExpertDetails = () => {
                 </div>
                 <div className='report-grid-tile-1'>
                   {editMode ? (
-                    <p><input type="number" value={closingGreeting} onChange={(e) => setScore(e.target.value)} /></p>
+                    <div>
+                      <p>Closing Greeting</p>
+                      <p><input type="number" value={closingGreeting} onChange={(e) => setScore(e.target.value)} /></p>
+                    </div>
                   ) : (
                     <div className='score-container'>
                       <h2>Closing</h2>
@@ -386,7 +410,7 @@ const ExpertDetails = () => {
                             strokeLinecap: "round",
                             textSize: '25px',
                             pathColor: '#1fe01f',
-                            
+
                             trailColor: '#141414',
                           })}
                         />
@@ -417,7 +441,6 @@ const ExpertDetails = () => {
               }}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <button className='update-button'>View Expert Report</button>
             </Link>
           </div>
         </div>
