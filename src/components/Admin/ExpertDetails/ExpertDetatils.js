@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import './ExpertDetails.css'
+import ExpertReport from './ExpertReport';
+import './ExpertDetails.css';
 
 const ExpertDetails = () => {
   const { expertId } = useParams();
@@ -101,7 +102,7 @@ const ExpertDetails = () => {
         setExpert(response.data);
         setEditMode(false);
         setStatus(newStatus);
-        window.alert('Expert details updated successfuly!');
+        window.alert('Expert details updated successfully!');
         localStorage.removeItem('experts');
       })
       .catch(error => {
@@ -157,7 +158,7 @@ const ExpertDetails = () => {
                   {editMode ? (
                     <p><input type="number" value={callsShare} onChange={(e) => setRepeatScore(e.target.value)} /></p>
                   ) : (
-                    <h2>{callsShare}</h2>
+                    <h2>{callsShare}%</h2>
                   )}
                 </div>
                 <div className='grid-tile-1'>
@@ -237,11 +238,23 @@ const ExpertDetails = () => {
           </div>
           <div className='edit-button-container'>
             {editMode ? (
-              <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
+              <>
+                <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
+                <button className='update-button' onClick={handleUpdate}>Update Details</button>
+              </>
             ) : (
-              <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
+              <>
+                <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
+              </>
             )}
-            {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
+            <Link
+              to={{
+                pathname: `/experts/${expertId}/report`
+              }}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <button className='update-button'>View Expert Report</button>
+            </Link>
           </div>
         </div>
       )}
@@ -256,6 +269,6 @@ const ExpertDetails = () => {
       </Link>
     </div>
   );
-}
+};
 
 export default ExpertDetails;

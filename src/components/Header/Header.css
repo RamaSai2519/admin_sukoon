@@ -14,7 +14,7 @@ header {
 }
 
 nav ul {
-  list-style: circle;
+  list-style: none;
   padding: 0px;
   font-size: large;
   font-weight: bold;
@@ -59,3 +59,10 @@ nav ul li {
   border: 2px solid white;
 }
 
+.all-container {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  max-width: fit-content;
+  justify-content: space-between;
+}

@@ -60,18 +60,12 @@ const AdminDashboard = () => {
       .then((currentToken) => {
         if (currentToken) {
           sendFCMTokenToServer(currentToken);
-        } else {
-          console.log('No token found.');
         }
       })
-      .catch((err) => {
-        console.log('Error retrieving token:', err);
-      });
 
     const socket = socketIOClient('/api');
 
     socket.on('error_notification', (data) => {
-      console.log('Received error notification:', data);
       setErrors((prevErrors) => [...prevErrors, data]);
     });
 
@@ -153,7 +147,6 @@ const AdminDashboard = () => {
       <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
         <h1 className="users-button">View All Users</h1>
       </Link>
-
       <ScrollBottom />
       <div className="error-messages-container">
         {errors.map((error, index) => (

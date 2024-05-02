@@ -12,6 +12,7 @@ import CallDetails from './components/Admin/CallDetails/CallDetails';
 import UserDetails from './components/Admin/UserDetails/UserDetails';
 import ExpertDetails from './components/Admin/ExpertDetails/ExpertDetatils';
 import ClearCacheButton from './components/ClearCacheButton';
+import ExpertReport from './components/Admin/ExpertDetails/ExpertReport';
 import './App.css';
 
 const App = () => {
@@ -79,6 +80,7 @@ const App = () => {
               <Route path="/calls/:callId" element={<CallDetails />} />
               <Route path="/users/:userId" element={<UserDetails />} />
               <Route path="/experts/:expertId" element={<ExpertDetails />} />
+              <Route path="/experts/:expertId/report" element={<ExpertReport />} />
               <Route path="/calls/dashboard" element={<AdminDashboard />} />
               <Route path="*" element={<Navigate to="/calls/dashboard" />} />
             </>
