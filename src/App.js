@@ -48,6 +48,7 @@ const App = () => {
   useEffect(() => {
     const storedVersion = localStorage.getItem('appVersion');
     if (storedVersion !== appVersion) {
+      window.location.reload();
       clearAllCaches();
       localStorage.setItem('appVersion', appVersion);
     }
