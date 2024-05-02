@@ -9,6 +9,7 @@ const UsersList = () => {
   const [filters, setFilters] = useState({
     user: '',
     city: '',
+    phoneNumber: ''
   });
   const [sortConfig, setSortConfig] = useState({
     key: '',
@@ -41,7 +42,8 @@ const UsersList = () => {
   let filteredUsers = users.filter((user) => {
     return (
       (user.name && user.name.toLowerCase().includes(filters.user.toLowerCase())) &&
-      (user.city && user.city.toLowerCase().includes(filters.city.toLowerCase()))
+      (user.city && user.city.toLowerCase().includes(filters.city.toLowerCase())) &&
+      (user.phoneNumber && user.phoneNumber.toLowerCase().includes(filters.phoneNumber.toLowerCase()))
     );
   });
 
@@ -74,7 +76,7 @@ const UsersList = () => {
                 <td>
                   <input
                     type="text"
-                    placeholder="Filter User"
+                    placeholder="Search User"
                     name="user"
                     value={filters.name}
                     onChange={handleFilterChange}
@@ -89,7 +91,15 @@ const UsersList = () => {
                     onChange={handleFilterChange}
                   />
                 </td>
-                <td></td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Filter Phone Number"
+                    name="phoneNumber"
+                    value={filters.phoneNumber}
+                    onChange={handleFilterChange}
+                  />
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -101,7 +111,7 @@ const UsersList = () => {
                 <th onClick={() => handleSort('city')}>
                   City {renderSortArrow('city')}
                 </th>
-                <th style={{ textAlign: 'center' }} onClick={() => handleSort('phoneNumber')}>
+                <th onClick={() => handleSort('phoneNumber')}>
                   Number {renderSortArrow('phoneNumber')}
                 </th>
                 <th onClick={() => handleSort('createdDate')}>
@@ -118,7 +128,7 @@ const UsersList = () => {
                 <tr key={user._id} className="row">
                   <td>{user.name}</td>
                   <td>{user.city}</td>
-                  <td style={{ textAlign: 'center' }}>{user.phoneNumber}</td>
+                  <td>{user.phoneNumber}</td>
                   <td>{new Date(user.createdDate).toLocaleDateString()}</td>
                   <td>{user.numberOfCalls}</td>
                   <td>

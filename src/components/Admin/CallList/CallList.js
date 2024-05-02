@@ -94,7 +94,7 @@ const CallsTable = () => {
                 <td>
                   <input
                     type="text"
-                    placeholder="Filter User"
+                    placeholder="Search User"
                     name="user"
                     value={filters.user}
                     onChange={handleFilterChange}
@@ -103,7 +103,7 @@ const CallsTable = () => {
                 <td>
                   <input
                     type="text"
-                    placeholder="Filter Expert"
+                    placeholder="Search Expert"
                     name="expert"
                     value={filters.expert}
                     onChange={handleFilterChange}

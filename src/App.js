@@ -90,6 +90,7 @@ const App = () => {
               <Route path="/" element={<AdminLogin onLogin={handleLogin} />} />
               <Route path="/calls/*" element={<Navigate to="/" />} />
               <Route path="*" element={<Navigate to="/" />} />
+              <Route path="/*" element={<Navigate to="/" />} />
             </>
           )}
         </Routes>

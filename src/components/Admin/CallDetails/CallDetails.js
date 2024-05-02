@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
+import { FaArrowLeft } from 'react-icons/fa';
 import axios from 'axios';
 import './CallDetails.css';
 
@@ -67,7 +68,12 @@ const CallDetails = () => {
 
     return (
         <div className="whole-container">
-            <h2>Call Details</h2>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px'}}>
+            <h1>Call Details</h1>
+            <button className='back-button' onClick={() => window.history.back()}>
+              <FaArrowLeft className="back-icon" />
+            </button>
+          </div>
             <div className="details-container">
                 <div className="details-box">
                     <h3>User</h3>

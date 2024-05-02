@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
 import axios from 'axios';
 import './UserDetails.css';
 
@@ -52,7 +53,12 @@ const UserDetails = () => {
     <div className='details-container'>
       {user && (
         <div className='content-container'>
-          <h1>User Details</h1>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px'}}>
+            <h1>User Details</h1>
+            <button className='back-button' onClick={() => window.history.back()}>
+              <FaArrowLeft className="back-icon" />
+            </button>
+          </div>
           <div className='grid-tile-1'>
             <h3>Name</h3>
             {editMode ? (

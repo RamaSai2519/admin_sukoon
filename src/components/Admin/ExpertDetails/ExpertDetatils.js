@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import ExpertReport from './ExpertReport';
 import './ExpertDetails.css';
+import { FaArrowLeft } from 'react-icons/fa';
+
 
 const ExpertDetails = () => {
   const { expertId } = useParams();
@@ -114,7 +115,12 @@ const ExpertDetails = () => {
     <div className='details-container'>
       {expert && (
         <div className='content-container'>
-          <h1>Expert Details</h1>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px'}}>
+            <h1>Expert Details</h1>
+            <button className='back-button' onClick={() => window.history.back()}>
+              <FaArrowLeft className="back-icon" />
+            </button>
+          </div>
           <div className="grid-container">
             <div className="grid-tile-1">
               <img src={profile} alt="Expert Profile" />

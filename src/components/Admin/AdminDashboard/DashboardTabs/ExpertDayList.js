@@ -23,17 +23,25 @@ const ExpertDayList = () => {
         setSortConfig({ key, direction });
     };
 
-    if (sortConfig.key) {
-        experts.sort((a, b) => {
-            if (a[sortConfig.key] < b[sortConfig.key]) {
-                return sortConfig.direction === 'ascending' ? -1 : 1;
+    const sortData = (data, key, direction) => {
+        return [...data].sort((a, b) => {
+            const valueA = calculateSortValue(a, key);
+            const valueB = calculateSortValue(b, key);
+
+            if (!isNaN(valueA) && !isNaN(valueB)) {
+                return direction === 'ascending' ? valueA - valueB : valueB - valueA;
+            } else {
+                // Handle NaN values
+                if (isNaN(valueA) && isNaN(valueB)) {
+                    return 0;
+                } else if (isNaN(valueA)) {
+                    return direction === 'ascending' ? 1 : -1;
+                } else {
+                    return direction === 'ascending' ? -1 : 1;
+                }
             }
-            if (a[sortConfig.key] > b[sortConfig.key]) {
-                return sortConfig.direction === 'ascending' ? 1 : -1;
-            }
-            return 0;
         });
-    }
+    };
 
     const renderSortArrow = (key) => {
         if (sortConfig.key === key) {
@@ -42,12 +50,45 @@ const ExpertDayList = () => {
         return null;
     };
 
-    const calculateAvgCallsPerDay = (callsData) => {
-        if (callsData.length === 0) return 0;
+    const calculateSortValue = (item, key) => {
+        switch (key) {
+            case 'successfulCalls':
+                return calculateSuccessfulCalls(item);
+            case 'failedCalls':
+                return calculateFailedCalls(item);
+            case 'avgCallsPerDay':
+                return calculateAvgCallsPerDay(item);
+            default:
+                return item[key];
+        }
+    };
 
-        const totalCalls = callsData.length;
+    const calculateSuccessfulCalls = (expert) => {
+        const currentDate = new Date().toISOString().split('T')[0];
+        const expertCalls = calls.filter(call => call.expert === expert._id);
+        const callsDataCurrentDay = expertCalls.filter(call => {
+            const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
+            return callDate === currentDate;
+        });
+        return callsDataCurrentDay.filter(call => call.status === 'successful').length;
+    };
 
-        const uniqueDaysSpoken = new Set(callsData.map(call => {
+    const calculateFailedCalls = (expert) => {
+        const currentDate = new Date().toISOString().split('T')[0];
+        const expertCalls = calls.filter(call => call.expert === expert._id);
+        const callsDataCurrentDay = expertCalls.filter(call => {
+            const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
+            return callDate === currentDate;
+        });
+        return callsDataCurrentDay.filter(call => call.status !== 'successful').length;
+    };
+
+    const calculateAvgCallsPerDay = (expert) => {
+        const expertCalls = calls.filter(call => call.expert === expert._id);
+        if (expertCalls.length === 0) return 0;
+
+        const totalCalls = expertCalls.length;
+        const uniqueDaysSpoken = new Set(expertCalls.map(call => {
             const callDate = new Date(call.initiatedTime);
             return callDate.toISOString().split('T')[0];
         }));
@@ -61,16 +102,10 @@ const ExpertDayList = () => {
         const wsData = [
             ['Expert', 'Success', 'Failed', 'Avg.', 'C.Score', 'Share', 'Repeat %', 'T.Score', 'Status'] // Header row
         ];
-        experts.forEach((expert) => {
-            const currentDate = new Date().toISOString().split('T')[0];
-            const expertCalls = calls.filter(call => call.expert === expert._id);
-            const callsDataCurrentDay = expertCalls.filter(call => {
-                const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
-                return callDate === currentDate;
-            });
-            const successfulCalls = callsDataCurrentDay.filter(call => call.status === 'successful').length;
-            const failedCalls = callsDataCurrentDay.filter(call => call.status !== 'successful').length;
-            const avgCallsPerDay = calculateAvgCallsPerDay(expertCalls);
+        sortData(experts, sortConfig.key, sortConfig.direction).forEach((expert) => {
+            const successfulCalls = calculateSuccessfulCalls(expert);
+            const failedCalls = calculateFailedCalls(expert);
+            const avgCallsPerDay = calculateAvgCallsPerDay(expert);
             wsData.push([
                 expert.name,
                 successfulCalls,
@@ -84,10 +119,9 @@ const ExpertDayList = () => {
             ]);
         });
 
-        const ws = XLSX.utils.aoa_to_sheet(wsData); // Convert array of arrays to worksheet
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
         XLSX.utils.book_append_sheet(wb, ws, 'Expert_Data'); // Append worksheet to workbook
 
-        // Save the workbook as an Excel file
         XLSX.writeFile(wb, 'ExpertDayList.xlsx');
     };
 
@@ -108,53 +142,25 @@ const ExpertDayList = () => {
                         <th onClick={() => handleSort('avgCallsPerDay')}>
                             Avg.{renderSortArrow('avgCallsPerDay')}
                         </th>
-                        <th onClick={() => handleSort('score')}>
-                            C.Score{renderSortArrow('score')}
-                        </th>
-
-                        <th onClick={() => handleSort('callsShare')}>
-                            Share{renderSortArrow('callsShare')}
-                        </th>
-                        <th onClick={() => handleSort('repeatRate')}>
-                            Repeat %{renderSortArrow('repeatRate')}
-                        </th>
-                        <th onClick={() => handleSort('totalScore')}>
-                            T.Score{renderSortArrow('totalScore')}
-                        </th>
                         <th>Status</th>
                         <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {experts.map((expert) => {
-                        const currentDate = new Date().toISOString().split('T')[0];
-                        const expertCalls = calls.filter(call => call.expert === expert._id);
-                        const callsDataCurrentDay = expertCalls.filter(call => {
-                            const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
-                            return callDate === currentDate;
-                        });
-                        const successfulCalls = callsDataCurrentDay.filter(call => call.status === 'successful').length;
-                        const failedCalls = callsDataCurrentDay.filter(call => call.status !== 'successful').length;
-                        const avgCallsPerDay = calculateAvgCallsPerDay(expertCalls);
-                        return (
-                            <tr key={expert._id} className="row">
-                                <td>{expert.name}</td>
-                                <td>{successfulCalls}</td>
-                                <td>{failedCalls}</td>
-                                <td>{avgCallsPerDay.toFixed(2)}</td>
-                                <td>{expert.score * 20}</td>
-                                <td>{expert.callsShare}%</td>
-                                <td>{expert.repeatRate}%</td>
-                                <td>{expert.totalScore}</td>
-                                <td>{expert.status}</td>
-                                <td>
-                                    <Link to={`/experts/${expert._id}`} className="view-details-link">
-                                        View
-                                    </Link>
-                                </td>
-                            </tr>
-                        );
-                    })}
+                    {sortData(experts, sortConfig.key, sortConfig.direction).map((expert) => (
+                        <tr key={expert._id} className="row">
+                            <td>{expert.name}</td>
+                            <td>{calculateSuccessfulCalls(expert)}</td>
+                            <td>{calculateFailedCalls(expert)}</td>
+                            <td>{calculateAvgCallsPerDay(expert).toFixed(2)}</td>
+                            <td>{expert.status}</td>
+                            <td>
+                                <Link to={`/experts/${expert._id}`} className="view-details-link">
+                                    View
+                                </Link>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
             <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -168,7 +174,6 @@ const ExpertDayList = () => {
             </Link>
             <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
         </div>
-
     );
 };
 

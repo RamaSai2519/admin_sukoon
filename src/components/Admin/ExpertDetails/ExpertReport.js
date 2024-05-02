@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import { FaArrowLeft } from 'react-icons/fa';
 import 'react-circular-progressbar/dist/styles.css';
 import './ExpertDetails.css';
 
@@ -76,8 +77,11 @@ const ExpertDetails = () => {
     <div className='details-container'>
       {expert && (
         <div className='report-content-container'>
-          <div style={{ margin: '20px', fontSize: '18px' }}>
-            <h2>Detailed Scores</h2>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px'}}>
+            <h1>Detailed Scores</h1>
+            <button className='back-button' onClick={() => window.history.back()}>
+              <FaArrowLeft className="back-icon" />
+            </button>
           </div>
           <div className="report-grid-container">
             <div className="report-grid-item">

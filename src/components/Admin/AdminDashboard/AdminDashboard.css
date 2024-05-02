@@ -164,6 +164,31 @@
     }
 }
 
+.back-icon {
+    font-size: 30px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 25px;
+    padding: 5px;
+    &:hover {
+        box-shadow: 0 0 0 ;
+    }
+    cursor: pointer;
+}
+
+.dark-mode .back-icon {
+    color: #fff;
+    background-color: #212121;
+    &:hover {
+        background-color: #141414;
+    }
+}
+
+.back-button {
+    background-color: inherit;
+    border-radius: 25px;
+    border-width: 0;
+}
+
 .tabs {
     display: flex;
     margin-bottom: 20px;
