@@ -73,7 +73,6 @@ const ApplicationsTab = () => {
                                 <th onClick={() => handleSort("createdDate")}>
                                     Applied Date {renderSortArrow("createdDate")}
                                 </th>
-                                <th>Video</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -85,11 +84,6 @@ const ApplicationsTab = () => {
                                     <td>{application.dateOfBirth}</td>
                                     <td>{application.gender}</td>
                                     <td>{application.createdDate}</td>
-                                    <td>
-                                        <a href={application.video} target="_blank" rel="noreferrer">
-                                            View
-                                        </a>
-                                    </td>
                                 </tr>
                             ))}
                         </tbody>
