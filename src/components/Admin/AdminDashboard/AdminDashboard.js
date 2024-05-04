@@ -4,6 +4,7 @@ import DashboardTab from './DashboardTabs/DashboardTab';
 import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
 import UsersTab from './DashboardTabs/UsersTab';
 import ApplicationsTab from './DashboardTabs/ApplicationsTab';
+import SchedulerTab from './DashboardTabs/SchedulerTab';
 import ScrollBottom from './ScrollBottom';
 import './AdminDashboard.css';
 import socketIOClient from 'socket.io-client';
@@ -129,6 +130,11 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('applications')}
             active={activeTab === 'applications'}
           />
+          <Tab 
+            label="Scheduler"
+            onClick={() => setActiveTab('scheduler')}
+            active={activeTab === 'scheduler'}
+          />
         </div>
         <div className="tabs">
           <Tab
@@ -144,6 +150,7 @@ const AdminDashboard = () => {
       {activeTab === 'users' && <UsersTab />}
       {activeTab === 'applications' && <ApplicationsTab />}
       {activeTab === 'notifications' && <ErrorLogsComponent />}
+      {activeTab === 'scheduler' && <SchedulerTab />}
 
       <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
         <h1 className="experts-button">View All Experts</h1>
