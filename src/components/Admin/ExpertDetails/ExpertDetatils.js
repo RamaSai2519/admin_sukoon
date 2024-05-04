@@ -53,7 +53,7 @@ const ExpertDetails = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [expertId]);
+  }, [expertId, setExpert, setName, setPhoneNumber, setTopics, setDescription, setCategories, setProfile, setStatus, setCallsShare, setLanguages, setScore, setRepeatScore, setTotalScore]);
 
   const fetchAllCategories = () => {
     axios.get('/api/categories')
@@ -246,7 +246,7 @@ const ExpertDetails = () => {
             {editMode ? (
               <>
                 <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
-                <button className='update-button' onClick={handleUpdate}>Update Details</button>
+                <button className='update-button' onClick={() => handleUpdate(status)}>Update Details</button>
               </>
             ) : (
               <>
