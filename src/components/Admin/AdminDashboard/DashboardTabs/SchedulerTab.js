@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from "react";
-import { Select, DatePicker, Form, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Select, DatePicker, Form, Button, Table } from "antd";
+import axios from "axios";
 import useUserManagement from "../../../../services/useUserManagement";
 import useExpertManagement from "../../../../services/useExpertManagement";
-import axios from "axios";
-import { Table } from "antd";
 
 const { Option } = Select;
 
@@ -12,44 +11,42 @@ const SchedulerTab = () => {
     const { experts } = useExpertManagement();
     const [dataSource, setDataSource] = useState([]);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const schedulesResponse = await axios.get("/api/schedule");
-                setDataSource(schedulesResponse.data.map(schedule => ({
-                    ...schedule,
-                    key: schedule._id
-                })));
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
+    const fetchData = async () => {
+        try {
+            const schedulesResponse = await axios.get("/api/schedule");
+            setDataSource(schedulesResponse.data.map(schedule => ({
+                ...schedule,
+                key: schedule._id,
+            })));
+        } catch (error) {
+            console.error("Error fetching data:", error);
         }
+    };
 
+    useEffect(() => {
         fetchData();
     }, []);
 
     const columns = [
         {
-            title: 'User',
-            dataIndex: 'user',
-            key: 'user',
+            title: "User",
+            dataIndex: "user",
+            key: "user",
         },
         {
-            title: 'Expert',
-            dataIndex: 'expert',
-            key: 'expert',
+            title: "Expert",
+            dataIndex: "expert",
+            key: "expert",
         },
         {
-            title: 'Date & Time',
-            dataIndex: 'datetime',
-            key: 'datetime',
+            title: "Date & Time",
+            dataIndex: "datetime",
+            key: "datetime",
         },
         {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => (
-                <Button>Edit</Button>
-            ),
+            title: "Action",
+            key: "action",
+            render: () => <Button>Edit</Button>,
         },
     ];
 
@@ -65,25 +62,34 @@ const SchedulerTab = () => {
         </Option>
     ));
 
-    const onFinish = async (values) => {
+    const onFinish = async values => {
         try {
-            const datetime = values.datetime;
-            console.log('Success:', { ...values, datetime });
-            await axios.post('/api/schedule', { ...values, datetime });
+            const selectedDateTime = values.datetime;
+            const now = new Date();
+            if (selectedDateTime <= now) {
+                window.alert("Selected time has already passed. Please select a future time.");
+            } else {
+                await axios.post("/api/schedule", values);
+                window.alert("Call Scheduled successfully");
+                fetchData(); // Update data without reloading the page
+            }
         } catch (error) {
-            console.error('Error:', error);
+            console.error("Error:", error);
         }
     };
 
     return (
         <div>
-
-            <Form name="schedule-call" className="grid grid-row grid-cols-4 gap-2 p-2 m-0 items-center" onFinish={onFinish}>
-
-                <Form.Item className="m-0" name={'user'} rules={[{
-                    required: true,
-                    message: 'Please select a user'
-                }]}>
+            <Form name="schedule-call" className="scheduler-grid-row" onFinish={onFinish}>
+                <Form.Item
+                    name={"user"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select a user",
+                        },
+                    ]}
+                >
                     <Select
                         id="user"
                         style={{ width: "100%" }}
@@ -97,10 +103,16 @@ const SchedulerTab = () => {
                         {userOptions}
                     </Select>
                 </Form.Item>
-                <Form.Item className="m-0" name={'expert'} rules={[{
-                    required: true,
-                    message: 'Please select an expert'
-                }]}>
+                <Form.Item
+                    className="m-0"
+                    name={"expert"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select an expert",
+                        },
+                    ]}
+                >
                     <Select
                         id="expert"
                         style={{ width: "100%" }}
@@ -115,11 +127,16 @@ const SchedulerTab = () => {
                     </Select>
                 </Form.Item>
 
-
-                <Form.Item className="m-0" name={'datetime'} rules={[{
-                    required: true,
-                    message: 'Please select a date and time'
-                }]}>
+                <Form.Item
+                    className="m-0"
+                    name={"datetime"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select a date and time",
+                        },
+                    ]}
+                >
                     <DatePicker
                         id="datetime"
                         style={{ width: "100%" }}
@@ -128,15 +145,14 @@ const SchedulerTab = () => {
                     />
                 </Form.Item>
 
-
-                <Button htmlType="submit" style={{ width: "100%" }}>Schedule</Button>
-
+                <Button htmlType="submit" style={{ width: "100%" }}>
+                    Schedule
+                </Button>
             </Form>
 
             <div>
                 <Table dataSource={dataSource} columns={columns} />
             </div>
-
         </div>
     );
 };
