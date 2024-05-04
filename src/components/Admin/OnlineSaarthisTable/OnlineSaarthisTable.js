@@ -12,7 +12,7 @@ const OnlineSaarthisTable = ({ onlineSaarthis }) => {
           {onlineSaarthis.map(saarthi => (
             <tr key={saarthi._id}>
               <td>{saarthi.name}</td>
-              <td className='status'>{saarthi.isBusy ? 'Busy' : 'Free'}</td>
+              <td className='status'>{saarthi.isBusy ? 'Busy' : 'Available'}</td>
             </tr>
           ))}
         </tbody>

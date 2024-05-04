@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import DashboardTab from './DashboardTabs/DashboardTab';
 import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
 import UsersTab from './DashboardTabs/UsersTab';
+import ApplicationsTab from './DashboardTabs/ApplicationsTab';
 import ScrollBottom from './ScrollBottom';
 import './AdminDashboard.css';
 import socketIOClient from 'socket.io-client';
@@ -123,6 +124,11 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('onlineSaarthis')}
             active={activeTab === 'onlineSaarthis'}
           />
+          <Tab
+            label="Applications"
+            onClick={() => setActiveTab('applications')}
+            active={activeTab === 'applications'}
+          />
         </div>
         <div className="tabs">
           <Tab
@@ -136,6 +142,7 @@ const AdminDashboard = () => {
       {activeTab === 'dashboard' && <DashboardTab />}
       {activeTab === 'onlineSaarthis' && <OnlineSaarthisTab />}
       {activeTab === 'users' && <UsersTab />}
+      {activeTab === 'applications' && <ApplicationsTab />}
       {activeTab === 'notifications' && <ErrorLogsComponent />}
 
       <Link to="/experts" style={{ textDecoration: 'none', color: 'inherit' }}>

@@ -37,6 +37,19 @@ const ExpertGraph = () => {
     return callData.filter(call => new Date(call.initiatedTime) > startDate);
   };
 
+  function handleClick(evt) {
+    const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+
+    if (points.length) {
+      const firstPoint = points[0];
+      const label = chart.data.labels[firstPoint.index];
+      const value = chart.data.datasets[firstPoint.datasetIndex].data[firstPoint.index];
+      console.log("labelClicked: ", label )
+      console.log("valueClicked: ", value)
+    }
+  }
+
+
   const renderChart = (callData, expertData) => {
     const filteredCalls = filterCallsByTimeframe(callData);
     const successfulCalls = filteredCalls.filter(call => call.status === 'successful');
@@ -103,7 +116,9 @@ const ExpertGraph = () => {
                 },
               },
             },
+            onClick: handleClick
           },
+
         })
       );
     }
@@ -116,7 +131,7 @@ const ExpertGraph = () => {
   return (
     <div className="chart-container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h2 style={{margin: "0"}}>Calls per Expert (Successful)</h2>
+        <h2 style={{ margin: "0" }}>Calls per Expert (Successful)</h2>
         <div className='drop-down'>
           <label>
             <select value={timeframe} onChange={handleTimeframeChange}>
