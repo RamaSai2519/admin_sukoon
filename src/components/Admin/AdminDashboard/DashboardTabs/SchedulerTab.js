@@ -15,7 +15,7 @@ const SchedulerTab = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const schedulesResponse = await axios.get("http://127.0.0.1:80/api/schedule");
+                const schedulesResponse = await axios.get("/api/schedule");
                 setDataSource(schedulesResponse.data.map(schedule => ({
                     ...schedule,
                     key: schedule._id
@@ -69,7 +69,7 @@ const SchedulerTab = () => {
         try {
             const datetime = values.datetime;
             console.log('Success:', { ...values, datetime });
-            await axios.post('http://127.0.0.1:80/api/schedule', { ...values, datetime });
+            await axios.post('/api/schedule', { ...values, datetime });
         } catch (error) {
             console.error('Error:', error);
         }
