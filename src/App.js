@@ -75,24 +75,21 @@ const App = () => {
         <Routes>
           {isLoggedIn ? (
             <>
-              <Route path="/" element={<Navigate to="/calls/dashboard" />} />
-              <Route path="/calls" element={<CallList />} />
-              <Route path="/users" element={<UsersList />} />
-              <Route path="/experts" element={<ExpertsList />} />
-              <Route path="/calls/:callId" element={<CallDetails />} />
-              <Route path="/users/:userId" element={<UserDetails />} />
-              <Route path="/experts/:expertId" element={<ExpertDetails />} />
-              <Route path="/experts/:expertId/report" element={<ExpertReport />} />
-              <Route path="/calls/dashboard" element={<AdminDashboard />} />
-              <Route path="/calls/approve/:scheduleId/:level" element={<ApprovePage />} />
-              <Route path="*" element={<Navigate to="/calls/dashboard" />} />
+              <Route path="/" element={<Navigate to="/admin/dashboard" />} />
+              <Route path="/admin/calls" element={<CallList />} />
+              <Route path="/admin/users" element={<UsersList />} />
+              <Route path="/admin/experts" element={<ExpertsList />} />
+              <Route path="/admin/calls/:callId" element={<CallDetails />} />
+              <Route path="/admin/users/:userId" element={<UserDetails />} />
+              <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
+              <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="*" element={<Navigate to="/admin/dashboard" />} />
             </>
           ) : (
             <>
-              <Route path="/" element={<AdminLogin onLogin={handleLogin} />} />
-              <Route path="/calls/*" element={<Navigate to="/" />} />
-              <Route path="*" element={<Navigate to="/" />} />
-              <Route path="/*" element={<Navigate to="/" />} />
+              <Route path="/*" element={<AdminLogin onLogin={handleLogin} />} />
+              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
             </>
           )}
         </Routes>

@@ -107,7 +107,7 @@ const LastFiveCallsTable = () => {
             <td>{call.status}</td>
             <td>{call.ConversationScore}</td>
             <td>
-              <Link to={`/calls/${call.callId}`} className="view-details-link">
+              <Link to={`/admin/calls/${call.callId}`} className="view-details-link">
                 View
               </Link>
             </td>

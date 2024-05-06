@@ -12,7 +12,7 @@ const AdminLogin = ({ onLogin }) => {
     const handleLogin = () => {
         if (email === 'admin@sukoon.love' && password === 'Care@sukoon123') {
             onLogin();
-            navigate('/calls/dashboard');
+            navigate('/admin/dashboard');
         } else {
             setError('Invalid email or password');
         }
