@@ -84,6 +84,7 @@ const App = () => {
               <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
               <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
               <Route path="*" element={<Navigate to="/admin/dashboard" />} />
             </>
           ) : (
