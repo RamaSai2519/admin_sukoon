@@ -13,6 +13,7 @@ import UserDetails from './components/Admin/UserDetails/UserDetails';
 import ExpertDetails from './components/Admin/ExpertDetails/ExpertDetatils';
 import ClearCacheButton from './components/ClearCacheButton';
 import ExpertReport from './components/Admin/ExpertDetails/ExpertReport';
+import ApprovePage from './components/Admin/AdminDashboard/DashboardTabs/Scheduler/ApprovePage';
 import './App.css';
 
 const App = () => {
@@ -83,6 +84,7 @@ const App = () => {
               <Route path="/experts/:expertId" element={<ExpertDetails />} />
               <Route path="/experts/:expertId/report" element={<ExpertReport />} />
               <Route path="/calls/dashboard" element={<AdminDashboard />} />
+              <Route path="/calls/approve/:scheduleId/:level" element={<ApprovePage />} />
               <Route path="*" element={<Navigate to="/calls/dashboard" />} />
             </>
           ) : (

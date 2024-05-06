@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
-      "./src/components/Admin/AdminDashboard/DashboardTabs/Scheduler.js",
+      "./src/components/Admin/AdminDashboard/DashboardTabs/Scheduler",
     ],
     theme: {
       extend: {

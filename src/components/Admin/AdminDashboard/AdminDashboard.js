@@ -4,7 +4,7 @@ import DashboardTab from './DashboardTabs/DashboardTab';
 import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
 import UsersTab from './DashboardTabs/UsersTab';
 import ApplicationsTab from './DashboardTabs/ApplicationsTab';
-import SchedulerTab from './DashboardTabs/SchedulerTab';
+import SchedulerTab from './DashboardTabs/Scheduler/SchedulerTab';
 import ScrollBottom from './ScrollBottom';
 import './AdminDashboard.css';
 import socketIOClient from 'socket.io-client';

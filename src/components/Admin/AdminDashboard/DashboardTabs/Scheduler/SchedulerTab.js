@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Select, DatePicker, Form, Button, Table, Modal } from "antd";
 import axios from "axios";
 import moment from "moment"; // Import moment library
-import useUserManagement from "../../../../services/useUserManagement";
-import useExpertManagement from "../../../../services/useExpertManagement";
+import useUserManagement from "../../../../../services/useUserManagement";
+import useExpertManagement from "../../../../../services/useExpertManagement";
 
 const { Option } = Select;
 
@@ -49,9 +49,25 @@ const SchedulerTab = () => {
         {
             title: "Action",
             key: "action",
-            render: (_, record) => <Button onClick={() => handleEdit(record)}>Edit</Button>,
+            render: (_, record) => 
+            <>
+            <Button onClick={() => handleEdit(record)}>Edit</Button>
+
+            <Button onClick={() => handleDelete(record)}>Delete</Button>
+            </>
         },
     ];
+
+    const handleDelete = async (record) => {
+        try {
+            await axios.delete(`/api/schedule/${record._id}`);
+            window.alert("Schedule deleted successfully");
+            fetchData();
+        } catch (error) {
+            console.error("Error deleting schedule:", error);
+        }
+    };
+
 
     const handleEdit = (record) => {
         setSelectedSchedule(record);
@@ -188,7 +204,7 @@ const EditModalForm = ({ visible, onCancel, schedule, fetchData }) => {
                 ...schedule,
                 user: values.user,
                 expert: values.expert,
-                datetime: values.datetime.toISOString(), // Convert to ISO string
+                datetime: values.datetime.toISOString(),
             };
             await axios.put(`/api/schedule/${schedule._id}`, updatedSchedule);
             window.alert("Schedule updated successfully");
