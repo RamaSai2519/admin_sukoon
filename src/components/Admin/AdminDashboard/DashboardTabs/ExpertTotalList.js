@@ -164,7 +164,7 @@ const ExpertTotalList = () => {
                             <td>{expert.totalScore}</td>
                             <td>{expert.status}</td>
                             <td>
-                                <Link to={`/experts/${expert._id}`} className="view-details-link">
+                                <Link to={`/admin/experts/${expert._id}`} className="view-details-link">
                                     View
                                 </Link>
                             </td>
@@ -173,10 +173,10 @@ const ExpertTotalList = () => {
                 </tbody>
             </table>
             <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
-            <Link to="/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link to="/admin/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <h1 className="calls-button">View All Calls</h1>
             </Link>
-            <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link to="/admin/users" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <h1 className="users-button">View All Users</h1>
             </Link>
         </div>

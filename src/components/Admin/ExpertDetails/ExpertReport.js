@@ -441,7 +441,7 @@ const ExpertDetails = () => {
             )}
             <Link
               to={{
-                pathname: `/experts/${expertId}/report`
+                pathname: `/admin/experts/${expertId}/report`
               }}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
