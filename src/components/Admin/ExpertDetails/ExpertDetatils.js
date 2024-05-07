@@ -73,7 +73,7 @@ const ExpertDetails = () => {
 
   const handleCategoryChange = (event) => {
     const { value, checked } = event.target;
-    if (checked && categories.length < 3) {
+    if (checked) {
       setCategories(prevCategories => [...prevCategories, value]);
     } else if (!checked) {
       setCategories(prevCategories => prevCategories.filter(category => category !== value));
