@@ -166,7 +166,7 @@ const SchedulerTab = () => {
             </Form>
 
             <div>
-                <Table dataSource={dataSource} columns={columns} />
+                <Table dataSource={dataSource.reverse()} columns={columns} />
             </div>
         </div>
     );
