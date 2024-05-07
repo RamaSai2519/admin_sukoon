@@ -85,11 +85,11 @@ const App = () => {
               <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
-              {/* <Route path="/" element={<Navigate to="/admin/dashboard" />} /> */}
+              <Route path="/*" element={<Navigate to="/admin/dashboard" />} />
             </>
           ) : (
             <>
-              <Route path="/" element={<AdminLogin onLogin={handleLogin} />} />
+              <Route path="/*" element={<AdminLogin onLogin={handleLogin} />} />
               <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
             </>
           )}
