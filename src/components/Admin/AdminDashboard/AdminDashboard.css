@@ -19,6 +19,11 @@
     grid-template-columns: repeat(2, 1fr);
 }
 
+.users-grid-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+
 .grid-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -194,15 +199,18 @@
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     border-radius: 25px;
     padding: 5px;
+
     &:hover {
-        box-shadow: 0 0 0 ;
+        box-shadow: 0 0 0;
     }
+
     cursor: pointer;
 }
 
 .dark-mode .back-icon {
     color: #fff;
     background-color: #212121;
+
     &:hover {
         background-color: #141414;
     }
@@ -247,6 +255,14 @@
 
 .dark-mode .tab.active:hover {
     background-color: #212121;
+}
+
+.popup-body {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    padding: 10px;
 }
 
 .dark-mode .tab {

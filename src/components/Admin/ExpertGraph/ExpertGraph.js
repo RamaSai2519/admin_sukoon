@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
 import './ExpertGraph.css';
-import useExpertManagement from '../../../services/useExpertManagement';
-import useCallsData from '../../../services/useCallsData';
+import { useCallsData, useExpertManagement } from '../../../services/useCallsData';
 
 const ExpertGraph = () => {
   const { experts, fetchNewExperts } = useExpertManagement();
@@ -36,19 +35,6 @@ const ExpertGraph = () => {
     }
     return callData.filter(call => new Date(call.initiatedTime) > startDate);
   };
-
-  function handleClick(evt) {
-    const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
-
-    if (points.length) {
-      const firstPoint = points[0];
-      const label = chart.data.labels[firstPoint.index];
-      const value = chart.data.datasets[firstPoint.datasetIndex].data[firstPoint.index];
-      console.log("labelClicked: ", label )
-      console.log("valueClicked: ", value)
-    }
-  }
-
 
   const renderChart = (callData, expertData) => {
     const filteredCalls = filterCallsByTimeframe(callData);
@@ -116,7 +102,6 @@ const ExpertGraph = () => {
                 },
               },
             },
-            onClick: handleClick
           },
 
         })

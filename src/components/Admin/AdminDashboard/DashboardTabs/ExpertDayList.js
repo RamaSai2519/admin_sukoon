@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useCallsData from '../../../../services/useCallsData';
-import useExpertManagement from '../../../../services/useExpertManagement';
+import { useCallsData, useExpertManagement } from '../../../../services/useCallsData';
 import * as XLSX from 'xlsx'; // Import XLSX library for Excel file generation
 
 const ExpertDayList = () => {
@@ -98,7 +97,7 @@ const ExpertDayList = () => {
     };
 
     const downloadExcel = () => {
-        const wb = XLSX.utils.book_new(); // Create a new Excel Workbook
+        const wb = XLSX.utils.book_new();
         const wsData = [
             ['Expert', 'Success', 'Failed', 'Avg.', 'C.Score', 'Share', 'Repeat %', 'T.Score', 'Status'] // Header row
         ];

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
-import useCallsData from '../../../services/useCallsData';
+import { useCallsData } from '../../../services/useCallsData';
 
 const HourCallChart = () => {
     const { calls } = useCallsData();

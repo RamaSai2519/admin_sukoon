@@ -7,9 +7,8 @@ import ApplicationsTab from './DashboardTabs/ApplicationsTab';
 import SchedulerTab from './DashboardTabs/Scheduler/SchedulerTab';
 import ScrollBottom from './ScrollBottom';
 import './AdminDashboard.css';
-import socketIOClient from 'socket.io-client';
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getMessaging, getToken } from "firebase/messaging";
 import ErrorLogsComponent from './DashboardTabs/Notifications';
 
 const firebaseConfig = {
@@ -64,16 +63,6 @@ const AdminDashboard = () => {
           sendFCMTokenToServer(currentToken);
         }
       })
-
-    const socket = socketIOClient('/api');
-
-    socket.on('error_notification', (data) => {
-      setErrors((prevErrors) => [...prevErrors, data]);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
   }, []);
 
   useEffect(() => {
@@ -130,7 +119,7 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('applications')}
             active={activeTab === 'applications'}
           />
-          <Tab 
+          <Tab
             label="Scheduler"
             onClick={() => setActiveTab('scheduler')}
             active={activeTab === 'scheduler'}

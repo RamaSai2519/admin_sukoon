@@ -1,7 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
-const useCallsData = () => {
+const CallsDataContext = React.createContext();
+
+export const useCallsData = () => {
+  return useContext(CallsDataContext);
+};
+
+export const CallsDataProvider = ({ children }) => {
   const [calls, setCalls] = useState([]);
 
   useEffect(() => {
@@ -9,41 +15,47 @@ const useCallsData = () => {
       try {
         const response = await axios.get('/api/calls');
         setCalls(response.data.reverse());
-        localStorage.setItem('calls', JSON.stringify(response.data));
       } catch (error) {
         console.error('Error fetching all calls:', error);
       }
     };
 
-    const cachedCalls = JSON.parse(localStorage.getItem('calls'));
-    if (cachedCalls != null) {
-      setCalls(cachedCalls);
-      fetchNewCalls(cachedCalls);
-    } else {
-      fetchCalls();
-    }
+    fetchCalls();
   }, []);
 
-  const fetchNewCalls = async (cachedCalls) => {
-    const latestTimestamp = cachedCalls.length > 0 ? cachedCalls[0].initiatedTime : 0;
-    try {
-      const response = await axios.get(`/api/new-calls?timestamp=${latestTimestamp}`);
-      const newData = response.data;
-      const filteredNewData = newData.filter(newCall => !cachedCalls.some(cachedCall => cachedCall.initiatedTime === newCall.initiatedTime));
-      if (filteredNewData.length > 0) {
-        const mergedData = [...cachedCalls, ...filteredNewData];
-        mergedData.sort((a, b) => new Date(b.initiatedTime).getTime() - new Date(a.initiatedTime).getTime());
-        setCalls(mergedData);
-        localStorage.setItem('calls', JSON.stringify(mergedData));
-      }
-    } catch (error) {
-      console.error('Error fetching new calls:', error);
-    }
-  };
-
-
-
-  return { calls };
+  return (
+    <CallsDataContext.Provider value={{ calls }}>
+      {children}
+    </CallsDataContext.Provider>
+  );
 };
 
-export default useCallsData;
+
+const ExpertManagementContext = React.createContext();
+
+export const useExpertManagement = () => {
+  return useContext(ExpertManagementContext);
+};
+
+export const ExpertManagementProvider = ({ children }) => {
+  const [experts, setExperts] = useState([]);
+
+  useEffect(() => {
+    const fetchAllExperts = async () => {
+      try {
+        const response = await axios.get('/api/experts');
+        setExperts(response.data);
+      } catch (error) {
+        console.error('Error fetching all experts:', error);
+      }
+    };
+
+    fetchAllExperts();
+  }, []);
+
+  return (
+    <ExpertManagementContext.Provider value={{ experts }}>
+      {children}
+    </ExpertManagementContext.Provider>
+  );
+};

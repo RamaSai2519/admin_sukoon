@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const useUserManagement = () => {
   const [users, setUsers] = useState([]);
+  const [leads, setLeads] = useState([]);
 
   function findLatestTimestamp(experts) {
     let latestTimestamp = 0;
@@ -33,6 +34,7 @@ const useUserManagement = () => {
     if (cachedUsers) {
       setUsers(cachedUsers);
       fetchNewUsers(cachedUsers);
+      fetchAllLeads();
     } else {
       fetchAllUsers();
     }
@@ -55,9 +57,19 @@ const useUserManagement = () => {
     }
   };
 
+  const fetchAllLeads = async () => {
+    try {
+      const response = await axios.get('/api/leads');
+      setLeads(response.data);
+      localStorage.setItem('leads', JSON.stringify(response.data));
+    }
+    catch (error) {
+      console.error('Error fetching all leads:', error);
+    }
+  };
 
 
-  return { users };
+  return { users, leads };
 };
 
 export default useUserManagement;

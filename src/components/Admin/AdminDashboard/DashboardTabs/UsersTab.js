@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Popup from '../Popup';
 import Histograms from './Histograms';
-import useCallsData from '../../../../services/useCallsData';
+import { useCallsData } from '../../../../services/useCallsData';
 import useUserManagement from '../../../../services/useUserManagement';
 
 const UsersTab = () => {
-  const { users } = useUserManagement();
+  const { users, leads } = useUserManagement();
   const { calls } = useCallsData();
 
   const [totalUsers, setTotalUsers] = useState(0);
@@ -50,7 +50,7 @@ const UsersTab = () => {
     <div className="users-tab">
       <div className="dashboard-tiles">
         <div className="dashboard-tile">
-          <div className="grid-row">
+          <div className="users-grid-row">
             <div className="grid-tile-1">
               <h3>User Signups</h3>
               <h1>{totalUsers}</h1>
@@ -67,6 +67,10 @@ const UsersTab = () => {
             <div className="grid-tile-1" onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
               <h3>Users with More than Two Calls</h3>
               <h1>{moreThanTwoCallsUsers.length}</h1>
+            </div>
+            <div className="grid-tile-1" onClick={() => openPopup('Leads', leads)}>
+              <h3>Leads</h3>
+              <h1>{leads.length}</h1>
             </div>
           </div>
         </div>

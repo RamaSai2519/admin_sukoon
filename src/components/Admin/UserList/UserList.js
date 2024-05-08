@@ -132,7 +132,7 @@ const UsersList = () => {
                   <td>{new Date(user.createdDate).toLocaleDateString()}</td>
                   <td>{user.numberOfCalls}</td>
                   <td>
-                    <Link to={`/users/${user._id}`} className="view-details-link">
+                    <Link to={`/admin/users/${user._id}`} className="view-details-link">
                       View
                     </Link>
                   </td>

@@ -6,7 +6,7 @@ import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
 import { red, pink, green, yellow } from '@mui/material/colors';
 import './LastFiveCallsTable.css';
-import useCallsData from '../../../services/useCallsData';
+import { useCallsData } from '../../../services/useCallsData';
 
 const LastFiveCallsTable = () => {
   const { calls } = useCallsData();

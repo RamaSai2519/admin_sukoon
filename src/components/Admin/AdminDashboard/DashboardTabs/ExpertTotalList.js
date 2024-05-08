@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useCallsData from '../../../../services/useCallsData';
-import useExpertManagement from '../../../../services/useExpertManagement';
+import { useCallsData, useExpertManagement } from '../../../../services/useCallsData';
 import * as XLSX from 'xlsx';
 
 const ExpertTotalList = () => {
