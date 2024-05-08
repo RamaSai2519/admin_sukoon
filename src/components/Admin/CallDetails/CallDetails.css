@@ -59,7 +59,7 @@
 }
 
 .popup-content {
-    background-color: #212121;
+    background-color: #fff;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -67,6 +67,11 @@
     max-height: 80%;
     overflow-y: auto;
     position: relative;
+}
+
+.dark-mode .popup-content {
+    background-color: #212121;
+    min-width: 50%;
 }
 
 .close {
