@@ -61,7 +61,6 @@ const useUserManagement = () => {
     try {
       const response = await axios.get('/api/leads');
       setLeads(response.data);
-      localStorage.setItem('leads', JSON.stringify(response.data));
     }
     catch (error) {
       console.error('Error fetching all leads:', error);
