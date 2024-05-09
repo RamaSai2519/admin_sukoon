@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ExpertTotalList from "./ExpertTotalList";
 import ExpertDayList from "./ExpertDayList";
+import NavMenu from "../../../NavMenu/NavMenu";
 
 const SaarthisTab = () => {
   const [selectedOption, setSelectedOption] = useState(() => {
@@ -35,6 +36,7 @@ const SaarthisTab = () => {
           </div>
         </div>
       </div>
+      <NavMenu />
     </div>
   );
 };

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCallsData, useExpertManagement } from '../../../../services/useData';
 import * as XLSX from 'xlsx';
-import NavMenu from '../../../NavMenu/NavMenu';
 
 const ExpertDayList = () => {
     const { experts } = useExpertManagement();
@@ -163,7 +162,6 @@ const ExpertDayList = () => {
                     ))}
                 </tbody>
             </table>
-            <NavMenu />
             <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
         </div>
     );

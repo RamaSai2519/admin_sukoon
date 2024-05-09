@@ -172,12 +172,6 @@ const ExpertTotalList = () => {
                 </tbody>
             </table>
             <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
-            <Link to="/admin/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <h1 className="calls-button">View All Calls</h1>
-            </Link>
-            <Link to="/admin/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <h1 className="users-button">View All Users</h1>
-            </Link>
         </div>
     );
 };
