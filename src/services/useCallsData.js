@@ -1,6 +1,35 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
+const LeadsDataContext = React.createContext();
+
+export const useLeadsData = () => {
+  return useContext(LeadsDataContext);
+};
+
+export const LeadsDataProvider = ({ children }) => {
+  const [leads, setLeads] = useState([]);
+
+  useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        const response = await axios.get('/api/leads');
+        setLeads(response.data);
+      } catch (error) {
+        console.error('Error fetching all leads:', error);
+      }
+    };
+
+    fetchLeads();
+  }, []);
+
+  return (
+    <LeadsDataContext.Provider value={{ leads }}>
+      {children}
+    </LeadsDataContext.Provider>
+  );
+};
+
 const CallsDataContext = React.createContext();
 
 export const useCallsData = () => {
@@ -9,6 +38,7 @@ export const useCallsData = () => {
 
 export const CallsDataProvider = ({ children }) => {
   const [calls, setCalls] = useState([]);
+  
 
   useEffect(() => {
     const fetchCalls = async () => {

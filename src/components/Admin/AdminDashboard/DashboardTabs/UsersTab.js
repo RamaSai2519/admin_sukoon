@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Popup from '../Popup';
 import Histograms from './Histograms';
-import { useCallsData } from '../../../../services/useCallsData';
+import { useCallsData, useLeadsData } from '../../../../services/useCallsData';
 import useUserManagement from '../../../../services/useUserManagement';
 
 const UsersTab = () => {
-  const { users, leads } = useUserManagement();
+  const { users } = useUserManagement();
   const { calls } = useCallsData();
+  const { leads } = useLeadsData();
 
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentDayTotalUsers, setCurrentDayTotalUsers] = useState(0);
@@ -17,6 +18,7 @@ const UsersTab = () => {
 
   useEffect(() => {
     const currentDate = new Date().toLocaleDateString();
+    console.log(users.filter(user => new Date(user.createdDate).toLocaleDateString() === currentDate));
     const currentDayTotalUsersCount = users.filter(user => new Date(user.createdDate).toLocaleDateString() === currentDate).length;
     setCurrentDayTotalUsers(currentDayTotalUsersCount);
 

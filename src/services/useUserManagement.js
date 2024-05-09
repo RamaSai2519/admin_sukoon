@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const useUserManagement = () => {
   const [users, setUsers] = useState([]);
-  const [leads, setLeads] = useState([]);
 
   function findLatestTimestamp(experts) {
     let latestTimestamp = 0;
@@ -34,7 +33,6 @@ const useUserManagement = () => {
     if (cachedUsers) {
       setUsers(cachedUsers);
       fetchNewUsers(cachedUsers);
-      fetchAllLeads();
     } else {
       fetchAllUsers();
     }
@@ -45,6 +43,7 @@ const useUserManagement = () => {
     try {
       const response = await axios.get(`/api/new-users?timestamp=${latestTimestamp}`);
       const newData = response.data;
+      
       const filteredNewData = newData.filter(newUser => !cachedUsers.some(cachedUser => cachedUser.id === newUser.id));
       if (filteredNewData.length > 0) {
         const mergedData = [...cachedUsers, ...filteredNewData];
@@ -57,18 +56,7 @@ const useUserManagement = () => {
     }
   };
 
-  const fetchAllLeads = async () => {
-    try {
-      const response = await axios.get('/api/leads');
-      setLeads(response.data);
-    }
-    catch (error) {
-      console.error('Error fetching all leads:', error);
-    }
-  };
-
-
-  return { users, leads };
+  return { users };
 };
 
 export default useUserManagement;

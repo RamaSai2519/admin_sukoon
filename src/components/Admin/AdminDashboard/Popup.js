@@ -4,6 +4,14 @@ import { Table } from 'antd';
 
 const Popup = ({ title, users, onClose }) => {
 
+  const formatDate = (date) => {
+    new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    } ? date : 'N/A');
+  }
+
   const columns = [
     {
       title: "Name",
@@ -24,7 +32,7 @@ const Popup = ({ title, users, onClose }) => {
       title: "Date of Birth",
       dataIndex: "birthDate",
       key: "birthDate",
-      render: (birthDate) => new Date(birthDate).toLocaleDateString('en-US', {
+      render: (createdDate) => new Date(createdDate).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
@@ -59,3 +67,6 @@ const Popup = ({ title, users, onClose }) => {
 };
 
 export default Popup;
+
+
+
