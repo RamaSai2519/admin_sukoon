@@ -58,19 +58,19 @@ const UsersTab = () => {
               <h1>{totalUsers}</h1>
               <h4>Today: {currentDayTotalUsers}</h4>
             </div>
-            <div className="grid-tile-1" onClick={() => openPopup('Users with One Call', oneCallUsers)}>
+            <div className="grid-tile-1" style={{cursor: "pointer"}} onClick={() => openPopup('Users with One Call', oneCallUsers)}>
               <h3>Users with One Call</h3>
               <h1>{oneCallUsers.length}</h1>
             </div>
-            <div className="grid-tile-1" onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
+            <div className="grid-tile-1" style={{cursor: "pointer"}} onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
               <h3>Users with Two Calls</h3>
               <h1>{twoCallsUsers.length}</h1>
             </div>
-            <div className="grid-tile-1" onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
+            <div className="grid-tile-1" style={{cursor: "pointer"}} onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
               <h3>Users with More than Two Calls</h3>
               <h1>{moreThanTwoCallsUsers.length}</h1>
             </div>
-            <div className="grid-tile-1" onClick={() => openPopup('Partial Signups', leads)}>
+            <div className="grid-tile-1" style={{cursor: "pointer"}} onClick={() => openPopup('Partial Signups', leads)}>
               <h3>Partial Signups</h3>
               <h1>{leads.length}</h1>
             </div>

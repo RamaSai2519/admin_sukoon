@@ -137,6 +137,7 @@
 
 .menu-button:hover {
     background-color: grey;
+    cursor: pointer;
 }
 
 .dark-mode .menu-button {
