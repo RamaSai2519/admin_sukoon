@@ -117,6 +117,9 @@ const UsersList = () => {
                 <th onClick={() => handleSort('createdDate')}>
                   Joined Date {renderSortArrow('createdDate')}
                 </th>
+                <th onClick={() => handleSort('birthDate')}>
+                  DOB {renderSortArrow('birthDate')}
+                </th>
                 <th onClick={() => handleSort('numberOfCalls')}>
                   Balance {renderSortArrow('numberOfCalls')}
                 </th>
@@ -130,6 +133,7 @@ const UsersList = () => {
                   <td>{user.city}</td>
                   <td>{user.phoneNumber}</td>
                   <td>{new Date(user.createdDate).toLocaleDateString()}</td>
+                  <td>{new Date(user.birthDate).toLocaleDateString()}</td>
                   <td>{user.numberOfCalls}</td>
                   <td>
                     <Link to={`/admin/users/${user._id}`} className="view-details-link">

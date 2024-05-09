@@ -6,17 +6,32 @@ const Popup = ({ title, users, onClose }) => {
 
   const columns = [
     {
-        title: "Name",
-        dataIndex: "name",
-        key: "name",
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-        title: "Date Joined",
-        dataIndex: "createdDate",
-        key: "date",
+      title: "Date Joined",
+      dataIndex: "createdDate",
+      key: "date",
+      render: (createdDate) => new Date(createdDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }),
+    },
+    {
+      title: "Date of Birth",
+      dataIndex: "birthDate",
+      key: "birthDate",
+      render: (birthDate) => new Date(birthDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }),
     },
   ];
-  
+
   return (
     <div className="popup">
       <div className="popup-content">
@@ -33,7 +48,7 @@ const Popup = ({ title, users, onClose }) => {
             //     </li>
             //   ))}
             // </ul>
-            <Table dataSource={users.reverse()} columns={columns}/>
+            <Table dataSource={users.reverse()} columns={columns} />
           ) : (
             <p>No users to display</p>
           )}
