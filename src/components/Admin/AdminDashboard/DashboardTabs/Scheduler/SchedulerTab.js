@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Select, DatePicker, Form, Button, Table, Modal } from "antd";
+import { Select, DatePicker, Form, Button, Table } from "antd";
 import axios from "axios";
-import useUserManagement from "../../../../../services/useUserManagement";
-import { useExpertManagement } from "../../../../../services/useCallsData";
+import { useExpertManagement, useUserManagement, useUserData } from "../../../../../services/useData";
 
 const { Option } = Select;
 
 const SchedulerTab = () => {
-    const { users } = useUserManagement();
+    const { users } = useUserData();
     const { experts } = useExpertManagement();
     const [dataSource, setDataSource] = useState([]);
 

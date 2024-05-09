@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
+import { useUserData } from '../../../services/useData';
 import './UserList.css';
-import useUserManagement from '../../../services/useUserManagement';
+
 
 const UsersList = () => {
-  const { users } = useUserManagement();
+  const { users } = useUserData();
   const [filters, setFilters] = useState({
     user: '',
     city: '',

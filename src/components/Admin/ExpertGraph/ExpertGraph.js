@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
 import './ExpertGraph.css';
-import { useCallsData, useExpertManagement } from '../../../services/useCallsData';
+import { useCallsData, useExpertManagement } from '../../../services/useData';
 
 const ExpertGraph = () => {
   const { experts, fetchNewExperts } = useExpertManagement();

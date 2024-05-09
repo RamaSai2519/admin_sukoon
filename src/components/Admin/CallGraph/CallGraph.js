@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
 import './CallGraph.css';
-import { useCallsData } from '../../../services/useCallsData';
+import { useCallsData } from '../../../services/useData';
 
 const CallGraph = () => {
   const { calls } = useCallsData();

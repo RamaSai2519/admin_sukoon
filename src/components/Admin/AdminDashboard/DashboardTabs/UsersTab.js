@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Popup from '../Popup';
 import Histograms from './Histograms';
-import { useCallsData, useLeadsData } from '../../../../services/useCallsData';
-import useUserManagement from '../../../../services/useUserManagement';
+import LeadsPopup from './LeadsPopup';
+import { useCallsData, useLeadsData, useUserData } from '../../../../services/useData';
 
 const UsersTab = () => {
-  const { users } = useUserManagement();
+  const { users } = useUserData();
   const { calls } = useCallsData();
   const { leads } = useLeadsData();
 
@@ -79,11 +79,19 @@ const UsersTab = () => {
       </div>
       <Histograms usersData={users} />
       {popupContent.title && (
-        <Popup
-          title={popupContent.title}
-          users={popupContent.users}
-          onClose={closePopup}
-        />
+        popupContent.title === 'Leads' ? (
+          <LeadsPopup
+            title={popupContent.title}
+            users={popupContent.users}
+            onClose={closePopup}
+          />
+        ) : (
+          <Popup
+            title={popupContent.title}
+            users={popupContent.users}
+            onClose={closePopup}
+          />
+        )
       )}
     </div>
   );

@@ -4,14 +4,6 @@ import { Table } from 'antd';
 
 const Popup = ({ title, users, onClose }) => {
 
-  const formatDate = (date) => {
-    new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    } ? date : 'N/A');
-  }
-
   const columns = [
     {
       title: "Name",
@@ -49,13 +41,6 @@ const Popup = ({ title, users, onClose }) => {
         </div>
         <div>
           {users.length > 0 ? (
-            // <ul className="popup-body" style={{listStyle: "none"}}>
-            //   {users.map(user => (
-            //     <li key={user._id}>
-            //       {user.name}
-            //     </li>
-            //   ))}
-            // </ul>
             <Table dataSource={users.reverse()} columns={columns} />
           ) : (
             <p>No users to display</p>

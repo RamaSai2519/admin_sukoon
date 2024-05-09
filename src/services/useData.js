@@ -30,6 +30,36 @@ export const LeadsDataProvider = ({ children }) => {
   );
 };
 
+const UserDataContext = React.createContext();
+
+export const useUserData = () => {
+  return useContext(UserDataContext);
+};
+
+export const UserDataProvider = ({ children }) => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('/api/users');
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching all users:', error);
+      }
+    };
+
+    fetchUsers();
+  }
+    , []);
+
+  return (
+    <UserDataContext.Provider value={{ users }}>
+      {children}
+    </UserDataContext.Provider>
+  );
+};
+
 const CallsDataContext = React.createContext();
 
 export const useCallsData = () => {
@@ -38,7 +68,7 @@ export const useCallsData = () => {
 
 export const CallsDataProvider = ({ children }) => {
   const [calls, setCalls] = useState([]);
-  
+
 
   useEffect(() => {
     const fetchCalls = async () => {

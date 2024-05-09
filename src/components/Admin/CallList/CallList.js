@@ -6,7 +6,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
-import { useCallsData } from '../../../services/useCallsData';
+import { useCallsData } from '../../../services/useData';
 import { red, pink, green, yellow } from '@mui/material/colors';
 
 const CallsTable = () => {

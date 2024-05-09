@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import App from './App';
-import { CallsDataProvider, ExpertManagementProvider, LeadsDataProvider } from './services/useCallsData';
+import { CallsDataProvider, ExpertManagementProvider, LeadsDataProvider, UserDataProvider } from './services/useData';
 
 ReactGA.initialize('G-X1P4R644F2');
 
@@ -19,9 +19,11 @@ root.render(
     </Helmet>
     <CallsDataProvider>
       <ExpertManagementProvider>
-        <LeadsDataProvider>
-          <App />
-        </LeadsDataProvider>
+        <UserDataProvider>
+          <LeadsDataProvider>
+            <App />
+          </LeadsDataProvider>
+        </UserDataProvider>
       </ExpertManagementProvider>
     </CallsDataProvider>
   </Router>
