@@ -10,6 +10,7 @@ import './AdminDashboard.css';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import ErrorLogsComponent from './DashboardTabs/Notifications';
+import NavMenu from '../../NavMenu/NavMenu';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAJTlUxbEndDBjZBvDJUXGJBelkQHXfNAI",
@@ -121,13 +122,13 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('applications')}
             active={activeTab === 'applications'}
           />
-          <Tab
+          {/* <Tab
             label="Scheduler"
             onClick={() => setActiveTab('scheduler')}
             active={activeTab === 'scheduler'}
-          />
+          /> */}
           <Tab
-            label="Errors"
+            label="Logs"
             onClick={() => setActiveTab('notifications')}
             active={activeTab === 'notifications'}
           />
@@ -141,15 +142,7 @@ const AdminDashboard = () => {
       {activeTab === 'notifications' && <ErrorLogsComponent />}
       {activeTab === 'scheduler' && <SchedulerTab />}
 
-      <Link to="/admin/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="experts-button">View All Experts</h1>
-      </Link>
-      <Link to="/admin/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="calls-button">View All Calls</h1>
-      </Link>
-      <Link to="/admin/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="users-button">View All Users</h1>
-      </Link>
+      <NavMenu />
       <ScrollBottom />
       <div className="error-messages-container">
         {errors.map((error, index) => (

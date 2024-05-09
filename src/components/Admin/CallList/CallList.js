@@ -8,6 +8,7 @@ import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
 import { useCallsData } from '../../../services/useData';
 import { red, pink, green, yellow } from '@mui/material/colors';
+import NavMenu from '../../NavMenu/NavMenu';
 
 const CallsTable = () => {
   const { calls } = useCallsData();
@@ -153,15 +154,7 @@ const CallsTable = () => {
               ))}
             </tbody>
           </table>
-          <Link to="/admin/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <h1 className="experts-button">View All Experts</h1>
-          </Link>
-          <Link to="/admin/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <h1 className="calls-button">View All Calls</h1>
-          </Link>
-          <Link to="/admin/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <h1 className="users-button">View All Users</h1>
-          </Link>
+          <NavMenu />
           <ScrollBottom />
         </div>
       </div>

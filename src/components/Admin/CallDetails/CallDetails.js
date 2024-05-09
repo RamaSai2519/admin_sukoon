@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import { FaArrowLeft } from 'react-icons/fa';
+import NavMenu from '../../NavMenu/NavMenu';
 import axios from 'axios';
 import './CallDetails.css';
 
@@ -146,15 +147,7 @@ const CallDetails = () => {
                     <p>Initiated Time: {call.initiatedTime}</p>
                 </div>
             </div>
-            <Link to="/admin/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <h1 className="experts-button">View All Experts</h1>
-            </Link>
-            <Link to="/admin/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <h1 className="calls-button">View All Calls</h1>
-            </Link>
-            <Link to="/admin/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <h1 className="users-button">View All Users</h1>
-            </Link>
+            <NavMenu />
             <ScrollBottom />
         </div>
     );

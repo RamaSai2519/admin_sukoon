@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import './ExpertDetails.css';
+import NavMenu from '../../NavMenu/NavMenu';
 import { FaArrowLeft } from 'react-icons/fa';
 
 
@@ -264,15 +265,7 @@ const ExpertDetails = () => {
           </div>
         </div>
       )}
-      <Link to="/admin/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="experts-button">View All Experts</h1>
-      </Link>
-      <Link to="/admin/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="calls-button">View All Calls</h1>
-      </Link>
-      <Link to="/admin/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <h1 className="users-button">View All Users</h1>
-      </Link>
+      <NavMenu />
     </div>
   );
 };

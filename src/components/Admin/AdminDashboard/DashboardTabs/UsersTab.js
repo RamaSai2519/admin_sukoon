@@ -70,8 +70,8 @@ const UsersTab = () => {
               <h3>Users with More than Two Calls</h3>
               <h1>{moreThanTwoCallsUsers.length}</h1>
             </div>
-            <div className="grid-tile-1" onClick={() => openPopup('Leads', leads)}>
-              <h3>Leads</h3>
+            <div className="grid-tile-1" onClick={() => openPopup('Partial Signups', leads)}>
+              <h3>Partial Signups</h3>
               <h1>{leads.length}</h1>
             </div>
           </div>
@@ -79,7 +79,7 @@ const UsersTab = () => {
       </div>
       <Histograms usersData={users} />
       {popupContent.title && (
-        popupContent.title === 'Leads' ? (
+        popupContent.title === 'Partial Signups' ? (
           <LeadsPopup
             title={popupContent.title}
             users={popupContent.users}

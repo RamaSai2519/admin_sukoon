@@ -11,7 +11,6 @@ import CallList from './components/Admin/CallList/CallList';
 import CallDetails from './components/Admin/CallDetails/CallDetails';
 import UserDetails from './components/Admin/UserDetails/UserDetails';
 import ExpertDetails from './components/Admin/ExpertDetails/ExpertDetatils';
-import ClearCacheButton from './components/ClearCacheButton';
 import ExpertReport from './components/Admin/ExpertDetails/ExpertReport';
 import ApprovePage from './components/Admin/AdminDashboard/DashboardTabs/Scheduler/ApprovePage';
 import './App.css';
@@ -29,7 +28,7 @@ const App = () => {
     }
   });
 
-  const appVersion = '5.1.6';
+  const appVersion = '5.2.6';
   const handleLogin = () => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
@@ -97,7 +96,6 @@ const App = () => {
       </div>
       <Analytics />
       <SpeedInsights />
-      <ClearCacheButton />
     </div>
   );
 };

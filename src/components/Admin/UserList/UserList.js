@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import { useUserData } from '../../../services/useData';
 import './UserList.css';
-
+import NavMenu from '../../NavMenu/NavMenu';
 
 const UsersList = () => {
   const { users } = useUserData();
@@ -146,15 +146,7 @@ const UsersList = () => {
             </tbody>
           </table>
           <ScrollBottom />
-          <Link to="/admin/experts" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <h1 className="experts-button">View All Experts</h1>
-          </Link>
-          <Link to="/admin/calls" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <h1 className="calls-button">View All Calls</h1>
-          </Link>
-          <Link to="/admin/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <h1 className="users-button">View All Users</h1>
-          </Link>
+          <NavMenu />
         </div>
       </div>
     </div>
