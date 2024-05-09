@@ -115,14 +115,14 @@ const ExpertDetails = () => {
     <div className='details-container'>
       {expert && (
         <div className='content-container'>
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px'}}>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px' }}>
             <h1>Expert Details</h1>
             <button className='back-button' onClick={() => window.history.back()}>
               <FaArrowLeft className="back-icon" />
             </button>
           </div>
           <div className="grid-container">
-            <div className="grid-tile-1">
+            <div className="grid-tile-2">
               <img src={profile} alt="Expert Profile" />
             </div>
             <div className="grid-item">
