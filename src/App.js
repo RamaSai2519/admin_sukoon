@@ -29,7 +29,7 @@ const App = () => {
     }
   });
 
-  const appVersion = '5.1.5';
+  const appVersion = '5.1.6';
   const handleLogin = () => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
