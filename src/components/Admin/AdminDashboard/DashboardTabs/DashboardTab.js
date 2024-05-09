@@ -11,11 +11,11 @@ import axios from 'axios'; // Import Axios library for making HTTP requests
 
 const DashboardTab = () => {
   const [stats, setStats] = useState({
-    totalCalls: 0,
-    successfulCalls: 0,
+    totalCalls: "Please Wait...",
+    successfulCalls: "Please Wait...",
     todayCalls: 0,
     todaySuccessfulCalls: 0,
-    averageCallDuration: 0,
+    averageCallDuration: "Please Wait...",
     onlineSaarthis: []
   });
 
