@@ -15,7 +15,6 @@ const UsersTab = () => {
 
   useEffect(() => {
     const currentDate = new Date().toLocaleDateString();
-    console.log(users.filter(user => new Date(user.createdDate).toLocaleDateString() === currentDate));
     const currentDayTotalUsersCount = users.filter(user => new Date(user.createdDate).toLocaleDateString() === currentDate).length;
     setCurrentDayTotalUsers(currentDayTotalUsersCount);
 
