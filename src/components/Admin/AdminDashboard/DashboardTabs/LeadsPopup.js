@@ -149,9 +149,7 @@ const LeadsPopup = ({ title, users, onClose }) => {
             <div className="popup-content">
                 <div className="popup-header">
                     <h2>{title}</h2>
-                    <button className="close-btn" onClick={onClose}>
-                        Close
-                    </button>
+                    <button className="back-button" onClick={onClose}>X</button>
                 </div>
                 <div>
                     {users.length > 0 ? (
