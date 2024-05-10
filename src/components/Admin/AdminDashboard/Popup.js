@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table, ConfigProvider, theme } from 'antd';
 
 const Popup = ({ title, users, onClose }) => {
