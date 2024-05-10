@@ -32,7 +32,6 @@ const Popup = ({ title, users, onClose }) => {
   ];
 
   return (
-
     <ConfigProvider theme={
       {
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
@@ -42,7 +41,7 @@ const Popup = ({ title, users, onClose }) => {
         <div className="popup-content">
           <div className="popup-header">
             <h2>{title}</h2>
-            <button className="close-btn" onClick={onClose}>Close</button>
+            <button className="back-button" onClick={onClose}>X</button>
           </div>
           <div>
             {users.length > 0 ? (
