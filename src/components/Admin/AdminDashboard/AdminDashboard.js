@@ -101,7 +101,7 @@ const AdminDashboard = () => {
       <div className="tabs-container">
         <div className="tabs">
           <Tab
-            label="Dashboard"
+            label="Calls"
             onClick={() => setActiveTab('dashboard')}
             active={activeTab === 'dashboard'}
           />
