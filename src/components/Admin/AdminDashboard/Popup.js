@@ -1,9 +1,8 @@
-// components/Admin/AdminDashboard/Popup.js
-import React from 'react';
-import { Table } from 'antd';
+import React, { useState } from 'react';
+import { Table, ConfigProvider, theme } from 'antd';
 
 const Popup = ({ title, users, onClose }) => {
-
+  const darkMode = localStorage.getItem('darkMode') === 'true';
   const columns = [
     {
       title: "Name",
@@ -33,25 +32,30 @@ const Popup = ({ title, users, onClose }) => {
   ];
 
   return (
-    <div className="popup">
-      <div className="popup-content">
-        <div className="popup-header">
-          <h2>{title}</h2>
-          <button className="close-btn" onClick={onClose}>Close</button>
-        </div>
-        <div>
-          {users.length > 0 ? (
-            <Table dataSource={users.reverse()} columns={columns} />
-          ) : (
-            <p>No users to display</p>
-          )}
+
+    <ConfigProvider theme={
+      {
+        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+      }
+    }>
+      <div className="popup">
+        <div className="popup-content">
+          <div className="popup-header">
+            <h2>{title}</h2>
+            <button className="close-btn" onClick={onClose}>Close</button>
+          </div>
+          <div>
+            {users.length > 0 ? (
+              <Table dataSource={users.reverse()} columns={columns} />
+            ) : (
+              <p>No users to display</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </ConfigProvider>
+
   );
 };
 
 export default Popup;
-
-
-

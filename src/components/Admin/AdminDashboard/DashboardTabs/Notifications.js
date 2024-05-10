@@ -1,22 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Raxios from '../../../../services/axiosHelper';
+import React from 'react';
+import { useData } from '../../../../services/useData';
 import './toggle.css'
 
 const ErrorLogsComponent = () => {
-    const [errorLogs, setErrorLogs] = useState([]);
-
-    useEffect(() => {
-        const fetchErrorLogs = async () => {
-            try {
-                const response = await Raxios.get('/api/errorlogs');
-                setErrorLogs(response.data.reverse());
-            } catch (error) {
-                console.error('Error fetching error logs:', error);
-            }
-        };
-
-        fetchErrorLogs();
-    }, []);
+    const { errorLogs } = useData();
 
     return (
         <div className="dashboard-tiles">

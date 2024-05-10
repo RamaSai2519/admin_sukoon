@@ -11,6 +11,7 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import ErrorLogsComponent from './DashboardTabs/Notifications';
 import NavMenu from '../../NavMenu/NavMenu';
+import Raxios from '../../../services/axiosHelper';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAJTlUxbEndDBjZBvDJUXGJBelkQHXfNAI",
@@ -78,20 +79,12 @@ const AdminDashboard = () => {
     });
   };
 
-  const sendFCMTokenToServer = (token) => {
-    fetch('/api/save-fcm-token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-    })
-      .then((response) => {
-        if (response.ok) {
-        } else {
-          console.error('Failed to send FCM token to server');
-        }
-      });
+  const sendFCMTokenToServer = async token => {
+    try {
+      await Raxios.post('/api/save-fcm-token', { token });
+    } catch (error) {
+      console.error('Failed to send FCM token to server:', error);
+    }
   };
 
   return (

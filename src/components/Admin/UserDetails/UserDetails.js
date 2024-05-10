@@ -16,18 +16,21 @@ const UserDetails = () => {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    Raxios.get(`/api/users/${userId}`)
-      .then(response => {
+    const fetchData = async () => {
+      try {
+        const response = await Raxios.get(`/api/users/${userId}`);
         setUser(response.data);
         setName(response.data.name);
         setPhoneNumber(response.data.phoneNumber);
         setCity(response.data.city);
         setBirthDate(new Date(response.data.birthDate).toISOString().split('T')[0]);
         setNumberOfCalls(response.data.numberOfCalls);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching user details:', error);
-      });
+      }
+    };
+
+    fetchData();
   }, [userId]);
 
   const handleUpdate = () => {
@@ -36,13 +39,12 @@ const UserDetails = () => {
       phoneNumber,
       city,
       birthDate,
-      numberOfCalls
+      numberOfCalls,
     })
       .then(response => {
         setUser(response.data);
         window.alert('User details updated successfuly.');
         setEditMode(false);
-        localStorage.removeItem('users')
       })
       .catch(error => {
         console.error('Error updating user details:', error);
@@ -119,7 +121,7 @@ const UserDetails = () => {
             ) : (
               <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
             )}
-            <button className='update-button' style={{backgroundColor: "red"}} onClick={handleDelete}>Delete User</button>
+            <button className='update-button' style={{ backgroundColor: "red" }} onClick={handleDelete}>Delete User</button>
           </div>
         </div>
       )}

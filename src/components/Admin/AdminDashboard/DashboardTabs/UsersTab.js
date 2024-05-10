@@ -2,13 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Popup from '../Popup';
 import Histograms from './Histograms';
 import LeadsPopup from './LeadsPopup';
-import { useCallsData, useLeadsData, useUserData } from '../../../../services/useData';
+import { useData } from '../../../../services/useData';
 
 const UsersTab = () => {
-  const { users } = useUserData();
-  const { calls } = useCallsData();
-  const { leads } = useLeadsData();
-
+  const { users, calls, leads } = useData();
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentDayTotalUsers, setCurrentDayTotalUsers] = useState(0);
   const [oneCallUsers, setOneCallUsers] = useState([]);
@@ -54,20 +51,20 @@ const UsersTab = () => {
         <div className="dashboard-tile">
           <div className="users-grid-row">
             <div className="grid-tile-1">
-              <h3>User Signups</h3>
+              <h3>Complete Signups</h3>
               <h1>{totalUsers}</h1>
               <h4>Today: {currentDayTotalUsers}</h4>
             </div>
             <div className="grid-tile-1" style={{cursor: "pointer"}} onClick={() => openPopup('Users with One Call', oneCallUsers)}>
-              <h3>Users with One Call</h3>
+              <h3>One Call Users</h3>
               <h1>{oneCallUsers.length}</h1>
             </div>
             <div className="grid-tile-1" style={{cursor: "pointer"}} onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
-              <h3>Users with Two Calls</h3>
+              <h3>Two Calls Users</h3>
               <h1>{twoCallsUsers.length}</h1>
             </div>
             <div className="grid-tile-1" style={{cursor: "pointer"}} onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
-              <h3>Users with More than Two Calls</h3>
+              <h3>{'>'}2 Calls Users</h3>
               <h1>{moreThanTwoCallsUsers.length}</h1>
             </div>
             <div className="grid-tile-1" style={{cursor: "pointer"}} onClick={() => openPopup('Partial Signups', leads)}>

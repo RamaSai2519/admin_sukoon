@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
-import { useUserData } from '../../../services/useData';
+import { useData } from '../../../services/useData';
 import './UserList.css';
+import * as XLSX from 'xlsx';
 import NavMenu from '../../NavMenu/NavMenu';
 
 const UsersList = () => {
-  const { users } = useUserData();
+  const { users } = useData();
   const [filters, setFilters] = useState({
     user: '',
     city: '',
@@ -67,6 +68,27 @@ const UsersList = () => {
     return null;
   };
 
+  const downloadExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const wsData = [
+      ['Name', 'City', 'Number', 'Joined Date', 'Birth Date']
+    ];
+    users.forEach((user) => {
+      wsData.push([
+        user.name,
+        user.city,
+        user.phoneNumber,
+        new Date(user.createdDate).toLocaleDateString(),
+        new Date(user.birthDate).toLocaleDateString(),
+      ]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, 'User_Data');
+
+    XLSX.writeFile(wb, 'UserList.xlsx');
+  };
+
   return (
     <div className="table-container">
       <div className="dashboard-tile">
@@ -104,6 +126,11 @@ const UsersList = () => {
                 <td></td>
                 <td></td>
                 <td></td>
+                <td>
+                  <button className='popup-button' onClick={downloadExcel}>
+                    Export
+                  </button>
+                </td>
               </tr>
               <tr>
                 <th onClick={() => handleSort('name')}>

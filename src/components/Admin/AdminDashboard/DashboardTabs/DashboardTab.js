@@ -7,31 +7,10 @@ import ExpertGraph from '../../ExpertGraph/ExpertGraph';
 import DayGraph from '../../DaysGraph/DaysGraph';
 import LastFiveCallsTable from '../../LastFiveCallsTable/LastFiveCallsTable';
 import '../AdminDashboard.css';
-import Raxios from '../../../../services/axiosHelper';
+import { useData } from '../../../../services/useData';
 
 const DashboardTab = () => {
-  const [stats, setStats] = useState({
-    totalCalls: "Please Wait...",
-    successfulCalls: "Please Wait...",
-    todayCalls: 0,
-    todaySuccessfulCalls: 0,
-    averageCallDuration: "Please Wait...",
-    onlineSaarthis: []
-  });
-
-  const fetchDashboardStats = useCallback(async () => {
-    try {
-      const response = await Raxios.get('/api/dashboard/stats');
-      setStats(response.data);
-      console.log('Dashboard statistics:', response.data);
-    } catch (error) {
-      console.error('Error fetching dashboard statistics:', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchDashboardStats();
-  }, [fetchDashboardStats]);
+  const { stats } = useData();
 
   return (
     <div className="admin-dashboard-container">

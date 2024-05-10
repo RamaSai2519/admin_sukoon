@@ -6,12 +6,13 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
-import { useCallsData } from '../../../services/useData';
+import { useData } from '../../../services/useData';
 import { red, pink, green, yellow } from '@mui/material/colors';
+import * as XLSX from 'xlsx';
 import NavMenu from '../../NavMenu/NavMenu';
 
 const CallsTable = () => {
-  const { calls } = useCallsData();
+  const { calls } = useData();
   const [filters, setFilters] = useState({
     user: '',
     expert: '',
@@ -85,6 +86,28 @@ const CallsTable = () => {
     return null;
   };
 
+  const downloadExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const wsData = [
+      ['User', 'Expert', 'Time', 'Duration', 'Status', 'Score']
+    ];
+    calls.forEach((call) => {
+      wsData.push([
+        call.userName,
+        call.expertName,
+        new Date(call.initiatedTime).toLocaleString(),
+        `${call.duration} min`,
+        call.status,
+        call.ConversationScore,
+      ]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, 'Call_Data');
+
+    XLSX.writeFile(wb, 'calls.xlsx');
+  };
+
   return (
     <div className="table-container">
       <div className="dashboard-tile">
@@ -114,7 +137,11 @@ const CallsTable = () => {
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
+                <td>
+                  <button className='popup-button' onClick={downloadExcel}>
+                    Export
+                  </button>
+                </td>
               </tr>
               <tr>
                 <th onClick={() => handleSort('userName')}>

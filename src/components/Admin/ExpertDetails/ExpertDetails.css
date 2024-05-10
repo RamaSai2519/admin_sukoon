@@ -5,8 +5,8 @@
     margin: 0 auto;
     padding: 10px;
     padding-top: 0;
-    min-width: 35%;
-    max-width: 55%;
+    min-width: min-content;
+    max-width: 70%;
 }
 
 .report-content-container {

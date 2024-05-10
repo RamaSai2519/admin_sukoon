@@ -6,10 +6,10 @@ import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
 import { red, pink, green, yellow } from '@mui/material/colors';
 import './LastFiveCallsTable.css';
-import { useCallsData } from '../../../services/useData';
+import { useData } from '../../../services/useData';
 
 const LastFiveCallsTable = () => {
-  const { calls } = useCallsData();
+  const { calls } = useData();
   const [lastFiveCalls, setLastFiveCalls] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: '',

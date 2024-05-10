@@ -4,7 +4,10 @@ import { useParams, Link } from 'react-router-dom';
 import './ExpertDetails.css';
 import NavMenu from '../../NavMenu/NavMenu';
 import { FaArrowLeft } from 'react-icons/fa';
+import { useData } from '../../../services/useData';
+import { Select } from 'antd';
 
+const { Option } = Select;
 
 const ExpertDetails = () => {
   const { expertId } = useParams();
@@ -21,10 +24,8 @@ const ExpertDetails = () => {
   const [repeatScore, setRepeatScore] = useState('');
   const [totalScore, setTotalScore] = useState('');
   const [callsShare, setCallsShare] = useState('');
-  const [allCategories, setAllCategories] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [editMode, setEditMode] = useState(false);
-
+  const { allCategories } = useData();
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -43,46 +44,14 @@ const ExpertDetails = () => {
         setScore(response.data.score);
         setRepeatScore(response.data.repeat_score);
         setTotalScore(response.data.total_score);
-        fetchAllCategories();
       })
       .catch(error => {
         console.error('Error fetching expert details:', error);
       });
+  }, [expertId]);
 
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [expertId, setExpert, setName, setPhoneNumber, setTopics, setDescription, setCategories, setProfile, setStatus, setCallsShare, setLanguages, setScore, setRepeatScore, setTotalScore]);
-
-  const fetchAllCategories = () => {
-    Raxios.get('/api/categories')
-      .then(response => {
-        setAllCategories(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching categories:', error);
-      });
-  };
-
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setShowDropdown(false);
-    }
-  };
-
-  const handleCategoryChange = (event) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      setCategories(prevCategories => [...prevCategories, value]);
-    } else if (!checked) {
-      setCategories(prevCategories => prevCategories.filter(category => category !== value));
-    }
-  };
-
-  const toggleDropdown = () => {
-    setShowDropdown(prevShowDropdown => !prevShowDropdown);
+  const handleCategoryChange = (value) => {
+    setCategories(value);
   };
 
   const handleUpdate = (newStatus) => {
@@ -102,12 +71,10 @@ const ExpertDetails = () => {
     })
       .then(response => {
         setExpert(response.data);
-        setEditMode(false);
         setStatus(newStatus);
-        window.alert('Expert details updated successfully!');
-        localStorage.removeItem('experts');
       })
       .catch(error => {
+        window.alert('Error updating expert details:', error);
         console.error('Error updating expert details:', error);
       });
   };
@@ -175,7 +142,7 @@ const ExpertDetails = () => {
                 <div className='grid-tile-1'>
                   <h3>Calls Share</h3>
                   {editMode ? (
-                    <p><input type="number" value={callsShare} onChange={(e) => setRepeatScore(e.target.value)} /></p>
+                    <p><input type="number" value={callsShare} onChange={(e) => setCallsShare(e.target.value)} /></p>
                   ) : (
                     <h2>{callsShare}%</h2>
                   )}
@@ -197,21 +164,21 @@ const ExpertDetails = () => {
               <div ref={dropdownRef}>
                 <div>
                   {editMode ? (
-                    <span onClick={toggleDropdown} className="dropdown-span">
-                      {categories.length > 0 ? categories.join(', ') : 'Select Categories'}
-                    </span>
+                    <Select
+                      mode="multiple"
+                      style={{ width: '100%' }}
+                      placeholder="Select Categories"
+                      onChange={handleCategoryChange}
+                      value={categories}
+                    >
+                      {allCategories.map(category => (
+                        <Option key={category._id} value={category}>
+                          {category.name}
+                        </Option>
+                      ))}
+                    </Select>
                   ) : (
                     <h2>{categories.length > 0 ? categories.join(', ') : 'No categories'}</h2>
-                  )}
-                  {showDropdown && editMode && (
-                    <div className='dropdown'>
-                      {allCategories.map(category => (
-                        <label className='dropdown-item' key={category}>
-                          <input type="checkbox" value={category} checked={categories.includes(category)} onChange={handleCategoryChange} />
-                          <span className="category-text">{category}</span>
-                        </label>
-                      ))}
-                    </div>
                   )}
                 </div>
               </div>
@@ -281,6 +248,7 @@ const ExpertDetails = () => {
       <NavMenu />
     </div>
   );
+
 };
 
 export default ExpertDetails;

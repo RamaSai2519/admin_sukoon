@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react';
-import {
-     Link } from 'react-router-dom';
-import { Table, Input, Button, Space } from 'antd';
+import { Link } from 'react-router-dom';
+import { Table, Input, Button, Space, ConfigProvider, theme } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 const LeadsPopup = ({ title, users, onClose }) => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInputRef = useRef(null);
+    const darkMode = localStorage.getItem('darkMode') === 'true';
 
     const getColumnSearchProps = (dataIndex, displayName) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -129,7 +129,7 @@ const LeadsPopup = ({ title, users, onClose }) => {
             ),
         },
     ];
-    
+
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -155,7 +155,11 @@ const LeadsPopup = ({ title, users, onClose }) => {
                 </div>
                 <div>
                     {users.length > 0 ? (
-                        <Table dataSource={users.reverse()} columns={columns} />
+                        <ConfigProvider theme={{
+                            algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+                        }}>
+                            <Table dataSource={users.reverse()} columns={columns} />
+                        </ConfigProvider>
                     ) : (
                         <p>No users to display</p>
                     )}

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useExpertManagement } from '../../../services/useData';
+import { useData } from '../../../services/useData';
 import * as XLSX from 'xlsx';
 import NavMenu from '../../NavMenu/NavMenu';
 
 const ExpertList = () => {
-  const { experts } = useExpertManagement();
+  const { experts } = useData();
   const [sortConfig, setSortConfig] = useState({
     key: 'createdDate',
     direction: 'descending',
@@ -40,9 +40,9 @@ const ExpertList = () => {
   };
 
   const downloadExcel = () => {
-    const wb = XLSX.utils.book_new(); // Create a new Excel Workbook
+    const wb = XLSX.utils.book_new();
     const wsData = [
-      ['Name', 'Number', 'Joined Date', 'C.Score', 'Share', 'Reapeat %', 'T.Score'] // Header row
+      ['Name', 'Number', 'Joined Date', 'C.Score', 'Share', 'Reapeat %', 'T.Score']
     ];
     experts.forEach((expert) => {
       wsData.push([
@@ -56,8 +56,8 @@ const ExpertList = () => {
       ]);
     });
 
-    const ws = XLSX.utils.aoa_to_sheet(wsData); // Convert array of arrays to worksheet
-    XLSX.utils.book_append_sheet(wb, ws, 'Expert_Data'); // Append worksheet to workbook
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, 'Expert_Data');
 
     XLSX.writeFile(wb, 'ExpertList.xlsx');
   };

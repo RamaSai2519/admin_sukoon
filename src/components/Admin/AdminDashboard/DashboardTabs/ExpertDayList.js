@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useCallsData, useExpertManagement } from '../../../../services/useData';
+import { useData } from '../../../../services/useData';
 import * as XLSX from 'xlsx';
 
 const ExpertDayList = () => {
-    const { experts } = useExpertManagement();
-    const { calls } = useCallsData();
+    const { experts, calls } = useData();
     const [sortConfig, setSortConfig] = useState({
         key: 'createdDate',
         direction: 'descending'

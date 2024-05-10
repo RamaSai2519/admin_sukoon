@@ -1,121 +1,82 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Raxios from './axiosHelper';
 
-const LeadsDataContext = React.createContext();
+const DataContext = React.createContext();
 
-export const useLeadsData = () => {
-  return useContext(LeadsDataContext);
+export const useData = () => {
+  return useContext(DataContext);
 };
 
-export const LeadsDataProvider = ({ children }) => {
+export const DataProvider = ({ children }) => {
+  const [errorLogs, setErrorLogs] = useState([]);
+  const [applications, setApplications] = useState([]);
+  const [allCategories, setCategories] = useState([]);
   const [leads, setLeads] = useState([]);
-
-  useEffect(() => {
-    const fetchLeads = async () => {
-      try {
-        const response = await Raxios.get('/api/leads');
-        setLeads(response.data);
-      } catch (error) {
-        console.error('Error fetching all leads:', error);
-      }
-    };
-
-    fetchLeads();
-  }, []);
-
-  return (
-    <LeadsDataContext.Provider value={{ leads }}>
-      {children}
-    </LeadsDataContext.Provider>
-  );
-};
-
-const UserDataContext = React.createContext();
-
-export const useUserData = () => {
-  return useContext(UserDataContext);
-};
-
-export const UserDataProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await Raxios.get('/api/users');
-        setUsers(response.data);
-      } catch (error) {
-        console.error('Error fetching all users:', error);
-      }
-    };
-
-    fetchUsers();
-  }
-    , []);
-
-  return (
-    <UserDataContext.Provider value={{ users }}>
-      {children}
-    </UserDataContext.Provider>
-  );
-};
-
-const CallsDataContext = React.createContext();
-
-export const useCallsData = () => {
-  return useContext(CallsDataContext);
-};
-
-export const CallsDataProvider = ({ children }) => {
   const [calls, setCalls] = useState([]);
-
-
-  useEffect(() => {
-    const fetchCalls = async () => {
-      try {
-        const response = await Raxios.get('/api/calls');
-        setCalls(response.data.reverse());
-      } catch (error) {
-        console.error('Error fetching all calls:', error);
-      }
-    };
-
-    fetchCalls();
-  }, []);
-
-  return (
-    <CallsDataContext.Provider value={{ calls }}>
-      {children}
-    </CallsDataContext.Provider>
-  );
-};
-
-
-const ExpertManagementContext = React.createContext();
-
-export const useExpertManagement = () => {
-  return useContext(ExpertManagementContext);
-};
-
-export const ExpertManagementProvider = ({ children }) => {
   const [experts, setExperts] = useState([]);
+  const [stats, setStats] = useState({
+    totalCalls: "Please Wait...",
+    successfulCalls: "Please Wait...",
+    todayCalls: 0,
+    todaySuccessfulCalls: 0,
+    averageCallDuration: "Please Wait...",
+    onlineSaarthis: []
+  });
 
   useEffect(() => {
-    const fetchAllExperts = async () => {
+    const fetchData = async () => {
       try {
-        const response = await Raxios.get('/api/experts');
-        setExperts(response.data);
+        const [
+          errorLogsResponse,
+          applicationsResponse,
+          categoriesResponse,
+          statsResponse,
+          leadsResponse,
+          usersResponse,
+          callsResponse,
+          expertsResponse
+        ] = await Promise.all([
+          Raxios.get('/api/errorlogs'),
+          Raxios.get('/api/applications'),
+          Raxios.get('/api/categories'),
+          Raxios.get('/api/dashboard/stats'),
+          Raxios.get('/api/leads'),
+          Raxios.get('/api/users'),
+          Raxios.get('/api/calls'),
+          Raxios.get('/api/experts')
+        ]);
+
+        setErrorLogs(errorLogsResponse.data.reverse());
+        setApplications(applicationsResponse.data.reverse());
+        setCategories(categoriesResponse.data);
+        setStats(statsResponse.data);
+        setLeads(leadsResponse.data);
+        setUsers(usersResponse.data);
+        setCalls(callsResponse.data.reverse());
+        setExperts(expertsResponse.data);
       } catch (error) {
-        console.error('Error fetching all experts:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchAllExperts();
+    fetchData();
   }, []);
 
+  const data = {
+    errorLogs,
+    applications,
+    allCategories,
+    stats,
+    leads,
+    users,
+    calls,
+    experts
+  };
+
   return (
-    <ExpertManagementContext.Provider value={{ experts }}>
+    <DataContext.Provider value={data}>
       {children}
-    </ExpertManagementContext.Provider>
+    </DataContext.Provider>
   );
 };

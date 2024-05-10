@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { Analytics } from '@vercel/analytics/react';
 import Header from './components/Header/Header';
 import AdminLogin from './components/Admin/AdminLogin/AdminLogin';
 import AdminDashboard from './components/Admin/AdminDashboard/AdminDashboard';
@@ -28,7 +27,7 @@ const App = () => {
     }
   });
 
-  const appVersion = '6.0.0';
+  const appVersion = '6.2.0';
   const handleLogin = () => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
@@ -56,8 +55,10 @@ const App = () => {
 
   useEffect(() => {
     if (darkMode) {
+      localStorage.setItem('darkMode', 'true');
       document.body.classList.add('dark-mode');
     } else {
+      localStorage.setItem('darkMode', 'false');
       document.body.classList.remove('dark-mode');
     }
   }, [darkMode]);
@@ -94,7 +95,6 @@ const App = () => {
           )}
         </Routes>
       </div>
-      <Analytics />
       <SpeedInsights />
     </div>
   );

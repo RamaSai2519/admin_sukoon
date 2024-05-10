@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
-import { useCallsData } from '../../../services/useData';
+import { useData } from '../../../services/useData';
 
 const HourCallChart = () => {
-    const { calls } = useCallsData();
+    const { calls } = useData();
     const [chart, setChart] = useState(null);
     const [timeframe, setTimeframe] = useState('year');
 

@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import Raxios from "../../../../services/axiosHelper";
+import React, { useState } from "react";
+import { useData } from "../../../../services/useData";
+import * as XLSX from 'xlsx';
 
 const ApplicationsTab = () => {
-    const [applications, setApplications] = useState([]);
+    const { applications } = useData();
     const [sortConfig, setSortConfig] = useState({
         key: "",
         direction: "",
     });
-
-    useEffect(() => {}, []);
 
     const handleSort = (key) => {
         let direction = "ascending";
@@ -35,18 +34,27 @@ const ApplicationsTab = () => {
         return null;
     };
 
-    useEffect(() => {
-        const fetchApplications = async () => {
-            try {
-                const response = await Raxios.get("/api/applications");
-                setApplications(response.data.reverse());
-            } catch (error) {
-                console.error("Error fetching applications:", error);
-            }
-        };
+    const downloadExcel = () => {
+        const wb = XLSX.utils.book_new();
+        const wsData = [
+            ["Name", "Email", "Phone Number", "Date of Birth", "Gender", "Applied Date"]
+        ];
+        applications.forEach((application) => {
+            wsData.push([
+                application.name,
+                application.email,
+                application.phoneNumber,
+                application.dateOfBirth,
+                application.gender,
+                application.createdDate,
+            ]);
+        });
 
-        fetchApplications();
-    }, []);
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, "Applications_Data");
+
+        XLSX.writeFile(wb, "ApplicationsList.xlsx");
+    };
 
     return (
         <div className="table-container">
@@ -90,6 +98,7 @@ const ApplicationsTab = () => {
                     </table>
                 </div>
             </div>
+            <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
         </div>
     );
 };

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Select, DatePicker, Form, Button, Table } from "antd";
 import Raxios from "../../../../../services/axiosHelper";
-import { useExpertManagement, useUserData } from "../../../../../services/useData";
+import { useData } from "../../../../../services/useData";
 
 const { Option } = Select;
 
 const SchedulerTab = () => {
-    const { users } = useUserData();
-    const { experts } = useExpertManagement();
+    const { users, experts } = useData();
     const [dataSource, setDataSource] = useState([]);
 
     const fetchData = async () => {

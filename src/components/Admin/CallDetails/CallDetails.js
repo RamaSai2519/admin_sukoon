@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import { FaArrowLeft } from 'react-icons/fa';
+import { Button } from 'antd';
 import NavMenu from '../../NavMenu/NavMenu';
 import Raxios from '../../../services/axiosHelper';
 import './CallDetails.css';
@@ -69,12 +70,12 @@ const CallDetails = () => {
 
     return (
         <div className="whole-container">
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px'}}>
-            <h1>Call Details</h1>
-            <button className='back-button' onClick={() => window.history.back()}>
-              <FaArrowLeft className="back-icon" />
-            </button>
-          </div>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px' }}>
+                <h1>Call Details</h1>
+                <button className='back-button' onClick={() => window.history.back()}>
+                    <FaArrowLeft className="back-icon" />
+                </button>
+            </div>
             <div className="details-container">
                 <div className="details-box">
                     <h3>User</h3>
@@ -138,14 +139,14 @@ const CallDetails = () => {
                     <p>{formatValue(call.Topics)}</p>
                 </div>
                 <div className="details-box">
-                    <p>Recording URL: <a href={formattedRecordingURL} target="_blank" rel="noopener noreferrer">{formattedRecordingURL}</a></p>
-                </div>
-                <div className="details-box">
-                    <p>Transcript URL: <a href={call.transcript_url} target="_blank" rel="noopener noreferrer">{call.transcript_url}</a></p>
-                </div>
-                <div className="details-box">
                     <p>Initiated Time: {call.initiatedTime}</p>
                 </div>
+                <Button style={{ margin: '10px' }} type="primary" href={formattedRecordingURL} target="_blank" rel="noopener noreferrer">
+                    Download Recording
+                </Button>
+                <Button style={{ margin: '10px' }} type="primary" href={call.transcript_url} target="_blank" rel="noopener noreferrer">
+                    Download Transcript
+                </Button>
             </div>
             <NavMenu />
             <ScrollBottom />
