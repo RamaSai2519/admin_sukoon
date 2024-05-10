@@ -67,7 +67,7 @@ const UserDetails = () => {
   return (
     <div className='details-container'>
       {user && (
-        <div className='content-container'>
+        <div className='user-content-container'>
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px' }}>
             <h1>User Details</h1>
             <button className='back-button' onClick={() => window.history.back()}>

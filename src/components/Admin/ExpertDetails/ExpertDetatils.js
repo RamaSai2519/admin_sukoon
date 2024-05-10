@@ -5,7 +5,7 @@ import './ExpertDetails.css';
 import NavMenu from '../../NavMenu/NavMenu';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useData } from '../../../services/useData';
-import { Select } from 'antd';
+import { Select, ConfigProvider, theme } from 'antd';
 
 const { Option } = Select;
 
@@ -27,6 +27,7 @@ const ExpertDetails = () => {
   const [editMode, setEditMode] = useState(false);
   const { allCategories } = useData();
   const dropdownRef = useRef(null);
+  const darkMode = localStorage.getItem('darkMode') === 'true';
 
   useEffect(() => {
     Raxios.get(`/api/experts/${expertId}`)
@@ -92,161 +93,167 @@ const ExpertDetails = () => {
   };
 
   return (
-    <div className='details-container'>
-      {expert && (
-        <div className='content-container'>
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px' }}>
-            <h1>Expert Details</h1>
-            <button className='back-button' onClick={() => window.history.back()}>
-              <FaArrowLeft className="back-icon" />
-            </button>
-          </div>
-          <div className="grid-container">
-            <div className="grid-tile-2">
-              <img src={profile} alt="Expert Profile" />
+    <ConfigProvider theme={
+      {
+        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+      }
+    }>
+      <div className='details-container'>
+        {expert && (
+          <div className='content-container'>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px' }}>
+              <h1>Expert Details</h1>
+              <button className='back-button' onClick={() => window.history.back()}>
+                <FaArrowLeft className="back-icon" />
+              </button>
             </div>
-            <div className="grid-item">
+            <div className="grid-container">
+              <div className="grid-tile-2">
+                <img src={profile} alt="Expert Profile" />
+              </div>
+              <div className="grid-item">
+                <div className='grid-tile-1'>
+                  <h3>Name</h3>
+                  {editMode ? (
+                    <p><input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
+                  ) : (
+                    <h2>{name}</h2>
+                  )}
+                </div>
+                <div className='grid-tile-1'>
+                  <h3>Phone Number</h3>
+                  {editMode ? (
+                    <p><input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
+                  ) : (
+                    <h2>{phoneNumber}</h2>
+                  )}
+                </div>
+                <div className='grid'>
+                  <div className='grid-tile-1'>
+                    <h3>Score</h3>
+                    {editMode ? (
+                      <p><input type="number" value={score} onChange={(e) => setScore(e.target.value)} /></p>
+                    ) : (
+                      <h2>{score}</h2>
+                    )}
+                  </div>
+                  <div className='grid-tile-1'>
+                    <h3>Repeat Score</h3>
+                    {editMode ? (
+                      <p><input type="number" value={repeatScore} onChange={(e) => setRepeatScore(e.target.value)} /></p>
+                    ) : (
+                      <h2>{repeatScore}</h2>
+                    )}
+                  </div>
+                  <div className='grid-tile-1'>
+                    <h3>Calls Share</h3>
+                    {editMode ? (
+                      <p><input type="number" value={callsShare} onChange={(e) => setCallsShare(e.target.value)} /></p>
+                    ) : (
+                      <h2>{callsShare}%</h2>
+                    )}
+                  </div>
+                  <div className='grid-tile-1'>
+                    <h3>Total Score</h3>
+                    {editMode ? (
+                      <p><input type="number" value={totalScore} onChange={(e) => setTotalScore(e.target.value)} /></p>
+                    ) : (
+                      <h2>{totalScore}</h2>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='grid-container-2'>
               <div className='grid-tile-1'>
-                <h3>Name</h3>
+                <h3>Categories</h3>
+                <div ref={dropdownRef}>
+                  <div>
+                    {editMode ? (
+                      <Select
+                        mode="multiple"
+                        style={{ width: '100%' }}
+                        placeholder="Select Categories"
+                        onChange={handleCategoryChange}
+                        value={categories}
+                      >
+                        {allCategories.map(category => (
+                          <Option key={category._id} value={category}>
+                            {category.name}
+                          </Option>
+                        ))}
+                      </Select>
+                    ) : (
+                      <h2>{categories.length > 0 ? categories.join(', ') : 'No categories'}</h2>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className='grid-tile-1'>
+                <h3>Languages</h3>
                 {editMode ? (
-                  <p><input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
+                  <p><input type="text" value={languages} onChange={(e) => setLanguages(e.target.value)} /></p>
                 ) : (
-                  <h2>{name}</h2>
+                  <h2>{languages}</h2>
                 )}
               </div>
               <div className='grid-tile-1'>
-                <h3>Phone Number</h3>
+                <h3>Topics</h3>
                 {editMode ? (
-                  <p><input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
+                  <p><input type="text" value={topics} onChange={(e) => setTopics(e.target.value)} /></p>
                 ) : (
-                  <h2>{phoneNumber}</h2>
+                  <h2>{topics}</h2>
                 )}
               </div>
-              <div className='grid'>
-                <div className='grid-tile-1'>
-                  <h3>Score</h3>
-                  {editMode ? (
-                    <p><input type="number" value={score} onChange={(e) => setScore(e.target.value)} /></p>
-                  ) : (
-                    <h2>{score}</h2>
-                  )}
-                </div>
-                <div className='grid-tile-1'>
-                  <h3>Repeat Score</h3>
-                  {editMode ? (
-                    <p><input type="number" value={repeatScore} onChange={(e) => setRepeatScore(e.target.value)} /></p>
-                  ) : (
-                    <h2>{repeatScore}</h2>
-                  )}
-                </div>
-                <div className='grid-tile-1'>
-                  <h3>Calls Share</h3>
-                  {editMode ? (
-                    <p><input type="number" value={callsShare} onChange={(e) => setCallsShare(e.target.value)} /></p>
-                  ) : (
-                    <h2>{callsShare}%</h2>
-                  )}
-                </div>
-                <div className='grid-tile-1'>
-                  <h3>Total Score</h3>
-                  {editMode ? (
-                    <p><input type="number" value={totalScore} onChange={(e) => setTotalScore(e.target.value)} /></p>
-                  ) : (
-                    <h2>{totalScore}</h2>
-                  )}
+              <div className='grid-tile-1'>
+                <h3>Description</h3>
+                {editMode ? (
+                  <p><input type="text" value={description} onChange={(e) => setDescription(e.target.value)} /></p>
+                ) : (
+                  <h2>{description}</h2>
+                )}
+              </div>
+              <div className='grid-tile-1'>
+                <h3>Status</h3>
+                <div className="toggle-container">
+                  <h2 className="status-label">{status === 'online' ? 'Online' : 'Offline'}</h2>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={status === 'online'}
+                      onChange={() => handleUpdate(status === 'offline' ? 'online' : 'offline')}
+                    />
+                    <span className="slider round"></span>
+                  </label>
                 </div>
               </div>
             </div>
-          </div>
-          <div className='grid-container-2'>
-            <div className='grid-tile-1'>
-              <h3>Categories</h3>
-              <div ref={dropdownRef}>
-                <div>
-                  {editMode ? (
-                    <Select
-                      mode="multiple"
-                      style={{ width: '100%' }}
-                      placeholder="Select Categories"
-                      onChange={handleCategoryChange}
-                      value={categories}
-                    >
-                      {allCategories.map(category => (
-                        <Option key={category._id} value={category}>
-                          {category.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  ) : (
-                    <h2>{categories.length > 0 ? categories.join(', ') : 'No categories'}</h2>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className='grid-tile-1'>
-              <h3>Languages</h3>
+            <div className='edit-button-container'>
               {editMode ? (
-                <p><input type="text" value={languages} onChange={(e) => setLanguages(e.target.value)} /></p>
+                <>
+                  <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
+                  <button className='update-button' onClick={() => handleUpdate(status)}>Update Details</button>
+                </>
               ) : (
-                <h2>{languages}</h2>
+                <>
+                  <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
+                </>
               )}
-            </div>
-            <div className='grid-tile-1'>
-              <h3>Topics</h3>
-              {editMode ? (
-                <p><input type="text" value={topics} onChange={(e) => setTopics(e.target.value)} /></p>
-              ) : (
-                <h2>{topics}</h2>
-              )}
-            </div>
-            <div className='grid-tile-1'>
-              <h3>Description</h3>
-              {editMode ? (
-                <p><input type="text" value={description} onChange={(e) => setDescription(e.target.value)} /></p>
-              ) : (
-                <h2>{description}</h2>
-              )}
-            </div>
-            <div className='grid-tile-1'>
-              <h3>Status</h3>
-              <div className="toggle-container">
-                <h2 className="status-label">{status === 'online' ? 'Online' : 'Offline'}</h2>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={status === 'online'}
-                    onChange={() => handleUpdate(status === 'offline' ? 'online' : 'offline')}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
+              <Link
+                to={{
+                  pathname: `/admin/experts/${expertId}/report`
+                }}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <button className='update-button'>View Detailed Scores</button>
+              </Link>
+              <button className='update-button' style={{ backgroundColor: 'red' }} onClick={handleDelete}>Delete Expert</button>
             </div>
           </div>
-          <div className='edit-button-container'>
-            {editMode ? (
-              <>
-                <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
-                <button className='update-button' onClick={() => handleUpdate(status)}>Update Details</button>
-              </>
-            ) : (
-              <>
-                <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
-              </>
-            )}
-            <Link
-              to={{
-                pathname: `/experts/${expertId}/report`
-              }}
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              <button className='update-button'>View Detailed Scores</button>
-            </Link>
-            <button className='update-button' style={{ backgroundColor: 'red' }} onClick={handleDelete}>Delete Expert</button>
-          </div>
-        </div>
-      )}
-      <NavMenu />
-    </div>
+        )}
+        <NavMenu />
+      </div>
+    </ConfigProvider>
   );
 
 };
