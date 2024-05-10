@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const Raxios = axios.create({
-  baseURL: 'http://adminapi.sukoon.love',
+  baseURL: 'https://adminapi.sukoon.love',
 });
 
 export default Raxios;

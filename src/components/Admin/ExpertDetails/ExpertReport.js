@@ -66,7 +66,6 @@ const ExpertDetails = () => {
         setExpert(response.data);
         setEditMode(false);
         window.alert('Expert details updated successfully!');
-        localStorage.removeItem('experts');
       })
       .catch(error => {
         console.error('Error updating expert details:', error);
