@@ -76,18 +76,8 @@ const CallGraph = () => {
       chart.data.datasets[0].data = counts;
       chart.update();
     }
+    // eslint-disable-next-line
   }, [calls, chart]); 
-
-  useEffect(() => {
-    if (chart && chart.canvas) {
-      const filteredData = filterData(calls);
-      const { labels, counts } = processChartData(filteredData);
-
-      chart.data.labels = labels;
-      chart.data.datasets[0].data = counts;
-      chart.update();
-    }
-  }, [timeframe]);
 
   const filterData = (callData) => {
     let startDate = new Date();

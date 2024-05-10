@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import { FaArrowLeft } from 'react-icons/fa';
 import NavMenu from '../../NavMenu/NavMenu';
-import axios from 'axios';
+import Raxios from '../../../services/axiosHelper';
 import './CallDetails.css';
 
 const CallDetails = () => {
@@ -14,7 +14,7 @@ const CallDetails = () => {
     const [newConversationScore, setNewConversationScore] = useState('');
 
     useEffect(() => {
-        axios.get(`/api/calls/${callId}`)
+        Raxios.get(`/api/calls/${callId}`)
             .then(response => {
                 setCall(response.data);
                 setNewConversationScore(response.data.ConversationScore);
@@ -25,7 +25,7 @@ const CallDetails = () => {
     }, [callId]);
 
     const handleScoreChange = () => {
-        axios.put(`/api/calls/${callId}`, {
+        Raxios.put(`/api/calls/${callId}`, {
             ConversationScore: newConversationScore
         })
             .then(response => {

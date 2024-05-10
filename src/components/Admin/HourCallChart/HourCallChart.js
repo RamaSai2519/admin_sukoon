@@ -9,6 +9,7 @@ const HourCallChart = () => {
 
     useEffect(() => {
         renderChart(calls);
+        // eslint-disable-next-line
     }, [calls, timeframe]);
 
     const renderChart = (callData) => {

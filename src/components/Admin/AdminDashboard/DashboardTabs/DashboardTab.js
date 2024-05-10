@@ -7,7 +7,7 @@ import ExpertGraph from '../../ExpertGraph/ExpertGraph';
 import DayGraph from '../../DaysGraph/DaysGraph';
 import LastFiveCallsTable from '../../LastFiveCallsTable/LastFiveCallsTable';
 import '../AdminDashboard.css';
-import axios from 'axios'; // Import Axios library for making HTTP requests
+import Raxios from '../../../../services/axiosHelper';
 
 const DashboardTab = () => {
   const [stats, setStats] = useState({
@@ -21,7 +21,7 @@ const DashboardTab = () => {
 
   const fetchDashboardStats = useCallback(async () => {
     try {
-      const response = await axios.get('/api/dashboard/stats');
+      const response = await Raxios.get('/api/dashboard/stats');
       setStats(response.data);
       console.log('Dashboard statistics:', response.data);
     } catch (error) {

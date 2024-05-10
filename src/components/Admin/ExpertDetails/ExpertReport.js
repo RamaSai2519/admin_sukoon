@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import Raxios from '../../../services/axiosHelper';
 import { useParams, Link } from 'react-router-dom';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -24,7 +24,7 @@ const ExpertDetails = () => {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    axios.get(`/api/experts/${expertId}`)
+    Raxios.get(`/api/experts/${expertId}`)
       .then(response => {
         setExpert(response.data);
         setName(response.data.name);
@@ -48,7 +48,7 @@ const ExpertDetails = () => {
   }, [expertId]);
 
   const handleUpdate = () => {
-    axios.put(`/api/experts/${expertId}`, {
+    Raxios.put(`/api/experts/${expertId}`, {
       name,
       score,
       flow,

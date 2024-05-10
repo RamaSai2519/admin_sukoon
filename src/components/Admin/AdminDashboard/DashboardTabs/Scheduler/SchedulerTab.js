@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Select, DatePicker, Form, Button, Table } from "antd";
-import axios from "axios";
-import { useExpertManagement, useUserManagement, useUserData } from "../../../../../services/useData";
+import Raxios from "../../../../../services/axiosHelper";
+import { useExpertManagement, useUserData } from "../../../../../services/useData";
 
 const { Option } = Select;
 
@@ -12,7 +12,7 @@ const SchedulerTab = () => {
 
     const fetchData = async () => {
         try {
-            const schedulesResponse = await axios.get("/api/schedule");
+            const schedulesResponse = await Raxios.get("/api/schedule");
             setDataSource(schedulesResponse.data.map(schedule => ({
                 ...schedule,
                 key: schedule._id,
@@ -55,7 +55,7 @@ const SchedulerTab = () => {
 
     const handleDelete = async (record) => {
         try {
-            await axios.delete(`/api/schedule/${record._id}`);
+            await Raxios.delete(`/api/schedule/${record._id}`);
             window.alert("Schedule deleted successfully");
             fetchData();
         } catch (error) {
@@ -83,7 +83,7 @@ const SchedulerTab = () => {
             if (selectedDateTime <= now) {
                 window.alert("Selected time has already passed. Please select a future time.");
             } else {
-                await axios.post("/api/schedule", values);
+                await Raxios.post("/api/schedule", values);
                 window.alert("Call Scheduled successfully");
                 fetchData();
             }

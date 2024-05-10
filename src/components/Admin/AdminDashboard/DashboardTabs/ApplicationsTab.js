@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import Raxios from "../../../../services/axiosHelper";
 
 const ApplicationsTab = () => {
     const [applications, setApplications] = useState([]);
@@ -38,7 +38,7 @@ const ApplicationsTab = () => {
     useEffect(() => {
         const fetchApplications = async () => {
             try {
-                const response = await axios.get("/api/applications");
+                const response = await Raxios.get("/api/applications");
                 setApplications(response.data.reverse());
             } catch (error) {
                 console.error("Error fetching applications:", error);

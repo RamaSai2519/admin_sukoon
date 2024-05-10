@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import Raxios from './axiosHelper';
 
 const LeadsDataContext = React.createContext();
 
@@ -13,7 +13,7 @@ export const LeadsDataProvider = ({ children }) => {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const response = await axios.get('/api/leads');
+        const response = await Raxios.get('/api/leads');
         setLeads(response.data);
       } catch (error) {
         console.error('Error fetching all leads:', error);
@@ -42,7 +42,7 @@ export const UserDataProvider = ({ children }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('/api/users');
+        const response = await Raxios.get('/api/users');
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching all users:', error);
@@ -73,7 +73,7 @@ export const CallsDataProvider = ({ children }) => {
   useEffect(() => {
     const fetchCalls = async () => {
       try {
-        const response = await axios.get('/api/calls');
+        const response = await Raxios.get('/api/calls');
         setCalls(response.data.reverse());
       } catch (error) {
         console.error('Error fetching all calls:', error);
@@ -103,7 +103,7 @@ export const ExpertManagementProvider = ({ children }) => {
   useEffect(() => {
     const fetchAllExperts = async () => {
       try {
-        const response = await axios.get('/api/experts');
+        const response = await Raxios.get('/api/experts');
         setExperts(response.data);
       } catch (error) {
         console.error('Error fetching all experts:', error);

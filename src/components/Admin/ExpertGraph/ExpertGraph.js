@@ -5,7 +5,7 @@ import './ExpertGraph.css';
 import { useCallsData, useExpertManagement } from '../../../services/useData';
 
 const ExpertGraph = () => {
-  const { experts, fetchNewExperts } = useExpertManagement();
+  const { experts } = useExpertManagement();
   const { calls } = useCallsData();
   const [chart, setChart] = useState(null);
   const [timeframe, setTimeframe] = useState('year');

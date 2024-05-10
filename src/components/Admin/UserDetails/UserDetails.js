@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import axios from 'axios';
+import Raxios from '../../../services/axiosHelper';
 import './UserDetails.css';
 import NavMenu from '../../NavMenu/NavMenu';
 
@@ -16,7 +16,7 @@ const UserDetails = () => {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    axios.get(`/api/users/${userId}`)
+    Raxios.get(`/api/users/${userId}`)
       .then(response => {
         setUser(response.data);
         setName(response.data.name);
@@ -31,7 +31,7 @@ const UserDetails = () => {
   }, [userId]);
 
   const handleUpdate = () => {
-    axios.put(`/api/users/${userId}`, {
+    Raxios.put(`/api/users/${userId}`, {
       name,
       phoneNumber,
       city,
@@ -50,11 +50,23 @@ const UserDetails = () => {
       });
   };
 
+  const handleDelete = () => {
+    Raxios.delete(`/api/users/${userId}`)
+      .then(() => {
+        window.alert('User deleted successfuly.');
+        window.location.href = '/admin/users';
+      })
+      .catch(error => {
+        console.error('Error deleting user:', error);
+        window.alert('Error deleting user:', error);
+      });
+  };
+
   return (
     <div className='details-container'>
       {user && (
         <div className='content-container'>
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px'}}>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px' }}>
             <h1>User Details</h1>
             <button className='back-button' onClick={() => window.history.back()}>
               <FaArrowLeft className="back-icon" />
@@ -101,12 +113,13 @@ const UserDetails = () => {
             )}
           </div>
           <div className='edit-button-container'>
-          {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
+            {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
             {editMode ? (
               <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
             ) : (
               <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
             )}
+            <button className='update-button' style={{backgroundColor: "red"}} onClick={handleDelete}>Delete User</button>
           </div>
         </div>
       )}

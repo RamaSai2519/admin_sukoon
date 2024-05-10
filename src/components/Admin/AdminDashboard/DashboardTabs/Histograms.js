@@ -26,7 +26,6 @@ const Histograms = ({ usersData }) => {
             cityCounts[city] = (cityCounts[city] || 0) + 1;
         });
 
-        const MIN_USERS_COUNT = 2;
         let othersCount = 0;
         const sortedCities = Object.keys(cityCounts)
             .sort((a, b) => a.localeCompare(b))
@@ -98,6 +97,7 @@ const Histograms = ({ usersData }) => {
     useEffect(() => {
         destroyCharts();
         renderCharts();
+        // eslint-disable-next-line
     }, [usersPerCity, usersPerAgeGroup]);
 
     // Function to destroy charts

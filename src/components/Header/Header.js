@@ -43,7 +43,6 @@ const Header = ({ isLoggedIn, onLogout, darkMode, toggleDarkMode }) => {
                 <Link
                   to={{ pathname: '/', state: { activeTab: 'dashboard' } }}
                   className='outlined-button' aria-label="Navigate to the Dashboard"
-                  onClick={() => localStorage.setItem('adminActiveTab', 'dashboard')}
                 >
                   <span>Dashboard</span>
                 </Link>

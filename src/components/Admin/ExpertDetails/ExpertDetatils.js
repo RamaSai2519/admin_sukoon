@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import Raxios from '../../../services/axiosHelper';
 import { useParams, Link } from 'react-router-dom';
 import './ExpertDetails.css';
 import NavMenu from '../../NavMenu/NavMenu';
@@ -28,7 +28,7 @@ const ExpertDetails = () => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    axios.get(`/api/experts/${expertId}`)
+    Raxios.get(`/api/experts/${expertId}`)
       .then(response => {
         setExpert(response.data);
         setName(response.data.name);
@@ -57,7 +57,7 @@ const ExpertDetails = () => {
   }, [expertId, setExpert, setName, setPhoneNumber, setTopics, setDescription, setCategories, setProfile, setStatus, setCallsShare, setLanguages, setScore, setRepeatScore, setTotalScore]);
 
   const fetchAllCategories = () => {
-    axios.get('/api/categories')
+    Raxios.get('/api/categories')
       .then(response => {
         setAllCategories(response.data);
       })
@@ -86,7 +86,7 @@ const ExpertDetails = () => {
   };
 
   const handleUpdate = (newStatus) => {
-    axios.put(`/api/experts/${expertId}`, {
+    Raxios.put(`/api/experts/${expertId}`, {
       name,
       phoneNumber,
       topics,
@@ -109,6 +109,18 @@ const ExpertDetails = () => {
       })
       .catch(error => {
         console.error('Error updating expert details:', error);
+      });
+  };
+
+  const handleDelete = () => {
+    Raxios.delete(`/api/experts/${expertId}`)
+      .then(() => {
+        window.alert('Expert deleted successfully!');
+        window.location.href = '/admin/experts';
+      })
+      .catch(error => {
+        console.error('Error deleting expert:', error);
+        window.alert('Error deleting expert:', error);
       });
   };
 
@@ -262,6 +274,7 @@ const ExpertDetails = () => {
             >
               <button className='update-button'>View Detailed Scores</button>
             </Link>
+            <button className='update-button' style={{ backgroundColor: 'red' }} onClick={handleDelete}>Delete Expert</button>
           </div>
         </div>
       )}

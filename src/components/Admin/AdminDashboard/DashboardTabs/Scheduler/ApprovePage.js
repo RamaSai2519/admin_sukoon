@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import Raxios from '../../../../../services/axiosHelper';
 
 const ApprovePage = () => {
     const { scheduleId } = useParams();
@@ -12,7 +12,7 @@ const ApprovePage = () => {
 
     const fetchData = async () => {
         try {
-            const schedulesResponse = await axios.get(`/api/schedule/${scheduleId}`);
+            const schedulesResponse = await Raxios.get(`/api/schedule/${scheduleId}`);
             setExpert(schedulesResponse.data.expert);
             setUser(schedulesResponse.data.user);
             setTime(schedulesResponse.data.datetime);
@@ -23,13 +23,14 @@ const ApprovePage = () => {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line
     }, [expert, user]);
 
     const handleClick = async (value) => {
         const status = {
             status: value
         }
-        await axios.put(`/api/approve/${scheduleId}/${level}`, status);
+        await Raxios.put(`/api/approve/${scheduleId}/${level}`, status);
     };
 
     return (
