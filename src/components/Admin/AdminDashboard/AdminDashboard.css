@@ -53,12 +53,12 @@
     gap: 20px;
     justify-content: center;
     min-width: 425px;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .schedules-table {
     min-width: 485px;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .chart-row {

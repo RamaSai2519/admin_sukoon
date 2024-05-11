@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Select, DatePicker, Form, Button, Table } from "antd";
+import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
 import Raxios from "../../../../../services/axiosHelper";
 import { useData } from "../../../../../services/useData";
 
 const { Option } = Select;
 
 const SchedulerTab = () => {
+    const darkMode = localStorage.getItem('darkMode') === 'true';
     const { users, experts } = useData();
     const [dataSource, setDataSource] = useState([]);
 
@@ -92,81 +93,85 @@ const SchedulerTab = () => {
     };
 
     return (
-        <div>
-            <Form name="schedule-call" className="scheduler-grid-row" onFinish={onFinish}>
-                <Form.Item
-                    name={"user"}
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please select a user",
-                        },
-                    ]}
-                >
-                    <Select
-                        id="user"
-                        style={{ width: "100%" }}
-                        showSearch
-                        placeholder="Select User"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                            option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
+        <ConfigProvider theme={{
+            algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+        }}>
+            <div>
+                <Form name="schedule-call" className="scheduler-grid-row" onFinish={onFinish}>
+                    <Form.Item
+                        name={"user"}
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select a user",
+                            },
+                        ]}
                     >
-                        {userOptions}
-                    </Select>
-                </Form.Item>
-                <Form.Item
-                    className="m-0"
-                    name={"expert"}
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please select an expert",
-                        },
-                    ]}
-                >
-                    <Select
-                        id="expert"
-                        style={{ width: "100%" }}
-                        showSearch
-                        placeholder="Select Expert"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                            option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
+                        <Select
+                            id="user"
+                            style={{ width: "100%" }}
+                            showSearch
+                            placeholder="Select User"
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                        >
+                            {userOptions}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        className="m-0"
+                        name={"expert"}
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select an expert",
+                            },
+                        ]}
                     >
-                        {expertOptions}
-                    </Select>
-                </Form.Item>
+                        <Select
+                            id="expert"
+                            style={{ width: "100%" }}
+                            showSearch
+                            placeholder="Select Expert"
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                        >
+                            {expertOptions}
+                        </Select>
+                    </Form.Item>
 
-                <Form.Item
-                    className="m-0"
-                    name={"datetime"}
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please select a date and time",
-                        },
-                    ]}
-                >
-                    <DatePicker
-                        id="datetime"
-                        style={{ width: "100%" }}
-                        showTime
-                        format="YYYY-MM-DD HH:mm:ss"
-                    />
-                </Form.Item>
+                    <Form.Item
+                        className="m-0"
+                        name={"datetime"}
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select a date and time",
+                            },
+                        ]}
+                    >
+                        <DatePicker
+                            id="datetime"
+                            style={{ width: "100%" }}
+                            showTime
+                            format="YYYY-MM-DD HH:mm:ss"
+                        />
+                    </Form.Item>
 
-                <Button htmlType="submit" style={{ width: "100%" }}>
-                    Schedule
-                </Button>
-            </Form>
+                    <Button htmlType="submit" style={{ width: "100%" }}>
+                        Schedule
+                    </Button>
+                </Form>
 
-            <div className="schedules-table">
-                <Table dataSource={dataSource.reverse()} columns={columns} />
+                <div className="schedules-table">
+                    <Table dataSource={dataSource.reverse()} columns={columns} />
+                </div>
             </div>
-        </div>
+        </ConfigProvider>
     );
 };
 
