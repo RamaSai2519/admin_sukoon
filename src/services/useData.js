@@ -15,6 +15,7 @@ export const DataProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [calls, setCalls] = useState([]);
   const [experts, setExperts] = useState([]);
+  const [schedules, setSchedules] = useState([]);
   const [stats, setStats] = useState({
     totalCalls: "Please Wait...",
     successfulCalls: "Please Wait...",
@@ -35,7 +36,8 @@ export const DataProvider = ({ children }) => {
           leadsResponse,
           usersResponse,
           callsResponse,
-          expertsResponse
+          expertsResponse,
+          schedulesResponse
         ] = await Promise.all([
           Raxios.get('/api/errorlogs'),
           Raxios.get('/api/applications'),
@@ -44,7 +46,8 @@ export const DataProvider = ({ children }) => {
           Raxios.get('/api/leads'),
           Raxios.get('/api/users'),
           Raxios.get('/api/calls'),
-          Raxios.get('/api/experts')
+          Raxios.get('/api/experts'),
+          Raxios.get('/api/schedule')
         ]);
 
         setErrorLogs(errorLogsResponse.data.reverse());
@@ -55,6 +58,10 @@ export const DataProvider = ({ children }) => {
         setUsers(usersResponse.data);
         setCalls(callsResponse.data.reverse());
         setExperts(expertsResponse.data);
+        setSchedules(schedulesResponse.data.map(schedule => ({
+          ...schedule,
+          key: schedule._id
+        })));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -71,7 +78,8 @@ export const DataProvider = ({ children }) => {
     leads,
     users,
     calls,
-    experts
+    experts,
+    schedules
   };
 
   return (

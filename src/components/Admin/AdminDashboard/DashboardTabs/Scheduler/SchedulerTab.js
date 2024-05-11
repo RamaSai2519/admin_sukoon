@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
 import Raxios from "../../../../../services/axiosHelper";
 import { useData } from "../../../../../services/useData";
@@ -7,24 +7,7 @@ const { Option } = Select;
 
 const SchedulerTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
-    const { users, experts } = useData();
-    const [dataSource, setDataSource] = useState([]);
-
-    const fetchData = async () => {
-        try {
-            const schedulesResponse = await Raxios.get("/api/schedule");
-            setDataSource(schedulesResponse.data.map(schedule => ({
-                ...schedule,
-                key: schedule._id,
-            })));
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const { users, experts, schedules } = useData();
 
     const columns = [
         {
@@ -57,7 +40,7 @@ const SchedulerTab = () => {
         try {
             await Raxios.delete(`/api/schedule/${record._id}`);
             window.alert("Schedule deleted successfully");
-            fetchData();
+            window.location.reload();
         } catch (error) {
             console.error("Error deleting schedule:", error);
         }
@@ -85,7 +68,7 @@ const SchedulerTab = () => {
             } else {
                 await Raxios.post("/api/schedule", values);
                 window.alert("Call Scheduled successfully");
-                fetchData();
+                window.location.reload();
             }
         } catch (error) {
             console.error("Error:", error);
@@ -168,7 +151,7 @@ const SchedulerTab = () => {
                 </Form>
 
                 <div className="schedules-table">
-                    <Table dataSource={dataSource.reverse()} columns={columns} />
+                    <Table dataSource={schedules.reverse()} columns={columns} />
                 </div>
             </div>
         </ConfigProvider>
