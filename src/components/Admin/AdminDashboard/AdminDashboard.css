@@ -200,7 +200,7 @@
     justify-content: space-between;
 }
 
-@media screen and (max-width: 560px) {
+@media screen and (max-width: 740px) {
     .tabs-container {
         display: flex;
         flex-wrap: wrap;
