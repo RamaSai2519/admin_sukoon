@@ -42,7 +42,6 @@ const Histograms = ({ usersData }) => {
         if (othersCount > 0) {
             cityCounts['Others'] = othersCount;
             sortedCities.push('Others');
-            othersCities.push(`Others (${othersCount})`);
         }
 
         const sortedCityCounts = {};
@@ -51,7 +50,7 @@ const Histograms = ({ usersData }) => {
         });
 
         setUsersPerCity(sortedCityCounts);
-        setOthersCities(othersCities); // Set state to store cities grouped into "Others"
+        setOthersCities(othersCities);
     };
 
 
@@ -100,7 +99,6 @@ const Histograms = ({ usersData }) => {
         // eslint-disable-next-line
     }, [usersPerCity, usersPerAgeGroup]);
 
-    // Function to destroy charts
     const destroyCharts = () => {
         if (cityChart) {
             cityChart.destroy();
@@ -162,7 +160,6 @@ const Histograms = ({ usersData }) => {
         });
     };
 
-    // Function to render age group chart
     const renderAgeGroupChart = (canvas) => {
         const ctx = canvas.getContext('2d');
         return new Chart(ctx, {

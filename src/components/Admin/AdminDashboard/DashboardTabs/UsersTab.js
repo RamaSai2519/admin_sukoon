@@ -11,11 +11,14 @@ const UsersTab = () => {
   const [oneCallUsers, setOneCallUsers] = useState([]);
   const [twoCallsUsers, setTwoCallsUsers] = useState([]);
   const [moreThanTwoCallsUsers, setMoreThanTwoCallsUsers] = useState([]);
+  const [currentDayPartialSignups, setCurrentDayPartialSignups] = useState([]);
   const [popupContent, setPopupContent] = useState({ title: '', users: [] });
 
   useEffect(() => {
     const currentDate = new Date().toLocaleDateString();
     const currentDayTotalUsersCount = users.filter(user => new Date(user.createdDate).toLocaleDateString() === currentDate).length;
+    const currentDayPartialSignupsCount = leads.filter(lead => new Date(lead.createdDate).toLocaleDateString() === currentDate).length;
+    setCurrentDayPartialSignups(currentDayPartialSignupsCount);
     setCurrentDayTotalUsers(currentDayTotalUsersCount);
 
     const callCounts = {};
@@ -34,7 +37,7 @@ const UsersTab = () => {
     setOneCallUsers(oneCallUsersList);
     setTwoCallsUsers(twoCallsUsersList);
     setMoreThanTwoCallsUsers(moreThanTwoCallsUsersList);
-  }, [users, calls]);
+  }, [users, calls, leads]);
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -83,6 +86,7 @@ const UsersTab = () => {
             <div className="grid-tile-1" style={{ cursor: "pointer" }} onClick={() => openPopup('Partial Signups', leads)}>
               <h3>Partial Signups</h3>
               <h1>{leads.length}</h1>
+              <h4>Today: {currentDayPartialSignups}</h4>
             </div>
           </div>
         </div>

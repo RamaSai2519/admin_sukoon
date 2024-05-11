@@ -115,11 +115,11 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('applications')}
             active={activeTab === 'applications'}
           />
-          {/* <Tab
+          <Tab
             label="Scheduler"
             onClick={() => setActiveTab('scheduler')}
             active={activeTab === 'scheduler'}
-          /> */}
+          />
           <Tab
             label="Logs"
             onClick={() => setActiveTab('notifications')}
