@@ -163,7 +163,7 @@ const SchedulerTab = () => {
                 </Button>
             </Form>
 
-            <div>
+            <div className="schedules-table">
                 <Table dataSource={dataSource.reverse()} columns={columns} />
             </div>
         </div>
