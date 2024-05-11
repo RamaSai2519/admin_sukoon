@@ -61,6 +61,10 @@
     overflow: auto;
 }
 
+.scheduler-tab {
+    padding: 10px 20px;
+}
+
 .chart-row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

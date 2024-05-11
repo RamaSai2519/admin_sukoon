@@ -79,7 +79,7 @@ const SchedulerTab = () => {
         <ConfigProvider theme={{
             algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
         }}>
-            <div>
+            <div className="scheduler-tab">
                 <Form name="schedule-call" className="scheduler-grid-row" onFinish={onFinish}>
                     <Form.Item
                         name={"user"}
