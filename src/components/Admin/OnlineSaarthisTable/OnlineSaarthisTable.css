@@ -1,9 +1,9 @@
 .online-table-container {
     padding: 0;
     margin: 0;
-    width: 200px;
+    width: 100%;
     overflow: auto;
-    height: 110px;
+    height: 120px;
 }
 
 .online-table {
@@ -11,5 +11,5 @@
 }
 
 .status {
-    text-align: right;
+    text-align: center;
 }
