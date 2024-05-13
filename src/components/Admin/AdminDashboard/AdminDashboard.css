@@ -230,30 +230,26 @@
 }
 
 .back-icon {
+    color: black;
     font-size: 30px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     border-radius: 25px;
     padding: 5px;
-
-    &:hover {
-        box-shadow: 0 0 0;
-    }
-
     cursor: pointer;
+}
+
+.back-icon:hover {
+    scale: 1.2;
 }
 
 .dark-mode .back-icon {
     color: #fff;
     background-color: #212121;
-
-    &:hover {
-        background-color: #141414;
-    }
 }
 
 .back-button {
-    background-color: #fff;
-    color: black;
+    background-color: white;
+    color: white;
     border-radius: 25px;
     padding: 0;
     border-width: 0;
@@ -261,20 +257,11 @@
     width: 30px;
     align-self: center;
     cursor: pointer;
-    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
-
-    &:hover {
-        background-color: grey;
-    }
 }
 
 .dark-mode .back-button {
     background-color: #141414;
-    color: #fff;
-
-    &:hover {
-        background-color: grey;
-    }
+    color: #141414;
 }
 
 

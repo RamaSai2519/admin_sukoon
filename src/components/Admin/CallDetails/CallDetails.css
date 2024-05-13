@@ -8,7 +8,8 @@
 
 .small-tiles {
     display: flex;
-    flex-direction: column; /* Change to column layout */
+    flex-direction: column;
+    /* Change to column layout */
     gap: 20px;
     justify-content: space-between;
     flex: 1;
@@ -85,7 +86,6 @@
 
 .popup-button {
     text-decoration: none;
-    color: #fff;
     background-color: inherit;
     font-size: large;
     padding: 6px;

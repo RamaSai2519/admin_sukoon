@@ -96,9 +96,9 @@ const ApplicationsTab = () => {
                             ))}
                         </tbody>
                     </table>
+                    <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
                 </div>
             </div>
-            <button className='popup-button' onClick={downloadExcel}>Export Excel Sheet</button>
         </div>
     );
 };
