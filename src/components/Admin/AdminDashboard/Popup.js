@@ -41,7 +41,7 @@ const Popup = ({ title, users, onClose }) => {
         <div className="popup-content">
           <div className="popup-header">
             <h2>{title}</h2>
-            <button className="back-button" onClick={onClose}>X</button>
+            <button className="pback-button" onClick={onClose}>X</button>
           </div>
           <div>
             {users.length > 0 ? (
