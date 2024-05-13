@@ -1,5 +1,5 @@
 // DashboardTab.js
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import OnlineSaarthisTable from '../../OnlineSaarthisTable/OnlineSaarthisTable';
 import CallGraph from '../../CallGraph/CallGraph';
 import HourCallChart from '../../HourCallChart/HourCallChart';
@@ -18,6 +18,11 @@ const DashboardTab = () => {
         <div className="dashboard-tile">
           <div className="grid-row">
             <div className="grid-tile-1" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <h3>Total Calls</h3>
+              <h1>{stats.totalCalls}</h1>
+              <h4>Today: {stats.todayCalls}</h4>
+            </div>
+            <div className="grid-tile-1" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <h3>Successful Calls</h3>
               <h1>{stats.successfulCalls}</h1>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -26,9 +31,9 @@ const DashboardTab = () => {
               </div>
             </div>
             <div className="grid-tile-1" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <h3>Total Calls</h3>
-              <h1>{stats.totalCalls}</h1>
-              <h4>Today: {stats.todayCalls}</h4>
+              <h3>Total Failed Calls</h3>
+              <h1>{stats.failedCalls}</h1>
+              <h4>Today: {stats.todayFailedCalls}</h4>
             </div>
             <div className="grid-tile-1" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <h3>Avg. Duration</h3>

@@ -22,6 +22,8 @@ export const DataProvider = ({ children }) => {
     todayCalls: 0,
     todaySuccessfulCalls: 0,
     averageCallDuration: "Please Wait...",
+    failedCalls: "Please Wait...",
+    todayFailedCalls: 0,
     onlineSaarthis: []
   });
 
