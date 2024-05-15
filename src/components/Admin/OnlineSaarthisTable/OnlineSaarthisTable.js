@@ -4,10 +4,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { red, green } from '@mui/material/colors';
 
-// OnlineSaarthisTable.js
-
 const renderStatusIcon = (saarthi) => {
-  console.log(saarthi);
   if (saarthi.isBusy === false) {
     return <PersonIcon sx={{ color: green[500] }} />;
   } else {
