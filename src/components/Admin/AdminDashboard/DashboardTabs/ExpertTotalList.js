@@ -49,6 +49,8 @@ const ExpertTotalList = () => {
                 return calculateFailedCalls(item);
             case 'avgCallsPerDay':
                 return calculateAvgCallsPerDay(item);
+            case 'missedCalls':
+                return calculatemissedCalls(item);
             default:
                 return item[key];
         }
@@ -61,7 +63,12 @@ const ExpertTotalList = () => {
 
     const calculateFailedCalls = (expert) => {
         const expertCalls = calls.filter(call => call.expert === expert._id);
-        return expertCalls.filter(call => call.status !== 'successful').length;
+        return expertCalls.filter(call => call.status === 'failed').length;
+    };
+
+    const calculatemissedCalls = (expert) => {
+        const expertCalls = calls.filter(call => call.expert === expert._id);
+        return expertCalls.filter(call => call.status === 'missed').length;
     };
 
     const calculateAvgCallsPerDay = (expert) => {
@@ -81,16 +88,18 @@ const ExpertTotalList = () => {
     const downloadExcel = () => {
         const wb = XLSX.utils.book_new(); // Create a new Excel Workbook
         const wsData = [
-            ['Expert', 'Successful', 'Failed', 'Avg.', 'C.Score', 'Share', 'Repeat %', 'T.Score', 'Status'] // Header row
+            ['Expert', 'Successful', 'Failed', 'Missed', 'Avg.', 'C.Score', 'Share', 'Repeat %', 'T.Score', 'Status'] // Header row
         ];
         sortData(experts, sortConfig.key, sortConfig.direction).forEach((expert) => {
             const successfulCalls = calculateSuccessfulCalls(expert);
             const failedCalls = calculateFailedCalls(expert);
             const avgCallsPerDay = calculateAvgCallsPerDay(expert);
+            const missedCalls = calculatemissedCalls(expert);
             wsData.push([
                 expert.name,
                 successfulCalls,
                 failedCalls,
+                missedCalls,
                 avgCallsPerDay.toFixed(2),
                 expert.score * 20,
                 expert.callsShare + '%',
@@ -128,6 +137,9 @@ const ExpertTotalList = () => {
                         <th onClick={() => handleSort('failedCalls')}>
                             Failed{renderSortArrow('failedCalls')}
                         </th>
+                        <th onClick={() => handleSort('missedCalls')}>
+                            Missed{renderSortArrow('missedCalls')}
+                        </th>
                         <th onClick={() => handleSort('avgCallsPerDay')}>
                             Avg.{renderSortArrow('avgCallsPerDay')}
                         </th>
@@ -155,6 +167,7 @@ const ExpertTotalList = () => {
                             <td>{expert.name}</td>
                             <td>{calculateSuccessfulCalls(expert)}</td>
                             <td>{calculateFailedCalls(expert)}</td>
+                            <td>{calculatemissedCalls(expert)}</td>
                             <td>{calculateAvgCallsPerDay(expert).toFixed(2)}</td>
                             <td>{expert.score * 20}</td>
                             <td>{expert.callsShare}%</td>

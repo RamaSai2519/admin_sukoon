@@ -54,6 +54,8 @@ const ExpertDayList = () => {
                 return calculateSuccessfulCalls(item);
             case 'failedCalls':
                 return calculateFailedCalls(item);
+            case 'MissedCalls':
+                return calculateMissedCalls(item);
             case 'avgCallsPerDay':
                 return calculateAvgCallsPerDay(item);
             default:
@@ -78,7 +80,17 @@ const ExpertDayList = () => {
             const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
             return callDate === currentDate;
         });
-        return callsDataCurrentDay.filter(call => call.status !== 'successful').length;
+        return callsDataCurrentDay.filter(call => call.status === 'failed').length;
+    };
+
+    const calculateMissedCalls = (expert) => {
+        const currentDate = new Date().toISOString().split('T')[0];
+        const expertCalls = calls.filter(call => call.expert === expert._id);
+        const callsDataCurrentDay = expertCalls.filter(call => {
+            const callDate = new Date(call.initiatedTime).toISOString().split('T')[0];
+            return callDate === currentDate;
+        });
+        return callsDataCurrentDay.filter(call => call.status === 'missed').length;
     };
 
     const calculateAvgCallsPerDay = (expert) => {
@@ -98,16 +110,18 @@ const ExpertDayList = () => {
     const downloadExcel = () => {
         const wb = XLSX.utils.book_new();
         const wsData = [
-            ['Expert', 'Success', 'Failed', 'Avg.', 'C.Score', 'Share', 'Repeat %', 'T.Score', 'Status'] // Header row
+            ['Expert', 'Success', 'Failed', 'Missed', 'Avg.', 'C.Score', 'Share', 'Repeat %', 'T.Score', 'Status'] // Header row
         ];
         sortData(experts, sortConfig.key, sortConfig.direction).forEach((expert) => {
             const successfulCalls = calculateSuccessfulCalls(expert);
             const failedCalls = calculateFailedCalls(expert);
+            const missedCalls = calculateMissedCalls(expert);
             const avgCallsPerDay = calculateAvgCallsPerDay(expert);
             wsData.push([
                 expert.name,
                 successfulCalls,
                 failedCalls,
+                missedCalls,
                 avgCallsPerDay.toFixed(2),
                 expert.score * 20,
                 expert.callsShare + '%',
@@ -137,6 +151,9 @@ const ExpertDayList = () => {
                         <th onClick={() => handleSort('failedCalls')}>
                             Failed{renderSortArrow('failedCalls')}
                         </th>
+                        <th onClick={() => handleSort('MissedCalls')}>
+                            Missed{renderSortArrow('MissedCalls')}
+                        </th>
                         <th onClick={() => handleSort('avgCallsPerDay')}>
                             Avg.{renderSortArrow('avgCallsPerDay')}
                         </th>
@@ -150,6 +167,7 @@ const ExpertDayList = () => {
                             <td>{expert.name}</td>
                             <td>{calculateSuccessfulCalls(expert)}</td>
                             <td>{calculateFailedCalls(expert)}</td>
+                            <td>{calculateMissedCalls(expert)}</td>
                             <td>{calculateAvgCallsPerDay(expert).toFixed(2)}</td>
                             <td>{expert.status}</td>
                             <td>
