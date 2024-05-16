@@ -13,7 +13,7 @@ const renderStatusIcon = (saarthi) => {
 }
 
 const OnlineSaarthisTable = ({ onlineSaarthis }) => {
-  // Sort the saarthis array by isBusy === false first
+  // Sort the saarthis array by isBusy is false first
   const sortedSaarthis = onlineSaarthis.sort((a, b) => {
     if (a.isBusy === true && b.isBusy === false) {
       return -1;
