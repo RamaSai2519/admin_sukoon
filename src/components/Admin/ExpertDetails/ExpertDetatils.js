@@ -73,6 +73,8 @@ const ExpertDetails = () => {
       .then(response => {
         setExpert(response.data);
         setStatus(newStatus);
+        window.alert('Expert details updated successfully!');
+        setEditMode(false);
       })
       .catch(error => {
         window.alert('Error updating expert details:', error);

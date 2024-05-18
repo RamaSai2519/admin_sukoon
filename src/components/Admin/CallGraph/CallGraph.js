@@ -77,7 +77,7 @@ const CallGraph = () => {
       chart.update();
     }
     // eslint-disable-next-line
-  }, [calls, chart]); 
+  }, [calls, chart, timeframe]); // Add timeframe as a dependency
 
   const filterData = (callData) => {
     let startDate = new Date();
