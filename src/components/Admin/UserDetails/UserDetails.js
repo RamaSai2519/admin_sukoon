@@ -74,7 +74,7 @@ const UserDetails = () => {
               <FaArrowLeft className="back-icon" />
             </button>
           </div>
-          <div className='grid-tile-1'>
+          <div className='grid-tile'>
             <h3>Name</h3>
             {editMode ? (
               <p><input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
@@ -82,7 +82,7 @@ const UserDetails = () => {
               <h2>{name}</h2>
             )}
           </div>
-          <div className='grid-tile-1'>
+          <div className='grid-tile'>
             <h3>Phone Number</h3>
             {editMode ? (
               <p><input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
@@ -90,7 +90,7 @@ const UserDetails = () => {
               <h2>{phoneNumber}</h2>
             )}
           </div>
-          <div className='grid-tile-1'>
+          <div className='grid-tile'>
             <h3>City</h3>
             {editMode ? (
               <p><input type="text" value={city} onChange={(e) => setCity(e.target.value)} /></p>
@@ -98,7 +98,7 @@ const UserDetails = () => {
               <h2>{city}</h2>
             )}
           </div>
-          <div className='grid-tile-1'>
+          <div className='grid-tile'>
             <h3>Birth Date</h3>
             {editMode ? (
               <p><input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} /></p>
@@ -106,7 +106,7 @@ const UserDetails = () => {
               <h2>{birthDate}</h2>
             )}
           </div>
-          <div className='grid-tile-1'>
+          <div className='grid-tile'>
             <h3>Number of Calls</h3>
             {editMode ? (
               <p><input type="number" value={numberOfCalls} onChange={(e) => setNumberOfCalls(e.target.value)} /></p>

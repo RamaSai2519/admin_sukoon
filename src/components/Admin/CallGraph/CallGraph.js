@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Chart from 'chart.js/auto';
-import './CallGraph.css';
 import { useData } from '../../../services/useData';
+import Chart from 'chart.js/auto';
 
 const CallGraph = () => {
   const { calls } = useData();
@@ -68,7 +67,7 @@ const CallGraph = () => {
   }, []);
 
   useEffect(() => {
-    if (chart && chart.canvas) { 
+    if (chart && chart.canvas) {
       const filteredData = filterData(calls);
       const { labels, counts } = processChartData(filteredData);
 
@@ -132,9 +131,9 @@ const CallGraph = () => {
   };
 
   return (
-    <div className='calls-table'>
-      <div className='idk' style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h2 style={{ margin: "0" }}>Calls Over Time (All)</h2>
+    <div className='w-full h-full'>
+      <div className='flex mt-2 justify-between items-center'>
+        <h2>Calls Over Time (All)</h2>
         <div className='drop-down'>
           <label>
             <select value={timeframe} onChange={handleTimeframeChange}>
@@ -145,8 +144,8 @@ const CallGraph = () => {
           </label>
         </div>
       </div>
-      <div className="chart-container">
-        <div className="chart-wrapper">
+      <div>
+        <div>
           <canvas id="callChart"></canvas>
         </div>
       </div>

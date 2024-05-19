@@ -6,7 +6,6 @@ import UsersTab from './DashboardTabs/UsersTab';
 import ApplicationsTab from './DashboardTabs/ApplicationsTab';
 import SchedulerTab from './DashboardTabs/Scheduler/SchedulerTab';
 import ScrollBottom from './ScrollBottom';
-import './AdminDashboard.css';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import ErrorLogsComponent from './DashboardTabs/Notifications';
@@ -22,12 +21,6 @@ const firebaseConfig = {
   appId: "1:221608439000:web:8d3b9e17733071addbbbad",
   measurementId: "G-3H59FDN20X"
 };
-
-const Tab = ({ label, onClick, active }) => (
-  <div className={`tab ${active ? 'active' : ''}`} onClick={onClick}>
-    {label}
-  </div>
-);
 
 const AdminDashboard = () => {
   const location = useLocation();
@@ -87,45 +80,46 @@ const AdminDashboard = () => {
     }
   };
 
-  return (
-    <div className="admin-dashboard-container">
-      <h1 className="Title">Admin Dashboard</h1>
+  const Tab = ({ label, onClick, active }) => (
+    <div className={`cshadow p-2 px-4 mx-2 rounded-3xl font-bold text-xl hover:scale-125 transition-all cursor-pointer dark:bg-lightBlack ${active ? 'scale-110' : ''}`}
+      onClick={onClick}>
+      {label}
+    </div>
+  );
 
-      <div className="tabs-container">
-        <div className="tabs">
-          <Tab
-            label="Calls"
-            onClick={() => setActiveTab('dashboard')}
-            active={activeTab === 'dashboard'}
-          />
-          <Tab
-            label="Users"
-            onClick={() => setActiveTab('users')}
-            active={activeTab === 'users'}
-          />
-          <Tab
-            label="Saarthis"
-            onClick={() => setActiveTab('onlineSaarthis')}
-            active={activeTab === 'onlineSaarthis'}
-          />
-        </div>
-        <div className="tabs">
-          <Tab
-            label="Applications"
-            onClick={() => setActiveTab('applications')}
-            active={activeTab === 'applications'}
-          />
-          <Tab
-            label="Scheduler"
-            onClick={() => setActiveTab('scheduler')}
-            active={activeTab === 'scheduler'}
-          />
-          <Tab
-            label="Logs"
-            onClick={() => setActiveTab('notifications')}
-            active={activeTab === 'notifications'}
-          />
-        </div>
+  return (
+    <div className="container">
+      <div className="flex flex-row flex-wrap justify-center">
+        <Tab
+          label="Calls"
+          onClick={() => setActiveTab('dashboard')}
+          active={activeTab === 'dashboard'}
+        />
+        <Tab
+          label="Users"
+          onClick={() => setActiveTab('users')}
+          active={activeTab === 'users'}
+        />
+        <Tab
+          label="Saarthis"
+          onClick={() => setActiveTab('onlineSaarthis')}
+          active={activeTab === 'onlineSaarthis'}
+        />
+        <Tab
+          label="Applications"
+          onClick={() => setActiveTab('applications')}
+          active={activeTab === 'applications'}
+        />
+        <Tab
+          label="Scheduler"
+          onClick={() => setActiveTab('scheduler')}
+          active={activeTab === 'scheduler'}
+        />
+        <Tab
+          label="Logs"
+          onClick={() => setActiveTab('notifications')}
+          active={activeTab === 'notifications'}
+        />
       </div>
 
       {activeTab === 'dashboard' && <DashboardTab />}

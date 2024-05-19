@@ -39,7 +39,7 @@ const ScrollToBottomButton = () => {
     }, []);
 
     return (
-        <div className="scroll-to-bottom-button" onClick={showUpArrow ? handleScrollToTop : handleScrollToBottom}>
+        <div className="fixed right-2 bottom-20 dark:bg-lightBlack p-2 rounded-full text-4xl cursor-pointer shadow-md hover:scale-110 transition-all" onClick={showUpArrow ? handleScrollToTop : handleScrollToBottom}>
             {showUpArrow ? <FaArrowUp /> : <FaArrowDown />}
         </div>
     );

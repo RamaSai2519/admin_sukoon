@@ -1,5 +1,4 @@
 import React from 'react';
-import './OnlineSaarthisTable.css';
 import PersonIcon from '@mui/icons-material/Person';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { red, green } from '@mui/material/colors';
@@ -25,16 +24,15 @@ const OnlineSaarthisTable = ({ onlineSaarthis }) => {
   });
 
   return (
-    <div className="online-table-container">
-      <table className="online-table">
+    <div className="w-full h-32 overflow-auto">
+      <table className="w-full mt-2">
         <thead>
         </thead>
         <tbody>
           {sortedSaarthis.map(saarthi => (
             <tr key={saarthi._id}>
               <td>{saarthi.name}</td>
-              <td className='status'>{renderStatusIcon(saarthi)}</td>
-              {/* <td className='status'>{saarthi.isBusy ? 'Busy' : 'Available'}</td> */}
+              <td className='text-right'>{renderStatusIcon(saarthi)}</td>
             </tr>
           ))}
         </tbody>

@@ -6,68 +6,62 @@ import HourCallChart from '../../HourCallChart/HourCallChart';
 import ExpertGraph from '../../ExpertGraph/ExpertGraph';
 import DayGraph from '../../DaysGraph/DaysGraph';
 import LastFiveCallsTable from '../../LastFiveCallsTable/LastFiveCallsTable';
-import '../AdminDashboard.css';
 import { useData } from '../../../../services/useData';
+import DashboardTile from '../../DashboardTile/DashboardTile';
 
 const DashboardTab = () => {
   const { stats } = useData();
 
   return (
-    <div className="admin-dashboard-container">
-      <div className="dashboard-tiles">
-        <div className="dashboard-tile">
-          <div className="grid-row">
-            <div className="grid-tile-1" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <h3>Total Calls</h3>
+    <div className="container">
+      <div className="flex flex-wrap justify-between">
+        <div className='w-full'>
+          <div className='grid grid-cols-3 md:grid-cols-5'>
+            <DashboardTile title="Total Calls">
               <h1>{stats.totalCalls}</h1>
               <h4>Today: {stats.todayCalls}</h4>
-            </div>
-            <div className="grid-tile-1" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <h3>Successful Calls</h3>
+            </DashboardTile>
+            <DashboardTile title="Successful Calls">
               <h1>{stats.successfulCalls}</h1>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <h4 style={{ margin: 0 }}>Today: {stats.todaySuccessfulCalls}</h4>
-                <p style={{ margin: 0 }}>&gt;1m</p>
+              <div className='flex flex-row justify-between w-full'>
+                <h4>Today: {stats.todaySuccessfulCalls}</h4>
+                <p>&gt;1m</p>
               </div>
-            </div>
-            <div className="grid-tile-1" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <h3>Total Failed Calls</h3>
+            </DashboardTile>
+            <DashboardTile title="Failed Calls">
               <h1>{stats.failedCalls}</h1>
               <h4>Today: {stats.todayFailedCalls}</h4>
-            </div>
-            <div className="grid-tile-1" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <h3>Avg. Duration</h3>
+            </DashboardTile>
+            <DashboardTile title="Avg. Duration">
               <h1>{stats.averageCallDuration}</h1>
-              <p style={{ textAlign: 'right', margin: '0' }}>&gt;1m</p>
-            </div>
-            <div className="grid-tile-1">
-              <h3>Online Saarthis</h3>
+              <p className='text-right w-full'>&gt;1m</p>
+            </DashboardTile>
+            <DashboardTile title="Online Saarthis">
               <OnlineSaarthisTable onlineSaarthis={stats.onlineSaarthis} />
-            </div>
+            </DashboardTile>
           </div>
         </div>
-        <div className='dashboard-tile'>
-          <div className="grid">
-            <div className='grid-tile-1'>
+        <div className='w-full'>
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            <DashboardTile title="Call Graph">
               <CallGraph />
-            </div>
-            <div className='grid-tile-1'>
+            </DashboardTile>
+            <DashboardTile title="Expert Graph">
               <ExpertGraph />
-              <p style={{ textAlign: 'right', margin: '0' }}>&gt;1m</p>
-            </div>
-            <div className='grid-tile-1'>
+              <p className='w-full text-right'>&gt;1m</p>
+            </DashboardTile>
+            <DashboardTile title="Hourly Call Chart">
               <HourCallChart />
-            </div>
-            <div className='grid-tile-1'>
+            </DashboardTile>
+            <DashboardTile title="Day Graph">
               <DayGraph />
-            </div>
+            </DashboardTile>
           </div>
         </div>
-
-        <div className="dashboard-tile">
-          <div className='latest-wrapper'>
+        <div className="w-full">
+          <DashboardTile>
             <LastFiveCallsTable />
-          </div>
+          </DashboardTile>
         </div>
       </div>
     </div>

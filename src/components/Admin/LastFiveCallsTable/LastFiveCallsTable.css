@@ -2,14 +2,8 @@
   background-color: #fff;
 }
 
-.dark-mode .default-row {
+.dark .default-row {
   background-color: #141414;
-}
-
-.last-five-calls-table {
-  border-collapse: separate;
-  border-spacing: 0 10px;
-  width: 100%;
 }
 
 .last-five-calls-table th,

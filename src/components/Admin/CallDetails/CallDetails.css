@@ -38,7 +38,7 @@
     height: max-content;
 }
 
-.dark-mode .details-box {
+.dark .details-box {
     background-color: #212121;
 }
 
@@ -72,7 +72,7 @@
     position: relative;
 }
 
-.dark-mode .popup-content {
+.dark .popup-content {
     background-color: #212121;
 }
 
@@ -97,7 +97,7 @@
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-.dark-mode .popup-button {
+.dark .popup-button {
     background-color: #141414;
     color: #fff;
 }

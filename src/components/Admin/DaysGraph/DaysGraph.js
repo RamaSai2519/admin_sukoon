@@ -5,7 +5,7 @@ import { useData } from '../../../services/useData';
 const DaysGraph = () => {
     const { calls } = useData();
     const [chart, setChart] = useState(null);
-    const [timeframe, setTimeframe] = useState('year'); 
+    const [timeframe, setTimeframe] = useState('year');
 
     useEffect(() => {
         renderChart(calls);
@@ -104,9 +104,9 @@ const DaysGraph = () => {
     };
 
     return (
-        <div className='day-graph'>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <h3 style={{ margin: "0" }}>Calls per Day (All)</h3>
+        <div className='w-full h-full'>
+            <div className='flex mt-2 justify-between items-center'>
+                <h3>Calls per Day (All)</h3>
                 <div className='drop-down'>
                     <label>
                         <select value={timeframe} onChange={handleTimeframeChange}>

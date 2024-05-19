@@ -86,11 +86,11 @@
     color: inherit;
 }
 
-.dark-mode .calls-table th {
+.dark .calls-table th {
     background-color: #212121;
 }
 
-.dark-mode .filter-row {
+.dark .filter-row {
     background-color: #212121;
 }
 
@@ -101,7 +101,7 @@
     background-color: inherit;
 }
 
-.dark-mode .filter-row input {
+.dark .filter-row input {
     background-color: #141414;
     color: white;
 }

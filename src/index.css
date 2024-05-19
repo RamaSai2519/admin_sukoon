@@ -1,23 +1,11 @@
- /* src/index.css */
-
- @font-face {
-   font-family: 'Custom Font';
-   src: url('./components/assets/futura light bt.ttf') format('truetype');
- }
-
  html {
    min-width: 425px;
  }
 
  body {
    margin: 0;
-   font-family: 'Custom Font';
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
- }
-
- code {
-   font-family: 'Custom Font';
  }
 
  ::-webkit-scrollbar {
@@ -25,9 +13,13 @@
  }
 
  ::-webkit-scrollbar-thumb {
-   background: #888;
+   background: #555;
  }
 
  ::-webkit-scrollbar-thumb:hover {
-   background: #555;
+   background: #f1f1f1;
+ }
+
+ ::-webkit-scrollbar-track {
+   background: #888;
  }

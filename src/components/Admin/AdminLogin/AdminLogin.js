@@ -20,8 +20,8 @@ const AdminLogin = ({ onLogin }) => {
 
     return (
         <div className='login-page'>
-            <div className="admin-login-container">
-                <h1>Hello Admin</h1>
+            <div className="admin-login-container mx-auto dark:bg-lightBlack">
+                <h1 className='text-3xl m-5 mt-0'>Login to access dashboard</h1>
                 <ConfigProvider theme={
                     {
                         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,

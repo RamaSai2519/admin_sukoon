@@ -34,10 +34,14 @@
     font-size: 21px;
     margin-top: 20px;
     margin-left: 0;
-    background-color: #fff;
     padding: 10px;
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
+}
+
+.dark .update-button {
+    background-color: #212121;
+    color: white;
 }
 
 .update-button:hover {

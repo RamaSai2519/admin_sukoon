@@ -114,7 +114,7 @@ const ExpertDetails = () => {
                 <img src={profile} alt="Expert Profile" />
               </div>
               <div className="grid-item">
-                <div className='grid-tile-1'>
+                <div className='grid-tile'>
                   <h3>Name</h3>
                   {editMode ? (
                     <p><input type="text" value={name} onChange={(e) => setName(e.target.value)} /></p>
@@ -122,7 +122,7 @@ const ExpertDetails = () => {
                     <h2>{name}</h2>
                   )}
                 </div>
-                <div className='grid-tile-1'>
+                <div className='grid-tile'>
                   <h3>Phone Number</h3>
                   {editMode ? (
                     <p><input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></p>
@@ -130,8 +130,8 @@ const ExpertDetails = () => {
                     <h2>{phoneNumber}</h2>
                   )}
                 </div>
-                <div className='grid'>
-                  <div className='grid-tile-1'>
+                <div className='grid grid-cols-4'>
+                  <div className='grid-tile'>
                     <h3>Score</h3>
                     {editMode ? (
                       <p><input type="number" value={score} onChange={(e) => setScore(e.target.value)} /></p>
@@ -139,7 +139,7 @@ const ExpertDetails = () => {
                       <h2>{score}</h2>
                     )}
                   </div>
-                  <div className='grid-tile-1'>
+                  <div className='grid-tile'>
                     <h3>Repeat Score</h3>
                     {editMode ? (
                       <p><input type="number" value={repeatScore} onChange={(e) => setRepeatScore(e.target.value)} /></p>
@@ -147,7 +147,7 @@ const ExpertDetails = () => {
                       <h2>{repeatScore}</h2>
                     )}
                   </div>
-                  <div className='grid-tile-1'>
+                  <div className='grid-tile'>
                     <h3>Calls Share</h3>
                     {editMode ? (
                       <p><input type="number" value={callsShare} onChange={(e) => setCallsShare(e.target.value)} /></p>
@@ -155,7 +155,7 @@ const ExpertDetails = () => {
                       <h2>{callsShare}%</h2>
                     )}
                   </div>
-                  <div className='grid-tile-1'>
+                  <div className='grid-tile'>
                     <h3>Total Score</h3>
                     {editMode ? (
                       <p><input type="number" value={totalScore} onChange={(e) => setTotalScore(e.target.value)} /></p>
@@ -164,92 +164,90 @@ const ExpertDetails = () => {
                     )}
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className='grid-container-2'>
-              <div className='grid-tile-1'>
-                <h3>Categories</h3>
-                <div ref={dropdownRef}>
-                  <div>
-                    {editMode ? (
-                      <Select
-                        mode="multiple"
-                        style={{ width: '100%' }}
-                        placeholder="Select Categories"
-                        onChange={handleCategoryChange}
-                        value={categories}
-                      >
-                        {allCategories.map(category => (
-                          <Option key={category._id} value={category}>
-                            {category.name}
-                          </Option>
-                        ))}
-                      </Select>
-                    ) : (
-                      <h2>{categories.length > 0 ? categories.join(', ') : 'No categories'}</h2>
-                    )}
+                <div className='grid-tile'>
+                  <h3>Categories</h3>
+                  <div ref={dropdownRef}>
+                    <div>
+                      {editMode ? (
+                        <Select
+                          mode="multiple"
+                          style={{ width: '100%' }}
+                          placeholder="Select Categories"
+                          onChange={handleCategoryChange}
+                          value={categories}
+                        >
+                          {allCategories.map(category => (
+                            <Option key={category._id} value={category}>
+                              {category.name}
+                            </Option>
+                          ))}
+                        </Select>
+                      ) : (
+                        <h2>{categories.length > 0 ? categories.join(', ') : 'No categories'}</h2>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className='grid-tile-1'>
-                <h3>Languages</h3>
-                {editMode ? (
-                  <p><input type="text" value={languages} onChange={(e) => setLanguages(e.target.value)} /></p>
-                ) : (
-                  <h2>{languages}</h2>
-                )}
-              </div>
-              <div className='grid-tile-1'>
-                <h3>Topics</h3>
-                {editMode ? (
-                  <p><input type="text" value={topics} onChange={(e) => setTopics(e.target.value)} /></p>
-                ) : (
-                  <h2>{topics}</h2>
-                )}
-              </div>
-              <div className='grid-tile-1'>
-                <h3>Description</h3>
-                {editMode ? (
-                  <p><input type="text" value={description} onChange={(e) => setDescription(e.target.value)} /></p>
-                ) : (
-                  <h2>{description}</h2>
-                )}
-              </div>
-              <div className='grid-tile-1'>
-                <h3>Status</h3>
-                <div className="toggle-container">
-                  <h2 className="status-label">{status === 'online' ? 'Online' : 'Offline'}</h2>
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={status === 'online'}
-                      onChange={() => handleUpdate(status === 'offline' ? 'online' : 'offline')}
-                    />
-                    <span className="slider round"></span>
-                  </label>
+                <div className='grid-tile'>
+                  <h3>Status</h3>
+                  <div className="toggle-container">
+                    <h2 className="status-label">{status === 'online' ? 'Online' : 'Offline'}</h2>
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        checked={status === 'online'}
+                        onChange={() => handleUpdate(status === 'offline' ? 'online' : 'offline')}
+                      />
+                      <span className="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+                <div className='grid-tile'>
+                  <h3>Languages</h3>
+                  {editMode ? (
+                    <p><input type="text" value={languages} onChange={(e) => setLanguages(e.target.value)} /></p>
+                  ) : (
+                    <h2>{languages}</h2>
+                  )}
+                </div>
+                <div className='grid-tile'>
+                  <h3>Topics</h3>
+                  {editMode ? (
+                    <p><input type="text" value={topics} onChange={(e) => setTopics(e.target.value)} /></p>
+                  ) : (
+                    <h2>{topics}</h2>
+                  )}
+                </div>
+                <div className='grid-tile'>
+                  <h3>Description</h3>
+                  {editMode ? (
+                    <p><input type="text" value={description} onChange={(e) => setDescription(e.target.value)} /></p>
+                  ) : (
+                    <h2>{description}</h2>
+                  )}
+                </div>
+                <div className='edit-button-container'>
+                  {editMode ? (
+                    <>
+                      <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
+                      <button className='update-button' onClick={() => handleUpdate(status)}>Update Details</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
+                    </>
+                  )}
+                  <Link
+                    to={{
+                      pathname: `/admin/experts/${expertId}/report`
+                    }}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <button className='update-button'>View Detailed Scores</button>
+                  </Link>
+                  <button className='update-button' style={{ backgroundColor: 'red' }} onClick={handleDelete}>Delete Expert</button>
                 </div>
               </div>
-            </div>
-            <div className='edit-button-container'>
-              {editMode ? (
-                <>
-                  <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
-                  <button className='update-button' onClick={() => handleUpdate(status)}>Update Details</button>
-                </>
-              ) : (
-                <>
-                  <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
-                </>
-              )}
-              <Link
-                to={{
-                  pathname: `/admin/experts/${expertId}/report`
-                }}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <button className='update-button'>View Detailed Scores</button>
-              </Link>
-              <button className='update-button' style={{ backgroundColor: 'red' }} onClick={handleDelete}>Delete Expert</button>
             </div>
           </div>
         )}

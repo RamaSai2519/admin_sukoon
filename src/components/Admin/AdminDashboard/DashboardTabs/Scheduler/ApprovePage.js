@@ -34,7 +34,7 @@ const ApprovePage = () => {
     };
 
     return (
-        <div className='grid-tile-1'>
+        <div className='grid-tile'>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '80vh', width: 'fit-content', margin: '0 auto' }}>
                 <h1>Approve the Scheduled Call</h1>
                 <h2>Expert: {expert}</h2>

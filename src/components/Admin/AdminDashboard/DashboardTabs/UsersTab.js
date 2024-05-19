@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Popup from '../Popup';
 import Histograms from './Histograms';
 import LeadsPopup from './LeadsPopup';
+import DashboardTile from '../../DashboardTile/DashboardTile';
 import { useData } from '../../../../services/useData';
 
 const UsersTab = () => {
@@ -62,32 +63,32 @@ const UsersTab = () => {
   };
 
   return (
-    <div className="users-tab">
-      <div className="dashboard-tiles">
-        <div className="dashboard-tile">
-          <div className="users-grid-row">
-            <div className="grid-tile-1">
-              <h3>Complete Signups</h3>
-              <h1>{totalUsers}</h1>
-              <h4>Today: {currentDayTotalUsers}</h4>
-            </div>
-            <div className="grid-tile-1" style={{ cursor: "pointer" }} onClick={() => openPopup('Users with One Call', oneCallUsers)}>
-              <h3>One Call Users</h3>
-              <h1>{oneCallUsers.length}</h1>
-            </div>
-            <div className="grid-tile-1" style={{ cursor: "pointer" }} onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
-              <h3>Two Calls Users</h3>
-              <h1>{twoCallsUsers.length}</h1>
-            </div>
-            <div className="grid-tile-1" style={{ cursor: "pointer" }} onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
-              <h3>{'>'}2 Calls Users</h3>
-              <h1>{moreThanTwoCallsUsers.length}</h1>
-            </div>
-            <div className="grid-tile-1" style={{ cursor: "pointer" }} onClick={() => openPopup('Partial Signups', leads)}>
-              <h3>Partial Signups</h3>
-              <h1>{leads.length}</h1>
-              <h4>Today: {currentDayPartialSignups}</h4>
-            </div>
+    <div className="container min-h-screen">
+      <div className="flex flex-wrap justify-between">
+        <div className="w-full">
+          <div className="grid grid-cols-3 md:grid-cols-5">
+            <DashboardTile title="Total Signups">
+              <div className='flex justify-between items-center w-full'>
+                <h1>{totalUsers}</h1>
+                <h4>Today: {currentDayTotalUsers}</h4>
+              </div>
+            </DashboardTile>
+            <DashboardTile title="One Call Users">
+              <h1 className='cursor-pointer' onClick={() => openPopup('Users with One Call', oneCallUsers)}>{oneCallUsers.length}</h1>
+            </DashboardTile>
+            <DashboardTile title="Two Calls Users">
+              <h1 className='cursor-pointer' onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>{twoCallsUsers.length}</h1>
+            </DashboardTile>
+            <DashboardTile title=">2 Calls Users">
+              <h1 className='cursor-pointer' onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>{moreThanTwoCallsUsers.length}</h1>
+            </DashboardTile>
+            <DashboardTile title="Partial Signups">
+              <div className='flex justify-between items-center w-full'>
+                <h1 style={{ cursor: "pointer" }}
+                  onClick={() => openPopup('Partial Signups', leads)}>{leads.length}</h1>
+                <h4>Today: {currentDayPartialSignups}</h4>
+              </div>
+            </DashboardTile>
           </div>
         </div>
       </div>

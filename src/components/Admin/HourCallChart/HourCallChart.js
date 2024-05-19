@@ -106,9 +106,9 @@ const HourCallChart = () => {
     };
 
     return (
-        <div className='hour-call-chart'>
-            <div className='idk' style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <h3 style={{ margin: "0" }}>Calls per Hour (All)</h3>
+        <div className='w-full h-full'>
+            <div className='flex mt-2 justify-between items-center'>
+                <h3>Calls per Hour (All)</h3>
                 <div className='drop-down'>
                     <label>
                         <select value={timeframe} onChange={handleTimeframeChange}>

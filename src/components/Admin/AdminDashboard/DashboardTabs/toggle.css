@@ -1,13 +1,3 @@
-.wrapper-wrapper {
-    height: 40px;
-}
-
-@media screen and (max-width: 560px) {
-    .wrapper-wrapper {
-        margin-top: 40px;
-    }
-}
-
 .toggleWrapper {
     display: flex;
     align-items: center;

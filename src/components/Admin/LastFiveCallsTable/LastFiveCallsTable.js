@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Table, ConfigProvider, theme } from 'antd';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
 import { red, pink, green, yellow } from '@mui/material/colors';
-import './LastFiveCallsTable.css';
 import { useData } from '../../../services/useData';
 
 const LastFiveCallsTable = () => {
   const { calls } = useData();
   const [lastFiveCalls, setLastFiveCalls] = useState([]);
-  const [sortConfig, setSortConfig] = useState({
-    key: '',
-    direction: '',
-  });
+  const darkMode = localStorage.getItem('darkMode') === 'true';
 
   useEffect(() => {
     const todayCalls = calls.filter(call => {
@@ -34,87 +31,84 @@ const LastFiveCallsTable = () => {
     }
   }, [calls]);
 
-  const handleSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  if (sortConfig.key) {
-    lastFiveCalls.sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
-      }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
-    });
-  }
-
-  const renderSortArrow = (key) => {
-    if (sortConfig.key === key) {
-      return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
-    }
-    return null;
-  };
+  const columns = [
+    {
+      title: 'User',
+      dataIndex: 'userName',
+      key: 'userName',
+      sorter: (a, b) => a.userName.localeCompare(b.userName),
+      render: (text, record) => (
+        <span>
+          {renderStatusIcon(record.status)} {text}
+        </span>
+      ),
+    },
+    {
+      title: 'Expert',
+      dataIndex: 'expertName',
+      key: 'expertName',
+      sorter: (a, b) => a.expertName.localeCompare(b.expertName),
+    },
+    {
+      title: 'Time',
+      dataIndex: 'initiatedTime',
+      key: 'initiatedTime',
+      sorter: (a, b) => new Date(a.initiatedTime) - new Date(b.initiatedTime),
+      render: (text) => new Date(text).toLocaleString(),
+    },
+    {
+      title: 'Duration',
+      dataIndex: 'duration',
+      key: 'duration',
+      render: (text) => `${text} min`,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      sorter: (a, b) => a.status.localeCompare(b.status),
+    },
+    {
+      title: 'Score',
+      dataIndex: 'ConversationScore',
+      key: 'ConversationScore',
+      sorter: (a, b) => a.ConversationScore - b.ConversationScore,
+    },
+    {
+      title: 'Details',
+      key: 'details',
+      render: (text, record) => (
+        <Link to={`/admin/calls/${record.callId}`} className="view-details-link">
+          View
+        </Link>
+      ),
+    },
+  ];
 
   const renderStatusIcon = (status) => {
     switch (status) {
       case 'failed':
-        return <CloseIcon sx={{ color: red[500] }} />;
+        return <CloseIcon style={{ color: red[500] }} />;
       case 'missed':
-        return <CallMissedIcon sx={{ color: pink[500] }} />;
+        return <CallMissedIcon style={{ color: pink[500] }} />;
       case 'successful':
-        return <CheckIcon sx={{ color: green[500] }} />;
+        return <CheckIcon style={{ color: green[500] }} />;
       default:
-        return <CallReceivedIcon sx={{ color: yellow[500] }} />;
+        return <CallReceivedIcon style={{ color: yellow[500] }} />;
     }
-  }
+  };
 
   return (
-    <table className="last-five-calls-table">
-      <thead>
-        <tr>
-          <th onClick={() => handleSort('userName')}>
-            User {renderSortArrow('userName')}
-          </th>
-          <th onClick={() => handleSort('expertName')}>
-            Expert {renderSortArrow('expertName')}
-          </th>
-          <th>Time</th>
-          <th onClick={() => handleSort('duration')}>
-            Duration {renderSortArrow('duration')}
-          </th>
-          <th onClick={() => handleSort('status')}>
-            Status {renderSortArrow('status')}
-          </th>
-          <th onClick={() => handleSort('ConversationScore')}>
-            Score {renderSortArrow('ConversationScore')}
-          </th>
-          <th>Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        {lastFiveCalls.map((call) => (
-          <tr key={call.callId} className='default-row'>
-            <td>{renderStatusIcon(call.status)} {call.userName}</td>
-            <td>{call.expertName}</td>
-            <td>{new Date(call.initiatedTime).toLocaleString()}</td>
-            <td>{call.duration} min</td>
-            <td>{call.status}</td>
-            <td>{call.ConversationScore}</td>
-            <td>
-              <Link to={`/admin/calls/${call.callId}`} className="view-details-link">
-                View
-              </Link>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <ConfigProvider theme={{
+      algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+    }}>
+      <Table
+        dataSource={lastFiveCalls}
+        columns={columns}
+        pagination={false}
+        className="w-full"
+      />
+    </ConfigProvider>
   );
 };
 

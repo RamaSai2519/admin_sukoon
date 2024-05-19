@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import DashboardTile from "../../DashboardTile/DashboardTile";
 import Chart from "chart.js/auto";
 
 const Histograms = ({ usersData }) => {
@@ -223,30 +224,22 @@ const Histograms = ({ usersData }) => {
     };
 
     return (
-        <div className="admin-dashboard-container">
-            <div className="dashboard-tiles">
-                <div className="dashboard-tile">
-                    <div className='grid'>
-                        <div className="grid-tile-1">
-                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <h3>Users per City</h3>
-                                <button className="popup-button"
-                                    onClick={() => setShowCounts(!showCounts)}>
-                                    Show Others</button>
-                            </div>
-                            <div className="chart-wrapper">
-                                <canvas id="cityChart"></canvas>
-                            </div>
-                            {renderCityTable()}
-                        </div>
-                        <div className="grid-tile-1">
-                            <h3>Users per Age</h3>
-                            <div className="chart-wrapper">
-                                <canvas id="ageGroupChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+        <div className="container">
+            <div className="grid md:grid-cols-2">
+            <DashboardTile title="Users Per City">
+                {/* <button className="popup-button"
+                    onClick={() => setShowCounts(!showCounts)}>
+                    Show Others</button> */}
+                <div className="w-full">
+                    <canvas id="cityChart"></canvas>
                 </div>
+                {renderCityTable()}
+            </DashboardTile>
+            <DashboardTile title="Users Per Age">
+                <div className="w-full">
+                    <canvas id="ageGroupChart"></canvas>
+                </div>
+            </DashboardTile>
             </div>
         </div>
     );

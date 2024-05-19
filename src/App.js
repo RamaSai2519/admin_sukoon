@@ -5,7 +5,6 @@ import Header from './components/Header/Header';
 import AdminLogin from './components/Admin/AdminLogin/AdminLogin';
 import AdminDashboard from './components/Admin/AdminDashboard/AdminDashboard';
 import UsersList from './components/Admin/UserList/UserList';
-import ExpertsList from './components/Admin/ExpertList/ExpertList';
 import CallList from './components/Admin/CallList/CallList';
 import CallDetails from './components/Admin/CallDetails/CallDetails';
 import UserDetails from './components/Admin/UserDetails/UserDetails';
@@ -56,10 +55,10 @@ const App = () => {
   useEffect(() => {
     if (darkMode) {
       localStorage.setItem('darkMode', 'true');
-      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
     } else {
       localStorage.setItem('darkMode', 'false');
-      document.body.classList.remove('dark-mode');
+      document.body.classList.remove('dark');
     }
   }, [darkMode]);
 
@@ -69,7 +68,7 @@ const App = () => {
   };
 
   return (
-    <div className={darkMode ? 'App dark-mode' : 'App'}>
+    <div className='dark:text-white min-w-screen min-h-screen dark:bg-darkBlack'>
       <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       <div>
         <Routes>
@@ -78,7 +77,6 @@ const App = () => {
               <Route path="/" element={<Navigate to="/admin/dashboard" />} />
               <Route path="/admin/calls" element={<CallList />} />
               <Route path="/admin/users" element={<UsersList />} />
-              <Route path="/admin/experts" element={<ExpertsList />} />
               <Route path="/admin/calls/:callId" element={<CallDetails />} />
               <Route path="/admin/users/:userId" element={<UserDetails />} />
               <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />

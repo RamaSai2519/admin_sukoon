@@ -1,7 +1,6 @@
 // ExpertGraph.js
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
-import './ExpertGraph.css';
 import { useData } from '../../../services/useData';
 
 const ExpertGraph = () => {
@@ -113,9 +112,9 @@ const ExpertGraph = () => {
   };
 
   return (
-    <div className="chart-container">
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h2 style={{ margin: "0" }}>Calls per Expert (Successful)</h2>
+    <div className='w-full h-full'>
+      <div className='flex mt-2 justify-between items-center'>
+        <h2>Calls per Expert (Successful)</h2>
         <div className='drop-down'>
           <label>
             <select value={timeframe} onChange={handleTimeframeChange}>

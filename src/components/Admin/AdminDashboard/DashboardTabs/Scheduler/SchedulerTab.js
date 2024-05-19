@@ -79,8 +79,8 @@ const SchedulerTab = () => {
         <ConfigProvider theme={{
             algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
         }}>
-            <div className="scheduler-tab">
-                <Form name="schedule-call" className="scheduler-grid-row" onFinish={onFinish}>
+            <div className="mt-2">
+                <Form name="schedule-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onFinish}>
                     <Form.Item
                         name={"user"}
                         rules={[
@@ -150,7 +150,7 @@ const SchedulerTab = () => {
                     </Button>
                 </Form>
 
-                <div className="schedules-table">
+                <div className="m-0">
                     <Table dataSource={schedules.reverse()} columns={columns} />
                 </div>
             </div>
