@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Popup from '../Popup';
 import Histograms from './Histograms';
 import LeadsPopup from './LeadsPopup';
@@ -62,27 +63,29 @@ const UsersTab = () => {
     setPopupContent({ title: '', users: [] });
   };
 
+  const nav = useNavigate();
+
   return (
     <div className="container min-h-screen">
       <div className="flex flex-wrap justify-between">
         <div className="w-full">
           <div className="grid grid-cols-3 md:grid-cols-5">
-            <DashboardTile title="Total Signups" onClick={() => window.location.href = "/admin/users"}>
+            <DashboardTile title="Total Signups" pointer='pointer' onClick={() => nav("/admin/users")}>
               <div className='flex justify-between items-center w-full'>
                 <h1>{totalUsers}</h1>
                 <h4>Today: {currentDayTotalUsers}</h4>
               </div>
             </DashboardTile>
-            <DashboardTile title="One Call Users" onClick={() => openPopup('Users with One Call', oneCallUsers)}>
+            <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('Users with One Call', oneCallUsers)}>
               <h1 className='cursor-pointer'>{oneCallUsers.length}</h1>
             </DashboardTile>
-            <DashboardTile title="Two Calls Users" onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
+            <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
               <h1 className='cursor-pointer'>{twoCallsUsers.length}</h1>
             </DashboardTile>
-            <DashboardTile title=">2min Calls Users" onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
+            <DashboardTile title=">2min Calls Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
               <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
             </DashboardTile>
-            <DashboardTile title="Partial Signups" onClick={() => openPopup('Partial Signups', leads)}>
+            <DashboardTile title="Partial Signups" pointer='pointer'   onClick={() => openPopup('Partial Signups', leads)}>
               <div className='flex justify-between items-center w-full'>
                 <h1>{leads.length}</h1>
                 <h4>Today: {currentDayPartialSignups}</h4>
