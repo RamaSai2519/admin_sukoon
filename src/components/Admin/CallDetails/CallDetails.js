@@ -141,7 +141,7 @@ const CallDetails = () => {
                 <div className="details-box">
                     <p>Initiated Time: {call.initiatedTime}</p>
                 </div>
-                <Button style={{ margin: '10px' }} type="primary" href={formattedRecordingURL} target="_blank" rel="noopener noreferrer">
+                <Button style={{ margin: '10px' }} type="primary" href={formattedRecordingURL} rel="noopener noreferrer">
                     Download Recording
                 </Button>
                 <Button style={{ margin: '10px' }} type="primary" href={call.transcript_url} target="_blank" rel="noopener noreferrer">
