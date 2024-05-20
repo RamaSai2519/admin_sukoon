@@ -67,48 +67,49 @@ const UsersTab = () => {
       <div className="flex flex-wrap justify-between">
         <div className="w-full">
           <div className="grid grid-cols-3 md:grid-cols-5">
-            <DashboardTile title="Total Signups">
+            <DashboardTile title="Total Signups" onClick={() => window.location.href = "/admin/users"}>
               <div className='flex justify-between items-center w-full'>
                 <h1>{totalUsers}</h1>
                 <h4>Today: {currentDayTotalUsers}</h4>
               </div>
             </DashboardTile>
-            <DashboardTile title="One Call Users">
-              <h1 className='cursor-pointer' onClick={() => openPopup('Users with One Call', oneCallUsers)}>{oneCallUsers.length}</h1>
+            <DashboardTile title="One Call Users" onClick={() => openPopup('Users with One Call', oneCallUsers)}>
+              <h1 className='cursor-pointer'>{oneCallUsers.length}</h1>
             </DashboardTile>
-            <DashboardTile title="Two Calls Users">
-              <h1 className='cursor-pointer' onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>{twoCallsUsers.length}</h1>
+            <DashboardTile title="Two Calls Users" onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
+              <h1 className='cursor-pointer'>{twoCallsUsers.length}</h1>
             </DashboardTile>
-            <DashboardTile title=">2 Calls Users">
-              <h1 className='cursor-pointer' onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>{moreThanTwoCallsUsers.length}</h1>
+            <DashboardTile title=">2min Calls Users" onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
+              <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
             </DashboardTile>
-            <DashboardTile title="Partial Signups">
+            <DashboardTile title="Partial Signups" onClick={() => openPopup('Partial Signups', leads)}>
               <div className='flex justify-between items-center w-full'>
-                <h1 style={{ cursor: "pointer" }}
-                  onClick={() => openPopup('Partial Signups', leads)}>{leads.length}</h1>
+                <h1>{leads.length}</h1>
                 <h4>Today: {currentDayPartialSignups}</h4>
               </div>
             </DashboardTile>
           </div>
         </div>
-      </div>
+      </div >
       <Histograms usersData={users} />
-      {popupContent.title && (
-        popupContent.title === 'Partial Signups' ? (
-          <LeadsPopup
-            title={popupContent.title}
-            users={popupContent.users}
-            onClose={closePopup}
-          />
-        ) : (
-          <Popup
-            title={popupContent.title}
-            users={popupContent.users}
-            onClose={closePopup}
-          />
+      {
+        popupContent.title && (
+          popupContent.title === 'Partial Signups' ? (
+            <LeadsPopup
+              title={popupContent.title}
+              users={popupContent.users}
+              onClose={closePopup}
+            />
+          ) : (
+            <Popup
+              title={popupContent.title}
+              users={popupContent.users}
+              onClose={closePopup}
+            />
+          )
         )
-      )}
-    </div>
+      }
+    </div >
   );
 };
 
