@@ -59,7 +59,7 @@ const SchedulerTab = () => {
         </Option>
     ));
 
-    const onFinish = async values => {
+    const onScheduleFinish = async values => {
         try {
             const selectedDateTime = values.datetime;
             const now = new Date();
@@ -75,12 +75,75 @@ const SchedulerTab = () => {
         }
     };
 
+    const onConnectFinish = async values => {
+        try {
+            const response = await Raxios.post("/api/connect", values);
+            console.log(response);
+            window.alert("Call Connected successfully");
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
     return (
         <ConfigProvider theme={{
             algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
         }}>
             <div className="mt-2">
-                <Form name="schedule-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onFinish}>
+                {/* <div className="flex items-center justify-center">
+                    <Form name="connect-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onConnectFinish}>
+                        <Form.Item
+                            name={"user"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select a user",
+                                },
+                            ]}
+                        >
+                            <Select
+                                id="user"
+                                style={{ width: "100%" }}
+                                showSearch
+                                placeholder="Select User"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {userOptions}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            className="m-0"
+                            name={"expert"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select an expert",
+                                },
+                            ]}
+                        >
+                            <Select
+                                id="expert"
+                                style={{ width: "100%" }}
+                                showSearch
+                                placeholder="Select Expert"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {expertOptions}
+                            </Select>
+                        </Form.Item>
+                        <Button htmlType="submit" style={{ width: "100%" }}>
+                            Connect Now
+                        </Button>
+                    </Form>
+                </div> */}
+
+                <Form name="schedule-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onScheduleFinish}>
                     <Form.Item
                         name={"user"}
                         rules={[
