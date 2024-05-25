@@ -27,50 +27,46 @@ export const DataProvider = ({ children }) => {
     onlineSaarthis: []
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [
-          errorLogsResponse,
-          applicationsResponse,
-          categoriesResponse,
-          statsResponse,
-          leadsResponse,
-          usersResponse,
-          callsResponse,
-          expertsResponse,
-          schedulesResponse
-        ] = await Promise.all([
-          Raxios.get('/api/errorlogs'),
-          Raxios.get('/api/applications'),
-          Raxios.get('/api/categories'),
-          Raxios.get('/api/dashboard/stats'),
-          Raxios.get('/api/leads'),
-          Raxios.get('/api/users'),
-          Raxios.get('/api/calls'),
-          Raxios.get('/api/experts'),
-          Raxios.get('/api/schedule')
-        ]);
+  const fetchData = async () => {
+    try {
+      const [
+        errorLogsResponse,
+        applicationsResponse,
+        categoriesResponse,
+        statsResponse,
+        leadsResponse,
+        usersResponse,
+        callsResponse,
+        expertsResponse,
+        schedulesResponse
+      ] = await Promise.all([
+        Raxios.get('/api/errorlogs'),
+        Raxios.get('/api/applications'),
+        Raxios.get('/api/categories'),
+        Raxios.get('/api/dashboard/stats'),
+        Raxios.get('/api/leads'),
+        Raxios.get('/api/users'),
+        Raxios.get('/api/calls'),
+        Raxios.get('/api/experts'),
+        Raxios.get('/api/schedule')
+      ]);
 
-        setErrorLogs(errorLogsResponse.data.reverse());
-        setApplications(applicationsResponse.data.reverse());
-        setCategories(categoriesResponse.data);
-        setStats(statsResponse.data);
-        setLeads(leadsResponse.data);
-        setUsers(usersResponse.data);
-        setCalls(callsResponse.data.reverse());
-        setExperts(expertsResponse.data);
-        setSchedules(schedulesResponse.data.map(schedule => ({
-          ...schedule,
-          key: schedule._id
-        })));
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
+      setErrorLogs(errorLogsResponse.data.reverse());
+      setApplications(applicationsResponse.data.reverse());
+      setCategories(categoriesResponse.data);
+      setStats(statsResponse.data);
+      setLeads(leadsResponse.data);
+      setUsers(usersResponse.data);
+      setCalls(callsResponse.data.reverse());
+      setExperts(expertsResponse.data);
+      setSchedules(schedulesResponse.data.map(schedule => ({
+        ...schedule,
+        key: schedule._id
+      })));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const data = {
     errorLogs,
@@ -81,7 +77,8 @@ export const DataProvider = ({ children }) => {
     users,
     calls,
     experts,
-    schedules
+    schedules,
+    fetchData
   };
 
   return (

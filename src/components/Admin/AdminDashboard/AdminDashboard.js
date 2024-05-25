@@ -11,6 +11,7 @@ import { getMessaging, getToken } from "firebase/messaging";
 import ErrorLogsComponent from './DashboardTabs/Notifications';
 import NavMenu from '../../NavMenu/NavMenu';
 import Raxios from '../../../services/axiosHelper';
+import { useData } from '../../../services/useData';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAJTlUxbEndDBjZBvDJUXGJBelkQHXfNAI",
@@ -23,11 +24,13 @@ const firebaseConfig = {
 };
 
 const AdminDashboard = () => {
+  const { fetchData } = useData();
   const location = useLocation();
   const [errors, setErrors] = useState([]);
   const [activeTab, setActiveTab] = useState('dashboard');
 
   useEffect(() => {
+    fetchData();
     const storedTab = localStorage.getItem('adminActiveTab');
     if (location.state && location.state.activeTab) {
       setActiveTab(location.state.activeTab);
