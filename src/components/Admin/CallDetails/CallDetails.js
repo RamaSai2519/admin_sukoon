@@ -15,7 +15,7 @@ const CallDetails = () => {
     const [newConversationScore, setNewConversationScore] = useState('');
 
     useEffect(() => {
-        Raxios.get(`/data/calls/${callId}`)
+        Raxios.get(`/call/calls/${callId}`)
             .then(response => {
                 setCall(response.data);
                 setNewConversationScore(response.data.ConversationScore);
