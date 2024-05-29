@@ -63,7 +63,7 @@ const ExpertDetails = () => {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    Raxios.get(`/api/experts/${expertId}`)
+    Raxios.get(`/expert/experts/${expertId}`)
       .then(response => {
         const data = response.data;
         setExpert(data);
@@ -86,7 +86,7 @@ const ExpertDetails = () => {
   }, [expertId]);
 
   const handleUpdate = () => {
-    Raxios.put(`/api/experts/${expertId}`, {
+    Raxios.put(`/expert/experts/${expertId}`, {
       name,
       score,
       flow,

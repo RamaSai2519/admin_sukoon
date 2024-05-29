@@ -18,7 +18,7 @@ const UserDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await Raxios.get(`/api/users/${userId}`);
+        const response = await Raxios.get(`/user/users/${userId}`);
         setUser(response.data);
         setName(response.data.name);
         setPhoneNumber(response.data.phoneNumber);
@@ -34,7 +34,7 @@ const UserDetails = () => {
   }, [userId]);
 
   const handleUpdate = () => {
-    Raxios.put(`/api/users/${userId}`, {
+    Raxios.put(`/user/users/${userId}`, {
       name,
       phoneNumber,
       city,
@@ -53,7 +53,7 @@ const UserDetails = () => {
   };
 
   const handleDelete = () => {
-    Raxios.delete(`/api/users/${userId}`)
+    Raxios.delete(`/user/users/${userId}`)
       .then(() => {
         window.alert('User deleted successfuly.');
         window.location.href = '/admin/users';

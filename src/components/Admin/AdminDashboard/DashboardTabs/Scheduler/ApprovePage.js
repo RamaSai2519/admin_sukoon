@@ -12,7 +12,7 @@ const ApprovePage = () => {
 
     const fetchData = async () => {
         try {
-            const schedulesResponse = await Raxios.get(`/api/schedule/${scheduleId}`);
+            const schedulesResponse = await Raxios.get(`/service/schedule/${scheduleId}`);
             setExpert(schedulesResponse.data.expert);
             setUser(schedulesResponse.data.user);
             setTime(schedulesResponse.data.datetime);
@@ -30,7 +30,7 @@ const ApprovePage = () => {
         const status = {
             status: value
         }
-        await Raxios.put(`/api/approve/${scheduleId}/${level}`, status);
+        await Raxios.put(`/service/approve/${scheduleId}/${level}`, status);
     };
 
     return (

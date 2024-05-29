@@ -30,7 +30,7 @@ const ExpertDetails = () => {
   const darkMode = localStorage.getItem('darkMode') === 'true';
 
   useEffect(() => {
-    Raxios.get(`/api/experts/${expertId}`)
+    Raxios.get(`/expert/experts/${expertId}`)
       .then(response => {
         setExpert(response.data);
         setName(response.data.name);
@@ -56,7 +56,7 @@ const ExpertDetails = () => {
   };
 
   const handleUpdate = (newStatus) => {
-    Raxios.put(`/api/experts/${expertId}`, {
+    Raxios.put(`/expert/experts/${expertId}`, {
       name,
       phoneNumber,
       topics,
@@ -83,7 +83,7 @@ const ExpertDetails = () => {
   };
 
   const handleDelete = () => {
-    Raxios.delete(`/api/experts/${expertId}`)
+    Raxios.delete(`/expert/experts/${expertId}`)
       .then(() => {
         window.alert('Expert deleted successfully!');
         window.location.href = '/admin/experts';
