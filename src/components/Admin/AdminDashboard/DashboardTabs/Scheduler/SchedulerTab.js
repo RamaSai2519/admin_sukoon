@@ -38,7 +38,7 @@ const SchedulerTab = () => {
 
     const handleDelete = async (record) => {
         try {
-            await Raxios.delete(`/api/schedule/${record._id}`);
+            await Raxios.delete(`/service/schedule/${record._id}`);
             window.alert("Schedule deleted successfully");
             window.location.reload();
         } catch (error) {
@@ -66,7 +66,7 @@ const SchedulerTab = () => {
             if (selectedDateTime <= now) {
                 window.alert("Selected time has already passed. Please select a future time.");
             } else {
-                await Raxios.post("/api/schedule", values);
+                await Raxios.post("/data/schedules", values);
                 window.alert("Call Scheduled successfully");
                 window.location.reload();
             }
@@ -77,7 +77,7 @@ const SchedulerTab = () => {
 
     const onConnectFinish = async values => {
         try {
-            const response = await Raxios.post("/api/connect", values);
+            const response = await Raxios.post("/call/connect", values);
             console.log(response);
             window.alert("Call Connected successfully");
         } catch (error) {
