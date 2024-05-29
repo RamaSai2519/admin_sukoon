@@ -40,15 +40,15 @@ export const DataProvider = ({ children }) => {
         expertsResponse,
         schedulesResponse
       ] = await Promise.all([
-        Raxios.get('/api/errorlogs'),
-        Raxios.get('/api/applications'),
-        Raxios.get('/api/categories'),
-        Raxios.get('/api/dashboard/stats'),
-        Raxios.get('/api/leads'),
-        Raxios.get('/api/users'),
-        Raxios.get('/api/calls'),
-        Raxios.get('/api/experts'),
-        Raxios.get('/api/schedule')
+        Raxios.get('/data/errorlogs'),
+        Raxios.get('/data/applications'),
+        Raxios.get('/data/categories'),
+        Raxios.get('/service/dashboardstats'),
+        Raxios.get('/user/leads'),
+        Raxios.get('/data/users'),
+        Raxios.get('/data/calls'),
+        Raxios.get('/data/experts'),
+        Raxios.get('/data/schedules')
       ]);
 
       setErrorLogs(errorLogsResponse.data.reverse());

@@ -77,7 +77,7 @@ const AdminDashboard = () => {
 
   const sendFCMTokenToServer = async token => {
     try {
-      await Raxios.post('/api/save-fcm-token', { token });
+      await Raxios.post('/service/save-fcm-token', { token });
     } catch (error) {
       console.error('Failed to send FCM token to server:', error);
     }
