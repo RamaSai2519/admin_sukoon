@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import './ExpertDetails.css';
 import NavMenu from '../../NavMenu/NavMenu';
 import { FaArrowLeft } from 'react-icons/fa';
-import { useData } from '../../../services/useData';
+import { useCategories } from '../../../services/useData';
 import { Select, ConfigProvider, theme } from 'antd';
 
 const { Option } = Select;
@@ -25,11 +25,12 @@ const ExpertDetails = () => {
   const [totalScore, setTotalScore] = useState('');
   const [callsShare, setCallsShare] = useState('');
   const [editMode, setEditMode] = useState(false);
-  const { allCategories } = useData();
+  const { allCategories, fetchCategories } = useCategories();
   const dropdownRef = useRef(null);
   const darkMode = localStorage.getItem('darkMode') === 'true';
 
   useEffect(() => {
+    fetchCategories();
     Raxios.get(`/expert/experts/${expertId}`)
       .then(response => {
         setExpert(response.data);

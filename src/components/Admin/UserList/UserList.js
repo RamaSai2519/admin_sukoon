@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
-import { useData } from '../../../services/useData';
+import { useUsers } from '../../../services/useData';
 import './UserList.css';
 import * as XLSX from 'xlsx';
 import NavMenu from '../../NavMenu/NavMenu';
 
 const UsersList = () => {
-  const { users } = useData();
+  const { users, fetchUsers } = useUsers();
   const [filters, setFilters] = useState({
     user: '',
     city: '',
@@ -88,6 +88,10 @@ const UsersList = () => {
 
     XLSX.writeFile(wb, 'UserList.xlsx');
   };
+
+  React.useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <div className="table-container">

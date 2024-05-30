@@ -1,9 +1,9 @@
 import React from "react";
 import { Table, ConfigProvider, theme } from "antd";
-import { useData } from "../../../../services/useData";
+import { useApplications } from "../../../../services/useData";
 
 const ApplicationsTab = () => {
-    const { applications } = useData();
+    const { applications } = useApplications();
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
     const columns = [

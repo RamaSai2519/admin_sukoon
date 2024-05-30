@@ -6,13 +6,13 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
-import { useData } from '../../../services/useData';
+import { useCalls } from '../../../services/useData';
 import { red, pink, green, yellow } from '@mui/material/colors';
 import * as XLSX from 'xlsx';
 import NavMenu from '../../NavMenu/NavMenu';
 
 const CallsTable = () => {
-  const { calls } = useData();
+  const { calls, fetchCalls } = useCalls();
   const [filters, setFilters] = useState({
     user: '',
     expert: '',
@@ -107,6 +107,10 @@ const CallsTable = () => {
 
     XLSX.writeFile(wb, 'calls.xlsx');
   };
+
+  React.useEffect(() => {
+    fetchCalls();
+  }, []);
 
   return (
     <div className="table-container">

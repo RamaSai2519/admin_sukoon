@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Table, ConfigProvider, theme } from 'antd';
-import { useData } from '../../../../services/useData';
+import { useErrorLogs } from '../../../../services/useData';
 import './toggle.css';
 
 const ErrorLogsComponent = () => {
-    const { errorLogs } = useData();
+    const { errorLogs } = useErrorLogs();
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
     const columns = [

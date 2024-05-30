@@ -6,10 +6,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
 import { red, pink, green, yellow } from '@mui/material/colors';
-import { useData } from '../../../services/useData';
+import { useCalls } from '../../../services/useData';
 
 const LastFiveCallsTable = () => {
-  const { calls } = useData();
+  const { calls } = useCalls();
   const [lastFiveCalls, setLastFiveCalls] = useState([]);
   const darkMode = localStorage.getItem('darkMode') === 'true';
 

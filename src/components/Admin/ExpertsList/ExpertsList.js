@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useData } from '../../../services/useData';
+import { useExperts, useCalls } from '../../../services/useData';
 import { Table, Button, ConfigProvider, theme } from 'antd';
 import * as XLSX from 'xlsx';
 
 const ExpertsList = () => {
-    const { experts, calls } = useData();
+    const { experts } = useExperts();
+    const { calls } = useCalls();
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
     const calculateSuccessfulCalls = (expert) => {

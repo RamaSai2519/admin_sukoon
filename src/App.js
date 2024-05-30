@@ -68,7 +68,7 @@ const App = () => {
   };
 
   return (
-    <div className='dark:text-white min-w-screen min-h-screen dark:bg-darkBlack'>
+    <div className='dark:text-white min-w-screen md:min-h-screen min-h-[210vh] dark:bg-darkBlack'>
       <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       <div>
         <Routes>

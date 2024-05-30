@@ -6,11 +6,11 @@ import HourCallChart from '../../HourCallChart/HourCallChart';
 import ExpertGraph from '../../ExpertGraph/ExpertGraph';
 import DayGraph from '../../DaysGraph/DaysGraph';
 import LastFiveCallsTable from '../../LastFiveCallsTable/LastFiveCallsTable';
-import { useData } from '../../../../services/useData';
+import { useStats } from '../../../../services/useData';
 import DashboardTile from '../../DashboardTile/DashboardTile';
 
 const DashboardTab = () => {
-  const { stats } = useData();
+  const { stats } = useStats();
 
   return (
     <div className="container">

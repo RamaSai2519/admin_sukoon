@@ -1,13 +1,15 @@
 import React from "react";
 import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
 import Raxios from "../../../../../services/axiosHelper";
-import { useData } from "../../../../../services/useData";
+import { useSchedules, useUsers, useExperts } from "../../../../../services/useData";
 
 const { Option } = Select;
 
 const SchedulerTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
-    const { users, experts, schedules } = useData();
+    const { schedules } = useSchedules();
+    const { users } = useUsers();
+    const { experts } = useExperts();
 
     const columns = [
         {

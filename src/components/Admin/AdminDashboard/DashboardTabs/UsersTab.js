@@ -4,10 +4,12 @@ import Popup from '../Popup';
 import Histograms from './Histograms';
 import LeadsPopup from './LeadsPopup';
 import DashboardTile from '../../DashboardTile/DashboardTile';
-import { useData } from '../../../../services/useData';
+import { useUsers, useCalls, useLeads } from '../../../../services/useData';
 
 const UsersTab = () => {
-  const { users, calls, leads } = useData();
+  const { users } = useUsers();
+  const { calls } = useCalls();
+  const { leads } = useLeads();
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentDayTotalUsers, setCurrentDayTotalUsers] = useState(0);
   const [oneCallUsers, setOneCallUsers] = useState([]);

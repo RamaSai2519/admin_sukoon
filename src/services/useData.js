@@ -1,89 +1,90 @@
-import React, { useState, useContext } from 'react';
-import Raxios from './axiosHelper';
+import React, { createContext, useContext, useState } from 'react';
+import {
+    fetchErrorLogs,
+    fetchApplications,
+    fetchCategories,
+    fetchStats,
+    fetchLeads,
+    fetchUsers,
+    fetchCalls,
+    fetchExperts,
+    fetchSchedules
+} from './fetchData';
 
-const DataContext = React.createContext();
+// Create contexts
+const ErrorLogsContext = createContext();
+const ApplicationsContext = createContext();
+const CategoriesContext = createContext();
+const StatsContext = createContext();
+const LeadsContext = createContext();
+const UsersContext = createContext();
+const CallsContext = createContext();
+const ExpertsContext = createContext();
+const SchedulesContext = createContext();
 
-export const useData = () => {
-  return useContext(DataContext);
-};
+// Export hooks to use contexts
+export const useErrorLogs = () => useContext(ErrorLogsContext);
+export const useApplications = () => useContext(ApplicationsContext);
+export const useCategories = () => useContext(CategoriesContext);
+export const useStats = () => useContext(StatsContext);
+export const useLeads = () => useContext(LeadsContext);
+export const useUsers = () => useContext(UsersContext);
+export const useCalls = () => useContext(CallsContext);
+export const useExperts = () => useContext(ExpertsContext);
+export const useSchedules = () => useContext(SchedulesContext);
 
+// Create a combined DataProvider component
 export const DataProvider = ({ children }) => {
-  const [errorLogs, setErrorLogs] = useState([]);
-  const [applications, setApplications] = useState([]);
-  const [allCategories, setCategories] = useState([]);
-  const [leads, setLeads] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [calls, setCalls] = useState([]);
-  const [experts, setExperts] = useState([]);
-  const [schedules, setSchedules] = useState([]);
-  const [stats, setStats] = useState({
-    totalCalls: "Please Wait...",
-    successfulCalls: "Please Wait...",
-    todayCalls: 0,
-    todaySuccessfulCalls: 0,
-    averageCallDuration: "Please Wait...",
-    failedCalls: "Please Wait...",
-    todayFailedCalls: 0,
-    onlineSaarthis: []
-  });
+    const [errorLogs, setErrorLogs] = useState([]);
+    const [applications, setApplications] = useState([]);
+    const [allCategories, setCategories] = useState([]);
+    const [leads, setLeads] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [calls, setCalls] = useState([]);
+    const [experts, setExperts] = useState([]);
+    const [schedules, setSchedules] = useState([]);
+    const [stats, setStats] = useState({
+        totalCalls: "Please Wait...",
+        successfulCalls: "Please Wait...",
+        todayCalls: 0,
+        todaySuccessfulCalls: 0,
+        averageCallDuration: "Please Wait...",
+        failedCalls: "Please Wait...",
+        todayFailedCalls: 0,
+        onlineSaarthis: []
+    });
 
-  const fetchData = async () => {
-    try {
-      const [
-        errorLogsResponse,
-        applicationsResponse,
-        categoriesResponse,
-        statsResponse,
-        leadsResponse,
-        usersResponse,
-        callsResponse,
-        expertsResponse,
-        schedulesResponse
-      ] = await Promise.all([
-        Raxios.get('/data/errorlogs'),
-        Raxios.get('/data/applications'),
-        Raxios.get('/data/categories'),
-        Raxios.get('/service/dashboardstats'),
-        Raxios.get('/user/leads'),
-        Raxios.get('/data/users'),
-        Raxios.get('/data/calls'),
-        Raxios.get('/data/experts'),
-        Raxios.get('/data/schedules')
-      ]);
+    const contextValues = {
+        errorLogs: { errorLogs, fetchErrorLogs: () => fetchErrorLogs(setErrorLogs) },
+        applications: { applications, fetchApplications: () => fetchApplications(setApplications) },
+        allCategories: { allCategories, fetchCategories: () => fetchCategories(setCategories) },
+        stats: { stats, fetchStats: () => fetchStats(setStats) },
+        leads: { leads, fetchLeads: () => fetchLeads(setLeads) },
+        users: { users, fetchUsers: () => fetchUsers(setUsers) },
+        calls: { calls, fetchCalls: () => fetchCalls(setCalls) },
+        experts: { experts, fetchExperts: () => fetchExperts(setExperts) },
+        schedules: { schedules, fetchSchedules: () => fetchSchedules(setSchedules) }
+    };
 
-      setErrorLogs(errorLogsResponse.data.reverse());
-      setApplications(applicationsResponse.data.reverse());
-      setCategories(categoriesResponse.data);
-      setStats(statsResponse.data);
-      setLeads(leadsResponse.data);
-      setUsers(usersResponse.data);
-      setCalls(callsResponse.data.reverse());
-      setExperts(expertsResponse.data);
-      setSchedules(schedulesResponse.data.map(schedule => ({
-        ...schedule,
-        key: schedule._id
-      })));
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }; 
-
-  const data = {
-    errorLogs,
-    applications,
-    allCategories,
-    stats,
-    leads,
-    users,
-    calls,
-    experts,
-    schedules,
-    fetchData
-  };
-
-  return (
-    <DataContext.Provider value={data}>
-      {children}
-    </DataContext.Provider>
-  );
+    return (
+        <ErrorLogsContext.Provider value={contextValues.errorLogs}>
+            <ApplicationsContext.Provider value={contextValues.applications}>
+                <CategoriesContext.Provider value={contextValues.allCategories}>
+                    <StatsContext.Provider value={contextValues.stats}>
+                        <LeadsContext.Provider value={contextValues.leads}>
+                            <UsersContext.Provider value={contextValues.users}>
+                                <CallsContext.Provider value={contextValues.calls}>
+                                    <ExpertsContext.Provider value={contextValues.experts}>
+                                        <SchedulesContext.Provider value={contextValues.schedules}>
+                                            {children}
+                                        </SchedulesContext.Provider>
+                                    </ExpertsContext.Provider>
+                                </CallsContext.Provider>
+                            </UsersContext.Provider>
+                        </LeadsContext.Provider>
+                    </StatsContext.Provider>
+                </CategoriesContext.Provider>
+            </ApplicationsContext.Provider>
+        </ErrorLogsContext.Provider>
+    );
 };

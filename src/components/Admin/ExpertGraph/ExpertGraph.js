@@ -1,10 +1,11 @@
 // ExpertGraph.js
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
-import { useData } from '../../../services/useData';
+import { useCalls, useExperts } from '../../../services/useData';
 
 const ExpertGraph = () => {
-  const { experts, calls } = useData();
+  const { calls } = useCalls();
+  const { experts } = useExperts();
   const [chart, setChart] = useState(null);
   const [timeframe, setTimeframe] = useState('year');
 

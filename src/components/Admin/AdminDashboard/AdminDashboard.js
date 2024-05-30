@@ -11,26 +11,31 @@ import { getMessaging, getToken } from "firebase/messaging";
 import ErrorLogsComponent from './DashboardTabs/Notifications';
 import NavMenu from '../../NavMenu/NavMenu';
 import Raxios from '../../../services/axiosHelper';
-import { useData } from '../../../services/useData';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAJTlUxbEndDBjZBvDJUXGJBelkQHXfNAI",
-  authDomain: "for-everyone-2519.firebaseapp.com",
-  projectId: "for-everyone-2519",
-  storageBucket: "for-everyone-2519.appspot.com",
-  messagingSenderId: "221608439000",
-  appId: "1:221608439000:web:8d3b9e17733071addbbbad",
-  measurementId: "G-3H59FDN20X"
-};
+import { useStats, useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../../../services/useData';
+import { firebaseConfig } from './firebaseConfig';
 
 const AdminDashboard = () => {
-  const { fetchData } = useData();
-  const location = useLocation();
-  const [errors, setErrors] = useState([]);
+  const { fetchStats } = useStats();
+  const { fetchCalls } = useCalls();
+  const { fetchExperts } = useExperts();
+  const { fetchUsers } = useUsers();
+  const { fetchLeads } = useLeads();
+  const { fetchSchedules } = useSchedules();
+  const { fetchApplications } = useApplications();
+  const { fetchErrorLogs } = useErrorLogs();
+
   const [activeTab, setActiveTab] = useState('dashboard');
+  const location = useLocation();
 
   useEffect(() => {
-    fetchData();
+    fetchCalls();
+    fetchExperts();
+    fetchUsers();
+    fetchLeads();
+    fetchSchedules();
+    fetchApplications();
+    fetchErrorLogs();
+    fetchStats();
     const storedTab = localStorage.getItem('adminActiveTab');
     if (location.state && location.state.activeTab) {
       setActiveTab(location.state.activeTab);
@@ -66,14 +71,6 @@ const AdminDashboard = () => {
   useEffect(() => {
     localStorage.setItem('adminActiveTab', activeTab);
   }, [activeTab]);
-
-  const handleCloseError = (index) => {
-    setErrors((prevErrors) => {
-      const updatedErrors = [...prevErrors];
-      updatedErrors.splice(index, 1);
-      return updatedErrors;
-    });
-  };
 
   const sendFCMTokenToServer = async token => {
     try {
@@ -134,19 +131,6 @@ const AdminDashboard = () => {
 
       <NavMenu />
       <ScrollBottom />
-      <div className="error-messages-container">
-        {errors.map((error, index) => (
-          <div key={index} className="error-message">
-            {error}
-            <button
-              className="close-button"
-              onClick={() => handleCloseError(index)}
-            >
-              x
-            </button>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };
