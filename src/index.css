@@ -1,25 +1,25 @@
- html {
-   min-width: 425px;
- }
+html {
+  min-width: 425px;
+}
 
- body {
-   margin: 0;
-   -webkit-font-smoothing: antialiased;
-   -moz-osx-font-smoothing: grayscale;
- }
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
- ::-webkit-scrollbar {
-   width: 5px;
- }
+::-webkit-scrollbar {
+  width: 5px;
+}
 
- ::-webkit-scrollbar-thumb {
-   background: #888;
- }
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
 
- ::-webkit-scrollbar-thumb:hover {
-   background: #f1f1f1;
- }
+::-webkit-scrollbar-thumb:hover {
+  background: #f1f1f1;
+}
 
- ::-webkit-scrollbar-track {
-   background: #555;
- }
+::-webkit-scrollbar-track {
+  background: #555;
+}

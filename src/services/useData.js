@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import Raxios from './axiosHelper';
 
 const DataContext = React.createContext();
@@ -66,11 +66,7 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  }; 
 
   const data = {
     errorLogs,
