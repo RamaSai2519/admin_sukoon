@@ -44,12 +44,12 @@ export const DataProvider = ({ children }) => {
     const [experts, setExperts] = useState([]);
     const [schedules, setSchedules] = useState([]);
     const [stats, setStats] = useState({
-        totalCalls: "Please Wait...",
-        successfulCalls: "Please Wait...",
+        totalCalls: "",
+        successfulCalls: "",
         todayCalls: 0,
         todaySuccessfulCalls: 0,
-        averageCallDuration: "Please Wait...",
-        failedCalls: "Please Wait...",
+        averageCallDuration: "",
+        failedCalls: "",
         todayFailedCalls: 0,
         onlineSaarthis: []
     });
