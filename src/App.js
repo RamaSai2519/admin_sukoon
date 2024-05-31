@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Header from './components/Header/Header';
-import AdminLogin from './components/Admin/AdminLogin/AdminLogin';
-import AdminDashboard from './components/Admin/AdminDashboard/AdminDashboard';
-import UsersList from './components/Admin/UserList/UserList';
-import CallList from './components/Admin/CallList/CallList';
-import CallDetails from './components/Admin/CallDetails/CallDetails';
-import UserDetails from './components/Admin/UserDetails/UserDetails';
-import ExpertDetails from './components/Admin/ExpertDetails/ExpertDetatils';
-import ExpertReport from './components/Admin/ExpertDetails/ExpertReport';
-import ApprovePage from './components/Admin/AdminDashboard/DashboardTabs/Scheduler/ApprovePage';
+import AdminLogin from './AdminLogin/AdminLogin'
+import AdminDashboard from './AdminDashboard/AdminDashboard';
+import UsersList from './UserList/UserList';
+import CallList from './CallList/CallList';
+import CallDetails from './CallDetails/CallDetails';
+import UserDetails from './UserDetails/UserDetails'
+import ExpertDetails from './ExpertDetails/ExpertDetatils'
+import ExpertReport from './ExpertDetails/ExpertReport'
+import ApprovePage from './AdminDashboard/DashboardTabs/Scheduler/ApprovePage'
 import './App.css';
 
 const App = () => {
