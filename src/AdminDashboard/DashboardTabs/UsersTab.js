@@ -5,6 +5,7 @@ import Histograms from '../../components/Histograms';
 import LeadsPopup from '../../components/LeadsPopup';
 import DashboardTile from '../../components/DashboardTile/DashboardTile';
 import { useUsers, useCalls, useLeads } from '../../services/useData';
+import LazyLoad from '../../components/LazyLoad/lazyload';
 
 const UsersTab = () => {
   const { users } = useUsers();
@@ -68,53 +69,55 @@ const UsersTab = () => {
   const nav = useNavigate();
 
   return (
-    <div className="container min-h-screen">
-      <div className="flex flex-wrap justify-between">
-        <div className="w-full">
-          <div className="grid grid-cols-3 md:grid-cols-5">
-            <DashboardTile title="Total Signups" pointer='pointer' onClick={() => nav("/admin/users")}>
-              <div className='flex justify-between items-center w-full'>
-                <h1>{totalUsers}</h1>
-                <h4>Today: {currentDayTotalUsers}</h4>
-              </div>
-            </DashboardTile>
-            <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('Users with One Call', oneCallUsers)}>
-              <h1 className='cursor-pointer'>{oneCallUsers.length}</h1>
-            </DashboardTile>
-            <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
-              <h1 className='cursor-pointer'>{twoCallsUsers.length}</h1>
-            </DashboardTile>
-            <DashboardTile title=">2min Calls Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
-              <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
-            </DashboardTile>
-            <DashboardTile title="Partial Signups" pointer='pointer'   onClick={() => openPopup('Partial Signups', leads)}>
-              <div className='flex justify-between items-center w-full'>
-                <h1>{leads.length}</h1>
-                <h4>Today: {currentDayPartialSignups}</h4>
-              </div>
-            </DashboardTile>
+    <LazyLoad>
+      <div className="container min-h-screen">
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full">
+            <div className="grid grid-cols-3 md:grid-cols-5">
+              <DashboardTile title="Total Signups" pointer='pointer' onClick={() => nav("/admin/users")}>
+                <div className='flex justify-between items-center w-full'>
+                  <h1>{totalUsers}</h1>
+                  <h4>Today: {currentDayTotalUsers}</h4>
+                </div>
+              </DashboardTile>
+              <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('Users with One Call', oneCallUsers)}>
+                <h1 className='cursor-pointer'>{oneCallUsers.length}</h1>
+              </DashboardTile>
+              <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
+                <h1 className='cursor-pointer'>{twoCallsUsers.length}</h1>
+              </DashboardTile>
+              <DashboardTile title=">2min Calls Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
+                <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
+              </DashboardTile>
+              <DashboardTile title="Partial Signups" pointer='pointer' onClick={() => openPopup('Partial Signups', leads)}>
+                <div className='flex justify-between items-center w-full'>
+                  <h1>{leads.length}</h1>
+                  <h4>Today: {currentDayPartialSignups}</h4>
+                </div>
+              </DashboardTile>
+            </div>
           </div>
-        </div>
-      </div >
-      <Histograms usersData={users} />
-      {
-        popupContent.title && (
-          popupContent.title === 'Partial Signups' ? (
-            <LeadsPopup
-              title={popupContent.title}
-              users={popupContent.users}
-              onClose={closePopup}
-            />
-          ) : (
-            <Popup
-              title={popupContent.title}
-              users={popupContent.users}
-              onClose={closePopup}
-            />
+        </div >
+        <Histograms usersData={users} />
+        {
+          popupContent.title && (
+            popupContent.title === 'Partial Signups' ? (
+              <LeadsPopup
+                title={popupContent.title}
+                users={popupContent.users}
+                onClose={closePopup}
+              />
+            ) : (
+              <Popup
+                title={popupContent.title}
+                users={popupContent.users}
+                onClose={closePopup}
+              />
+            )
           )
-        )
-      }
-    </div >
+        }
+      </div>
+    </LazyLoad>
   );
 };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
 import Raxios from "../../../services/axiosHelper";
 import { useSchedules, useUsers, useExperts } from "../../../services/useData";
+import LazyLoad from "../../../components/LazyLoad/lazyload";
 
 const { Option } = Select;
 
@@ -88,11 +89,12 @@ const SchedulerTab = () => {
     };
 
     return (
-        <ConfigProvider theme={{
-            algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        }}>
-            <div className="mt-2">
-                {/* <div className="flex items-center justify-center">
+        <LazyLoad>
+            <ConfigProvider theme={{
+                algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+            }}>
+                <div className="mt-2">
+                    {/* <div className="flex items-center justify-center">
                     <Form name="connect-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onConnectFinish}>
                         <Form.Item
                             name={"user"}
@@ -145,81 +147,82 @@ const SchedulerTab = () => {
                     </Form>
                 </div> */}
 
-                <Form name="schedule-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onScheduleFinish}>
-                    <Form.Item
-                        name={"user"}
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please select a user",
-                            },
-                        ]}
-                    >
-                        <Select
-                            id="user"
-                            style={{ width: "100%" }}
-                            showSearch
-                            placeholder="Select User"
-                            optionFilterProp="children"
-                            filterOption={(input, option) =>
-                                option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                            }
+                    <Form name="schedule-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onScheduleFinish}>
+                        <Form.Item
+                            name={"user"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select a user",
+                                },
+                            ]}
                         >
-                            {userOptions}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item
-                        className="m-0"
-                        name={"expert"}
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please select an expert",
-                            },
-                        ]}
-                    >
-                        <Select
-                            id="expert"
-                            style={{ width: "100%" }}
-                            showSearch
-                            placeholder="Select Expert"
-                            optionFilterProp="children"
-                            filterOption={(input, option) =>
-                                option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                            }
+                            <Select
+                                id="user"
+                                style={{ width: "100%" }}
+                                showSearch
+                                placeholder="Select User"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {userOptions}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            className="m-0"
+                            name={"expert"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select an expert",
+                                },
+                            ]}
                         >
-                            {expertOptions}
-                        </Select>
-                    </Form.Item>
+                            <Select
+                                id="expert"
+                                style={{ width: "100%" }}
+                                showSearch
+                                placeholder="Select Expert"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {expertOptions}
+                            </Select>
+                        </Form.Item>
 
-                    <Form.Item
-                        className="m-0"
-                        name={"datetime"}
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please select a date and time",
-                            },
-                        ]}
-                    >
-                        <DatePicker
-                            id="datetime"
-                            style={{ width: "100%" }}
-                            showTime
-                            format="YYYY-MM-DD HH:mm:ss"
-                        />
-                    </Form.Item>
+                        <Form.Item
+                            className="m-0"
+                            name={"datetime"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select a date and time",
+                                },
+                            ]}
+                        >
+                            <DatePicker
+                                id="datetime"
+                                style={{ width: "100%" }}
+                                showTime
+                                format="YYYY-MM-DD HH:mm:ss"
+                            />
+                        </Form.Item>
 
-                    <Button htmlType="submit" style={{ width: "100%" }}>
-                        Schedule
-                    </Button>
-                </Form>
+                        <Button htmlType="submit" style={{ width: "100%" }}>
+                            Schedule
+                        </Button>
+                    </Form>
 
-                <div className="m-0">
-                    <Table dataSource={schedules.reverse()} columns={columns} />
+                    <div className="m-0">
+                        <Table dataSource={schedules.reverse()} columns={columns} />
+                    </div>
                 </div>
-            </div>
-        </ConfigProvider>
+            </ConfigProvider>
+        </LazyLoad>
     );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
 import DashboardTab from './DashboardTabs/DashboardTab';
 import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
@@ -13,6 +13,8 @@ import NavMenu from '../components/NavMenu/NavMenu';
 import Raxios from '../services/axiosHelper';
 import { useStats, useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
 import { firebaseConfig } from './firebaseConfig';
+import LazyLoad from '../components/LazyLoad/lazyload';
+import Loading from '../components/Loading/loading';
 
 const AdminDashboard = () => {
   const { fetchStats } = useStats();
@@ -88,50 +90,53 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div className="container">
-      <div className="flex flex-row flex-wrap justify-center">
-        <Tab
-          label="Calls"
-          onClick={() => setActiveTab('dashboard')}
-          active={activeTab === 'dashboard'}
-        />
-        <Tab
-          label="Users"
-          onClick={() => setActiveTab('users')}
-          active={activeTab === 'users'}
-        />
-        <Tab
-          label="Saarthis"
-          onClick={() => setActiveTab('onlineSaarthis')}
-          active={activeTab === 'onlineSaarthis'}
-        />
-        <Tab
-          label="Applications"
-          onClick={() => setActiveTab('applications')}
-          active={activeTab === 'applications'}
-        />
-        <Tab
-          label="Scheduler"
-          onClick={() => setActiveTab('scheduler')}
-          active={activeTab === 'scheduler'}
-        />
-        <Tab
-          label="Logs"
-          onClick={() => setActiveTab('notifications')}
-          active={activeTab === 'notifications'}
-        />
-      </div>
+    <LazyLoad>
+        <div className="container px-5">
+          <div className="flex flex-row flex-wrap justify-center">
+            <Tab
+              label="Calls"
+              onClick={() => setActiveTab('dashboard')}
+              active={activeTab === 'dashboard'}
+            />
+            <Tab
+              label="Users"
+              onClick={() => setActiveTab('users')}
+              active={activeTab === 'users'}
+            />
+            <Tab
+              label="Saarthis"
+              onClick={() => setActiveTab('onlineSaarthis')}
+              active={activeTab === 'onlineSaarthis'}
+            />
+            <Tab
+              label="Applications"
+              onClick={() => setActiveTab('applications')}
+              active={activeTab === 'applications'}
+            />
+            <Tab
+              label="Scheduler"
+              onClick={() => setActiveTab('scheduler')}
+              active={activeTab === 'scheduler'}
+            />
+            <Tab
+              label="Logs"
+              onClick={() => setActiveTab('notifications')}
+              active={activeTab === 'notifications'}
+            />
+          </div>
 
-      {activeTab === 'dashboard' && <DashboardTab />}
-      {activeTab === 'onlineSaarthis' && <OnlineSaarthisTab />}
-      {activeTab === 'users' && <UsersTab />}
-      {activeTab === 'applications' && <ApplicationsTab />}
-      {activeTab === 'notifications' && <ErrorLogsComponent />}
-      {activeTab === 'scheduler' && <SchedulerTab />}
 
-      <NavMenu />
-      <ScrollBottom />
-    </div>
+          {activeTab === 'dashboard' && <DashboardTab />}
+          {activeTab === 'onlineSaarthis' && <OnlineSaarthisTab />}
+          {activeTab === 'users' && <UsersTab />}
+          {activeTab === 'applications' && <ApplicationsTab />}
+          {activeTab === 'notifications' && <ErrorLogsComponent />}
+          {activeTab === 'scheduler' && <SchedulerTab />}
+
+          <NavMenu />
+          <ScrollBottom />
+        </div>
+    </LazyLoad>
   );
 };
 

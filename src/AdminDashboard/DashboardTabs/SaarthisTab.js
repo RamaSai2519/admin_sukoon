@@ -1,15 +1,18 @@
 import React from "react";
 import ExpertsList from "../../components/ExpertsList/ExpertsList";
 import NavMenu from "../../components/NavMenu/NavMenu";
+import LazyLoad from "../../components/LazyLoad/lazyload";
 
 const SaarthisTab = () => {
   return (
-    <div className="container">
-      <div className="w-full">
-        <ExpertsList />
+    <LazyLoad>
+      <div className="container">
+        <div className="w-full">
+          <ExpertsList />
+        </div>
+        <NavMenu />
       </div>
-      <NavMenu />
-    </div>
+    </LazyLoad>
   );
 };
 

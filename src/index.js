@@ -1,13 +1,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import ReactGA from 'react-ga';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { DataProvider } from './services/useData';
-
-ReactGA.initialize('G-X1P4R644F2');
 
 const root = createRoot(document.getElementById('root'));
 

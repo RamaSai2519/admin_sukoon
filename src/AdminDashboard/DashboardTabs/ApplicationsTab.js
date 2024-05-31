@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, ConfigProvider, theme } from "antd";
 import { useApplications } from "../../services/useData";
+import LazyLoad from "../../components/LazyLoad/lazyload";
 
 const ApplicationsTab = () => {
     const { applications } = useApplications();
@@ -40,15 +41,17 @@ const ApplicationsTab = () => {
     ];
 
     return (
-        <ConfigProvider theme={
-            {
-                algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-            }
-        }>
-            <div className="container">
-                <Table dataSource={applications} columns={columns} />
-            </div>
-        </ConfigProvider>
+        <LazyLoad>
+            <ConfigProvider theme={
+                {
+                    algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+                }
+            }>
+                <div className="container">
+                    <Table dataSource={applications} columns={columns} />
+                </div>
+            </ConfigProvider>
+        </LazyLoad>
     );
 };
 

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useCalls } from '../../services/useData';
+import Loading from '../Loading/loading';
 import Chart from 'chart.js/auto';
 
 const CallGraph = () => {
@@ -131,6 +132,7 @@ const CallGraph = () => {
   };
 
   return (
+    <Suspense fallback={<Loading />}>
     <div className='w-full h-full'>
       <div className='flex mt-2 justify-between items-center'>
         <h2>Calls Over Time (All)</h2>
@@ -150,6 +152,7 @@ const CallGraph = () => {
         </div>
       </div>
     </div>
+    </Suspense>
   );
 };
 

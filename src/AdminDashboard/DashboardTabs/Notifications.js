@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, ConfigProvider, theme } from 'antd';
 import { useErrorLogs } from '../../services/useData';
+import LazyLoad from '../../components/LazyLoad/lazyload';
 import './toggle.css';
 
 const ErrorLogsComponent = () => {
@@ -22,17 +23,19 @@ const ErrorLogsComponent = () => {
     ];
 
     return (
-        <ConfigProvider theme={
-            {
-                algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-            }
-        }>
-            <div className="container">
-                <div className='w-full'>
-                    <Table dataSource={errorLogs} columns={columns} />
+        <LazyLoad>
+            <ConfigProvider theme={
+                {
+                    algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+                }
+            }>
+                <div className="container">
+                    <div className='w-full'>
+                        <Table dataSource={errorLogs} columns={columns} />
+                    </div>
                 </div>
-            </div>
-        </ConfigProvider>
+            </ConfigProvider>
+        </LazyLoad>
     );
 };
 
