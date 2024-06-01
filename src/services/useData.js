@@ -33,7 +33,6 @@ export const useCalls = () => useContext(CallsContext);
 export const useExperts = () => useContext(ExpertsContext);
 export const useSchedules = () => useContext(SchedulesContext);
 
-// Create a combined DataProvider component
 export const DataProvider = ({ children }) => {
     const [errorLogs, setErrorLogs] = useState([]);
     const [applications, setApplications] = useState([]);

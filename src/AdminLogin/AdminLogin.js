@@ -16,7 +16,6 @@ const AdminLogin = ({ onLogin }) => {
                 email,
                 password,
             });
-
             const { access_token, refresh_token } = response.data;
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token);
@@ -58,7 +57,6 @@ const AdminLogin = ({ onLogin }) => {
                         <Form.Item>
                             <button>Sign In</button>
                         </Form.Item>
-                        {error && <p>{error}</p>}
                     </Form>
                 </ConfigProvider>
             </div>
