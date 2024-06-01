@@ -69,8 +69,8 @@ const UsersTab = () => {
   const nav = useNavigate();
 
   return (
-    <LazyLoad>
-      <div className="container min-h-screen">
+    // <LazyLoad>
+      <div className="w-full min-h-screen">
         <div className="flex flex-wrap justify-between">
           <div className="w-full">
             <div className="grid grid-cols-3 md:grid-cols-5">
@@ -117,7 +117,7 @@ const UsersTab = () => {
           )
         }
       </div>
-    </LazyLoad>
+    // </LazyLoad>
   );
 };
 

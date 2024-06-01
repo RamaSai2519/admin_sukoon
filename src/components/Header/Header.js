@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import './toggle.css';
 
-const Header = ({ isLoggedIn, onLogout, darkMode, toggleDarkMode }) => {
+const Header = ({ isLoggedIn, onLogout }) => {
   return (
     <header>
       <Helmet>
@@ -21,24 +22,6 @@ const Header = ({ isLoggedIn, onLogout, darkMode, toggleDarkMode }) => {
         <h1>Admin Dashboard</h1>
       </Link>
       <div className='flex flex-row w-fit justify-between mr-4'>
-        <div className='h-10'>
-          <div className='flex items-center mx-5'>
-            <input type="checkbox" className="absolute ml-2" id="dn" checked={darkMode} onChange={toggleDarkMode} />
-            <label htmlFor="dn" className="toggle">
-              <span className="toggle__handler">
-                <span className="crater crater--1"></span>
-                <span className="crater crater--2"></span>
-                <span className="crater crater--3"></span>
-              </span>
-              <span className="star star--1"></span>
-              <span className="star star--2"></span>
-              <span className="star star--3"></span>
-              <span className="star star--4"></span>
-              <span className="star star--5"></span>
-              <span className="star star--6"></span>
-            </label>
-          </div>
-        </div>
         <nav>
           {isLoggedIn ? (
             <button className='p-2 rounded-xl text-xl dark:bg-lightBlack hover:scale-125 transition-transform' onClick={onLogout} aria-label="Log out">

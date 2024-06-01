@@ -32,12 +32,6 @@
   background-color: #212121;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 header {
   display: flex;
   justify-content: space-between;
@@ -251,7 +245,6 @@ body {
   max-width: 1550px;
   margin: 0 auto;
   min-width: 425px;
-  margin-top: 15px;
 }
 
 .w-max-1550 {
