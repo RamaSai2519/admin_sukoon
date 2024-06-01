@@ -78,7 +78,7 @@ const UserDetails = () => {
 
   return (
     <LazyLoad>
-      <div className='details-container'>
+      <div className='details-container h-screen'>
         <div id='details-container' className='w-full p-10'>
           <div id='details-header' className='flex flex-row items-center justify-between'>
             <h1>User Details</h1>
