@@ -104,92 +104,88 @@ const UsersList = () => {
   }, []);
 
   return (
-    <div className="w-full overflow-auto">
-      <div className="dashboard-tile">
-        <div className='latest-wrapper'>
-          <table className="users-table">
-            <thead>
-              <tr className="filter-row">
-                <td>
-                  <input
-                    type="text"
-                    placeholder="Search User"
-                    name="user"
-                    value={filters.name}
-                    onChange={handleFilterChange}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    placeholder="Filter City"
-                    name="city"
-                    value={filters.city}
-                    onChange={handleFilterChange}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    placeholder="Filter Phone Number"
-                    name="phoneNumber"
-                    value={filters.phoneNumber}
-                    onChange={handleFilterChange}
-                  />
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                  <button className='popup-button' onClick={downloadExcel}>
-                    Export
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <th onClick={() => handleSort('name')}>
-                  User {renderSortArrow('name')}
-                </th>
-                <th onClick={() => handleSort('city')}>
-                  City {renderSortArrow('city')}
-                </th>
-                <th onClick={() => handleSort('phoneNumber')}>
-                  Number {renderSortArrow('phoneNumber')}
-                </th>
-                <th onClick={() => handleSort('createdDate')}>
-                  Joined Date {renderSortArrow('createdDate')}
-                </th>
-                <th onClick={() => handleSort('birthDate')}>
-                  DOB {renderSortArrow('birthDate')}
-                </th>
-                <th onClick={() => handleSort('numberOfCalls')}>
-                  Balance {renderSortArrow('numberOfCalls')}
-                </th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.reverse().map((user) => (
-                <tr key={user._id} className="row">
-                  <td>{user.name}</td>
-                  <td>{user.city}</td>
-                  <td>{user.phoneNumber}</td>
-                  <td>{new Date(user.createdDate).toLocaleDateString()}</td>
-                  <td>{new Date(user.birthDate).toLocaleDateString()}</td>
-                  <td>{user.numberOfCalls}</td>
-                  <td>
-                    <Link to={`/admin/users/${user._id}`} className="view-details-link">
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <ScrollBottom />
-          <NavMenu />
-        </div>
-      </div>
+    <div className="container w-full overflow-auto">
+      <table className="users-table mt-5">
+        <thead>
+          <tr className="filter-row">
+            <td>
+              <input
+                type="text"
+                placeholder="Search User"
+                name="user"
+                value={filters.name}
+                onChange={handleFilterChange}
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="Filter City"
+                name="city"
+                value={filters.city}
+                onChange={handleFilterChange}
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="Filter Phone Number"
+                name="phoneNumber"
+                value={filters.phoneNumber}
+                onChange={handleFilterChange}
+              />
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <button className='popup-button' onClick={downloadExcel}>
+                Export
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <th onClick={() => handleSort('name')}>
+              User {renderSortArrow('name')}
+            </th>
+            <th onClick={() => handleSort('city')}>
+              City {renderSortArrow('city')}
+            </th>
+            <th onClick={() => handleSort('phoneNumber')}>
+              Number {renderSortArrow('phoneNumber')}
+            </th>
+            <th onClick={() => handleSort('createdDate')}>
+              Joined Date {renderSortArrow('createdDate')}
+            </th>
+            <th onClick={() => handleSort('birthDate')}>
+              DOB {renderSortArrow('birthDate')}
+            </th>
+            <th onClick={() => handleSort('numberOfCalls')}>
+              Balance {renderSortArrow('numberOfCalls')}
+            </th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredUsers.reverse().map((user) => (
+            <tr key={user._id} className="row">
+              <td>{user.name}</td>
+              <td>{user.city}</td>
+              <td>{user.phoneNumber}</td>
+              <td>{new Date(user.createdDate).toLocaleDateString()}</td>
+              <td>{new Date(user.birthDate).toLocaleDateString()}</td>
+              <td>{user.numberOfCalls}</td>
+              <td>
+                <Link to={`/admin/users/${user._id}`} className="view-details-link">
+                  View
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <ScrollBottom />
+      <NavMenu />
     </div>
   );
 };
