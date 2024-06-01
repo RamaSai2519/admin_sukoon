@@ -10,10 +10,11 @@ import CallDetails from './CallDetails/CallDetails';
 import UserDetails from './UserDetails/UserDetails'
 import ExpertDetails from './ExpertDetails/ExpertDetatils'
 import ExpertReport from './ExpertDetails/ExpertReport'
-import ApprovePage from './AdminDashboard/DashboardTabs/Scheduler/ApprovePage'
+import ApprovePage from './ApprovePage/ApprovePage'
 import './App.css';
 
 const App = () => {
+  const appVersion = '8.3.0';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
@@ -26,10 +27,10 @@ const App = () => {
     }
   });
 
-  const appVersion = '7.3.0';
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem('isLoggedIn', 'true');
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
   };
 
   const handleLogout = () => {
@@ -37,17 +38,12 @@ const App = () => {
     localStorage.removeItem('isLoggedIn');
   };
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
-  };
-
   useEffect(() => {
     const storedVersion = localStorage.getItem('appVersion');
     if (storedVersion !== appVersion) {
       window.location.reload();
-      clearAllCaches();
+      localStorage.clear();
+      sessionStorage.clear();
       localStorage.setItem('appVersion', appVersion);
     }
   }, []);
@@ -62,37 +58,29 @@ const App = () => {
     }
   }, [darkMode]);
 
-  const clearAllCaches = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-  };
-
   return (
-    <div className='dark:text-white min-w-screen md:min-h-screen min-h-[210vh] dark:bg-darkBlack'>
-      <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <div>
-        <Routes>
-          {isLoggedIn ? (
-            <>
-              <Route path="/" element={<Navigate to="/admin/dashboard" />} />
-              <Route path="/admin/calls" element={<CallList />} />
-              <Route path="/admin/users" element={<UsersList />} />
-              <Route path="/admin/calls/:callId" element={<CallDetails />} />
-              <Route path="/admin/users/:userId" element={<UserDetails />} />
-              <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
-              <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
-              <Route path="/*" element={<Navigate to="/admin/dashboard" />} />
-            </>
-          ) : (
-            <>
-              <Route path="/*" element={<AdminLogin onLogin={handleLogin} />} />
-              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
-            </>
-          )}
-        </Routes>
-      </div>
+    <div className='dark:text-white min-w-screen md:min-h-full min-h-[210vh] overflow-clip dark:bg-darkBlack'>
+      <Routes>
+        {isLoggedIn ? (
+          <>
+            <Route path="/" element={<Navigate to="/admin/dashboard" />} />
+            <Route path="/admin/calls" element={<CallList />} />
+            <Route path="/admin/users" element={<UsersList />} />
+            <Route path="/admin/calls/:callId" element={<CallDetails />} />
+            <Route path="/admin/users/:userId" element={<UserDetails />} />
+            <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
+            <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+            <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
+            <Route path="/*" element={<Navigate to="/admin/dashboard" />} />
+          </>
+        ) : (
+          <>
+            <Route path="/*" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
+          </>
+        )}
+      </Routes>
       <SpeedInsights />
     </div>
   );

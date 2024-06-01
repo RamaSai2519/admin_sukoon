@@ -1,8 +1,8 @@
 import React from "react";
 import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
-import Raxios from "../../../services/axiosHelper";
-import { useSchedules, useUsers, useExperts } from "../../../services/useData";
-import LazyLoad from "../../../components/LazyLoad/lazyload";
+import Raxios from "../../services/axiosHelper";
+import { useSchedules, useUsers, useExperts } from "../../services/useData";
+import LazyLoad from "../../components/LazyLoad/lazyload";
 
 const { Option } = Select;
 
@@ -94,58 +94,58 @@ const SchedulerTab = () => {
                 algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
             }}>
                 <div className="mt-2">
-                    {/* <div className="flex items-center justify-center">
-                    <Form name="connect-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onConnectFinish}>
-                        <Form.Item
-                            name={"user"}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select a user",
-                                },
-                            ]}
-                        >
-                            <Select
-                                id="user"
-                                style={{ width: "100%" }}
-                                showSearch
-                                placeholder="Select User"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
+                    <div className="flex items-center justify-center">
+                        <Form name="connect-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onConnectFinish}>
+                            <Form.Item
+                                name={"user"}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please select a user",
+                                    },
+                                ]}
                             >
-                                {userOptions}
-                            </Select>
-                        </Form.Item>
-                        <Form.Item
-                            className="m-0"
-                            name={"expert"}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select an expert",
-                                },
-                            ]}
-                        >
-                            <Select
-                                id="expert"
-                                style={{ width: "100%" }}
-                                showSearch
-                                placeholder="Select Expert"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
+                                <Select
+                                    id="user"
+                                    style={{ width: "100%" }}
+                                    showSearch
+                                    placeholder="Select User"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {userOptions}
+                                </Select>
+                            </Form.Item>
+                            <Form.Item
+                                className="m-0"
+                                name={"expert"}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please select an expert",
+                                    },
+                                ]}
                             >
-                                {expertOptions}
-                            </Select>
-                        </Form.Item>
-                        <Button htmlType="submit" style={{ width: "100%" }}>
-                            Connect Now
-                        </Button>
-                    </Form>
-                </div> */}
+                                <Select
+                                    id="expert"
+                                    style={{ width: "100%" }}
+                                    showSearch
+                                    placeholder="Select Expert"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {expertOptions}
+                                </Select>
+                            </Form.Item>
+                            <Button htmlType="submit" style={{ width: "100%" }}>
+                                Connect Now
+                            </Button>
+                        </Form>
+                    </div>
 
                     <Form name="schedule-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onScheduleFinish}>
                         <Form.Item

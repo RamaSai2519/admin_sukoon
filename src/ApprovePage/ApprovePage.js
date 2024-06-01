@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { useParams } from 'react-router-dom';
-import Raxios from '../../../services/axiosHelper';
+import Raxios from '../services/axiosHelper';
 
 const ApprovePage = () => {
     const { scheduleId } = useParams();

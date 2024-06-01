@@ -147,7 +147,7 @@ const ExpertsList = () => {
 
 
     return (
-        <div className="container">
+        <div className='w-fit mx-auto overflow-auto'>
             <ConfigProvider theme={
                 {
                     algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,

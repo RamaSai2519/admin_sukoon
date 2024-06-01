@@ -15,7 +15,7 @@ const DashboardTab = () => {
 
   return (
     <LazyLoad>
-      <div className="container">
+    <div className="px-5">
         <div className="flex flex-wrap justify-between">
           <div className='w-full'>
             <div className='grid grid-cols-3 md:grid-cols-5'>

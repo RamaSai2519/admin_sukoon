@@ -2,7 +2,6 @@ import React from 'react';
 import { Table, ConfigProvider, theme } from 'antd';
 import { useErrorLogs } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import './toggle.css';
 
 const ErrorLogsComponent = () => {
     const { errorLogs } = useErrorLogs();
