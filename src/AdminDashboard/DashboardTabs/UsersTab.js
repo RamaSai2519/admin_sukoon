@@ -69,12 +69,12 @@ const UsersTab = () => {
   const nav = useNavigate();
 
   return (
-    // <LazyLoad>
+    <LazyLoad>
       <div className="w-full min-h-screen">
         <div className="flex flex-wrap justify-between">
           <div className="w-full">
             <div className="grid grid-cols-3 md:grid-cols-5">
-              <DashboardTile title="Total Signups" pointer='pointer' onClick={() => nav("/admin/users")}>
+              <DashboardTile msg="Click here to view all Users Table" title="Total Signups" pointer='pointer' onClick={() => nav("/admin/users")}>
                 <div className='flex justify-between items-center w-full'>
                   <h1>{totalUsers}</h1>
                   <h4>Today: {currentDayTotalUsers}</h4>
@@ -116,8 +116,11 @@ const UsersTab = () => {
             )
           )
         }
+        <div className='flex justify-center items-center'>
+          <h2>Note: Click on the boxes to view details</h2>
+        </div>
       </div>
-    // </LazyLoad>
+    </LazyLoad>
   );
 };
 

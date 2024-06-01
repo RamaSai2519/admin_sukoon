@@ -4,27 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import Raxios from '../services/axiosHelper';
 import './AdminLogin.css';
 
-const AdminLogin = ({ onLogin }) => {
+const AdminLogin = ({ setIsLoggedIn }) => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
     const navigate = useNavigate();
-    const [error, setError] = useState('');
 
     const onFinish = async (values) => {
-        const { email, password } = values;
+        const { id, password } = values;
         try {
             const response = await Raxios.post('/auth/login', {
-                email,
+                id,
                 password,
             });
             const { access_token, refresh_token } = response.data;
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token);
+            setIsLoggedIn(true);
+            localStorage.setItem('isLoggedIn', 'true');
+            navigate('/admin/dashboard');
         } catch (error) {
             console.error('Login failed', error);
-            alert('Login failed');
+            alert('Login failed, Please recheck your credentials. If the problem persists, please contact your IT Admin.');
         }
-        onLogin();
-        navigate('/admin/dashboard');
     };
 
     return (
@@ -43,10 +43,10 @@ const AdminLogin = ({ onLogin }) => {
                         initialValues={{ remember: true }}
                     >
                         <Form.Item
-                            name="email"
-                            rules={[{ required: true, message: 'Please input your email!' }]}
+                            name="id"
+                            rules={[{ required: true, message: 'Please input your ID!' }]}
                         >
-                            <Input type="email" placeholder="Email" />
+                            <Input placeholder="ID" />
                         </Form.Item>
                         <Form.Item
                             name="password"

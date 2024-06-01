@@ -6,10 +6,8 @@ import LazyLoad from "../../components/LazyLoad/lazyload";
 const SaarthisTab = () => {
   return (
     <LazyLoad>
-      <div className="container">
-        <div className="w-full">
-          <ExpertsList />
-        </div>
+      <div className="w-full overflow-auto">
+        <ExpertsList />
         <NavMenu />
       </div>
     </LazyLoad>

@@ -14,7 +14,7 @@ import ApprovePage from './ApprovePage/ApprovePage'
 import './App.css';
 
 const App = () => {
-  const appVersion = '7.3.0';
+  const appVersion = '8.3.0';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
@@ -31,11 +31,6 @@ const App = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
     localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
-  };
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem('isLoggedIn', 'true');
   };
 
   const handleLogout = () => {
@@ -64,32 +59,28 @@ const App = () => {
   }, [darkMode]);
 
   return (
-    <div className='dark:text-white min-w-screen md:min-h-screen min-h-[210vh] dark:bg-darkBlack'>
-
-      {/* <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} /> */}
-      <div>
-        <Routes>
-          {isLoggedIn ? (
-            <>
-              <Route path="/" element={<Navigate to="/admin/dashboard" />} />
-              <Route path="/admin/calls" element={<CallList />} />
-              <Route path="/admin/users" element={<UsersList />} />
-              <Route path="/admin/calls/:callId" element={<CallDetails />} />
-              <Route path="/admin/users/:userId" element={<UserDetails />} />
-              <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
-              <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard toggleDarkMode={toggleDarkMode} darkMode={darkMode} />} />
-              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
-              <Route path="/*" element={<Navigate to="/admin/dashboard" />} />
-            </>
-          ) : (
-            <>
-              <Route path="/*" element={<AdminLogin onLogin={handleLogin} />} />
-              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
-            </>
-          )}
-        </Routes>
-      </div>
+    <div className='dark:text-white min-w-screen md:min-h-full min-h-[210vh] overflow-clip dark:bg-darkBlack'>
+      <Routes>
+        {isLoggedIn ? (
+          <>
+            <Route path="/" element={<Navigate to="/admin/dashboard" />} />
+            <Route path="/admin/calls" element={<CallList />} />
+            <Route path="/admin/users" element={<UsersList />} />
+            <Route path="/admin/calls/:callId" element={<CallDetails />} />
+            <Route path="/admin/users/:userId" element={<UserDetails />} />
+            <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
+            <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+            <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
+            <Route path="/*" element={<Navigate to="/admin/dashboard" />} />
+          </>
+        ) : (
+          <>
+            <Route path="/*" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
+          </>
+        )}
+      </Routes>
       <SpeedInsights />
     </div>
   );

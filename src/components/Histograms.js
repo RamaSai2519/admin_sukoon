@@ -224,8 +224,7 @@ const Histograms = ({ usersData }) => {
     };
 
     return (
-        <div className="">
-            <div className="grid md:grid-cols-2">
+        <div className="grid md:grid-cols-2">
             <DashboardTile title="Users Per City">
                 {/* <button className="popup-button"
                     onClick={() => setShowCounts(!showCounts)}>
@@ -240,7 +239,6 @@ const Histograms = ({ usersData }) => {
                     <canvas id="ageGroupChart"></canvas>
                 </div>
             </DashboardTile>
-            </div>
         </div>
     );
 };

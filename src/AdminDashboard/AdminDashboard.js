@@ -17,7 +17,7 @@ import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 
-const AdminDashboard = ({ darkMode, toggleDarkMode }) => {
+const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
   const { fetchStats } = useStats();
   const { fetchCalls } = useCalls();
   const { fetchExperts } = useExperts();
@@ -65,13 +65,10 @@ const AdminDashboard = ({ darkMode, toggleDarkMode }) => {
     }
   };
 
-  // Uncomment the following useEffect for FCM token registration
-  /*
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('/firebase-messaging-sw.js')
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
           .catch((err) => {
             console.error('Service worker registration failed: ', err);
           });
@@ -80,34 +77,31 @@ const AdminDashboard = ({ darkMode, toggleDarkMode }) => {
 
     const app = initializeApp(firebaseConfig);
     const messaging = getMessaging(app);
-    getToken(messaging, {
-      vapidKey: 'YOUR_VAPID_KEY',
-    }).then((currentToken) => {
-      if (currentToken) {
-        sendFCMTokenToServer(currentToken);
-      }
-    });
+    getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
+      .then((currentToken) => {
+        if (currentToken) {
+          sendFCMTokenToServer(currentToken);
+        }
+      })
   }, []);
-  */
 
   const Tab = ({ label, onClick, active }) => (
     <div
-      className={`cshadow p-2 px-4 my-2 rounded-3xl font-bold text-xl hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack ${
-        active ? 'scale-110' : ''
-      }`}
+      className={`cshadow p-2 px-4 my-2 rounded-3xl font-bold text-xl hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack ${active ? 'scale-110' : ''
+        }`}
       onClick={onClick}
     >
       {label}
     </div>
   );
 
-  const isDesktop = useMediaQuery(768);
+  const isDesktop = useMediaQuery(1240);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardTab />;
-      case 'onlineSaarthis':
+      case 'experts':
         return <OnlineSaarthisTab />;
       case 'users':
         return <UsersTab />;
@@ -128,7 +122,7 @@ const AdminDashboard = ({ darkMode, toggleDarkMode }) => {
         <div className="flex flex-row">
           <div className="flex flex-col h-screen p-4 w-1/8 justify-start bg-gray-100 dark:bg-darkBlack">
             <img src="/logo.svg" alt="logo" className="max-h-24" />
-            {['dashboard', 'users', 'onlineSaarthis', 'applications', 'scheduler', 'notifications'].map((tab) => (
+            {['dashboard', 'users', 'experts', 'applications', 'scheduler', 'notifications'].map((tab) => (
               <Tab
                 key={tab}
                 label={tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -136,6 +130,7 @@ const AdminDashboard = ({ darkMode, toggleDarkMode }) => {
                 active={activeTab === tab}
               />
             ))}
+            <Tab label="Logout" onClick={onLogout} />
             <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
           </div>
 
@@ -143,8 +138,8 @@ const AdminDashboard = ({ darkMode, toggleDarkMode }) => {
         </div>
       ) : (
         <div className="container px-5">
-          <div className="flex flex-row flex-wrap justify-center">
-            {['dashboard', 'users', 'onlineSaarthis', 'applications', 'scheduler', 'notifications'].map((tab) => (
+          <div className="flex flex-row flex-wrap gap-4 justify-center">
+            {['dashboard', 'users', 'experts', 'applications', 'scheduler', 'notifications'].map((tab) => (
               <Tab
                 key={tab}
                 label={tab.charAt(0).toUpperCase() + tab.slice(1)}
