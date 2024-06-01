@@ -104,7 +104,7 @@ const UsersList = () => {
   }, []);
 
   return (
-    <div className="table-container">
+    <div className="w-full overflow-auto">
       <div className="dashboard-tile">
         <div className='latest-wrapper'>
           <table className="users-table">
