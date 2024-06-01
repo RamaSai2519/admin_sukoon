@@ -114,6 +114,7 @@ const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
         return <ErrorLogsComponent />;
       case 'scheduler':
         return <SchedulerTab />;
+      
       default:
         return null;
     }
