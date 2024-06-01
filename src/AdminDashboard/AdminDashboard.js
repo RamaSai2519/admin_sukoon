@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
 import DashboardTab from './DashboardTabs/DashboardTab';
-import OnlineSaarthisTab from './DashboardTabs/SaarthisTab';
+import SaarthisTab from './DashboardTabs/SaarthisTab';
 import UsersTab from './DashboardTabs/UsersTab';
 import ApplicationsTab from './DashboardTabs/ApplicationsTab';
 import SchedulerTab from './DashboardTabs/SchedulerTab';
@@ -16,6 +16,7 @@ import LazyLoad from '../components/LazyLoad/lazyload';
 import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
+import CallsTable from '../CallList/CallList';
 
 const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
   const { fetchStats } = useStats();
@@ -101,8 +102,10 @@ const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardTab />;
+      case 'calls':
+        return <CallsTable />;
       case 'experts':
-        return <OnlineSaarthisTab />;
+        return <SaarthisTab />;
       case 'users':
         return <UsersTab />;
       case 'applications':
@@ -122,7 +125,7 @@ const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
         <div className="flex flex-row">
           <div className="flex flex-col h-screen p-4 w-1/8 justify-start bg-gray-100 dark:bg-darkBlack">
             <img src="/logo.svg" alt="logo" className="max-h-24" />
-            {['dashboard', 'users', 'experts', 'applications', 'scheduler', 'notifications'].map((tab) => (
+            {['dashboard', 'users', 'calls', 'experts', 'applications', 'scheduler', 'notifications'].map((tab) => (
               <Tab
                 key={tab}
                 label={tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -139,7 +142,7 @@ const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
       ) : (
         <div className="container px-5">
           <div className="flex flex-row flex-wrap gap-4 justify-center">
-            {['dashboard', 'users', 'experts', 'applications', 'scheduler', 'notifications'].map((tab) => (
+            {['dashboard', 'users', 'calls', 'experts', 'applications', 'scheduler', 'notifications'].map((tab) => (
               <Tab
                 key={tab}
                 label={tab.charAt(0).toUpperCase() + tab.slice(1)}

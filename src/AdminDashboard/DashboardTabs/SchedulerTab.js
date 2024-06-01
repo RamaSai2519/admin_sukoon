@@ -95,7 +95,7 @@ const SchedulerTab = () => {
             }}>
                 <div className="mt-2">
                     <div className="flex items-center justify-center">
-                        <Form name="connect-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onConnectFinish}>
+                        <Form name="connect-call" className="grid grid-cols-4 gap-2" onFinish={onConnectFinish}>
                             <Form.Item
                                 name={"user"}
                                 rules={[

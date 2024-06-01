@@ -117,7 +117,7 @@ const UsersTab = () => {
           )
         }
         <div className='flex justify-center items-center'>
-          <h2>Note: Click on the boxes to view details</h2>
+          <h2>Note: Click on the boxes to view details. Total Signups will return all users table.</h2>
         </div>
       </div>
     </LazyLoad>
