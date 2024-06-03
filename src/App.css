@@ -302,6 +302,11 @@ body {
 }
 
 .dark .pback-button {
+  background-color: #212121;
+  color: white;
+}
+
+.dark .pback-button:hover {
   background-color: #141414;
   color: white;
 }

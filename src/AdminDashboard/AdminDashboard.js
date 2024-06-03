@@ -13,12 +13,13 @@ import NavMenu from '../components/NavMenu/NavMenu';
 import Raxios from '../services/axiosHelper';
 import { useStats, useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
 import LazyLoad from '../components/LazyLoad/lazyload';
+import EventsTab from './DashboardTabs/EventsTab';
 import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import CallsTable from '../CallList/CallList';
 
-const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
+const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   const { fetchStats } = useStats();
   const { fetchCalls } = useCalls();
   const { fetchExperts } = useExperts();
@@ -66,25 +67,25 @@ const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
     }
   };
 
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/firebase-messaging-sw.js')
-          .catch((err) => {
-            console.error('Service worker registration failed: ', err);
-          });
-      });
-    }
+  // useEffect(() => {
+  //   if ('serviceWorker' in navigator) {
+  //     window.addEventListener('load', () => {
+  //       navigator.serviceWorker.register('/firebase-messaging-sw.js')
+  //         .catch((err) => {
+  //           console.error('Service worker registration failed: ', err);
+  //         });
+  //     });
+  //   }
 
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
-    getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
-      .then((currentToken) => {
-        if (currentToken) {
-          sendFCMTokenToServer(currentToken);
-        }
-      })
-  }, []);
+  //   const app = initializeApp(firebaseConfig);
+  //   const messaging = getMessaging(app);
+  //   getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
+  //     .then((currentToken) => {
+  //       if (currentToken) {
+  //         sendFCMTokenToServer(currentToken);
+  //       }
+  //     })
+  // }, []);
 
   const Tab = ({ label, onClick, active }) => (
     <div
@@ -114,7 +115,8 @@ const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
         return <ErrorLogsComponent />;
       case 'scheduler':
         return <SchedulerTab />;
-      
+      case 'events':
+        return <EventsTab />;
       default:
         return null;
     }
@@ -126,7 +128,7 @@ const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
         <div className="flex flex-row">
           <div className="flex flex-col h-screen p-4 w-1/8 justify-start bg-gray-100 dark:bg-darkBlack">
             <img src="/logo.svg" alt="logo" className="max-h-24" />
-            {['dashboard', 'users', 'calls', 'experts', 'applications', 'scheduler', 'notifications'].map((tab) => (
+            {['dashboard', 'users', 'calls', 'experts', 'applications', 'events', 'scheduler', 'notifications'].map((tab) => (
               <Tab
                 key={tab}
                 label={tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -143,7 +145,7 @@ const AdminDashboard = ({ onLogout,  darkMode, toggleDarkMode }) => {
       ) : (
         <div className="container px-5">
           <div className="flex flex-row flex-wrap gap-4 justify-center">
-            {['dashboard', 'users', 'calls', 'experts', 'applications', 'scheduler', 'notifications'].map((tab) => (
+            {['dashboard', 'users', 'calls', 'experts', 'applications', 'events', 'scheduler', 'notifications'].map((tab) => (
               <Tab
                 key={tab}
                 label={tab.charAt(0).toUpperCase() + tab.slice(1)}

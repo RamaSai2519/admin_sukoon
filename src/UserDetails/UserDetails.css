@@ -9,6 +9,17 @@
     box-sizing: border-box;
 }
 
+.container input {
+    font-size: 20px;
+    margin-top: 2px;
+    width: 100%;
+    padding: 12px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
 .details-container textarea {
     font-size: 20px;
     margin-top: 2px;
@@ -21,6 +32,11 @@
 }
 
 .dark .details-container input {
+    background-color: #212121;
+    color: white;
+}
+
+.dark .container input {
     background-color: #212121;
     color: white;
 }
