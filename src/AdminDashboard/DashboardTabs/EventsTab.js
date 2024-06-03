@@ -1,12 +1,13 @@
 import React from 'react';
-import { Table, ConfigProvider, theme } from 'antd';
+import { Table, Button, ConfigProvider, theme } from 'antd';
 import { useEvents } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
+import CreateEventPopup from '../../components/CreateEventPopup';
 import { Link } from 'react-router-dom';
-import EventDetails from '../../EventDetails';
 
 const EventsTab = () => {
     const { events, fetchEvents } = useEvents();
+    const [visible, setVisible] = React.useState(false);
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
     React.useEffect(() => {
@@ -50,7 +51,7 @@ const EventsTab = () => {
             title: 'Details',
             key: 'details',
             render: (text, record) => (
-                <Link to={{ pathname: `/admin/events/${record.slug}`}} className="view-details-link">
+                <Link to={{ pathname: `/admin/events/${record.slug}` }} className="view-details-link">
                     View
                 </Link>
             ),
@@ -65,10 +66,16 @@ const EventsTab = () => {
                 }
             }>
                 <div className="container min-h-screen">
+                    <div className='flex justify-end mb-5'>
+                        <Button onClick={() => setVisible(true)} type="primary">
+                            Create Event
+                        </Button>
+                    </div>
                     <div className='w-full'>
                         <Table dataSource={events} columns={columns} />
                     </div>
                 </div>
+                {visible && <CreateEventPopup visible={visible} setVisible={setVisible} />}
             </ConfigProvider>
         </LazyLoad>
     );
