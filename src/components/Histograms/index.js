@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import DashboardTile from "./DashboardTile/DashboardTile";
+import DashboardTile from "../DashboardTile";
 import Chart from "chart.js/auto";
 
 const Histograms = ({ usersData }) => {

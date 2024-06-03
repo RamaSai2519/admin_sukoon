@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Button, ConfigProvider, theme } from 'antd';
 import { useEvents } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import CreateEventPopup from '../../components/CreateEventPopup';
+import CreateEventPopup from '../../components/Popups/CreateEventPopup';
 import { Link } from 'react-router-dom';
 
 const EventsTab = () => {

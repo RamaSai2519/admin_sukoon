@@ -24,7 +24,7 @@ const ExpertDetails = () => {
   const [repeatScore, setRepeatScore] = useState('');
   const [totalScore, setTotalScore] = useState('');
   const [callsShare, setCallsShare] = useState('');
-  const [active, setActive] = useState(true);
+  const [editMode, setEditMode] = useState(false);
   const { allCategories, fetchCategories } = useCategories();
   const dropdownRef = useRef(null);
   const darkMode = localStorage.getItem('darkMode') === 'true';

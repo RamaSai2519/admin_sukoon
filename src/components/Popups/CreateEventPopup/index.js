@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Raxios from '../../services/axiosHelper';
+import Raxios from '../../../services/axiosHelper';
 import { Button } from 'antd';
 
 const CreateEventPopup = ({ visible, setVisible }) => {
@@ -35,7 +35,6 @@ const CreateEventPopup = ({ visible, setVisible }) => {
                 console.error('Error creating event:', error);
                 window.alert('Error creating event:', error);
             });
-        window.alert('Event created successfully.'); 
         setVisible(false);
     };
 

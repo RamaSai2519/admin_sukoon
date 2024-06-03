@@ -104,7 +104,7 @@ const UsersList = () => {
   }, []);
 
   return (
-    <div className="container min-h-screen w-full overflow-auto">
+    <div className="container min-h-screen px-5 w-full overflow-auto">
       <table className="users-table mt-5">
         <thead>
           <tr className="filter-row">

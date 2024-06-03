@@ -7,7 +7,7 @@ import ExpertGraph from '../../components/ExpertGraph/ExpertGraph';
 import DayGraph from '../../components/DaysGraph/DaysGraph';
 import LastFiveCallsTable from '../../components/LastFiveCallsTable/LastFiveCallsTable';
 import { useStats } from '../../services/useData';
-import DashboardTile from '../../components/DashboardTile/DashboardTile';
+import DashboardTile from '../../components/DashboardTile';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 
 const DashboardTab = () => {

@@ -1,14 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useExperts, useCalls } from '../../services/useData';
 import { Table, Button, ConfigProvider, theme } from 'antd';
+import CreateCategoryPopup from '../Popups/CreateCategoryPopup';
 import writeXlsxFile from 'write-excel-file';
 import { saveAs } from 'file-saver';
+import Raxios from '../../services/axiosHelper';
 
 const ExpertsList = () => {
     const { experts } = useExperts();
     const { calls } = useCalls();
+    const [visible, setVisible] = React.useState(false);
     const darkMode = localStorage.getItem('darkMode') === 'true';
+
+    const navigate = useNavigate();
 
     const calculateSuccessfulCalls = (expert) => {
         const expertCalls = calls.filter(call => call.expert === expert._id);
@@ -126,7 +131,6 @@ const ExpertsList = () => {
     }));
 
     const exportToExcel = async () => {
-        // Assuming dataSource is an array of objects
         const wsData = [
             Object.keys(dataSource[0]).map(key => ({ value: key }))  // Header row
         ];
@@ -145,6 +149,10 @@ const ExpertsList = () => {
         saveAs(blob, 'ExpertsData.xlsx');
     };
 
+    const createExpert = async () => {
+        const response = await Raxios.post('/expert/create');
+        navigate(`/admin/experts/${response.data}`);
+    }
 
     return (
         <div className='w-full mx-auto overflow-auto'>
@@ -153,15 +161,23 @@ const ExpertsList = () => {
                     algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
                 }
             }>
+                <div className='flex gap-2 justify-end mb-2'>
+                    <Button onClick={() => setVisible(true)} type="primary">
+                        Create Category
+                    </Button>
+                    <Button onClick={createExpert} type="primary">
+                        Create Expert
+                    </Button>
+                </div>
                 <Table
                     dataSource={dataSource}
                     columns={columns}
                     pagination={false}
                 />
-                <Button className='' onClick={exportToExcel}>Export Excel Sheet</Button>
+                <Button onClick={exportToExcel}>Export Excel Sheet</Button>
+                {visible && <CreateCategoryPopup visible={visible} setVisible={setVisible} />}
             </ConfigProvider>
         </div>
-
     );
 };
 

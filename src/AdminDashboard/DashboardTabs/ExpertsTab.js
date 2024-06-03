@@ -1,5 +1,5 @@
 import React from "react";
-import ExpertsList from "../../components/ExpertsList/ExpertsList";
+import ExpertsList from "../../components/ExpertsList";
 import NavMenu from "../../components/NavMenu/NavMenu";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 

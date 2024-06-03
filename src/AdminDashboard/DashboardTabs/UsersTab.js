@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Popup from '../Popup'
 import Histograms from '../../components/Histograms';
-import LeadsPopup from '../../components/LeadsPopup';
-import DashboardTile from '../../components/DashboardTile/DashboardTile';
+import Popup from '../../components/Popups/Popup';
+import LeadsPopup from '../../components/Popups/LeadsPopup';
+import DashboardTile from '../../components/DashboardTile';
 import { useUsers, useCalls, useLeads } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 
