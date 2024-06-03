@@ -83,3 +83,12 @@ export const fetchSchedules = async (setSchedules) => {
         console.error('Error fetching schedules:', error);
     }
 };
+
+export const fetchEvents = async (setEvents) => {
+    try {
+        const response = await Raxios.get('/event/events');
+        setEvents(response.data);
+    } catch (error) {
+        console.error('Error fetching events:', error);
+    }
+}

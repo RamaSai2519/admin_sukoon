@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const Raxios = axios.create({
   // baseURL: 'https://m196vr75-8080.inc1.devtunnels.ms/'
-  baseURL: 'https://apiadmin.sukoon.love/admin',
-  // baseURL: 'http://192.168.0.132:8080/admin',
+  // baseURL: 'https://apiadmin.sukoon.love/admin',
+  baseURL: 'http://192.168.29.21:8080/admin',
   // baseURL: 'https://m196vr75-8080.inc1.devtunnels.ms/admin',
 });
 

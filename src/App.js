@@ -8,6 +8,7 @@ import UsersList from './UserList/UserList';
 import CallList from './CallList/CallList';
 import CallDetails from './CallDetails/CallDetails';
 import UserDetails from './UserDetails/UserDetails'
+import EventDetails from './EventDetails';
 import ExpertDetails from './ExpertDetails/ExpertDetatils'
 import ExpertReport from './ExpertDetails/ExpertReport'
 import ApprovePage from './ApprovePage/ApprovePage'
@@ -68,6 +69,7 @@ const App = () => {
             <Route path="/admin/users" element={<UsersList />} />
             <Route path="/admin/calls/:callId" element={<CallDetails />} />
             <Route path="/admin/users/:userId" element={<UserDetails />} />
+            <Route path='/admin/events/:slug' element={<EventDetails />} />
             <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
             <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
             <Route path="/admin/dashboard" element={<AdminDashboard onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
