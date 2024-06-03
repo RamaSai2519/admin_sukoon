@@ -107,6 +107,7 @@ const LastFiveCallsTable = () => {
         columns={columns}
         pagination={false}
         className="w-full"
+        rowKey={(record) => record.callId}
       />
     </ConfigProvider>
   );

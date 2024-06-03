@@ -39,14 +39,6 @@ const CreateEventPopup = ({ visible, setVisible }) => {
         setVisible(false);
     };
 
-    const onSlugChange = (e) => {
-        let slugText = e.target.value;
-        if (slugText.length > 4) {
-            alert('Slug should be less than 4 characters');
-            return;
-        }
-    };
-
     return (
         <div className={`fixed left-0 top-0 overflow-auto w-full h-full bg-black bg-opacity-50 ${visible ? 'visible' : ''}`}>
             <div className="p-10 rounded-5 rounded-10 shadow-md min-w-1/2 max-w-90 max-h-90 overflow-y-auto relative ">

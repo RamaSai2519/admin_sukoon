@@ -72,7 +72,7 @@ const EventsTab = () => {
                         </Button>
                     </div>
                     <div className='w-full'>
-                        <Table dataSource={events} columns={columns} />
+                        <Table dataSource={events} columns={columns} rowKey={(record) => record.slug} />
                     </div>
                 </div>
                 {visible && <CreateEventPopup visible={visible} setVisible={setVisible} />}

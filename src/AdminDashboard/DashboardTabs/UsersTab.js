@@ -86,7 +86,7 @@ const UsersTab = () => {
               <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
                 <h1 className='cursor-pointer'>{twoCallsUsers.length}</h1>
               </DashboardTile>
-              <DashboardTile title=">2min Calls Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
+              <DashboardTile title="Repeat Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
                 <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
               </DashboardTile>
               <DashboardTile title="Partial Signups" pointer='pointer' onClick={() => openPopup('Partial Signups', leads)}>
