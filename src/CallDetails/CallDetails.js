@@ -69,7 +69,7 @@ const CallDetails = () => {
     };
 
     return (
-        <div className="whole-container">
+        <div className="whole-container min-h-screen">
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px' }}>
                 <h1>Call Details</h1>
                 <button className='back-button' onClick={() => window.history.back()}>
