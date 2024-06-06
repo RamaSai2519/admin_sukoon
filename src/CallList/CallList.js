@@ -10,7 +10,6 @@ import { useCalls } from '../services/useData';
 import { red, pink, green, yellow } from '@mui/material/colors';
 import writeXlsxFile from 'write-excel-file';
 import { saveAs } from 'file-saver';
-import NavMenu from '../components/NavMenu/NavMenu';
 import LazyLoad from '../components/LazyLoad/lazyload';
 
 const CallsTable = () => {
@@ -196,7 +195,6 @@ const CallsTable = () => {
                 ))}
               </tbody>
             </table>
-            <NavMenu />
             <ScrollBottom />
           </div>
         </div>

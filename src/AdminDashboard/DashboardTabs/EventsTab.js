@@ -12,6 +12,7 @@ const EventsTab = () => {
 
     React.useEffect(() => {
         fetchEvents();
+        // eslint-disable-next-line
     }, []);
 
     const columns = [

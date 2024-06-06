@@ -7,7 +7,6 @@ import ApplicationsTab from './DashboardTabs/ApplicationsTab';
 import SchedulerTab from './DashboardTabs/SchedulerTab';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import useMediaQuery from '../services/useMediaQueryHook';
 import ThemeToggle from '../components/ThemeToggle/toggle';
 import ErrorLogsComponent from './DashboardTabs/Notifications';
 import Raxios from '../services/axiosHelper';
@@ -15,9 +14,11 @@ import { useStats, useCalls, useExperts, useUsers, useLeads, useSchedules, useAp
 import LazyLoad from '../components/LazyLoad/lazyload';
 import EventsTab from './DashboardTabs/EventsTab';
 import CallsTable from '../CallList/CallList';
+import UserList from '../UserList/UserList';
 import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
+import './toggle.css'
 
 const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   const { fetchStats } = useStats();
@@ -42,31 +43,33 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     } else if (storedTab) {
       setActiveTab(storedTab);
     }
+
+    // eslint-disable-next-line
   }, [location.state]);
 
   useEffect(() => {
     localStorage.setItem('adminActiveTab', activeTab);
   }, [activeTab]);
 
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/firebase-messaging-sw.js')
-          .catch((err) => {
-            console.error('Service worker registration failed: ', err);
-          });
-      });
-    }
+  // useEffect(() => {
+  //   if ('serviceWorker' in navigator) {
+  //     window.addEventListener('load', () => {
+  //       navigator.serviceWorker.register('/firebase-messaging-sw.js')
+  //         .catch((err) => {
+  //           console.error('Service worker registration failed: ', err);
+  //         });
+  //     });
+  //   }
 
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
-    getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
-      .then((currentToken) => {
-        if (currentToken) {
-          sendFCMTokenToServer(currentToken);
-        }
-      })
-  }, []);
+  //   const app = initializeApp(firebaseConfig);
+  //   const messaging = getMessaging(app);
+  //   getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
+  //     .then((currentToken) => {
+  //       if (currentToken) {
+  //         sendFCMTokenToServer(currentToken);
+  //       }
+  //     })
+  // }, []);
 
   const sendFCMTokenToServer = async (token) => {
     try {
@@ -99,15 +102,13 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     </div>
   );
 
-  const isDesktop = useMediaQuery(1240);
-
   const renderTabContent = () => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardTab />;
-      case 'calls':
+      case 'calls list':
         return <CallsTable />;
-      case 'experts':
+      case 'experts list':
         return <SaarthisTab />;
       case 'users':
         return <UsersTab />;
@@ -119,6 +120,8 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
         return <SchedulerTab />;
       case 'events':
         return <EventsTab />;
+      case 'users list':
+        return <UserList />;
       default:
         return null;
     }
@@ -141,7 +144,7 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
               <img src="/logo.svg" alt="logo" className="max-h-24" />
               <div className='flex flex-col h-full justify-between'>
                 <div>
-                  {['dashboard', 'users', 'calls', 'experts', 'applications', 'events', 'scheduler', 'notifications'].map((tab) => (
+                  {['dashboard', 'users', 'applications', 'events', 'scheduler', 'notifications', 'calls list', 'experts list', 'users list'].map((tab) => (
                     <Tab
                       key={tab}
                       label={tab.charAt(0).toUpperCase() + tab.slice(1)}

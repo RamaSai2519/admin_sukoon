@@ -138,7 +138,7 @@ const CallGraph = () => {
         <h2>Calls Over Time</h2>
         <div className='flex flex-cols-2 gap-1'>
           <div className='drop-down'>
-            <label className='border rounded-xl p-1 border-gray-500'>
+            <label className='border border-gray-500 rounded-xl p-1'>
               <select value={type} onChange={handleTypeChange}>
                 <option value="all">All Calls</option>
                 <option value="successful">Successful</option>

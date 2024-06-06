@@ -11,7 +11,6 @@ const EventDetails = () => {
     const [name, setName] = useState('');
     const [mainTitle, setMainTitle] = useState('');
     const [subTitle, setSubTitle] = useState('');
-    const [editMode, setEditMode] = useState(false);
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
     const fetchEventDetails = async () => {
@@ -49,7 +48,6 @@ const EventDetails = () => {
                 setMainTitle(response.data.mainTitle);
                 setSubTitle(response.data.subTitle);
                 window.alert('Event details updated successfully.');
-                setEditMode(false);
             })
             .catch(error => {
                 console.error('Error updating event details:', error);
@@ -61,6 +59,7 @@ const EventDetails = () => {
     useEffect(() => {
         fetchEventDetails();
         fetchUsers();
+        // eslint-disable-next-line
     }, [slug]);
 
 

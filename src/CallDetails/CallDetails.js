@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Button } from 'antd';
-import NavMenu from '../components/NavMenu/NavMenu';
 import Raxios from '../services/axiosHelper';
 import './CallDetails.css';
 
@@ -148,7 +147,6 @@ const CallDetails = () => {
                     Download Transcript
                 </Button>
             </div>
-            <NavMenu />
             <ScrollBottom />
         </div>
     );

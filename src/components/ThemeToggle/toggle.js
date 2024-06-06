@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const ThemeToggle = ({darkMode, toggleDarkMode}) => {
+const ThemeToggle = ({ darkMode, toggleDarkMode }) => {
 
     return (
         <div className='h-10'>
