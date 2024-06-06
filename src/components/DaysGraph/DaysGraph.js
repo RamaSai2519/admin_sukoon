@@ -6,18 +6,61 @@ const DaysGraph = () => {
     const { calls } = useCalls();
     const [chart, setChart] = useState(null);
     const [timeframe, setTimeframe] = useState('year');
+    const [type, setType] = useState('all');
 
     useEffect(() => {
         renderChart(calls);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [calls, timeframe]);
+    }, [calls, timeframe, type]);
+
+    const filterDataByTimeframe = (callData) => {
+        let startDate = new Date();
+        switch (timeframe) {
+            case 'week':
+                startDate.setDate(startDate.getDate() - 7);
+                break;
+            case 'month':
+                startDate.setMonth(startDate.getMonth() - 1);
+                break;
+            case 'year':
+                startDate.setFullYear(startDate.getFullYear() - 1);
+                break;
+            default:
+                startDate.setFullYear(startDate.getFullYear() - 1);
+                break;
+        }
+        return callData.filter(call => new Date(call.initiatedTime) > startDate);
+    };
+
+    const filterCallsByType = (filteredData) => {
+        switch (type) {
+            case 'successful':
+                return filteredData.filter(call => call.status === 'successful');
+            case 'failed':
+                return filteredData.filter(call => call.status === 'failed');
+            case 'missed':
+                return filteredData.filter(call => call.status === 'missed');
+            case 'all':
+            default:
+                return filteredData;
+        }
+    };
+
+    const handleTimeframeChange = (event) => {
+        setTimeframe(event.target.value);
+    };
+
+    const handleTypeChange = (event) => {
+        setType(event.target.value);
+    };
 
     const renderChart = (callData) => {
         const filteredData = filterDataByTimeframe(callData);
+        const filteredDataByType = filterCallsByType(filteredData);
 
         const dayLabels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const dayData = Array.from({ length: 7 }, (_, index) => {
-            const callsOnDay = filteredData.filter(call => {
+            const callsOnDay = filteredDataByType.filter(call => {
                 const callDate = new Date(call.initiatedTime);
                 return callDate.getDay() === index;
             });
@@ -80,43 +123,33 @@ const DaysGraph = () => {
         }
     };
 
-    const filterDataByTimeframe = (callData) => {
-        let startDate = new Date();
-        switch (timeframe) {
-            case 'week':
-                startDate.setDate(startDate.getDate() - 7);
-                break;
-            case 'month':
-                startDate.setMonth(startDate.getMonth() - 1);
-                break;
-            case 'year':
-                startDate.setFullYear(startDate.getFullYear() - 1);
-                break;
-            default:
-                startDate.setFullYear(startDate.getFullYear() - 1);
-                break;
-        }
-        return callData.filter(call => new Date(call.initiatedTime) > startDate);
-    };
-
-    const handleTimeframeChange = (event) => {
-        setTimeframe(event.target.value);
-    };
-
     return (
         <div className='w-full h-full'>
             <div className='flex mt-2 justify-between items-center'>
                 <h3>Calls per Day (All)</h3>
-                <div className='drop-down'>
-                    <label>
-                        <select value={timeframe} onChange={handleTimeframeChange}>
-                            <option value="week">Week</option>
-                            <option value="month">Month</option>
-                            <option value="year">Year</option>
-                        </select>
-                    </label>
+                <div className='flex flex-cols-2 gap-1'>
+                    <div className='drop-down'>
+                        <label className='border rounded-xl p-1 border-gray-500'>
+                            <select value={type} onChange={handleTypeChange}>
+                                <option value="all">All Calls</option>
+                                <option value="successful">Successful</option>
+                                <option value="failed">Failed</option>
+                                <option value="missed">Missed</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div className='drop-down'>
+                        <label className='border border-gray-500 rounded-xl p-1'>
+                            <select value={timeframe} onChange={handleTimeframeChange}>
+                                <option value="week">Week</option>
+                                <option value="month">Month</option>
+                                <option value="year">Year</option>
+                            </select>
+                        </label>
+                    </div>
                 </div>
             </div>
+            <div className='border-t mt-1 border-neutral-600' />
             <canvas id="dayGraph"></canvas>
         </div>
     );

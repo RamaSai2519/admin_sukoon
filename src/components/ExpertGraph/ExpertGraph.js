@@ -1,4 +1,3 @@
-// ExpertGraph.js
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
 import { useCalls, useExperts } from '../../services/useData';
@@ -8,13 +7,13 @@ const ExpertGraph = () => {
   const { experts } = useExperts();
   const [chart, setChart] = useState(null);
   const [timeframe, setTimeframe] = useState('year');
+  const [type, setType] = useState('all');
+  const [representation, setRepresentation] = useState('absolute');
 
   useEffect(() => {
-    if (calls.length > 0 && experts.length > 0) {
-      renderChart(calls, experts);
-    }
+    renderChart(calls, experts);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calls, experts, timeframe]);
+  }, [calls, experts, timeframe, type, representation]);
 
   const filterCallsByTimeframe = (callData) => {
     let startDate = new Date();
@@ -35,13 +34,27 @@ const ExpertGraph = () => {
     return callData.filter(call => new Date(call.initiatedTime) > startDate);
   };
 
+  const filterCallsByType = (filteredData) => {
+    switch (type) {
+      case 'successful':
+        return filteredData.filter(call => call.status === 'successful');
+      case 'failed':
+        return filteredData.filter(call => call.status === 'failed');
+      case 'missed':
+        return filteredData.filter(call => call.status === 'missed');
+      case 'all':
+      default:
+        return filteredData;
+    }
+  };
+
   const renderChart = (callData, expertData) => {
     const filteredCalls = filterCallsByTimeframe(callData);
-    const successfulCalls = filteredCalls.filter(call => call.status === 'successful');
+    const filteredCallsByType = filterCallsByType(filteredCalls);
 
     const expertCalls = {};
 
-    successfulCalls.forEach((call) => {
+    filteredCallsByType.forEach((call) => {
       const expertId = call.expert;
       const expert = expertData.find(expert => expert._id === expertId);
       if (expert) {
@@ -50,10 +63,16 @@ const ExpertGraph = () => {
       }
     });
 
+    const totalCalls = Object.values(expertCalls).reduce((acc, val) => acc + val, 0);
     const chartData = Object.entries(expertCalls);
     chartData.sort((a, b) => b[1] - a[1]);
     const labels = chartData.map((data) => data[0]);
     const counts = chartData.map((data) => data[1]);
+
+    const dataValues = representation === 'percentage'
+      ? counts.map(count => (count / totalCalls * 100).toFixed(2))
+      : counts;
+
     const ctx = document.getElementById('expertCallChart');
 
     if (chart) {
@@ -68,8 +87,8 @@ const ExpertGraph = () => {
             labels: labels,
             datasets: [
               {
-                label: 'Number of Calls per Expert',
-                data: counts,
+                label: representation === 'percentage' ? 'Percentage of Calls per Expert' : 'Number of Calls per Expert',
+                data: dataValues,
                 backgroundColor: 'rgba(69, 120, 249, 1)',
                 borderColor: 'rgba(69, 120, 249, 1)',
                 borderWidth: 0,
@@ -93,6 +112,10 @@ const ExpertGraph = () => {
                 grid: {
                   display: false,
                 },
+                title: {
+                  display: true,
+                  text: representation === 'percentage' ? 'Percentage (%)' : 'Number of Calls'
+                }
               },
               y: {
                 display: true,
@@ -102,7 +125,6 @@ const ExpertGraph = () => {
               },
             },
           },
-
         })
       );
     }
@@ -112,20 +134,49 @@ const ExpertGraph = () => {
     setTimeframe(event.target.value);
   };
 
+  const handleTypeChange = (event) => {
+    setType(event.target.value);
+  };
+
+  const handleRepresentationChange = (event) => {
+    setRepresentation(event.target.value);
+  };
+
   return (
     <div className='w-full h-full'>
       <div className='flex mt-2 justify-between items-center'>
-        <h2>Calls per Expert (Successful)</h2>
-        <div className='drop-down'>
-          <label>
-            <select value={timeframe} onChange={handleTimeframeChange}>
-              <option value="week">Week</option>
-              <option value="month">Month</option>
-              <option value="year">Year</option>
-            </select>
-          </label>
+        <h2>Calls per Expert</h2>
+        <div className='flex flex-cols-3 gap-1'>
+          <div className='drop-down'>
+            <label className='border rounded-xl p-1 border-gray-500'>
+              <select value={type} onChange={handleTypeChange}>
+                <option value="all">All Calls</option>
+                <option value="successful">Successful</option>
+                <option value="failed">Failed</option>
+                <option value="missed">Missed</option>
+              </select>
+            </label>
+          </div>
+          <div className='drop-down'>
+            <label className='border border-gray-500 rounded-xl p-1'>
+              <select value={timeframe} onChange={handleTimeframeChange}>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+              </select>
+            </label>
+          </div>
+          <div className='drop-down'>
+            <label className='border border-gray-500 rounded-xl p-1'>
+              <select value={representation} onChange={handleRepresentationChange}>
+                <option value="absolute">Absolute</option>
+                <option value="percentage">Percentage</option>
+              </select>
+            </label>
+          </div>
         </div>
       </div>
+      <div className='border-t mt-1 border-neutral-600' />
       <div className="chart-wrapper">
         <canvas id="expertCallChart"></canvas>
       </div>
