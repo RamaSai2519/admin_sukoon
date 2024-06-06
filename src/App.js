@@ -15,7 +15,7 @@ import ApprovePage from './ApprovePage/ApprovePage'
 import './App.css';
 
 const App = () => {
-  const appVersion = '8.3.0';
+  const appVersion = '9.0.0';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
