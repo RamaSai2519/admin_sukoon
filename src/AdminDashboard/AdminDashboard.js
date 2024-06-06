@@ -18,7 +18,6 @@ import UserList from '../UserList/UserList';
 import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
-import './toggle.css'
 
 const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   const { fetchStats } = useStats();
