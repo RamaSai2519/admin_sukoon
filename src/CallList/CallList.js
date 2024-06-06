@@ -11,9 +11,10 @@ import { red, pink, green, yellow } from '@mui/material/colors';
 import writeXlsxFile from 'write-excel-file';
 import { saveAs } from 'file-saver';
 import NavMenu from '../components/NavMenu/NavMenu';
+import LazyLoad from '../components/LazyLoad/lazyload';
 
 const CallsTable = () => {
-  const { calls, fetchCalls } = useCalls();
+  const { calls } = useCalls();
   const [filters, setFilters] = useState({
     user: '',
     expert: '',
@@ -89,123 +90,118 @@ const CallsTable = () => {
 
   const downloadExcel = async () => {
     const wsData = [
-        [
-            { value: 'User' },
-            { value: 'Expert' },
-            { value: 'Time' },
-            { value: 'Duration' },
-            { value: 'Status' },
-            { value: 'Score' }
-        ]
+      [
+        { value: 'User' },
+        { value: 'Expert' },
+        { value: 'Time' },
+        { value: 'Duration' },
+        { value: 'Status' },
+        { value: 'Score' }
+      ]
     ];
 
     calls.forEach((call) => {
-        wsData.push([
-            { value: call.userName },
-            { value: call.expertName },
-            { value: new Date(call.initiatedTime).toLocaleString() },
-            { value: `${call.duration} min` },
-            { value: call.status },
-            { value: call.ConversationScore }
-        ]);
+      wsData.push([
+        { value: call.userName },
+        { value: call.expertName },
+        { value: new Date(call.initiatedTime).toLocaleString() },
+        { value: `${call.duration} min` },
+        { value: call.status },
+        { value: call.ConversationScore }
+      ]);
     });
 
     const buffer = await writeXlsxFile(wsData, {
-        headerStyle: {
-            fontWeight: 'bold'
-        },
-        buffer: true
+      headerStyle: {
+        fontWeight: 'bold'
+      },
+      buffer: true
     });
 
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, 'calls.xlsx');
-};
-
-
-
-
-  React.useEffect(() => {
-    fetchCalls();
-  }, []);
+  };
 
   return (
-    <div className="w-full overflow-auto">
-      <div className="dashboard-tile">
-        <div className='latest-wrapper'>
-          <table className="calls-table">
-            <thead>
-              <tr className="filter-row">
-                <td>
-                  <input
-                    type="text"
-                    placeholder="Search User"
-                    name="user"
-                    value={filters.user}
-                    onChange={handleFilterChange}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    placeholder="Search Expert"
-                    name="expert"
-                    value={filters.expert}
-                    onChange={handleFilterChange}
-                  />
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                  <button className='popup-button' onClick={downloadExcel}>
-                    Export
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <th onClick={() => handleSort('userName')}>
-                  User {renderSortArrow('userName')}
-                </th>
-                <th onClick={() => handleSort('expertName')}>
-                  Expert {renderSortArrow('expertName')}
-                </th>
-                <th>Time</th>
-                <th onClick={() => handleSort('duration')}>
-                  Duration {renderSortArrow('duration')}
-                </th>
-                <th style={{ textAlign: 'center' }} onClick={() => handleSort('status')}>
-                  Status {renderSortArrow('status')}
-                </th>
-                <th onClick={() => handleSort('ConversationScore')}>
-                  Score {renderSortArrow('ConversationScore')}
-                </th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCalls.map((call) => (
-                <tr key={call.callId} className='default-row'>
-                  <td>{renderStatusIcon(call.status)} {call.userName}</td>
-                  <td>{call.expertName}</td>
-                  <td>{new Date(call.initiatedTime).toLocaleString()}</td>
-                  <td>{call.duration} min</td>
-                  <td style={{ textAlign: 'center' }}>{call.status}</td>
-                  <td>{call.ConversationScore}</td>
+    <LazyLoad>
+      <div className="w-full overflow-auto">
+        <div className="dashboard-tile">
+          <div className='latest-wrapper'>
+            <table className="calls-table">
+              <thead>
+                <tr className="filter-row">
                   <td>
-                    <Link to={`/admin/calls/${call.callId}`} className="view-details-link">
-                      View
-                    </Link>
+                    <input
+                      type="text"
+                      placeholder="Search User"
+                      name="user"
+                      value={filters.user}
+                      onChange={handleFilterChange}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      placeholder="Search Expert"
+                      name="expert"
+                      value={filters.expert}
+                      onChange={handleFilterChange}
+                    />
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <button className='popup-button' onClick={downloadExcel}>
+                      Export
+                    </button>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <NavMenu />
-          <ScrollBottom />
+                <tr>
+                  <th onClick={() => handleSort('userName')}>
+                    User {renderSortArrow('userName')}
+                  </th>
+                  <th onClick={() => handleSort('expertName')}>
+                    Expert {renderSortArrow('expertName')}
+                  </th>
+                  <th>Time</th>
+                  <th onClick={() => handleSort('duration')}>
+                    Duration {renderSortArrow('duration')}
+                  </th>
+                  <th style={{ textAlign: 'center' }} onClick={() => handleSort('status')}>
+                    Status {renderSortArrow('status')}
+                  </th>
+                  <th onClick={() => handleSort('ConversationScore')}>
+                    Score {renderSortArrow('ConversationScore')}
+                  </th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCalls.map((call) => (
+                  <tr key={call.callId} className='default-row'>
+                    <td>{renderStatusIcon(call.status)} {call.userName}</td>
+                    <td>{call.expertName}</td>
+                    <td>{new Date(call.initiatedTime).toLocaleString()}</td>
+                    <td>{call.duration} min</td>
+                    <td style={{ textAlign: 'center' }}>{call.status}</td>
+                    <td>{call.ConversationScore}</td>
+                    <td>
+                      <Link to={`/admin/calls/${call.callId}`} className="view-details-link">
+                        View
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <NavMenu />
+            <ScrollBottom />
+          </div>
         </div>
       </div>
-    </div>
+    </LazyLoad>
   );
 };
 

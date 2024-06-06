@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const DashboardTile = ({ title, msg, children, style, onClick, pointer = "default" }) => {
+const DashboardTile = ({ title, msg, children, style, onClick, pointer = "default", toggle }) => {
     const [showTooltip, setShowTooltip] = useState(false);
 
     const tooltipStyle = {
@@ -10,9 +10,10 @@ const DashboardTile = ({ title, msg, children, style, onClick, pointer = "defaul
         color: '#fff',
         textAlign: 'center',
         borderRadius: '6px',
-        padding: '5px 0',
+        padding: '5px',
         position: 'absolute',
-        left: '50%',
+        bottom: "15%",
+        right: 0,
         zIndex: 1,
         opacity: showTooltip ? 1 : 0,
         transition: 'opacity 0.3s',
@@ -37,14 +38,14 @@ const DashboardTile = ({ title, msg, children, style, onClick, pointer = "defaul
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
         >
-            <h3 className='text-2xl font-bold'>{title}</h3>
-            {children}
             {msg &&
                 <div style={tooltipStyle}>
                     {msg}
                     <div style={arrowStyle}></div>
                 </div>
             }
+            <h3 className='text-2xl font-bold'>{title}</h3>
+            {children}
         </div>
     );
 };

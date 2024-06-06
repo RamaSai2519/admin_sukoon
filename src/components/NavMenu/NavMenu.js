@@ -21,23 +21,8 @@ const NavMenu = () => {
                 <FaBars />
             </div>
             {showMenu && (
-                <div
-                    style={{ alignItems: "flex-end" }}
+                <div style={{ alignItems: "flex-end" }}
                     className="fixed right-2 z-10 bottom-20 text-right flex flex-col gap-2">
-
-                    <h1
-                        className="dark:bg-lightBlack p-2 w-fit cursor-pointer rounded-full hover:scale-110 transition-all text-lg no-underline shadow-md"
-                        onClick={handleViewExpertsClick}
-                    >
-                        View All Experts
-                    </h1>
-
-                    <Link
-                        to="/admin/calls"
-                        style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                        <h1 className="dark:bg-lightBlack p-2 w-fit rounded-full hover:scale-110 transition-all text-lg no-underline">View All Calls</h1>
-                    </Link>
                     <Link
                         to="/admin/users"
                         style={{ textDecoration: "none", color: "inherit" }}

@@ -47,13 +47,18 @@ export const DataProvider = ({ children }) => {
     const [schedules, setSchedules] = useState([]);
     const [events, setEvents] = useState([]);
     const [stats, setStats] = useState({
-        totalCalls: "",
-        successfulCalls: "",
+        totalCalls: 0,
         todayCalls: 0,
+        successfulCalls: 0,
         todaySuccessfulCalls: 0,
-        averageCallDuration: "",
-        failedCalls: "",
+        failedCalls: 0,
         todayFailedCalls: 0,
+        missedCalls: 0,
+        todayMissedCalls: 0,
+        averageCallDuration: "",
+        totalDuration: 0,
+        scheduledCallsPercentage: 0,
+        averageConversationScore: 0,
         onlineSaarthis: []
     });
 

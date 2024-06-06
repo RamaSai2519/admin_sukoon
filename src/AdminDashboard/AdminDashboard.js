@@ -5,11 +5,11 @@ import SaarthisTab from './DashboardTabs/ExpertsTab';
 import UsersTab from './DashboardTabs/UsersTab';
 import ApplicationsTab from './DashboardTabs/ApplicationsTab';
 import SchedulerTab from './DashboardTabs/SchedulerTab';
-import ScrollBottom from './ScrollBottom';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import useMediaQuery from '../services/useMediaQueryHook';
 import ThemeToggle from '../components/ThemeToggle/toggle';
 import ErrorLogsComponent from './DashboardTabs/Notifications';
-import NavMenu from '../components/NavMenu/NavMenu';
 import Raxios from '../services/axiosHelper';
 import { useStats, useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
 import LazyLoad from '../components/LazyLoad/lazyload';
@@ -30,21 +30,10 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   const { fetchErrorLogs } = useErrorLogs();
 
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    const fetchData = async () => {
-      await Promise.all([
-        fetchCalls(),
-        fetchExperts(),
-        fetchUsers(),
-        fetchLeads(),
-        fetchSchedules(),
-        fetchApplications(),
-        fetchErrorLogs(),
-        fetchStats(),
-      ]);
-    };
     fetchData();
 
     const storedTab = localStorage.getItem('adminActiveTab');
@@ -59,6 +48,26 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     localStorage.setItem('adminActiveTab', activeTab);
   }, [activeTab]);
 
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
+          .catch((err) => {
+            console.error('Service worker registration failed: ', err);
+          });
+      });
+    }
+
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+    getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
+      .then((currentToken) => {
+        if (currentToken) {
+          sendFCMTokenToServer(currentToken);
+        }
+      })
+  }, []);
+
   const sendFCMTokenToServer = async (token) => {
     try {
       await Raxios.post('/service/save-fcm-token', { token });
@@ -67,25 +76,18 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     }
   };
 
-  // useEffect(() => {
-  //   if ('serviceWorker' in navigator) {
-  //     window.addEventListener('load', () => {
-  //       navigator.serviceWorker.register('/firebase-messaging-sw.js')
-  //         .catch((err) => {
-  //           console.error('Service worker registration failed: ', err);
-  //         });
-  //     });
-  //   }
-
-  //   const app = initializeApp(firebaseConfig);
-  //   const messaging = getMessaging(app);
-  //   getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
-  //     .then((currentToken) => {
-  //       if (currentToken) {
-  //         sendFCMTokenToServer(currentToken);
-  //       }
-  //     })
-  // }, []);
+  const fetchData = async () => {
+    await Promise.all([
+      fetchCalls(),
+      fetchExperts(),
+      fetchUsers(),
+      fetchLeads(),
+      fetchSchedules(),
+      fetchApplications(),
+      fetchErrorLogs(),
+      fetchStats(),
+    ]);
+  };
 
   const Tab = ({ label, onClick, active }) => (
     <div
@@ -122,45 +124,45 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     }
   };
 
+  const onMenuToggle = () => {
+    setShowMenu(!showMenu);
+  };
+
   return (
     <LazyLoad>
-      {isDesktop ? (
-        <div className="flex flex-row">
-          <div className="flex flex-col h-screen p-4 w-1/8 justify-start bg-gray-100 dark:bg-darkBlack">
-            <img src="/logo.svg" alt="logo" className="max-h-24" />
-            {['dashboard', 'users', 'calls', 'experts', 'applications', 'events', 'scheduler', 'notifications'].map((tab) => (
-              <Tab
-                key={tab}
-                label={tab.charAt(0).toUpperCase() + tab.slice(1)}
-                onClick={() => setActiveTab(tab)}
-                active={activeTab === tab}
-              />
-            ))}
-            <Tab label="Logout" onClick={onLogout} />
-            <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <div className="flex flex-row">
+        {!showMenu ? (
+          <div className="fixed z-50 left-0 top-1" onClick={onMenuToggle}>
+            <KeyboardArrowRightIcon className="cursor-pointer" />
           </div>
-
-          <div className="flex-1 p-4">{renderTabContent()}</div>
-        </div>
-      ) : (
-        <div className="container px-5">
-          <div className="flex flex-row flex-wrap gap-4 justify-center">
-            {['dashboard', 'users', 'calls', 'experts', 'applications', 'events', 'scheduler', 'notifications'].map((tab) => (
-              <Tab
-                key={tab}
-                label={tab.charAt(0).toUpperCase() + tab.slice(1)}
-                onClick={() => setActiveTab(tab)}
-                active={activeTab === tab}
-              />
-            ))}
+        ) : (
+          <div className={`fixed z-50 left-0 top-0 flex flex-row w-screen bg-opacity-70 bg-black ${showMenu ? 'slide-in' : 'slide-out'}`}>
+            <div className={`flex flex-col h-screen p-4 w-1/8 bg-gray-100 dark:bg-darkBlack ${showMenu ? 'slide-in' : 'slide-out'}`}>
+              <img src="/logo.svg" alt="logo" className="max-h-24" />
+              <div className='flex flex-col h-full justify-between'>
+                <div>
+                  {['dashboard', 'users', 'calls', 'experts', 'applications', 'events', 'scheduler', 'notifications'].map((tab) => (
+                    <Tab
+                      key={tab}
+                      label={tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      onClick={() => setActiveTab(tab)}
+                      active={activeTab === tab}
+                    />
+                  ))}
+                </div>
+                <div className='grid grid-rows-2'>
+                  <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+                  <Tab label="Logout" onClick={onLogout} />
+                </div>
+              </div>
+            </div>
+            <div className='grid w-screen h-screen items-center cursor-pointer' onClick={onMenuToggle} >
+              <KeyboardArrowLeftIcon />
+            </div>
           </div>
-
-          {renderTabContent()}
-
-          <NavMenu />
-          <ScrollBottom />
-        </div>
-      )}
+        )}
+        <div className="flex-1 px-4 min-h-screen">{renderTabContent()}</div>
+      </div>
     </LazyLoad>
   );
 };
