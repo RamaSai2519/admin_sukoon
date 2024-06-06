@@ -57,22 +57,10 @@ const LastFiveCallsTable = () => {
       render: (text) => new Date(text).toLocaleString(),
     },
     {
-      title: 'Duration',
-      dataIndex: 'duration',
-      key: 'duration',
-      render: (text) => `${text} min`,
-    },
-    {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
       sorter: (a, b) => a.status.localeCompare(b.status),
-    },
-    {
-      title: 'Score',
-      dataIndex: 'ConversationScore',
-      key: 'ConversationScore',
-      sorter: (a, b) => a.ConversationScore - b.ConversationScore,
     },
     {
       title: 'Details',
