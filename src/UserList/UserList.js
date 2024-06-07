@@ -4,7 +4,7 @@ import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import { useUsers } from '../services/useData';
 import writeXlsxFile from 'write-excel-file';
 import { saveAs } from 'file-saver';
-import NavMenu from '../components/NavMenu/NavMenu';
+import LazyLoad from '../components/LazyLoad/lazyload';
 import './UserList.css';
 
 const UsersList = () => {
@@ -98,95 +98,96 @@ const UsersList = () => {
     saveAs(blob, 'UserList.xlsx');
   };
 
-
   React.useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line
   }, []);
 
   return (
-    <div className="container min-h-screen px-5 w-full overflow-auto">
-      <table className="users-table mt-5">
-        <thead>
-          <tr className="filter-row">
-            <td>
-              <input
-                type="text"
-                placeholder="Search User"
-                name="user"
-                value={filters.name}
-                onChange={handleFilterChange}
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                placeholder="Filter City"
-                name="city"
-                value={filters.city}
-                onChange={handleFilterChange}
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                placeholder="Filter Phone Number"
-                name="phoneNumber"
-                value={filters.phoneNumber}
-                onChange={handleFilterChange}
-              />
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-              <button className='popup-button' onClick={downloadExcel}>
-                Export
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th onClick={() => handleSort('name')}>
-              User {renderSortArrow('name')}
-            </th>
-            <th onClick={() => handleSort('city')}>
-              City {renderSortArrow('city')}
-            </th>
-            <th onClick={() => handleSort('phoneNumber')}>
-              Number {renderSortArrow('phoneNumber')}
-            </th>
-            <th onClick={() => handleSort('createdDate')}>
-              Joined Date {renderSortArrow('createdDate')}
-            </th>
-            <th onClick={() => handleSort('birthDate')}>
-              DOB {renderSortArrow('birthDate')}
-            </th>
-            <th onClick={() => handleSort('numberOfCalls')}>
-              Balance {renderSortArrow('numberOfCalls')}
-            </th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.reverse().map((user) => (
-            <tr key={user._id} className="row">
-              <td>{user.name}</td>
-              <td>{user.city}</td>
-              <td>{user.phoneNumber}</td>
-              <td>{new Date(user.createdDate).toLocaleDateString()}</td>
-              <td>{new Date(user.birthDate).toLocaleDateString()}</td>
-              <td>{user.numberOfCalls}</td>
+    <LazyLoad>
+      <div className="min-h-screen px-5 w-full overflow-auto">
+        <table className="users-table mt-5">
+          <thead>
+            <tr className="filter-row">
               <td>
-                <Link to={`/admin/users/${user._id}`} className="view-details-link">
-                  View
-                </Link>
+                <input
+                  type="text"
+                  placeholder="Search User"
+                  name="user"
+                  value={filters.name}
+                  onChange={handleFilterChange}
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  placeholder="Filter City"
+                  name="city"
+                  value={filters.city}
+                  onChange={handleFilterChange}
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  placeholder="Filter Phone Number"
+                  name="phoneNumber"
+                  value={filters.phoneNumber}
+                  onChange={handleFilterChange}
+                />
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>
+                <button className='popup-button' onClick={downloadExcel}>
+                  Export
+                </button>
               </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <ScrollBottom />
-      <NavMenu />
-    </div>
+            <tr>
+              <th onClick={() => handleSort('name')}>
+                User {renderSortArrow('name')}
+              </th>
+              <th onClick={() => handleSort('city')}>
+                City {renderSortArrow('city')}
+              </th>
+              <th onClick={() => handleSort('phoneNumber')}>
+                Number {renderSortArrow('phoneNumber')}
+              </th>
+              <th onClick={() => handleSort('createdDate')}>
+                Joined Date {renderSortArrow('createdDate')}
+              </th>
+              <th onClick={() => handleSort('birthDate')}>
+                DOB {renderSortArrow('birthDate')}
+              </th>
+              <th onClick={() => handleSort('numberOfCalls')}>
+                Balance {renderSortArrow('numberOfCalls')}
+              </th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.reverse().map((user) => (
+              <tr key={user._id} className="row">
+                <td>{user.name}</td>
+                <td>{user.city}</td>
+                <td>{user.phoneNumber}</td>
+                <td>{new Date(user.createdDate).toLocaleDateString()}</td>
+                <td>{new Date(user.birthDate).toLocaleDateString()}</td>
+                <td>{user.numberOfCalls}</td>
+                <td>
+                  <Link to={`/admin/users/${user._id}`} className="view-details-link">
+                    View
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <ScrollBottom />
+      </div>
+    </LazyLoad>
   );
 };
 

@@ -3,12 +3,10 @@ import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import Raxios from '../services/axiosHelper';
 import './UserDetails.css';
-import NavMenu from '../components/NavMenu/NavMenu';
 import LazyLoad from '../components/LazyLoad/lazyload';
 
 const UserDetails = () => {
   const { userId } = useParams();
-  const [user, setUser] = useState(null);
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [city, setCity] = useState('');
@@ -22,7 +20,6 @@ const UserDetails = () => {
     const fetchData = async () => {
       try {
         const response = await Raxios.get(`/user/users/${userId}`);
-        setUser(response.data);
         setName(response.data.name);
         setPhoneNumber(response.data.phoneNumber);
         setCity(response.data.city);
@@ -49,7 +46,6 @@ const UserDetails = () => {
       context,
     })
       .then(response => {
-        setUser(response.data);
         window.alert('User details updated successfully.');
         setEditMode(false);
       })
@@ -159,7 +155,6 @@ const UserDetails = () => {
             </div>
           </div>
         </div>
-        <NavMenu />
       </div>
     </LazyLoad>
   );

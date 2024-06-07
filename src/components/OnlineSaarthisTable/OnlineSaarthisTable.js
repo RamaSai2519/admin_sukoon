@@ -24,7 +24,7 @@ const OnlineSaarthisTable = ({ onlineSaarthis }) => {
   });
 
   return (
-    <div className="w-full h-32 overflow-auto">
+    <div className="w-full h-full overflow-auto">
       <table className="w-full mt-2">
         <thead>
         </thead>

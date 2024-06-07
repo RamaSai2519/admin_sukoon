@@ -18,7 +18,7 @@ const UsersTab = () => {
   const [moreThanTwoCallsUsers, setMoreThanTwoCallsUsers] = useState([]);
   const [currentDayPartialSignups, setCurrentDayPartialSignups] = useState([]);
   const [popupContent, setPopupContent] = useState({ title: '', users: [] });
-
+  
   useEffect(() => {
     const currentDate = new Date().toLocaleDateString();
     const currentDayTotalUsersCount = users.filter(user => new Date(user.createdDate).toLocaleDateString() === currentDate).length;

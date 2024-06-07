@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Raxios from '../services/axiosHelper';
 import { useParams, Link } from 'react-router-dom';
-import NavMenu from '../components/NavMenu/NavMenu';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useCategories } from '../services/useData';
 import { Select, ConfigProvider, theme } from 'antd';
@@ -50,6 +49,7 @@ const ExpertDetails = () => {
       .catch(error => {
         console.error('Error fetching expert details:', error);
       });
+      // eslint-disable-next-line
   }, [expertId]);
 
   const handleCategoryChange = (value) => {
@@ -252,7 +252,6 @@ const ExpertDetails = () => {
             </div>
           </div>
         )}
-        <NavMenu />
       </div>
     </ConfigProvider>
   );

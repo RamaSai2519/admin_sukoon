@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import Header from './components/Header/Header';
 import AdminLogin from './AdminLogin/AdminLogin'
 import AdminDashboard from './AdminDashboard/AdminDashboard';
 import UsersList from './UserList/UserList';
