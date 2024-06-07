@@ -50,25 +50,25 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     localStorage.setItem('adminActiveTab', activeTab);
   }, [activeTab]);
 
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/firebase-messaging-sw.js')
-          .catch((err) => {
-            console.error('Service worker registration failed: ', err);
-          });
-      });
-    }
+  // useEffect(() => {
+  //   if ('serviceWorker' in navigator) {
+  //     window.addEventListener('load', () => {
+  //       navigator.serviceWorker.register('/firebase-messaging-sw.js')
+  //         .catch((err) => {
+  //           console.error('Service worker registration failed: ', err);
+  //         });
+  //     });
+  //   }
 
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
-    getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
-      .then((currentToken) => {
-        if (currentToken) {
-          sendFCMTokenToServer(currentToken);
-        }
-      })
-  }, []);
+  //   const app = initializeApp(firebaseConfig);
+  //   const messaging = getMessaging(app);
+  //   getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
+  //     .then((currentToken) => {
+  //       if (currentToken) {
+  //         sendFCMTokenToServer(currentToken);
+  //       }
+  //     })
+  // }, []);
 
   const sendFCMTokenToServer = async (token) => {
     try {
@@ -134,8 +134,8 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     <LazyLoad>
       <div className="flex flex-row">
         {!showMenu ? (
-          <div className="fixed z-50 left-0 top-1" onClick={onMenuToggle}>
-            <KeyboardArrowRightIcon className="cursor-pointer" />
+          <div className="fixed z-50 left-0 top-0 rounded-r-full rounded-br-full h-screen cursor-pointer bg-black bg-opacity-50 flex items-center" onClick={onMenuToggle}>
+            <KeyboardArrowRightIcon />
           </div>
         ) : (
           <div className={`fixed z-50 left-0 top-0 flex flex-row w-screen bg-opacity-70 bg-black ${showMenu ? 'slide-in' : 'slide-out'}`}>
