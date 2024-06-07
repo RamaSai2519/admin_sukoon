@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table } from 'antd';
 import mockData from '../mockData';
 
@@ -18,7 +18,7 @@ const columns = [
 const DataTable = ({ data }) => (
     <div className='overflow-auto'>
         <Table
-        
+
             columns={columns}
             dataSource={data}
             pagination={false}
