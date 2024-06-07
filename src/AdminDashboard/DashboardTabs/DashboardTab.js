@@ -49,9 +49,6 @@ const DashboardTab = () => {
               <h1>{stats.missedCalls}</h1>
               <h4>Today: {stats.todayMissedCalls}</h4>
             </DashboardTile>
-            <DashboardTile title="Online Saarthis" style={{ "grid-row": "1 / span 2", "grid-column": "5" }}>
-              <OnlineSaarthisTable onlineSaarthis={stats.onlineSaarthis} />
-            </DashboardTile>
             <DashboardTile title="Avg. Duration">
               <h1>{stats.averageCallDuration}</h1>
               <p className='text-right w-full'>&gt;1m</p>
@@ -68,8 +65,11 @@ const DashboardTab = () => {
               <h1>{stats.averageConversationScore}</h1>
               <p className='text-right w-full'>all calls</p>
             </DashboardTile>
-            <DashboardTile title='Latest Calls' style={{ "grid-column": "1 / 5" }}><LastFiveCallsTable /></DashboardTile>
-            <DashboardTile title='Insights Coming Soon...'>
+            <DashboardTile title="Online Saarthis" style={{ "grid-row": "1 / span 2", "grid-column": "5" }}>
+              <OnlineSaarthisTable onlineSaarthis={stats.onlineSaarthis} />
+            </DashboardTile>
+            <DashboardTile title='Latest Calls' style={{ "grid-column": "1 / 4" }}><LastFiveCallsTable /></DashboardTile>
+            <DashboardTile title='Insights Coming Soon...' style={{"grid-column": "4 / span 2"}} >
               <DynamicTable view={view} handleToggle={handleToggle} />
               <Switch
                 checkedChildren="Next"

@@ -10,7 +10,6 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import ThemeToggle from '../components/ThemeToggle/toggle';
 import ErrorLogsComponent from './DashboardTabs/Notifications';
 import Raxios from '../services/axiosHelper';
-import { useStats, useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import EventsTab from './DashboardTabs/EventsTab';
 import CallsTable from '../CallList/CallList';
@@ -18,6 +17,7 @@ import UserList from '../UserList/UserList';
 import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
+import { useStats, useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
 
 const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   const { fetchStats } = useStats();
@@ -95,7 +95,10 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     <div
       className={`cshadow p-2 px-4 my-2 rounded-3xl font-bold text-xl hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack ${active ? 'scale-110' : ''
         }`}
-      onClick={onClick}
+      onClick={() => {
+        onClick();
+        setShowMenu(false); // Close the menu when a tab is selected
+      }}
     >
       {label}
     </div>
@@ -130,15 +133,23 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     setShowMenu(!showMenu);
   };
 
+  const handleMouseEnter = () => {
+    setShowMenu(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowMenu(false);
+  };
+
   return (
     <LazyLoad>
       <div className="flex flex-row">
         {!showMenu ? (
-          <div className="fixed z-50 left-0 top-0 rounded-r-full rounded-br-full h-screen cursor-pointer bg-black bg-opacity-50 flex items-center" onClick={onMenuToggle}>
+          <div className="fixed z-50 left-0 top-0 rounded-r-full rounded-br-full h-screen cursor-pointer bg-black bg-opacity-50 flex items-center" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <KeyboardArrowRightIcon />
           </div>
         ) : (
-          <div className={`fixed z-50 left-0 top-0 flex flex-row w-screen bg-opacity-70 bg-black ${showMenu ? 'slide-in' : 'slide-out'}`}>
+          <div className={`fixed z-50 left-0 top-0 flex flex-row w-screen bg-opacity-70 bg-black ${showMenu ? 'slide-in' : 'slide-out'}`} onClick={onMenuToggle}>
             <div className={`flex flex-col h-screen p-4 w-1/8 bg-gray-100 dark:bg-darkBlack ${showMenu ? 'slide-in' : 'slide-out'}`}>
               <img src="/logo.svg" alt="logo" className="max-h-24" />
               <div className='flex flex-col h-full justify-between'>

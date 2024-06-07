@@ -26,7 +26,7 @@ const DataTable = ({ data }) => (
     </div>
 );
 
-const DynamicTable = ({ view, handleToggle }) => {
+const DynamicTable = ({ view }) => {
     return (
         <div className='w-full h-full'>
             {view === 'successfulCalls' && <DataTable data={mockData.successfulCalls} />}
