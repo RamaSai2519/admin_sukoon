@@ -68,18 +68,15 @@ const DashboardTab = () => {
               <h1>{stats.averageConversationScore}</h1>
               <p className='text-right w-full'>all calls</p>
             </DashboardTile>
-            <DashboardTile title='Latest Calls' style={{ "grid-column": "1 / 5"}}><LastFiveCallsTable /></DashboardTile>
+            <DashboardTile title='Latest Calls' style={{ "grid-column": "1 / 5" }}><LastFiveCallsTable /></DashboardTile>
             <DashboardTile title='Insights Coming Soon...'>
-              {/* <DynamicTable view={view} handleToggle={handleToggle} />
+              <DynamicTable view={view} handleToggle={handleToggle} />
               <Switch
                 checkedChildren="Next"
                 unCheckedChildren="Next"
                 onChange={handleToggle}
-              /> */}
+              />
             </DashboardTile>
-          </div>
-          <div id='tables-grid' className='grid grid-cols-2'>
-            
           </div>
           <div id='graphs-grid' className='grid md:grid-cols-2 w-full h-full'>
             <DashboardTile title='Call Graph'><CallGraph /></DashboardTile>
