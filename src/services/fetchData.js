@@ -36,6 +36,15 @@ export const fetchStats = async (setStats) => {
     }
 };
 
+export const fetchInsights = async (setInsights) => {
+    try {
+        const response = await Raxios.get('/service/callinsights');
+        setInsights(response.data);
+    } catch (error) {
+        console.error('Error fetching insights:', error);
+    }
+};
+
 export const fetchLeads = async (setLeads) => {
     try {
         const response = await Raxios.get('/user/leads');
