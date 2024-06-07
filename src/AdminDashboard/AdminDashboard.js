@@ -50,25 +50,25 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
     localStorage.setItem('adminActiveTab', activeTab);
   }, [activeTab]);
 
-  // useEffect(() => {
-  //   if ('serviceWorker' in navigator) {
-  //     window.addEventListener('load', () => {
-  //       navigator.serviceWorker.register('/firebase-messaging-sw.js')
-  //         .catch((err) => {
-  //           console.error('Service worker registration failed: ', err);
-  //         });
-  //     });
-  //   }
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
+          .catch((err) => {
+            console.error('Service worker registration failed: ', err);
+          });
+      });
+    }
 
-  //   const app = initializeApp(firebaseConfig);
-  //   const messaging = getMessaging(app);
-  //   getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
-  //     .then((currentToken) => {
-  //       if (currentToken) {
-  //         sendFCMTokenToServer(currentToken);
-  //       }
-  //     })
-  // }, []);
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+    getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
+      .then((currentToken) => {
+        if (currentToken) {
+          sendFCMTokenToServer(currentToken);
+        }
+      })
+  }, []);
 
   const sendFCMTokenToServer = async (token) => {
     try {
