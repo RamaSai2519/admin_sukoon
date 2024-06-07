@@ -49,6 +49,7 @@ const ExpertDetails = () => {
       .catch(error => {
         console.error('Error fetching expert details:', error);
       });
+      // eslint-disable-next-line
   }, [expertId]);
 
   const handleCategoryChange = (value) => {

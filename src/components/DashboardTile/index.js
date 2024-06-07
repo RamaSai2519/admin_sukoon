@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const DashboardTile = ({ title, msg, children, style, onClick, pointer = "default", toggle }) => {
+const DashboardTile = ({ title, msg, children, style, onClick, pointer = "default" }) => {
     const [showTooltip, setShowTooltip] = useState(false);
 
     const tooltipStyle = {

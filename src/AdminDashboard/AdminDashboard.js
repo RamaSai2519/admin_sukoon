@@ -80,6 +80,7 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
 
   const fetchData = async () => {
     await Promise.all([
+      fetchStats(),
       fetchCalls(),
       fetchExperts(),
       fetchUsers(),
@@ -87,7 +88,6 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
       fetchSchedules(),
       fetchApplications(),
       fetchErrorLogs(),
-      fetchStats(),
     ]);
   };
 
