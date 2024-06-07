@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'antd';
-import mockData from '../mockData';
+import { useInsights } from '../../services/useData';
 
 const columns = [
     {
@@ -18,7 +18,7 @@ const columns = [
 const DataTable = ({ data }) => (
     <div className='overflow-auto'>
         <Table
-
+            rowKey={(record) => record.category}
             columns={columns}
             dataSource={data}
             pagination={false}
@@ -26,12 +26,14 @@ const DataTable = ({ data }) => (
     </div>
 );
 
-const DynamicTable = ({ view, handleToggle }) => {
+const DynamicTable = ({ view }) => {
+    const { insights } = useInsights();
+
     return (
-        <div className='w-full h-full'>
-            {view === 'successfulCalls' && <DataTable data={mockData.successfulCalls} />}
-            {view === 'avgCallDuration' && <DataTable data={mockData.avgCallDuration} />}
-            {view === 'otherStats' && <DataTable data={mockData.otherStats} />}
+        <div className='w-full'>
+            {view === 'Split By Duration' && <DataTable data={insights.successfulCalls} />}
+            {view === 'Average Call Durations' && <DataTable data={insights.avgCallDuration} />}
+            {view === 'Split Of Calls' && <DataTable data={insights.otherStats} />}
         </div>
     );
 };
