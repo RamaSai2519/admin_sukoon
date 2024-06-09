@@ -17,11 +17,9 @@ import UserList from '../UserList/UserList';
 import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
-import { useStats, useInsights, useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
+import { useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
 
 const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
-  const { fetchStats } = useStats();
-  const { fetchInsights } = useInsights();
   const { fetchCalls } = useCalls();
   const { fetchExperts } = useExperts();
   const { fetchUsers } = useUsers();
@@ -52,23 +50,27 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   }, [activeTab]);
 
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/firebase-messaging-sw.js')
-          .catch((err) => {
-            console.error('Service worker registration failed: ', err);
-          });
-      });
-    }
+    try {
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/firebase-messaging-sw.js')
+            .catch((err) => {
+              console.error('Service worker registration failed: ', err);
+            });
+        });
+      }
 
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
-    getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
-      .then((currentToken) => {
-        if (currentToken) {
-          sendFCMTokenToServer(currentToken);
-        }
-      })
+      const app = initializeApp(firebaseConfig);
+      const messaging = getMessaging(app);
+      getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
+        .then((currentToken) => {
+          if (currentToken) {
+            sendFCMTokenToServer(currentToken);
+          }
+        })
+    } catch (error) {
+      console.error('Failed to initialize Firebase:', error);
+    }
   }, []);
 
   const sendFCMTokenToServer = async (token) => {
@@ -81,8 +83,6 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
 
   const fetchData = async () => {
     await Promise.all([
-      fetchStats(),
-      fetchInsights(),
       fetchCalls(),
       fetchExperts(),
       fetchUsers(),

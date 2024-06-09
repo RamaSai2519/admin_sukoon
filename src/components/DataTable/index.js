@@ -26,8 +26,13 @@ const DataTable = ({ data }) => (
     </div>
 );
 
-const DynamicTable = ({ view }) => {
-    const { insights } = useInsights();
+const InsightsTable = ({ view }) => {
+    const { insights, fetchInsights } = useInsights();
+
+    React.useEffect(() => {
+        fetchInsights();
+        // eslint-disable-next-line
+    }, []);
 
     return (
         <div className='w-full'>
@@ -38,4 +43,4 @@ const DynamicTable = ({ view }) => {
     );
 };
 
-export default DynamicTable;
+export default InsightsTable;
