@@ -17,11 +17,9 @@ import UserList from '../UserList/UserList';
 import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
-import { useStats, useInsights, useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
+import { useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
 
 const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
-  const { fetchStats } = useStats();
-  const { fetchInsights } = useInsights();
   const { fetchCalls } = useCalls();
   const { fetchExperts } = useExperts();
   const { fetchUsers } = useUsers();
@@ -85,8 +83,6 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
 
   const fetchData = async () => {
     await Promise.all([
-      fetchStats(),
-      fetchInsights(),
       fetchCalls(),
       fetchExperts(),
       fetchUsers(),

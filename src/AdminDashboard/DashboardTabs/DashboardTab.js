@@ -9,13 +9,18 @@ import LastFiveCallsTable from '../../components/LastFiveCallsTable/LastFiveCall
 import { useStats } from '../../services/useData';
 import DashboardTile from '../../components/DashboardTile';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import DynamicTable from '../../components/DataTable';
+import InsightsTable from '../../components/DataTable';
 import { Button, ConfigProvider, theme } from 'antd';
 
 const DashboardTab = () => {
-  const { stats } = useStats();
+  const { stats, fetchStats } = useStats();
   const [view, setView] = React.useState('Split By Duration');
   const darkMode = localStorage.getItem('darkMode') === 'true';
+
+  React.useEffect(() => {
+    fetchStats();
+    // eslint-disable-next-line
+  }, []);
 
   const handleToggle = () => {
     if (view === 'Split By Duration') {
@@ -76,7 +81,7 @@ const DashboardTab = () => {
               </DashboardTile>
               <DashboardTile title='Latest Calls' style={{ "grid-column": "1 / 5" }}><LastFiveCallsTable /></DashboardTile>
               <DashboardTile title={view} style={{ "grid-column": "5 / span 1" }} >
-                <DynamicTable view={view} handleToggle={handleToggle} />
+                <InsightsTable view={view} handleToggle={handleToggle} />
                 <div className='w-full flex items-center justify-end'>
                   <Button className='mt-1' onClick={handleToggle}>
                     Next
