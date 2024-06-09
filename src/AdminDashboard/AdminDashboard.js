@@ -9,14 +9,10 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import ThemeToggle from '../components/ThemeToggle/toggle';
 import ErrorLogsComponent from './DashboardTabs/Notifications';
-import Raxios from '../services/axiosHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import EventsTab from './DashboardTabs/EventsTab';
 import CallsTable from '../CallList/CallList';
 import UserList from '../UserList/UserList';
-import { firebaseConfig } from './firebaseConfig';
-import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
 import { useStats, useInsights, useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
 
 const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
@@ -50,34 +46,6 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   useEffect(() => {
     localStorage.setItem('adminActiveTab', activeTab);
   }, [activeTab]);
-
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/firebase-messaging-sw.js')
-          .catch((err) => {
-            console.error('Service worker registration failed: ', err);
-          });
-      });
-    }
-
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
-    getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
-      .then((currentToken) => {
-        if (currentToken) {
-          sendFCMTokenToServer(currentToken);
-        }
-      })
-  }, []);
-
-  const sendFCMTokenToServer = async (token) => {
-    try {
-      await Raxios.post('/service/save-fcm-token', { token });
-    } catch (error) {
-      console.error('Failed to send FCM token to server:', error);
-    }
-  };
 
   const fetchData = async () => {
     await Promise.all([
