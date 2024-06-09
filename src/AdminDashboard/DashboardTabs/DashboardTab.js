@@ -74,15 +74,14 @@ const DashboardTab = () => {
               <DashboardTile title="Online Saarthis" style={{ "grid-row": "1 / span 2", "grid-column": "5" }}>
                 <OnlineSaarthisTable onlineSaarthis={stats.onlineSaarthis} />
               </DashboardTile>
-              <DashboardTile title='Latest Calls' style={{ "grid-column": "1 / 4" }}><LastFiveCallsTable /></DashboardTile>
-              <DashboardTile title={view} style={{ "grid-column": "4 / span 2" }} >
+              <DashboardTile title='Latest Calls' style={{ "grid-column": "1 / 5" }}><LastFiveCallsTable /></DashboardTile>
+              <DashboardTile title={view} style={{ "grid-column": "5 / span 1" }} >
                 <DynamicTable view={view} handleToggle={handleToggle} />
-                {/* <Switch
-                checkedChildren="Next"
-                unCheckedChildren="Next"
-                onChange={handleToggle}
-              /> */}
-                <div className='w-full flex items-center justify-end'><Button className='mt-1' onClick={handleToggle}>Next</Button></div>
+                <div className='w-full flex items-center justify-end'>
+                  <Button className='mt-1' onClick={handleToggle}>
+                    Next
+                  </Button>
+                </div>
               </DashboardTile>
             </div>
             <div id='graphs-grid' className='grid md:grid-cols-2 w-full h-full'>
