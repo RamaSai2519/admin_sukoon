@@ -159,9 +159,10 @@ const UserDetails = () => {
           <div className='grid-tile w-1/2'>
             <h3>Customer Persona</h3>
             {persona && (
-              persona.map((item, index) => (
-                <h2 className='text-2xl' key={index}>{item}</h2>
-              ))
+              // persona.map((item, index) => (
+              //   <h2 className='text-2xl' key={index}>{item}</h2>
+              // ))
+              <h2 className='text-2xl' style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace' }}>{persona}</h2>
             )}
           </div>
         </div>
