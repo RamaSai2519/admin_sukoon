@@ -14,6 +14,7 @@ const UserDetails = () => {
   const [numberOfCalls, setNumberOfCalls] = useState('');
   const [source, setSource] = useState('');
   const [context, setContext] = useState([]);
+  const [persona, setPersona] = useState('');
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ const UserDetails = () => {
         setNumberOfCalls(response.data.numberOfCalls);
         setSource(response.data.source);
         setContext(response.data.context);
+        setPersona(response.data['Customer Persona']);
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
@@ -74,10 +76,10 @@ const UserDetails = () => {
 
   return (
     <LazyLoad>
-      <div className='details-container h-screen'>
+      <div className='details-container h-screen overflow-auto'>
         <div id='details-container' className='w-full p-10'>
           <div id='details-header' className='flex flex-row items-center justify-between'>
-            <h1>User Details</h1>
+            <h2 className='text-2xl'>User Details</h2>
             <button className='back-button' onClick={() => window.history.back()}>
               <FaArrowLeft className="back-icon" />
             </button>
@@ -88,7 +90,7 @@ const UserDetails = () => {
               {editMode ? (
                 <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
               ) : (
-                <h1>{name}</h1>
+                <h2 className='text-2xl'>{name}</h2>
               )}
             </div>
             <div className='grid-tile'>
@@ -96,7 +98,7 @@ const UserDetails = () => {
               {editMode ? (
                 <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
               ) : (
-                <h1>{phoneNumber}</h1>
+                <h2 className='text-2xl'>{phoneNumber}</h2>
               )}
             </div>
             <div className='grid-tile'>
@@ -104,7 +106,7 @@ const UserDetails = () => {
               {editMode ? (
                 <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
               ) : (
-                <h1>{city}</h1>
+                <h2 className='text-2xl'>{city}</h2>
               )}
             </div>
             <div className='grid-tile'>
@@ -112,7 +114,7 @@ const UserDetails = () => {
               {editMode ? (
                 <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
               ) : (
-                <h1>{birthDate}</h1>
+                <h2 className='text-2xl'>{birthDate}</h2>
               )}
             </div>
             {context && context.length > 0 && (
@@ -127,7 +129,7 @@ const UserDetails = () => {
                   />
                 ) : (
                   context.map((item, index) => (
-                    <h1 key={index}>{item}</h1>
+                    <h2 key={index}>{item}</h2>
                   ))
                 )}
               </div>
@@ -135,14 +137,14 @@ const UserDetails = () => {
             <div className='edit-button-container'>
               <div className='grid-tile'>
                 <h3>Number of Calls</h3>
-                <h1>{numberOfCalls}</h1>
+                <h2 className='text-2xl'>{numberOfCalls}</h2>
               </div>
               <div className='grid-tile'>
                 <h3>Source</h3>
                 {editMode ? (
                   <input type="text" value={source} onChange={(e) => setSource(e.target.value)} />
                 ) : (
-                  <h1>{source}</h1>
+                  <h2 className='text-2xl'>{source}</h2>
                 )}
               </div>
               {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
@@ -153,6 +155,14 @@ const UserDetails = () => {
               )}
               <button className='update-button' style={{ backgroundColor: "red" }} onClick={handleDelete}>Delete User</button>
             </div>
+          </div>
+          <div className='grid-tile w-1/2'>
+            <h3>Customer Persona</h3>
+            {persona && (
+              persona.map((item, index) => (
+                <h2 className='text-2xl' key={index}>{item}</h2>
+              ))
+            )}
           </div>
         </div>
       </div>
