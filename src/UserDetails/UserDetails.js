@@ -156,13 +156,13 @@ const UserDetails = () => {
               <button className='update-button' style={{ backgroundColor: "red" }} onClick={handleDelete}>Delete User</button>
             </div>
           </div>
-          <div className='grid-tile w-1/2'>
+          <div className='grid-tile'>
             <h3>Customer Persona</h3>
             {persona && (
               // persona.map((item, index) => (
               //   <h2 className='text-2xl' key={index}>{item}</h2>
               // ))
-              <h2 className='text-2xl' style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace' }}>{persona}</h2>
+              <h2 className='text-2xl whitespace-pre-wrap'>{persona}</h2>
             )}
           </div>
         </div>
