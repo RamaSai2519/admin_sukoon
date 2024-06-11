@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Tooltip, ConfigProvider, theme } from 'antd';
+import { Table, ConfigProvider, theme } from 'antd';
 import { FaArrowLeft } from 'react-icons/fa';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import Raxios from '../services/axiosHelper';
@@ -48,42 +48,52 @@ const UserEngagement = () => {
         lastCallDate: item.lastCallDate,
         callsDone: item.callsDone,
         remarks: item.remarks,
+        saarthi: item.saarthi
     }));
 
     const columns = [
-        { title: "POC", dataIndex: "poc", key: "poc" },
         {
-            title: "Name", dataIndex: "name", key: "name", editable: true, width: 150,
-            ellipsis: {
-                showTitle: false,
-            },
-            render: (address) => (
-                <Tooltip placement="topLeft" title={address}>
-                    {address}
-                </Tooltip>
-            ),
+            title: "POC", dataIndex: "poc", key: "poc", width: 100, editable: true,
+            filters: data.reduce((uniquePocs, item) => {
+                if (!uniquePocs.includes(item.poc)) {
+                    uniquePocs.push(item.poc);
+                }
+                return uniquePocs;
+            }, []).map((poc) => ({ text: poc, value: poc })),
+            filterSearch: true,
+            onFilter: (value, record) => record.poc.includes(value)
         },
-        { title: "DOJ / Days in SL", dataIndex: "createdDate", key: "createdDate" },
-        { title: "Status", dataIndex: "status", key: "status" },
-        { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber", editable: true },
-        { title: "City", dataIndex: "city", key: "city" },
-        { title: "DOB / Age", dataIndex: "dateOfBirth", key: "dateOfBirth" },
-        { title: "Gender", dataIndex: "gender", key: "gender" },
-        { title: "Last Call Date / Call Age", dataIndex: "lastCallDate", key: "lastCallDate" },
-        { title: "# Calls", dataIndex: "callsDone", key: "callsDone" },
         {
-            title: "Remarks", dataIndex: "remarks", key: "remarks", editable: true, ellipsis: {
-                showTitle: false,
-            },
-            render: (address) => (
-                <Tooltip placement="topLeft" title={address}>
-                    {address}
-                </Tooltip>
-            ),
+            title: "Name", dataIndex: "name", key: "name", width: 150, fixed: 'left',
+            filters: data.map((item) => ({ text: item.name, value: item.name })),
+            filterSearch: true,
+            onFilter: (value, record) => record.name.includes(value),
         },
+        { title: "DOJ / Days in SL", dataIndex: "createdDate", key: "createdDate", width: 135 },
+        { title: "Status", dataIndex: "status", key: "status", width: 100, editable: true },
+        { title: "Contact", dataIndex: "phoneNumber", key: "phoneNumber", width: 120 },
+        {
+            title: "City", dataIndex: "city", key: "city", width: 110,
+            filters: data.reduce((uniqueCities, item) => {
+                if (!uniqueCities.includes(item.city)) {
+                    uniqueCities.push(item.city);
+                }
+                return uniqueCities;
+            }, []).map((city) => ({ text: city, value: city })),
+            filterSearch: true,
+            onFilter: (value, record) => record.city.includes(value)
+        },
+        { title: "DOB / Age", dataIndex: "dateOfBirth", key: "dateOfBirth", width: 135 },
+        { title: "Gender", dataIndex: "gender", key: "gender", width: 90, editable: true },
+        { title: "Last Call Date / Call Age", dataIndex: "lastCallDate", key: "lastCallDate", width: 135 },
+        { title: "Calls", dataIndex: "callsDone", key: "callsDone", width: 70 },
+        { title: "Saarthi", dataIndex: "saarthi", key: "saarthi", width: 100, editable: true },
+        { title: "Remarks", dataIndex: "remarks", key: "remarks", width: 250, editable: true, },
         {
             title: 'Details',
             key: 'details',
+            width: 100,
+            fixed: 'right',
             render: (record) => (
                 <Link to={`/admin/users/${record.key}`} className="view-details-link">View</Link>
             ),
@@ -138,29 +148,30 @@ const UserEngagement = () => {
 
     return (
         <ConfigProvider theme={{ algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
-            <div key='parent-container' className='flex flex-col h-screen gap-2 p-10'>
+            <div key='parent-container' className='flex flex-col h-screen gap-2 p-10 pt-2 overflow-auto'>
                 <div key='back-button-container' className='flex justify-end w-full'>
-                    <button>
+                    <button className='back-button' onClick={() => window.history.back()}>
                         <FaArrowLeft className="back-icon" />
                     </button>
                 </div>
                 {loading ? <Loading /> :
                     <LazyLoad>
-                        <Table
-                            components={components}
-                            dataSource={data}
-                            columns={mergedColumns}
-                            pagination={{
-                                current: currentPage,
-                                pageSize: pageSize,
-                                total: totalItems,
-                                onChange: handleTableChange
-                            }}
-                            size='middle'
-                            scroll={{
-                                y: 'calc(100vh - 250px)',
-                            }}
-                        />
+                        <div className='flex py-5 overflow-auto w-full'>
+                            <Table
+                                components={components}
+                                dataSource={data}
+                                columns={mergedColumns}
+                                pagination={{
+                                    current: currentPage,
+                                    pageSize: pageSize,
+                                    total: totalItems,
+                                    onChange: handleTableChange
+                                }}
+                                scroll={{
+                                    x: 'calc(100vw + 100px)'
+                                }}
+                            />
+                        </div>
                     </LazyLoad>
                 }
             </div>

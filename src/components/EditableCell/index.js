@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Input, Form } from 'antd';
+import './index.css';
 
 const EditableCell = ({
     title,
@@ -37,7 +38,6 @@ const EditableCell = ({
                 <Form.Item
                     style={{ margin: 0 }}
                     name={dataIndex}
-                    rules={[{ required: true, message: `${title} is required.` }]}
                 >
                     <Input onBlur={save} onPressEnter={save} />
                 </Form.Item>

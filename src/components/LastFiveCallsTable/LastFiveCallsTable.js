@@ -105,6 +105,7 @@ const LastFiveCallsTable = () => {
       <Table
         dataSource={lastFiveCalls}
         columns={columns}
+        size='middle'
         pagination={{ pageSize: 5 }}
         className="w-full h-full mt-2"
         rowKey={(record) => record.callId}

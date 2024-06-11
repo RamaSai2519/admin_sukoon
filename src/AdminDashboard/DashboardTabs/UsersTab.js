@@ -68,7 +68,7 @@ const UsersTab = () => {
   const closePopup = () => {
     setPopupContent({ title: '', users: [] });
   };
-  
+
   const nav = useNavigate();
 
   return (
@@ -81,13 +81,13 @@ const UsersTab = () => {
         <div className="w-full min-h-screen">
           <div className="flex flex-wrap justify-between">
             <div className="w-full">
-              <div key="button-container" className='flex justify-end mr-3'>
+              <div key="button-container" className='flex justify-end m-3'>
                 <Button onClick={() => nav("/admin/userEngage")}>
                   User Engagement
                 </Button>
               </div>
               <div className="grid grid-cols-3 md:grid-cols-5">
-                <DashboardTile title="Total Signups" pointer='pointer' onClick={() => nav("/admin/users")}>
+                <DashboardTile title="Total Signups">
                   <div className='flex justify-between items-center w-full'>
                     <h1>{totalUsers}</h1>
                     <h4>Today: {currentDayTotalUsers}</h4>
@@ -129,9 +129,6 @@ const UsersTab = () => {
               )
             )
           }
-          <div className='flex justify-center items-center'>
-            <h2>Note: Click on the boxes to view details. Total Signups will return all users table.</h2>
-          </div>
         </div>
       </ConfigProvider>
     </LazyLoad>
