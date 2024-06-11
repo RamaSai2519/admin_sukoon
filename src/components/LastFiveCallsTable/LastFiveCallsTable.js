@@ -77,7 +77,7 @@ const LastFiveCallsTable = () => {
     {
       title: 'Details',
       key: 'details',
-      render: (text, record) => (
+      render: (record) => (
         <Link to={`/admin/calls/${record.callId}`} className="view-details-link">
           View
         </Link>
