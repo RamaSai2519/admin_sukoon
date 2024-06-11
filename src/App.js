@@ -11,6 +11,7 @@ import EventDetails from './EventDetails';
 import ExpertDetails from './ExpertDetails/ExpertDetatils'
 import ExpertReport from './ExpertDetails/ExpertReport'
 import ApprovePage from './ApprovePage/ApprovePage'
+import UserEngagement from './UserEngagement';
 import './App.css';
 
 const App = () => {
@@ -73,6 +74,7 @@ const App = () => {
             <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
             <Route path="/admin/dashboard" element={<AdminDashboard onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
             <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
+            <Route path='/admin/userEngage' element={<UserEngagement />} />
             <Route path="/*" element={<Navigate to="/admin/dashboard" />} />
           </>
         ) : (

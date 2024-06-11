@@ -77,7 +77,7 @@ const LastFiveCallsTable = () => {
     {
       title: 'Details',
       key: 'details',
-      render: (text, record) => (
+      render: (record) => (
         <Link to={`/admin/calls/${record.callId}`} className="view-details-link">
           View
         </Link>
@@ -105,6 +105,7 @@ const LastFiveCallsTable = () => {
       <Table
         dataSource={lastFiveCalls}
         columns={columns}
+        size='middle'
         pagination={{ pageSize: 5 }}
         className="w-full h-full mt-2"
         rowKey={(record) => record.callId}
