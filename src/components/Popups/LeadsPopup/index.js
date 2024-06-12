@@ -4,6 +4,7 @@ import { Table, Input, Button, Space, ConfigProvider, theme } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 const LeadsPopup = ({ users, onClose }) => {
+    console.log(users);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInputRef = useRef(null);
@@ -120,6 +121,13 @@ const LeadsPopup = ({ users, onClose }) => {
                 }),
         },
         {
+            title: 'Source',
+            dataIndex: 'source',
+            key: 'source',
+            ...getColumnSearchProps('source', 'Source'),
+            sorter: (a, b) => a.source.localeCompare(b.source),
+        },
+        {
             title: 'Actions',
             key: 'actions',
             render: (_, user) => (
@@ -155,7 +163,7 @@ const LeadsPopup = ({ users, onClose }) => {
                         <ConfigProvider theme={{
                             algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
                         }}>
-                            <Table dataSource={users.reverse()} columns={columns} />
+                            <Table dataSource={users} columns={columns} />
                         </ConfigProvider>
                     ) : (
                         <p>No users to display</p>

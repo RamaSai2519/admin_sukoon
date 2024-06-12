@@ -24,7 +24,7 @@ const LazyLoad = ({ children }) => {
     }, []);
 
     return (
-        <div ref={ref} className={`opacity-0 transition-opacity duration-500 ${isVisible ? 'opacity-100' : ''}`}>
+        <div ref={ref} className={`opacity-0 w-full h-full transition-opacity duration-500 ${isVisible ? 'opacity-100' : ''}`}>
             {children}
         </div>
     );

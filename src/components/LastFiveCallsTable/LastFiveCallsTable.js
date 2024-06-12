@@ -6,10 +6,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
 import { red, pink, green, yellow } from '@mui/material/colors';
+import { LoadingContext } from '../../AdminDashboard/AdminDashboard';
+import Loading from '../Loading/loading';
+import LazyLoad from '../LazyLoad/lazyload';
 import { useCalls } from '../../services/useData';
 
 const LastFiveCallsTable = () => {
   const { calls } = useCalls();
+  const { loading } = React.useContext(LoadingContext);
   const [lastFiveCalls, setLastFiveCalls] = useState([]);
   const darkMode = localStorage.getItem('darkMode') === 'true';
 
@@ -102,14 +106,18 @@ const LastFiveCallsTable = () => {
     <ConfigProvider theme={{
       algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
     }}>
-      <Table
-        dataSource={lastFiveCalls}
-        columns={columns}
-        size='middle'
-        pagination={{ pageSize: 5 }}
-        className="w-full h-full mt-2"
-        rowKey={(record) => record.callId}
-      />
+      {loading ? <Loading /> :
+        <LazyLoad>
+          <Table
+            dataSource={lastFiveCalls}
+            columns={columns}
+            size='middle'
+            pagination={{ pageSize: 5 }}
+            className="w-full h-full mt-2"
+            rowKey={(record) => record.callId}
+          />
+        </LazyLoad>
+      }
     </ConfigProvider>
   );
 };

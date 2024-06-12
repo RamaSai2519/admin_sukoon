@@ -11,8 +11,11 @@ import { red, pink, green, yellow } from '@mui/material/colors';
 import writeXlsxFile from 'write-excel-file';
 import { saveAs } from 'file-saver';
 import LazyLoad from '../components/LazyLoad/lazyload';
+import Loading from '../components/Loading/loading';
+import { LoadingContext } from '../AdminDashboard/AdminDashboard';
 
 const CallsTable = () => {
+  const { loading } = React.useContext(LoadingContext);
   const { calls } = useCalls();
   const [filters, setFilters] = useState({
     user: '',
@@ -177,23 +180,25 @@ const CallsTable = () => {
                   <th>Details</th>
                 </tr>
               </thead>
-              <tbody>
-                {filteredCalls.map((call) => (
-                  <tr key={call.callId} className='default-row'>
-                    <td>{renderStatusIcon(call.status)} {call.userName}</td>
-                    <td>{call.expertName}</td>
-                    <td>{new Date(call.initiatedTime).toLocaleString()}</td>
-                    <td>{call.duration} min</td>
-                    <td style={{ textAlign: 'center' }}>{call.status}</td>
-                    <td>{call.ConversationScore}</td>
-                    <td>
-                      <Link to={`/admin/calls/${call.callId}`} className="view-details-link">
-                        View
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+              {loading ?
+                <Loading /> :
+                <tbody>
+                  {filteredCalls.map((call) => (
+                    <tr key={call.callId} className='default-row'>
+                      <td>{renderStatusIcon(call.status)} {call.userName}</td>
+                      <td>{call.expertName}</td>
+                      <td>{new Date(call.initiatedTime).toLocaleString()}</td>
+                      <td>{call.duration} min</td>
+                      <td style={{ textAlign: 'center' }}>{call.status}</td>
+                      <td>{call.ConversationScore}</td>
+                      <td>
+                        <Link to={`/admin/calls/${call.callId}`} className="view-details-link">
+                          View
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>}
             </table>
             <ScrollBottom />
           </div>

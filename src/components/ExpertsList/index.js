@@ -172,7 +172,6 @@ const ExpertsList = () => {
                 <Table
                     dataSource={dataSource}
                     columns={columns}
-                    pagination={false}
                 />
                 <Button onClick={exportToExcel}>Export Excel Sheet</Button>
                 {visible && <CreateCategoryPopup visible={visible} setVisible={setVisible} />}

@@ -3,14 +3,16 @@ import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "
 import Raxios from "../../services/axiosHelper";
 import { useSchedules, useUsers, useExperts } from "../../services/useData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
-
-const { Option } = Select;
+import Loading from "../../components/Loading/loading";
+import { LoadingContext } from "../AdminDashboard";
 
 const SchedulerTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
+    const { loading } = React.useContext(LoadingContext);
     const { schedules } = useSchedules();
     const { users } = useUsers();
     const { experts } = useExperts();
+    const { Option } = Select;
 
     const columns = [
         {
@@ -223,7 +225,9 @@ const SchedulerTab = () => {
                     </Form>
 
                     <div className="m-0">
-                        <Table dataSource={schedules.reverse()} columns={columns} />
+                        {loading ? <Loading /> :
+                            <Table dataSource={schedules.reverse()} columns={columns} />
+                        }
                     </div>
                 </div>
             </ConfigProvider>
