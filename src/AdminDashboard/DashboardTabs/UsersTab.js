@@ -6,7 +6,6 @@ import LeadsPopup from '../../components/Popups/LeadsPopup';
 import DashboardTile from '../../components/DashboardTile';
 import { useUsers, useCalls, useLeads } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import UserEngagement from '../../UserEngagement';
 import { Button, ConfigProvider, theme } from 'antd';
 
 const UsersTab = () => {

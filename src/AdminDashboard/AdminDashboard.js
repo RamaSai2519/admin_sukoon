@@ -19,6 +19,8 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import { useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
 
+export const LoadingContext = React.createContext();
+
 const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   const { fetchCalls } = useCalls();
   const { fetchExperts } = useExperts();
@@ -30,6 +32,7 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showMenu, setShowMenu] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const location = useLocation();
 
@@ -83,18 +86,23 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   };
 
   const fetchData = async () => {
-    await fetchExperts()
-    await fetchUsers()
-    await fetchLeads()
-    await fetchApplications()
-    await fetchErrorLogs()
-    await fetchCalls()
-    await fetchSchedules()
+    setLoading(true);
+    await Promise.all([
+      fetchExperts(),
+      fetchUsers(),
+      fetchCalls(),
+      fetchSchedules(),
+      fetchApplications(),
+      fetchLeads(),
+      fetchErrorLogs(),
+    ]);
+    setLoading(false);
   };
 
   const Tab = ({ label, onClick, active }) => (
     <div
-      className={`cshadow p-2 px-4 my-2 rounded-3xl font-bold text-xl hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack ${active ? 'scale-110' : ''
+      className={`cshadow p-2 px-4 my-2 rounded-3xl font-bold text-xl hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack 
+        ${active ? 'scale-110' : ''
         }`}
       onClick={() => {
         onClick();
@@ -143,41 +151,45 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   };
 
   return (
-    <LazyLoad>
-      <div className="flex flex-row">
-        {!showMenu ? (
-          <div className="fixed z-50 left-0 top-0 rounded-r-full rounded-br-full h-screen cursor-pointer bg-black bg-opacity-50 flex items-center" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <KeyboardArrowRightIcon />
-          </div>
-        ) : (
-          <div className={`fixed z-50 left-0 top-0 flex flex-row w-screen bg-opacity-70 bg-black ${showMenu ? 'slide-in' : 'slide-out'}`} onClick={onMenuToggle}>
-            <div className={`flex flex-col h-screen p-4 w-1/8 bg-gray-100 dark:bg-darkBlack ${showMenu ? 'slide-in' : 'slide-out'}`}>
-              <img src="/logo.svg" alt="logo" className="max-h-24" />
-              <div className='flex flex-col h-full justify-between'>
-                <div>
-                  {['dashboard', 'users', 'applications', 'events', 'scheduler', 'notifications', 'calls list', 'experts list', 'users list'].map((tab) => (
-                    <Tab
-                      key={tab}
-                      label={tab.charAt(0).toUpperCase() + tab.slice(1)}
-                      onClick={() => setActiveTab(tab)}
-                      active={activeTab === tab}
-                    />
-                  ))}
-                </div>
-                <div className='grid grid-rows-2'>
-                  <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-                  <Tab label="Logout" onClick={onLogout} />
+    <LoadingContext.Provider value={{ loading, setLoading }}>
+      <LazyLoad>
+        <div className="flex flex-row">
+          {!showMenu ? (
+            <div
+              className="fixed z-50 left-0 top-0 rounded-r-full rounded-br-full h-screen cursor-pointer bg-black bg-opacity-50 flex items-center"
+              onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+              <KeyboardArrowRightIcon />
+            </div>
+          ) : (
+            <div className={`fixed z-50 left-0 top-0 flex flex-row w-screen bg-opacity-70 bg-black ${showMenu ? 'slide-in' : 'slide-out'}`} onClick={onMenuToggle}>
+              <div className={`flex flex-col h-screen p-4 w-1/8 bg-gray-100 dark:bg-darkBlack ${showMenu ? 'slide-in' : 'slide-out'}`}>
+                <img src="/logo.svg" alt="logo" className="max-h-24" />
+                <div className='flex flex-col h-full justify-between'>
+                  <div>
+                    {['dashboard', 'users', 'applications', 'events', 'scheduler', 'notifications', 'calls list', 'experts list', 'users list'].map((tab) => (
+                      <Tab
+                        key={tab}
+                        label={tab.charAt(0).toUpperCase() + tab.slice(1)}
+                        onClick={() => setActiveTab(tab)}
+                        active={activeTab === tab}
+                      />
+                    ))}
+                  </div>
+                  <div className='grid grid-rows-2'>
+                    <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+                    <Tab label="Logout" onClick={onLogout} />
+                  </div>
                 </div>
               </div>
+              <div className='grid w-screen h-screen items-center cursor-pointer' onClick={onMenuToggle} >
+                <KeyboardArrowLeftIcon />
+              </div>
             </div>
-            <div className='grid w-screen h-screen items-center cursor-pointer' onClick={onMenuToggle} >
-              <KeyboardArrowLeftIcon />
-            </div>
-          </div>
-        )}
-        <div className="flex-1 px-10 min-h-screen">{renderTabContent()}</div>
-      </div>
-    </LazyLoad>
+          )}
+          <div className="flex-1 px-10 min-h-screen">{renderTabContent()}</div>
+        </div>
+      </LazyLoad>
+    </LoadingContext.Provider>
   );
 };
 
