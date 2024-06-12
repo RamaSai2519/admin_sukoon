@@ -14,7 +14,6 @@ import LazyLoad from '../components/LazyLoad/lazyload';
 import EventsTab from './DashboardTabs/EventsTab';
 import CallsTable from '../CallList/CallList';
 import UserList from '../UserList/UserList';
-import Loading from '../components/Loading/loading';
 import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
@@ -31,7 +30,7 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showMenu, setShowMenu] = useState(false);
-  const [loading, setLoading] = useState(true);
+
   const location = useLocation();
 
   useEffect(() => {
@@ -84,17 +83,13 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   };
 
   const fetchData = async () => {
-    setLoading(true);
-    await Promise.all([
-      fetchCalls(),
-      fetchExperts(),
-      fetchUsers(),
-      fetchLeads(),
-      fetchSchedules(),
-      fetchApplications(),
-      fetchErrorLogs(),
-    ]);
-    setLoading(false);
+    await fetchExperts()
+    await fetchUsers()
+    await fetchLeads()
+    await fetchApplications()
+    await fetchErrorLogs()
+    await fetchCalls()
+    await fetchSchedules()
   };
 
   const Tab = ({ label, onClick, active }) => (
@@ -180,13 +175,7 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
             </div>
           </div>
         )}
-        {loading ?
-          <div className='h-screen w-screen'>
-            <Loading />
-          </div>
-          :
-          <div className="flex-1 px-10 min-h-screen">{renderTabContent()}</div>
-        }
+        <div className="flex-1 px-10 min-h-screen">{renderTabContent()}</div>
       </div>
     </LazyLoad>
   );
