@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, ConfigProvider, theme, Select } from 'antd';
+import { Button, Table, ConfigProvider, theme, Select } from 'antd';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import Raxios from '../services/axiosHelper';
 import Loading from '../components/Loading/loading';
@@ -129,7 +129,9 @@ const UserEngagement = () => {
             width: 100,
             fixed: 'right',
             render: (record) => (
-                <Link to={`/admin/users/${record._id}`} className="view-details-link">View</Link>
+                <Link to={`/admin/users/${record._id}`}>
+                    <Button>View</Button>
+                </Link>
             ),
         },
     ];

@@ -82,7 +82,11 @@ const UsersList = () => {
       title: 'Details',
       dataIndex: '_id',
       key: 'details',
-      render: (id) => <Link to={`/admin/users/${id}`} className="view-details-link">View</Link>,
+      render: (id) => <Link to={`/admin/users/${id}`}>
+        <Button>
+          View
+        </Button>
+      </Link>,
     },
   ];
 
@@ -135,12 +139,12 @@ const UsersList = () => {
               onChange={(e) => {
                 localStorage.setItem('table', e.target.value);
                 setTable(e.target.value);
-              }}              
+              }}
             >
               <Radio.Button value="users">Users</Radio.Button>
               <Radio.Button value="engagement">Engagement</Radio.Button>
             </Radio.Group>
-          </Flex> 
+          </Flex>
           <Button onClick={downloadExcel}>
             Export
           </Button>
