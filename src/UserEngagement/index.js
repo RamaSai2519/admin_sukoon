@@ -158,6 +158,7 @@ const UserEngagement = () => {
                                 components={components}
                                 dataSource={data}
                                 columns={mergedColumns}
+                                rowKey={(record) => record._id}
                                 pagination={{
                                     current: currentPage,
                                     pageSize: pageSize,
