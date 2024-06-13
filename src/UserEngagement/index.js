@@ -114,7 +114,8 @@ const UserEngagement = () => {
         {
             title: "Contact", dataIndex: "phoneNumber", key: "phoneNumber", width: 120,
             filters: generateFilters(data, 'phoneNumber'),
-            onFilter: (value, record) => record.phoneNumber.includes(value)
+            onFilter: (value, record) => record.phoneNumber.includes(value),
+            filterSearch: true
         },
         {
             title: "City", dataIndex: "city", key: "city", width: 110,
