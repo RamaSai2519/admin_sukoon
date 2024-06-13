@@ -5,8 +5,19 @@ import Raxios from '../services/axiosHelper';
 import './AdminLogin.css';
 
 const AdminLogin = ({ setIsLoggedIn }) => {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
+    const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (darkMode) {
+            localStorage.setItem('darkMode', 'true');
+            document.body.classList.add('dark');
+        } else {
+            localStorage.setItem('darkMode', 'false');
+            document.body.classList.remove('dark');
+        }
+    }, [darkMode]);
+
 
     const onFinish = async (values) => {
         const { id, password } = values;
@@ -28,14 +39,14 @@ const AdminLogin = ({ setIsLoggedIn }) => {
     };
 
     return (
-        <div className='h-screen flex justify-center items-center'>
-            <div className="dark:bg-lightBlack flex flex-col justify-center p-10 rounded-3xl">
-                <h1 className='text-3xl m-5 mt-0'>Login to access dashboard</h1>
-                <ConfigProvider theme={
-                    {
-                        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-                    }
-                }>
+        <ConfigProvider theme={
+            {
+                algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+            }
+        }>
+            <div className='h-screen flex justify-center items-center'>
+                <div className="dark:bg-lightBlack flex flex-col justify-center p-10 rounded-3xl">
+                    <h1 className='text-3xl m-5 mt-0'>Login to access dashboard</h1>
                     <Form
                         className='h-full'
                         name="admin_login"
@@ -58,9 +69,9 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                             <button>Sign In</button>
                         </Form.Item>
                     </Form>
-                </ConfigProvider>
+                </div>
             </div>
-        </div>
+        </ConfigProvider>
     );
 };
 

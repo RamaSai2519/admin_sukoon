@@ -110,11 +110,6 @@ const UsersTab = () => {
         <div className="w-full min-h-screen">
           <div className="flex flex-wrap justify-between">
             <div className="w-full">
-              <div key="button-container" className='flex justify-end m-3'>
-                <Button onClick={() => nav("/admin/userEngage")}>
-                  User Engagement
-                </Button>
-              </div>
               <div className="grid grid-cols-3 md:grid-cols-5">
                 <DashboardTile title="Total Signups">
                   <div className='flex justify-between items-center w-full'>
