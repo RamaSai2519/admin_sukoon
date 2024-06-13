@@ -24,7 +24,7 @@ const EditableCell = ({
             const values = await form.validateFields();
             toggleEdit();
             // Pass the edited field and value to handleSave
-            handleSave({ key: record.key, field: dataIndex, value: values[dataIndex] });
+            handleSave({ key: record._id, field: dataIndex, value: values[dataIndex] });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }

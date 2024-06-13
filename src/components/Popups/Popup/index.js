@@ -44,7 +44,7 @@ const Popup = ({ title, users, onClose }) => {
               <button className="pback-button" onClick={onClose}>X</button>
             </div>
             {users.length > 0 ? (
-              <Table dataSource={users.reverse()} columns={columns} />
+              <Table dataSource={users.reverse()} columns={columns} rowKey={(user) => user._id} />
             ) : (
               <p>No users to display</p>
             )}
