@@ -21,7 +21,7 @@ import { useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications
 
 export const LoadingContext = React.createContext();
 
-const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
+const AdminDashboard = ({ onLogout }) => {
   const { fetchCalls } = useCalls();
   const { fetchExperts } = useExperts();
   const { fetchUsers } = useUsers();
@@ -33,8 +33,31 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showMenu, setShowMenu] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const localStorageDarkMode = localStorage.getItem('darkMode');
+    if (localStorageDarkMode !== null) {
+      return JSON.parse(localStorageDarkMode);
+    } else {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+  });
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    localStorage.setItem('darkMode', !darkMode);
+  };
 
   const location = useLocation();
+
+  useEffect(() => {
+    if (darkMode) {
+      localStorage.setItem('darkMode', 'true');
+      document.body.classList.add('dark');
+    } else {
+      localStorage.setItem('darkMode', 'false');
+      document.body.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   useEffect(() => {
     fetchData();
@@ -186,7 +209,7 @@ const AdminDashboard = ({ onLogout, darkMode, toggleDarkMode }) => {
               </div>
             </div>
           )}
-          <div className="flex-1 px-10 min-h-screen">{renderTabContent()}</div>
+          <div className="flex-1 px-10 min-h-screen overflow-auto">{renderTabContent()}</div>
         </div>
       </LazyLoad>
     </LoadingContext.Provider>

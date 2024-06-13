@@ -15,24 +15,10 @@ import UserEngagement from './UserEngagement';
 import './App.css';
 
 const App = () => {
-  const appVersion = '9.5.0';
+  const appVersion = '10.0.0';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
-  const [darkMode, setDarkMode] = useState(() => {
-    const localStorageDarkMode = localStorage.getItem('darkMode');
-    if (localStorageDarkMode !== null) {
-      return JSON.parse(localStorageDarkMode);
-    } else {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-  });
-
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
-  };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -49,16 +35,6 @@ const App = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (darkMode) {
-      localStorage.setItem('darkMode', 'true');
-      document.body.classList.add('dark');
-    } else {
-      localStorage.setItem('darkMode', 'false');
-      document.body.classList.remove('dark');
-    }
-  }, [darkMode]);
-
   return (
     <div className='dark:text-white min-w-screen md:min-h-full min-h-[210vh] overflow-clip dark:bg-darkBlack'>
       <Routes>
@@ -72,7 +48,7 @@ const App = () => {
             <Route path='/admin/events/:slug' element={<EventDetails />} />
             <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
             <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard onLogout={handleLogout} />} />
             <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
             <Route path='/admin/userEngage' element={<UserEngagement />} />
             <Route path="/*" element={<Navigate to="/admin/dashboard" />} />

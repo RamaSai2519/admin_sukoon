@@ -1,73 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import ScrollBottom from '../AdminDashboard/ScrollBottom';
 import { useUsers } from '../services/useData';
 import writeXlsxFile from 'write-excel-file';
 import { saveAs } from 'file-saver';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import './UserList.css';
+import { ConfigProvider, theme, Table, Button, Switch, Flex, Radio } from 'antd';
+import UserEngagement from '../UserEngagement';
+import Loading from '../components/Loading/loading';
+import { LoadingContext } from '../AdminDashboard/AdminDashboard';
 
 const UsersList = () => {
+  const { loading } = React.useContext(LoadingContext);
+  const darkMode = localStorage.getItem('darkMode') === 'true';
+  const [table, setTable] = useState(
+    localStorage.getItem('table') === 'engagement' ? 'engagement' : 'users'
+  );
   const { users, fetchUsers } = useUsers();
-  const [filters, setFilters] = useState({
-    user: '',
-    city: '',
-    phoneNumber: ''
-  });
-  const [sortConfig, setSortConfig] = useState({
-    key: '',
-    direction: '',
-  });
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-  };
-
-  const handleSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-
-    if (key === 'ConversationScore') {
-      if (sortConfig.key === key) {
-        direction = sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
-      }
-    }
-    setSortConfig({ key, direction });
-  };
-
-  let filteredUsers = users.filter((user) => {
-    return (
-      (user.name && user.name.toLowerCase().includes(filters.user.toLowerCase())) &&
-      (user.city && user.city.toLowerCase().includes(filters.city.toLowerCase())) &&
-      (user.phoneNumber && user.phoneNumber.toLowerCase().includes(filters.phoneNumber.toLowerCase()))
-    );
-  });
-
-  if (sortConfig.key) {
-    filteredUsers.sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
-      }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
-    });
-  }
-
-  const renderSortArrow = (key) => {
-    if (sortConfig.key === key) {
-      return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
-    }
-    return null;
-  };
+  const columns = [
+    {
+      title: 'User',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      filters: users.map((user) => ({ text: user.name, value: user.name })),
+      filterSearch: true,
+      onFilter: (value, record) => record.name.includes(value),
+    },
+    {
+      title: 'City',
+      dataIndex: 'city',
+      key: 'city',
+      sorter: (a, b) => a.city.localeCompare(b.city),
+      filters: users.reduce((acc, user) => {
+        if (!acc.some((city) => city.text === user.city)) {
+          acc.push({ text: user.city, value: user.city });
+        }
+        return acc;
+      }, []).map((city) => ({ text: city.text, value: city.value })),
+      filterSearch: true,
+      onFilter: (value, record) => record.city.includes(value),
+    },
+    {
+      title: 'Number',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+      sorter: (a, b) => a.phoneNumber.localeCompare(b.phoneNumber),
+      filters: users.map((user) => ({ text: user.phoneNumber, value: user.phoneNumber })),
+      filterSearch: true,
+      onFilter: (value, record) => record.phoneNumber.includes(value),
+    },
+    {
+      title: 'Joined Date',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
+      render: (date) => new Date(date).toLocaleDateString(),
+      sorter: (a, b) => new Date(a.createdDate) - new Date(b.createdDate),
+      filters: users.reduce((acc, user) => {
+        if (!acc.some((date) => date.text === new Date(user.createdDate).toLocaleDateString())) {
+          acc.push({ text: new Date(user.createdDate).toLocaleDateString(), value: new Date(user.createdDate).toLocaleDateString() });
+        }
+        return acc;
+      }, []).map((date) => ({ text: date.text, value: date.value })),
+      filterSearch: true,
+      onFilter: (value, record) => record.createdDate.includes(value),
+    },
+    {
+      title: 'DOB',
+      dataIndex: 'birthDate',
+      key: 'birthDate',
+      render: (date) => new Date(date).toLocaleDateString(),
+      sorter: (a, b) => new Date(a.birthDate) - new Date(b.birthDate),
+    },
+    {
+      title: 'Balance',
+      dataIndex: 'numberOfCalls',
+      key: 'numberOfCalls',
+      sorter: (a, b) => a.numberOfCalls - b.numberOfCalls,
+    },
+    {
+      title: 'Details',
+      dataIndex: '_id',
+      key: 'details',
+      render: (id) => <Link to={`/admin/users/${id}`}>
+        <Button>
+          View
+        </Button>
+      </Link>,
+    },
+  ];
 
   const downloadExcel = async () => {
     const wsData = [
@@ -98,96 +119,48 @@ const UsersList = () => {
     saveAs(blob, 'UserList.xlsx');
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line
   }, []);
 
   return (
-    <LazyLoad>
-      <div className="min-h-screen px-5 w-full overflow-auto">
-        <table className="users-table mt-5">
-          <thead>
-            <tr className="filter-row">
-              <td>
-                <input
-                  type="text"
-                  placeholder="Search User"
-                  name="user"
-                  value={filters.name}
-                  onChange={handleFilterChange}
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  placeholder="Filter City"
-                  name="city"
-                  value={filters.city}
-                  onChange={handleFilterChange}
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  placeholder="Filter Phone Number"
-                  name="phoneNumber"
-                  value={filters.phoneNumber}
-                  onChange={handleFilterChange}
-                />
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>
-                <button className='popup-button' onClick={downloadExcel}>
-                  Export
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <th onClick={() => handleSort('name')}>
-                User {renderSortArrow('name')}
-              </th>
-              <th onClick={() => handleSort('city')}>
-                City {renderSortArrow('city')}
-              </th>
-              <th onClick={() => handleSort('phoneNumber')}>
-                Number {renderSortArrow('phoneNumber')}
-              </th>
-              <th onClick={() => handleSort('createdDate')}>
-                Joined Date {renderSortArrow('createdDate')}
-              </th>
-              <th onClick={() => handleSort('birthDate')}>
-                DOB {renderSortArrow('birthDate')}
-              </th>
-              <th onClick={() => handleSort('numberOfCalls')}>
-                Balance {renderSortArrow('numberOfCalls')}
-              </th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.reverse().map((user) => (
-              <tr key={user._id} className="row">
-                <td>{user.name}</td>
-                <td>{user.city}</td>
-                <td>{user.phoneNumber}</td>
-                <td>{new Date(user.createdDate).toLocaleDateString()}</td>
-                <td>{new Date(user.birthDate).toLocaleDateString()}</td>
-                <td>{user.numberOfCalls}</td>
-                <td>
-                  <Link to={`/admin/users/${user._id}`} className="view-details-link">
-                    View
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <ScrollBottom />
+    <ConfigProvider theme={
+      {
+        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+      }
+    }>
+
+      <div className="min-h-screen p-5 w-full overflow-auto">
+        <div className="flex w-full justify-between items-center gap-2">
+          <Flex vertical>
+            <Radio.Group
+              value={table}
+              onChange={(e) => {
+                localStorage.setItem('table', e.target.value);
+                setTable(e.target.value);
+              }}
+            >
+              <Radio.Button value="users">Users</Radio.Button>
+              <Radio.Button value="engagement">Engagement</Radio.Button>
+            </Radio.Group>
+          </Flex>
+          <Button onClick={downloadExcel}>
+            Export
+          </Button>
+        </div>
+        {table === 'engagement' ? <UserEngagement /> :
+          loading ? <Loading /> :
+            <LazyLoad>
+              <Table
+                className='my-5'
+                columns={columns}
+                dataSource={users}
+                rowKey={(record) => record._id}
+              />
+            </LazyLoad>}
       </div>
-    </LazyLoad>
+    </ConfigProvider >
   );
 };
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, ConfigProvider, theme } from 'antd';
-import { FaArrowLeft } from 'react-icons/fa';
+import { Button, Table, ConfigProvider, theme, Select } from 'antd';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import Raxios from '../services/axiosHelper';
 import Loading from '../components/Loading/loading';
@@ -37,71 +36,141 @@ const UserEngagement = () => {
 
     const data = engagementData.map((item) => ({
         _id: item._id,
-        poc: item.poc,
-        name: item.name,
-        createdDate: item.createdDate,
-        status: item.status,
-        phoneNumber: item.phoneNumber,
-        city: item.city,
-        dateOfBirth: item.birthDate,
-        gender: item.gender,
-        lastCallDate: item.lastCallDate,
-        callsDone: item.callsDone,
-        remarks: item.remarks,
-        saarthi: item.saarthi
+        poc: item.poc || 'N/A',
+        name: item.name || 'N/A',
+        createdDate: item.createdDate || 'N/A',
+        slDays: item.slDays || 0,
+        callStatus: item.callStatus || 'N/A',
+        userStatus: item.userStatus || 'N/A',
+        phoneNumber: item.phoneNumber || 'N/A',
+        city: item.city || 'N/A',
+        dateOfBirth: item.birthDate || 'N/A',
+        gender: item.gender || 'N/A',
+        expert: item.expert || 'N/A',
+        lastCallDate: item.lastCallDate || 'N/A',
+        callAge: item.callAge || 0,
+        callsDone: item.callsDone || 0,
+        remarks: item.remarks || 'N/A',
     }));
+
+    const userStatusOptions = [
+        { value: 'Not interested user', label: 'Not interested user' },
+        { value: 'Family & Friends', label: 'Family & Friends' },
+        { value: 'Invalid/ Test user', label: 'Invalid/ Test user' },
+        { value: 'Engaged User', label: 'Engaged User' },
+        { value: 'Not reachable user', label: 'Not reachable user' },
+    ];
+
+    const generateFilters = (data, key) => {
+        return data.reduce((acc, curr) => {
+            if (curr[key] && !acc.find((item) => item.text === curr[key])) {
+                acc.push({ text: curr[key], value: curr[key] });
+            }
+            return acc;
+        }, []).map((item) => ({ text: item.text, value: item.value }));
+    };
+
 
     const columns = [
         {
             title: "POC", dataIndex: "poc", key: "poc", width: 100, editable: true,
-            filters: data.reduce((uniquePocs, item) => {
-                if (!uniquePocs.includes(item.poc)) {
-                    uniquePocs.push(item.poc);
-                }
-                return uniquePocs;
-            }, []).map((poc) => ({ text: poc, value: poc })),
-            filterSearch: true,
+            filters: generateFilters(data, 'poc'),
             onFilter: (value, record) => record.poc.includes(value)
         },
         {
             title: "Name", dataIndex: "name", key: "name", width: 150, fixed: 'left',
-            filters: data.map((item) => ({ text: item.name, value: item.name })),
+            filters: generateFilters(data, 'name'),
             filterSearch: true,
-            onFilter: (value, record) => record.name.includes(value),
+            onFilter: (value, record) => record.name.includes(value)
         },
-        { title: "DOJ / Days in SL", dataIndex: "createdDate", key: "createdDate", width: 135 },
-        { title: "Status", dataIndex: "status", key: "status", width: 100, editable: true },
-        { title: "Contact", dataIndex: "phoneNumber", key: "phoneNumber", width: 120 },
+        {
+            title: "DOJ", dataIndex: "createdDate", key: "createdDate", width: 110,
+            filters: generateFilters(data, 'createdDate'),
+            onFilter: (value, record) => record.createdDate.includes(value)
+        },
+        {
+            title: "SL Days", dataIndex: "slDays", key: "slDays", width: 90,
+            filters: generateFilters(data, 'slDays'),
+            onFilter: (value, record) => record.slDays === value
+        },
+        {
+            title: "Call Status", dataIndex: "callStatus", key: "callStatus", width: 110,
+            filters: generateFilters(data, 'callStatus'),
+            onFilter: (value, record) => record.callStatus.includes(value)
+        },
+        {
+            title: "User Status", dataIndex: "userStatus", key: "userStatus", width: 200,
+            render: (text, record) => (
+                <Select
+                    className='w-full'
+                    value={text}
+                    onChange={(value) => handleUserStatusChange(value, record)}
+                    options={userStatusOptions}
+                />
+            ),
+            filters: generateFilters(data, 'userStatus'),
+            onFilter: (value, record) => record.userStatus.includes(value)
+        },
+        {
+            title: "Contact", dataIndex: "phoneNumber", key: "phoneNumber", width: 120,
+            filters: generateFilters(data, 'phoneNumber'),
+            onFilter: (value, record) => record.phoneNumber.includes(value),
+            filterSearch: true
+        },
         {
             title: "City", dataIndex: "city", key: "city", width: 110,
-            filters: data.reduce((uniqueCities, item) => {
-                if (!uniqueCities.includes(item.city)) {
-                    uniqueCities.push(item.city);
-                }
-                return uniqueCities;
-            }, []).map((city) => ({ text: city, value: city })),
-            filterSearch: true,
+            filters: generateFilters(data, 'city'),
             onFilter: (value, record) => record.city.includes(value)
         },
-        { title: "DOB / Age", dataIndex: "dateOfBirth", key: "dateOfBirth", width: 135 },
-        { title: "Gender", dataIndex: "gender", key: "gender", width: 90, editable: true },
-        { title: "Last Call Date / Call Age", dataIndex: "lastCallDate", key: "lastCallDate", width: 135 },
-        { title: "Calls", dataIndex: "callsDone", key: "callsDone", width: 70 },
-        { title: "Saarthi", dataIndex: "saarthi", key: "saarthi", width: 100, editable: true },
-        { title: "Remarks", dataIndex: "remarks", key: "remarks", width: 250, editable: true, },
+        {
+            title: "DOB", dataIndex: "dateOfBirth", key: "dateOfBirth", width: 110,
+            filters: generateFilters(data, 'dateOfBirth'),
+            onFilter: (value, record) => record.dateOfBirth.includes(value)
+        },
+        {
+            title: "Gender", dataIndex: "gender", key: "gender", width: 90, editable: true,
+            filters: generateFilters(data, 'gender'),
+            onFilter: (value, record) => record.gender.includes(value)
+        },
+        {
+            title: "Last Call Date", dataIndex: "lastCallDate", key: "lastCallDate", width: 135,
+            filters: generateFilters(data, 'lastCallDate'),
+            onFilter: (value, record) => record.lastCallDate.includes(value)
+        },
+        {
+            title: "Call Age", dataIndex: "callAge", key: "callAge", width: 90,
+            filters: generateFilters(data, 'callAge'),
+            onFilter: (value, record) => record.callAge === value
+        },
+        {
+            title: "Calls", dataIndex: "callsDone", key: "callsDone", width: 70,
+            filters: generateFilters(data, 'callsDone'),
+            onFilter: (value, record) => record.callsDone === value
+        },
+        {
+            title: "Saarthi", dataIndex: "expert", key: "saarthi", width: 150, editable: true,
+            filters: generateFilters(data, 'expert'),
+            onFilter: (value, record) => record.expert.includes(value)
+        },
+        {
+            title: "Remarks", dataIndex: "remarks", key: "remarks", width: 250, editable: true,
+            filters: generateFilters(data, 'remarks'),
+            onFilter: (value, record) => record.remarks.includes(value)
+        },
         {
             title: 'Details',
             key: 'details',
             width: 100,
             fixed: 'right',
             render: (record) => (
-                <Link to={`/admin/users/${record.key}`} className="view-details-link">View</Link>
+                <Link to={`/admin/users/${record._id}`}>
+                    <Button>View</Button>
+                </Link>
             ),
         },
     ];
 
     const handleTableChange = (current, pageSize) => {
-        console.log('current:', current, 'pageSize:', pageSize);
         setCurrentPage(current);
         setPageSize(pageSize);
     };
@@ -121,58 +190,67 @@ const UserEngagement = () => {
         }
     };
 
-        const components = {
-            body: {
-                cell: EditableCell,
-            },
-        };
-
-        const mergedColumns = columns.map((col) => {
-            if (!col.editable) {
-                return col;
+    const handleUserStatusChange = async (value, record) => {
+        try {
+            await Raxios.post('/user/engagementData', { key: record._id, field: 'userStatus', value });
+            const newData = [...engagementData];
+            const index = newData.findIndex((item) => item._id === record._id);
+            if (index > -1) {
+                const item = newData[index];
+                newData.splice(index, 1, { ...item, userStatus: value });
+                setEngagementData(newData);
             }
-            return {
-                ...col,
-                onCell: (record) => ({
-                    record,
-                    editable: col.editable,
-                    dataIndex: col.dataIndex,
-                    title: col.title,
-                    handleSave,
-                }),
-            };
-        });
+        } catch (error) {
+            console.error('Error updating user status:', error);
+        }
+    };
+
+    const components = {
+        body: {
+            cell: EditableCell,
+        },
+    };
+
+    const mergedColumns = columns.map((col) => {
+        if (!col.editable) {
+            return col;
+        }
+        return {
+            ...col,
+            onCell: (record) => ({
+                record,
+                editable: col.editable,
+                dataIndex: col.dataIndex,
+                title: col.title,
+                handleSave,
+            }),
+        };
+    });
 
     return (
         <ConfigProvider theme={{ algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
-            <div key='parent-container' className='flex flex-col h-screen gap-2 p-10 pt-2 overflow-auto'>
-                <div key='back-button-container' className='flex justify-end w-full'>
-                    <button className='back-button' onClick={() => window.history.back()}>
-                        <FaArrowLeft className="back-icon" />
-                    </button>
-                </div>
-                {loading ? <Loading /> :
-                    <LazyLoad>
-                        <div className='flex py-5 overflow-auto w-full'>
-                            <Table
-                                components={components}
-                                dataSource={data}
-                                columns={mergedColumns}
-                                rowKey={(record) => record._id}
-                                pagination={{
-                                    current: currentPage,
-                                    pageSize: pageSize,
-                                    total: totalItems,
-                                    onChange: handleTableChange
-                                }}
-                                scroll={{
-                                    x: 'calc(100vw + 100px)'
-                                }}
-                            />
-                        </div>
-                    </LazyLoad>
-                }
-            </div>
+
+            {loading ? <Loading /> :
+                <LazyLoad>
+                    <div className='flex py-5 overflow-auto w-full'>
+                        <Table
+                            components={components}
+                            dataSource={data}
+                            columns={mergedColumns}
+                            rowKey={(record) => record._id}
+                            pagination={{
+                                current: currentPage,
+                                pageSize: pageSize,
+                                total: totalItems,
+                                onChange: handleTableChange
+                            }}
+                            scroll={{
+                                x: 'calc(100vw + 100px)'
+                            }}
+                        />
+                    </div>
+                </LazyLoad>
+            }
         </ConfigProvider>
     );
 };
