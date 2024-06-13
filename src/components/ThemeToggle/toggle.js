@@ -5,7 +5,7 @@ const ThemeToggle = ({ darkMode, toggleDarkMode }) => {
     return (
         <div className='h-10'>
             <div className='flex items-center p-2 px-1 my-2'>
-                <input type="checkbox" className="absolute ml-2" id="dn" checked={darkMode} />
+                <input type="checkbox" className="absolute ml-2" id="dn" checked={darkMode} onChange={toggleDarkMode} />
                 <label htmlFor="dn" className="toggle" onClick={toggleDarkMode}>
                     <span className="toggle__handler">
                         <span className="crater crater--1"></span>
