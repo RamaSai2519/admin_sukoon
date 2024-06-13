@@ -117,7 +117,11 @@ const LeadsPopup = ({ onClose }) => {
             ...getColumnSearchProps('source', 'Source'),
             sorter: (a, b) => a.source.localeCompare(b.source),
         },
-        { title: "Remarks", dataIndex: "remarks", key: "remarks", width: 250, editable: true, },
+        {
+            title: "Remarks", dataIndex: "remarks",
+            key: "remarks", width: 250, editable: true,
+            ...getColumnSearchProps('remarks', 'Remarks')
+        },
         {
             title: 'Actions',
             key: 'actions',
