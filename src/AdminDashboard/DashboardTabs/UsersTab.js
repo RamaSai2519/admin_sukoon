@@ -17,8 +17,11 @@ const UsersTab = () => {
   const [oneCallUsers, setOneCallUsers] = useState([]);
   const [twoCallsUsers, setTwoCallsUsers] = useState([]);
   const [moreThanTwoCallsUsers, setMoreThanTwoCallsUsers] = useState([]);
-  const [currentDayPartialSignups, setCurrentDayPartialSignups] = useState([]);
-  const [popupContent, setPopupContent] = useState({ title: '', users: [] });
+  const [currentDayPartialSignups, setCurrentDayPartialSignups] = useState(0);
+  const [popupContent, setPopupContent] = useState({
+    title: localStorage.getItem('popupTitle') || '',
+    users: []
+  });
   const darkMode = localStorage.getItem('darkMode') === 'true';
 
   useEffect(() => {
@@ -44,6 +47,10 @@ const UsersTab = () => {
     setOneCallUsers(oneCallUsersList);
     setTwoCallsUsers(twoCallsUsersList);
     setMoreThanTwoCallsUsers(moreThanTwoCallsUsersList);
+
+    if (popupContent.title) {
+      fetchPopupUsers(popupContent.title);
+    }
   }, [users, calls, leads]);
 
   useEffect(() => {
@@ -60,12 +67,35 @@ const UsersTab = () => {
     };
   }, []);
 
-  const openPopup = (title, users) => {
-    setPopupContent({ title, users });
+  const fetchPopupUsers = (title) => {
+    let usersToSet = [];
+    switch (title) {
+      case 'Users with One Call':
+        usersToSet = oneCallUsers;
+        break;
+      case 'Users with Two Calls':
+        usersToSet = twoCallsUsers;
+        break;
+      case 'Users with More than Two Calls':
+        usersToSet = moreThanTwoCallsUsers;
+        break;
+      case 'Partial Signups':
+        usersToSet = leads;
+        break;
+      default:
+        usersToSet = [];
+    }
+    setPopupContent({ title, users: usersToSet });
+  };
+
+  const openPopup = (title) => {
+    localStorage.setItem('popupTitle', title);
+    fetchPopupUsers(title);
   };
 
   const closePopup = () => {
     setPopupContent({ title: '', users: [] });
+    localStorage.removeItem('popupTitle');
   };
 
   const nav = useNavigate();
@@ -92,16 +122,16 @@ const UsersTab = () => {
                     <h4>Today: {currentDayTotalUsers}</h4>
                   </div>
                 </DashboardTile>
-                <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('Users with One Call', oneCallUsers)}>
+                <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('Users with One Call')}>
                   <h1 className='cursor-pointer'>{oneCallUsers.length}</h1>
                 </DashboardTile>
-                <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('Users with Two Calls', twoCallsUsers)}>
+                <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('Users with Two Calls')}>
                   <h1 className='cursor-pointer'>{twoCallsUsers.length}</h1>
                 </DashboardTile>
-                <DashboardTile title="Repeat Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls', moreThanTwoCallsUsers)}>
+                <DashboardTile title="Repeat Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls')}>
                   <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
                 </DashboardTile>
-                <DashboardTile title="Partial Signups" pointer='pointer' onClick={() => openPopup('Partial Signups', leads)}>
+                <DashboardTile title="Partial Signups" pointer='pointer' onClick={() => openPopup('Partial Signups')}>
                   <div className='flex justify-between items-center w-full'>
                     <h1>{leads.length}</h1>
                     <h4>Today: {currentDayPartialSignups}</h4>
@@ -116,7 +146,6 @@ const UsersTab = () => {
               popupContent.title === 'Partial Signups' ? (
                 <LeadsPopup
                   title={popupContent.title}
-                  users={popupContent.users}
                   onClose={closePopup}
                 />
               ) : (

@@ -36,7 +36,7 @@ const UserEngagement = () => {
     }, [currentPage, pageSize]);
 
     const data = engagementData.map((item) => ({
-        key: item._id,
+        _id: item._id,
         poc: item.poc,
         name: item.name,
         createdDate: item.createdDate,
@@ -108,10 +108,7 @@ const UserEngagement = () => {
 
     const handleSave = async ({ key, field, value }) => {
         try {
-            // Send the updated data to the server
             await Raxios.post('/user/engagementData', { key, field, value });
-
-            // Update local state with the changed field
             const newData = [...engagementData];
             const index = newData.findIndex((item) => item._id === key);
             if (index > -1) {
@@ -124,27 +121,27 @@ const UserEngagement = () => {
         }
     };
 
-    const components = {
-        body: {
-            cell: EditableCell,
-        },
-    };
-
-    const mergedColumns = columns.map((col) => {
-        if (!col.editable) {
-            return col;
-        }
-        return {
-            ...col,
-            onCell: (record) => ({
-                record,
-                editable: col.editable,
-                dataIndex: col.dataIndex,
-                title: col.title,
-                handleSave,
-            }),
+        const components = {
+            body: {
+                cell: EditableCell,
+            },
         };
-    });
+
+        const mergedColumns = columns.map((col) => {
+            if (!col.editable) {
+                return col;
+            }
+            return {
+                ...col,
+                onCell: (record) => ({
+                    record,
+                    editable: col.editable,
+                    dataIndex: col.dataIndex,
+                    title: col.title,
+                    handleSave,
+                }),
+            };
+        });
 
     return (
         <ConfigProvider theme={{ algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
@@ -161,6 +158,7 @@ const UserEngagement = () => {
                                 components={components}
                                 dataSource={data}
                                 columns={mergedColumns}
+                                rowKey={(record) => record._id}
                                 pagination={{
                                     current: currentPage,
                                     pageSize: pageSize,

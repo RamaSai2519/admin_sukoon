@@ -78,11 +78,11 @@ const DashboardTab = () => {
                 <h1>{stats.averageConversationScore}</h1>
                 <p className='text-right w-full'>all calls</p>
               </DashboardTile>
-              <DashboardTile title="Online Saarthis" style={{ "grid-row": "1 / span 2", "grid-column": "5" }}>
+              <DashboardTile title="Online Saarthis" style={{ "gridRow": "1 / span 2", "gridColumn": "5" }}>
                 <OnlineSaarthisTable onlineSaarthis={stats.onlineSaarthis} />
               </DashboardTile>
-              <DashboardTile title='Latest Calls' style={{ "grid-column": "1 / 5" }}><LastFiveCallsTable /></DashboardTile>
-              <DashboardTile title={view} style={{ "grid-column": "5 / span 1" }} >
+              <DashboardTile title='Latest Calls' style={{ "gridColumn": "1 / 5" }}><LastFiveCallsTable /></DashboardTile>
+              <DashboardTile title={view} style={{ "gridColumn": "5 / span 1" }} >
                 <InsightsTable view={view} handleToggle={handleToggle} />
                 <div className='w-full flex items-center justify-end'>
                   <Button className='mt-1' onClick={handleToggle}>
