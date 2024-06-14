@@ -27,10 +27,9 @@ const GamesTab = () => {
     }, []);
 
     const onFormSubmit = (values) => {
-        console.log(values);
         Raxios.post('/games/addQuestion', values)
             .then((res) => {
-                console.log(res);
+                window.location.reload();
             })
             .catch((err) => {
                 console.log(err);
@@ -42,6 +41,8 @@ const GamesTab = () => {
         newOptions[index] = value;
         setOptions(newOptions);
     };
+
+    const uniqueLevels = [...new Set(questions.map(question => question.level))];
 
     return (
         <LazyLoad>
@@ -76,7 +77,7 @@ const GamesTab = () => {
                                         rules={[{ required: true }]}
                                     >
                                         <Select placeholder="Select Level">
-                                            {[1, 2, 3, 4, 5].map((level) => (
+                                            {uniqueLevels.map((level) => (
                                                 <Select.Option key={level} value={level}>
                                                     {level}
                                                 </Select.Option>
@@ -137,19 +138,30 @@ const GamesTab = () => {
                             {questions.length > 0 ?
                                 <Cascader.Panel
                                     className='w-full h-full'
-                                    defaultValue={["quiz", questions[0].question]}
+                                    defaultValue={[['quiz', 1, 'Quesss', '2', '2'] || []]}
+                                    onChange={(value) => console.log(value)}
                                     options={[
                                         {
                                             value: "quiz",
                                             label: "Quiz",
-                                            children: questions.map((record) => ({
-                                                value: record.question,
-                                                label: record.question,
-                                                children: record.options.map((option) => ({
-                                                    value: option.key,
-                                                    label: option.value,
-                                                })),
-                                            })),
+                                            children: uniqueLevels.map(level => ({
+                                                value: level,
+                                                label: level,
+                                                children: questions.filter(question => question.level === level).map(question => ({
+                                                    value: question.question,
+                                                    label: question.question,
+                                                    children: question.options.map(option => ({
+                                                        value: option.key,
+                                                        label: option.value,
+                                                        children: [
+                                                            {
+                                                                value: option.key,
+                                                                label: option.isCorrect ? "Correct" : "Incorrect"
+                                                            }
+                                                        ]
+                                                    }))
+                                                }))
+                                            }))
                                         },
                                         {
                                             value: "cards",
