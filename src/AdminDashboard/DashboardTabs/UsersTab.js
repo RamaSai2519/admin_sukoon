@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Histograms from '../../components/Histograms';
 import Popup from '../../components/Popups/Popup';
 import LeadsPopup from '../../components/Popups/LeadsPopup';
 import DashboardTile from '../../components/DashboardTile';
 import { useUsers, useCalls, useLeads } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import { Button, ConfigProvider, theme } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 
 const UsersTab = () => {
   const { users } = useUsers();
@@ -97,8 +96,6 @@ const UsersTab = () => {
     setPopupContent({ title: '', users: [] });
     localStorage.removeItem('popupTitle');
   };
-
-  const nav = useNavigate();
 
   return (
     <LazyLoad>

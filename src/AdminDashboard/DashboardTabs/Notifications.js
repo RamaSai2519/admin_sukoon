@@ -28,7 +28,7 @@ const ErrorLogsComponent = () => {
                     algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
                 }
             }>
-                <div className="min-h-screen">
+                <div className="min-h-screen py-2">
                     <div className='w-full'>
                         <Table dataSource={errorLogs} columns={columns} />
                     </div>
