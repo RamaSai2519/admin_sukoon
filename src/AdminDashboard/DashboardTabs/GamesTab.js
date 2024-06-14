@@ -10,7 +10,7 @@ import Loading from '../../components/Loading/loading';
 const GamesTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
     const [game, setGame] = useState(
-        localStorage.getItem('game') === 'quiz' ? 'quiz' : 'cards'
+        localStorage.getItem('game') || 'quiz'
     );
     const [options, setOptions] = useState([]);
     const [questions, setQuestions] = useState([]);
