@@ -18,7 +18,6 @@ const GamesTab = () => {
     React.useEffect(() => {
         Raxios.get('/games/quizQuestions')
             .then((res) => {
-                console.log(res.data);
                 setQuestions(res.data);
             })
             .catch((err) => {
