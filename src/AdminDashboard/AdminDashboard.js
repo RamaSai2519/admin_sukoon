@@ -18,6 +18,7 @@ import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import { useCalls, useExperts, useUsers, useLeads, useSchedules, useApplications, useErrorLogs } from '../services/useData';
+import GamesTab from './DashboardTabs/GamesTab';
 
 export const LoadingContext = React.createContext();
 
@@ -156,6 +157,8 @@ const AdminDashboard = ({ onLogout }) => {
         return <EventsTab />;
       case 'users list':
         return <UserList />;
+      case 'games':
+        return <GamesTab />;
       default:
         return null;
     }
@@ -189,7 +192,7 @@ const AdminDashboard = ({ onLogout }) => {
                 <img src="/logo.svg" alt="logo" className="max-h-24" />
                 <div className='flex flex-col h-full justify-between'>
                   <div>
-                    {['dashboard', 'users', 'applications', 'events', 'scheduler', 'notifications', 'calls list', 'experts list', 'users list'].map((tab) => (
+                    {['dashboard', 'users', 'applications', 'events', 'scheduler', 'calls list', 'experts list', 'users list', 'games'].map((tab) => (
                       <Tab
                         key={tab}
                         label={tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -199,6 +202,7 @@ const AdminDashboard = ({ onLogout }) => {
                     ))}
                   </div>
                   <div className='grid grid-rows-2'>
+                    <Tab label="Notifications" onClick={() => setActiveTab('notifications')} active={activeTab === 'notifications'} />
                     <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
                     <Tab label="Logout" onClick={onLogout} />
                   </div>
