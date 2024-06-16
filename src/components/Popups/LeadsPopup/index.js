@@ -10,6 +10,7 @@ const LeadsPopup = ({ onClose }) => {
     const { leads } = useLeads();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+    const [data, setData] = useState(leads);
     const searchInputRef = useRef(null);
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
@@ -176,8 +177,10 @@ const LeadsPopup = ({ onClose }) => {
             await Raxios.post('/user/leadRemarks', { key, field, value })
                 .then((response) => {
                     if (response.request.status === 200) {
-                        window.alert('Lead updated successfully');
-                        window.location.reload();
+                        let updatedLeads = [...data];
+                        const index = updatedLeads.findIndex((item) => key === item._id);
+                        updatedLeads[index][field] = value;
+                        setData(updatedLeads);
                     }
                 })
                 .catch((error) => {
@@ -235,13 +238,13 @@ const LeadsPopup = ({ onClose }) => {
                     <div className="flex flex-row m-5 justify-end">
                         <button className="pback-button" onClick={onClose}>X</button>
                     </div>
-                    {leads.length > 0 ? (
+                    {data.length > 0 ? (
                         <ConfigProvider theme={{
                             algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
                         }}>
                             <Table
                                 components={components}
-                                dataSource={leads}
+                                dataSource={data}
                                 columns={mergedColumns}
                                 rowKey={(user) => user._id}
                             />
