@@ -36,6 +36,7 @@ const GamesTab = () => {
                 window.location.reload();
             })
             .catch((err) => {
+                alert(err.response.data.message);
                 console.log(err);
             });
     };
