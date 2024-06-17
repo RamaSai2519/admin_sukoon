@@ -4,7 +4,7 @@ import { useUsers } from '../services/useData';
 import writeXlsxFile from 'write-excel-file';
 import { saveAs } from 'file-saver';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import { ConfigProvider, theme, Table, Button, Switch, Flex, Radio } from 'antd';
+import { ConfigProvider, theme, Table, Button, Flex, Radio } from 'antd';
 import UserEngagement from '../UserEngagement';
 import Loading from '../components/Loading/loading';
 import { LoadingContext } from '../AdminDashboard/AdminDashboard';
