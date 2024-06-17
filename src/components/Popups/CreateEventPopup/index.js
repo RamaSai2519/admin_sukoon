@@ -7,6 +7,7 @@ import { PlusOutlined } from '@ant-design/icons';
 const CreateEventPopup = ({ visible, setVisible }) => {
     const [form] = Form.useForm();
     const [uploadedImageUrl, setUploadedImageUrl] = React.useState('');
+    const [ready, setReady] = React.useState(false);
     const { experts } = useExperts();
 
     useEffect(() => {
@@ -60,6 +61,7 @@ const CreateEventPopup = ({ visible, setVisible }) => {
         if (info.file.status === 'done') {
             setUploadedImageUrl(info.file.response.file_url);
             message.success(`${info.file.name} file uploaded successfully`);
+            setReady(true);
         } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
         }
@@ -186,7 +188,7 @@ const CreateEventPopup = ({ visible, setVisible }) => {
                     ))}
                     <Form.Item>
                         <div className='flex justify-end'>
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary" htmlType="submit" disabled={!ready}>
                                 Create
                             </Button>
                         </div>

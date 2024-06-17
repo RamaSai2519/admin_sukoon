@@ -14,6 +14,7 @@ const GamesTab = () => {
     const [options, setOptions] = useState([]);
     const [questions, setQuestions] = useState([]);
     const [uploadedImageUrl, setUploadedImageUrl] = useState('');
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         Raxios.get('/games/quizQuestions')
@@ -65,6 +66,7 @@ const GamesTab = () => {
         if (info.file.status === 'done') {
             setUploadedImageUrl(info.file.response.file_url);
             message.success(`${info.file.name} file uploaded successfully`);
+            setReady(true);
         } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
         }
@@ -171,7 +173,7 @@ const GamesTab = () => {
                                         </Upload>
                                     </Form.Item>
                                     <Form.Item>
-                                        <Button type="primary" htmlType="submit">
+                                        <Button type="primary" htmlType="submit" disabled={!ready}>
                                             Submit
                                         </Button>
                                     </Form.Item>
