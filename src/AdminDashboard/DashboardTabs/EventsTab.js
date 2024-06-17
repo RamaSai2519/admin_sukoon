@@ -66,17 +66,22 @@ const EventsTab = () => {
                     algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
                 }
             }>
-                <div className="container min-h-screen">
-                    <div className='flex justify-end mb-5'>
-                        <Button onClick={() => setVisible(true)} type="primary">
-                            Create Event
-                        </Button>
-                    </div>
+                <div className="min-h-screen">
+                    {!visible ?
+                        <div className='flex justify-end mb-5'>
+                            <Button onClick={() => setVisible(true)} type="primary">
+                                Create Event
+                            </Button>
+                        </div>
+                        : null
+                    }
                     <div className='w-full'>
-                        <Table dataSource={events} columns={columns} rowKey={(record) => record.slug} />
+                        {visible ?
+                            <CreateEventPopup visible={visible} setVisible={setVisible} />
+                            : <Table dataSource={events} columns={columns} rowKey={(record) => record.slug} />
+                        }
                     </div>
                 </div>
-                {visible && <CreateEventPopup visible={visible} setVisible={setVisible} />}
             </ConfigProvider>
         </LazyLoad>
     );
