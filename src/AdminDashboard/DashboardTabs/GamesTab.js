@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     ConfigProvider, Form, Radio, theme,
-    Input, Cascader, Select, Button
+    Input, Cascader, Select, Button, message, Upload
 } from 'antd';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import Raxios from '../../services/axiosHelper';
 import Loading from '../../components/Loading/loading';
+import { PlusOutlined } from '@ant-design/icons';
 
 const GamesTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
-    const [game, setGame] = useState(
-        localStorage.getItem('game') || 'quiz'
-    );
+    const [game, setGame] = useState(localStorage.getItem('game') || 'quiz');
     const [options, setOptions] = useState([]);
     const [questions, setQuestions] = useState([]);
+    const [uploadedImageUrl, setUploadedImageUrl] = useState('');
+    const [ready, setReady] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         Raxios.get('/games/quizQuestions')
             .then((res) => {
                 setQuestions(res.data);
@@ -26,11 +27,17 @@ const GamesTab = () => {
     }, []);
 
     const onFormSubmit = (values) => {
-        Raxios.post('/games/addQuestion', values)
+        const formData = {
+            ...values,
+            imageUrl: uploadedImageUrl
+        };
+
+        Raxios.post('/games/addQuestion', formData)
             .then((res) => {
                 window.location.reload();
             })
             .catch((err) => {
+                alert(err.response.data.message);
                 console.log(err);
             });
     };
@@ -39,6 +46,30 @@ const GamesTab = () => {
         const newOptions = [...options];
         newOptions[index] = value;
         setOptions(newOptions);
+    };
+
+    const beforeUpload = (file) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+            message.error('You can only upload JPG/PNG file!');
+            return Upload.LIST_IGNORE;
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            message.error('Image must be smaller than 2MB!');
+            return Upload.LIST_IGNORE;
+        }
+        return true;
+    };
+
+    const handleChange = (info) => {
+        if (info.file.status === 'done') {
+            setUploadedImageUrl(info.file.response.file_url);
+            message.success(`${info.file.name} file uploaded successfully`);
+            setReady(true);
+        } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
     };
 
     const uniqueLevels = [...new Set(questions.map(question => question.level))];
@@ -124,8 +155,25 @@ const GamesTab = () => {
                                             ))}
                                         </Select>
                                     </Form.Item>
+                                    <Form.Item
+                                        label="Image"
+                                        name="image"
+                                        rules={[{ required: true, message: 'Please upload an image' }]}
+                                    >
+                                        <Upload
+                                            name="file"
+                                            listType="picture-card"
+                                            className="avatar-uploader"
+                                            action="https://apiadmin.sukoon.love/admin/service/upload"
+                                            beforeUpload={beforeUpload}
+                                            onChange={handleChange}
+                                            maxCount={1}
+                                        >
+                                            <PlusOutlined />
+                                        </Upload>
+                                    </Form.Item>
                                     <Form.Item>
-                                        <Button type="primary" htmlType="submit">
+                                        <Button type="primary" htmlType="submit" disabled={!ready}>
                                             Submit
                                         </Button>
                                     </Form.Item>
@@ -137,7 +185,6 @@ const GamesTab = () => {
                             {questions.length > 0 ?
                                 <Cascader.Panel
                                     className='w-full h-full'
-                                    defaultValue={[['quiz', 1, 'Quesss', '2', '2'] || []]}
                                     onChange={(value) => console.log(value)}
                                     options={[
                                         {
