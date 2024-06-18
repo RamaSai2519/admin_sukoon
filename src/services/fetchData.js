@@ -102,11 +102,11 @@ export const fetchEvents = async (setEvents) => {
     }
 }
 
-export const fetchEngangementData = async (setEngagementData) => {
+export const fetchShorts = async (setShorts) => {
     try {
-        const response = await Raxios.get('/user/engagementData');
-        setEngagementData(response.data);
+        const response = await Raxios.get('/content/shorts');
+        setShorts(response.data);
     } catch (error) {
-        console.error('Error fetching engagement data:', error);
+        console.error('Error fetching shorts:', error);
     }
 };

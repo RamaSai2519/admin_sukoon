@@ -11,7 +11,6 @@ import {
     fetchExperts,
     fetchSchedules,
     fetchEvents,
-    fetchEngangementData
 } from './fetchData';
 
 // Create contexts
@@ -26,7 +25,6 @@ const CallsContext = createContext();
 const ExpertsContext = createContext();
 const SchedulesContext = createContext();
 const EventsContext = createContext();
-const EngangementDataContext = createContext();
 
 // Export hooks to use contexts
 export const useErrorLogs = () => useContext(ErrorLogsContext);
@@ -98,30 +96,28 @@ export const DataProvider = ({ children }) => {
     };
 
     return (
-        <EngangementDataContext.Provider value={contextValues.engagementData}>
-            <ErrorLogsContext.Provider value={contextValues.errorLogs}>
-                <ApplicationsContext.Provider value={contextValues.applications}>
-                    <CategoriesContext.Provider value={contextValues.allCategories}>
-                        <StatsContext.Provider value={contextValues.stats}>
-                            <InsightsContext.Provider value={contextValues.insights}>
-                                <LeadsContext.Provider value={contextValues.leads}>
-                                    <UsersContext.Provider value={contextValues.users}>
-                                        <CallsContext.Provider value={contextValues.calls}>
-                                            <ExpertsContext.Provider value={contextValues.experts}>
-                                                <SchedulesContext.Provider value={contextValues.schedules}>
-                                                    <EventsContext.Provider value={contextValues.events}>
-                                                        {children}
-                                                    </EventsContext.Provider>
-                                                </SchedulesContext.Provider>
-                                            </ExpertsContext.Provider>
-                                        </CallsContext.Provider>
-                                    </UsersContext.Provider>
-                                </LeadsContext.Provider>
-                            </InsightsContext.Provider>
-                        </StatsContext.Provider>
-                    </CategoriesContext.Provider>
-                </ApplicationsContext.Provider>
-            </ErrorLogsContext.Provider>
-        </EngangementDataContext.Provider>
+        <ErrorLogsContext.Provider value={contextValues.errorLogs}>
+            <ApplicationsContext.Provider value={contextValues.applications}>
+                <CategoriesContext.Provider value={contextValues.allCategories}>
+                    <StatsContext.Provider value={contextValues.stats}>
+                        <InsightsContext.Provider value={contextValues.insights}>
+                            <LeadsContext.Provider value={contextValues.leads}>
+                                <UsersContext.Provider value={contextValues.users}>
+                                    <CallsContext.Provider value={contextValues.calls}>
+                                        <ExpertsContext.Provider value={contextValues.experts}>
+                                            <SchedulesContext.Provider value={contextValues.schedules}>
+                                                <EventsContext.Provider value={contextValues.events}>
+                                                    {children}
+                                                </EventsContext.Provider>
+                                            </SchedulesContext.Provider>
+                                        </ExpertsContext.Provider>
+                                    </CallsContext.Provider>
+                                </UsersContext.Provider>
+                            </LeadsContext.Provider>
+                        </InsightsContext.Provider>
+                    </StatsContext.Provider>
+                </CategoriesContext.Provider>
+            </ApplicationsContext.Provider>
+        </ErrorLogsContext.Provider>
     );
 };

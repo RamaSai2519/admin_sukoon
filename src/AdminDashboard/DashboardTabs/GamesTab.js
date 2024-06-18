@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     ConfigProvider, Form, Radio, theme,
-    Input, Cascader, Select, Button, message, Upload
+    Input, Cascader, Select, Button, message, Upload, Tooltip
 } from 'antd';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import Raxios from '../../services/axiosHelper';
@@ -185,20 +185,37 @@ const GamesTab = () => {
                             {questions.length > 0 ?
                                 <Cascader.Panel
                                     className='w-full h-full'
-                                    onChange={(value) => console.log(value)}
                                     options={[
                                         {
                                             value: "quiz",
                                             label: "Quiz",
                                             children: uniqueLevels.map(level => ({
                                                 value: level,
-                                                label: level,
+                                                label: (
+                                                    <Tooltip title={level}>
+                                                        <span>
+                                                            {level.length > 40 ? `${level.substring(0, 37)}...` : level}
+                                                        </span>
+                                                    </Tooltip>
+                                                ),
                                                 children: questions.filter(question => question.level === level).map(question => ({
                                                     value: question.question,
-                                                    label: question.question,
+                                                    label: (
+                                                        <Tooltip title={question.question}>
+                                                            <span className="inline-block max-w-full whitespace-nowrap overflow-hidden text-ellipsis">
+                                                                {question.question.length > 40 ? `${question.question.substring(0, 37)}...` : question.question}
+                                                            </span>
+                                                        </Tooltip>
+                                                    ),
                                                     children: question.options.map(option => ({
                                                         value: option.key,
-                                                        label: option.value,
+                                                        label: (
+                                                            <Tooltip title={option.value}>
+                                                                <span>
+                                                                    {option.value.length > 40 ? `${option.value.substring(0, 37)}...` : option.value}
+                                                                </span>
+                                                            </Tooltip>
+                                                        ),
                                                         children: [
                                                             {
                                                                 value: option.key,

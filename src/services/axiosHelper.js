@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const Raxios = axios.create({
   baseURL: 'https://apiadmin.sukoon.love/admin',
-  // baseURL: 'http://192.168.1.7:8080/admin',
+  // baseURL: 'http://192.168.1.3:8080/admin',
   // baseURL: 'https://m196vr75-8080.inc1.devtunnels.ms/admin',
 });
 

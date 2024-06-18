@@ -14,6 +14,7 @@ import LazyLoad from '../components/LazyLoad/lazyload';
 import EventsTab from './DashboardTabs/EventsTab';
 import CallsTable from '../CallList/CallList';
 import UserList from '../UserList/UserList';
+import ContentTab from './DashboardTabs/ContentTab';
 import { firebaseConfig } from './firebaseConfig';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
@@ -159,6 +160,8 @@ const AdminDashboard = ({ onLogout }) => {
         return <UserList />;
       case 'games':
         return <GamesTab />;
+      case 'content':
+        return <ContentTab />;
       default:
         return null;
     }
@@ -192,7 +195,7 @@ const AdminDashboard = ({ onLogout }) => {
                 <img src="/logo.svg" alt="logo" className="max-h-24" />
                 <div className='flex flex-col h-full justify-between'>
                   <div>
-                    {['dashboard', 'users', 'applications', 'events', 'scheduler', 'calls list', 'experts list', 'users list', 'games'].map((tab) => (
+                    {['dashboard', 'users', 'applications', 'events', 'scheduler', 'calls list', 'experts list', 'users list', 'games', 'content'].map((tab) => (
                       <Tab
                         key={tab}
                         label={tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -208,7 +211,7 @@ const AdminDashboard = ({ onLogout }) => {
                   </div>
                 </div>
               </div>
-              <div className='grid w-screen h-screen items-center cursor-pointer' onClick={onMenuToggle} >
+              <div className='grid w-screen h-screen items-center cursor-pointer' onClick={onMenuToggle}>
                 <KeyboardArrowLeftIcon />
               </div>
             </div>
