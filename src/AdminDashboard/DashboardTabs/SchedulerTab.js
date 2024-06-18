@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Select, DatePicker, Form, Button, Table, Checkbox, ConfigProvider, theme } from "antd";
+import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
 import Raxios from "../../services/axiosHelper";
 import { useSchedules, useUsers, useExperts } from "../../services/useData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
@@ -10,7 +10,8 @@ const SchedulerTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
     const [slots, setSlots] = React.useState([]);
     const [sValues, setSValues] = React.useState({ user: "", expert: "", datetime: "" });
-    const [slot, setSlot] = React.useState([]);
+    const [fslot, setFSlot] = React.useState([]); // Final slot state
+    const [selectedSlot, setSelectedSlot] = React.useState(null); // Selected slot state
     const { loading } = useContext(LoadingContext);
     const { schedules } = useSchedules();
     const { users } = useUsers();
@@ -44,14 +45,8 @@ const SchedulerTab = () => {
         </Option>
     ));
 
-    const onFinish = async (values, endpoint, successMessage) => {
+    const onFinish = async (values, endpoint) => {
         try {
-            const selectedDateTime = values.datetime;
-            const now = new Date();
-            if (selectedDateTime && selectedDateTime <= now) {
-                window.alert("Selected time has already passed. Please select a future time.");
-                return;
-            }
             const response = await Raxios.post(endpoint, values);
             if (response.status === 200) {
                 if (endpoint === "/data/slots") {
@@ -59,28 +54,24 @@ const SchedulerTab = () => {
                     setSlots(response.data.map(slot => ({
                         label: slot.slot,
                         value: slot
-                    }))
-                    );
+                    })));
                 }
             }
-            // window.alert(successMessage);
-            // window.location.reload();
         } catch (error) {
             console.error("Error:", error);
         }
     };
 
     const onFinalSchedule = async () => {
-        if (slot.length === 0) {
+        if (fslot.length === 0) {
             window.alert("Please select a slot to schedule the call");
             return;
-        } else if (slot.length > 1) {
+        } else if (fslot.length > 1) {
             window.alert("Please select only one slot to schedule the call");
             return;
         }
 
-        // Update sValues with the datetime from the selected slot
-        const updatedSValues = { ...sValues, datetime: slot[0].datetime };
+        const updatedSValues = { ...sValues, datetime: fslot[0].datetime };
 
         try {
             const response = await Raxios.post("/data/schedules", updatedSValues);
@@ -109,7 +100,7 @@ const SchedulerTab = () => {
                         <Form
                             name="connect-call"
                             className="grid grid-cols-2 gap-2 w-full border-b-2 dark:border-lightBlack pb-4"
-                            onFinish={(values) => onFinish(values, "/call/connect", "Call Connected successfully")}
+                            onFinish={(values) => onFinish(values, "/call/connect")}
                         >
                             <Form.Item
                                 name="user"
@@ -150,7 +141,7 @@ const SchedulerTab = () => {
                         <Form
                             name="schedule-call"
                             className="grid grid-cols-2 gap-2 mt-3"
-                            onFinish={(values) => onFinish(values, "/data/slots", "Call Scheduled successfully")}
+                            onFinish={(values) => onFinish(values, "/data/slots")}
                         >
                             <Form.Item
                                 name="user"
@@ -190,20 +181,44 @@ const SchedulerTab = () => {
                             >
                                 <DatePicker
                                     className="w-full"
-                                    showTime
                                     format="YYYY-MM-DD HH:mm:ss"
                                 />
+                            </Form.Item>
+                            <Form.Item
+                                name="duration"
+                                rules={[{ required: true, message: "Please select a duration" }]}
+                            >
+                                <Select
+                                    className="w-full"
+                                    placeholder="Select Duration"
+                                >
+                                    {["30", "60"].map(duration => (
+                                        <Option key={duration} value={duration}>
+                                            {duration} minutes
+                                        </Option>
+                                    ))}
+                                </Select>
                             </Form.Item>
                             <Button htmlType="submit" className="w-full">Get slots</Button>
                             {slots.length !== 0 ?
                                 <div
                                     style={{ gridColumn: "1 / span 2" }}
                                 >
-                                    <Checkbox.Group
-                                        className="grid grid-cols-3 gap-2 bg-lightBlack p-2 rounded-xl my-2"
-                                        options={slots}
-                                        onChange={(values) => setSlot(values)}
-                                    />
+                                    <div className="grid grid-cols-3 gap-2 bg-lightBlack p-2 rounded-xl my-2">
+                                        {slots.map(slot => (
+                                            <Button
+                                                key={slot.label}
+                                                className={`w-full my-2 ${selectedSlot === slot ? 'ant-btn-primary' : ''}`}
+                                                onClick={() => {
+                                                    setSelectedSlot(slot);
+                                                    setFSlot([slot.value]);
+                                                }}
+                                                disabled={!slot.value.available}
+                                            >
+                                                {slot.label}
+                                            </Button>
+                                        ))}
+                                    </div>
                                     <Button onClick={onFinalSchedule} className="w-full">Schedule</Button>
                                 </div>
                                 : null
