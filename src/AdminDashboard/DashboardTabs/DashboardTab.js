@@ -11,16 +11,17 @@ import DashboardTile from '../../components/DashboardTile';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import InsightsTable from '../../components/DataTable';
 import { Button, ConfigProvider, theme } from 'antd';
-import { LoadingContext } from '../AdminDashboard';
 
 const DashboardTab = () => {
   const { stats, fetchStats } = useStats();
   const [view, setView] = React.useState('Split By Duration');
   const darkMode = localStorage.getItem('darkMode') === 'true';
-  const { loading } = React.useContext(LoadingContext);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
+    setLoading(true);
     fetchStats();
+    setLoading(false);
     // eslint-disable-next-line
   }, []);
 

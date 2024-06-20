@@ -4,8 +4,13 @@ import { useApplications } from "../../services/useData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 
 const ApplicationsTab = () => {
-    const { applications } = useApplications();
+    const { applications, fetchApplications } = useApplications();
     const darkMode = localStorage.getItem('darkMode') === 'true';
+
+    React.useEffect(() => {
+        fetchApplications();
+        // eslint-disable-next-line
+    }, []);
 
     const columns = [
         {

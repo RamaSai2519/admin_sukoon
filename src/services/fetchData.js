@@ -66,7 +66,7 @@ export const fetchUsers = async (setUsers) => {
 export const fetchCalls = async (setCalls) => {
     try {
         const response = await Raxios.get('/data/calls');
-        setCalls(response.data.reverse());
+        setCalls(response.data);
     } catch (error) {
         console.error('Error fetching calls:', error);
     }
