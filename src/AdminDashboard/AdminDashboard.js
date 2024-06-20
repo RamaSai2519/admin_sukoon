@@ -147,6 +147,7 @@ const AdminDashboard = ({ onLogout }) => {
         )}
         <div className="flex-1 px-10 min-h-screen overflow-auto">
           <Routes>
+            <Route path="/" element={<DashboardTab />} />
             <Route path="dashboard" element={<DashboardTab />} />
             <Route path="calls list" element={<CallsTable />} />
             <Route path="experts list" element={<SaarthisTab />} />
