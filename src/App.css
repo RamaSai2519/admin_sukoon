@@ -354,6 +354,10 @@ body {
   align-items: flex-end;
 }
 
+.h3-darkgrey h3 {
+  color: darkgrey;
+}
+
 @keyframes slide-in {
   0% {
     transform: translateX(-100%);
@@ -381,4 +385,3 @@ body {
 .slide-out {
   animation: slide-out 0.5s ease-out forwards;
 }
-

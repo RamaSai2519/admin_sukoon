@@ -9,7 +9,9 @@ import EditableCell from '../components/EditableCell';
 const UserEngagement = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
     const [engagementData, setEngagementData] = React.useState([]);
-    const [currentPage, setCurrentPage] = React.useState(1);
+    const [currentPage, setCurrentPage] = React.useState(
+        localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1
+    );
     const [pageSize, setPageSize] = React.useState(10);
     const [totalItems, setTotalItems] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
@@ -172,6 +174,7 @@ const UserEngagement = () => {
 
     const handleTableChange = (current, pageSize) => {
         setCurrentPage(current);
+        localStorage.setItem('currentPage', current);
         setPageSize(pageSize);
     };
 
