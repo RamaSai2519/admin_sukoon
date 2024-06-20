@@ -7,11 +7,10 @@ import LazyLoad from '../components/LazyLoad/lazyload';
 import { ConfigProvider, theme, Table, Button, Flex, Radio } from 'antd';
 import UserEngagement from '../UserEngagement';
 import Loading from '../components/Loading/loading';
-import { LoadingContext } from '../AdminDashboard/AdminDashboard';
 import { fetchEngagementData } from '../services/fetchData';
 
 const UsersList = () => {
-  const { loading } = React.useContext(LoadingContext);
+  const [loading, setLoading] = useState(false);
   const darkMode = localStorage.getItem('darkMode') === 'true';
   const [table, setTable] = useState(
     localStorage.getItem('table') === 'engagement' ? 'engagement' : 'users'
@@ -175,8 +174,14 @@ const UsersList = () => {
     saveAs(blob, 'UserEngagement.xlsx');
   };
 
+  const fetchdata = async () => {
+    setLoading(true);
+    await fetchUsers();
+    setLoading(false);
+  };
+
   useEffect(() => {
-    fetchUsers();
+    fetchdata();
     // eslint-disable-next-line
   }, []);
 

@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
 import Raxios from "../../services/axiosHelper";
 import { useSchedules, useUsers, useExperts } from "../../services/useData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
-import { LoadingContext } from "../AdminDashboard";
 
 const SchedulerTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -12,11 +11,18 @@ const SchedulerTab = () => {
     const [sValues, setSValues] = React.useState({ user: "", expert: "", datetime: "" });
     const [fslot, setFSlot] = React.useState([]); // Final slot state
     const [selectedSlot, setSelectedSlot] = React.useState(null); // Selected slot state
-    const { loading } = useContext(LoadingContext);
-    const { schedules } = useSchedules();
+    const [loading, setLoading] = React.useState(false);
+    const { schedules, fetchSchedules } = useSchedules();
     const { users } = useUsers();
     const { experts } = useExperts();
     const { Option } = Select;
+
+    useEffect(() => {
+        setLoading(true);
+        fetchSchedules();
+        setLoading(false);
+        // eslint-disable-next-line
+    }, []);
 
     const columns = [
         { title: "User", dataIndex: "user", key: "user" },

@@ -3,14 +3,16 @@ import Histograms from '../../components/Histograms';
 import Popup from '../../components/Popups/Popup';
 import LeadsPopup from '../../components/Popups/LeadsPopup';
 import DashboardTile from '../../components/DashboardTile';
+import Loading from '../../components/Loading/loading';
 import { useUsers, useCalls, useLeads } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import { ConfigProvider, theme } from 'antd';
 
 const UsersTab = () => {
-  const { users } = useUsers();
-  const { calls } = useCalls();
-  const { leads } = useLeads();
+  const { users, fetchUsers } = useUsers();
+  const { calls, fetchCalls } = useCalls();
+  const { leads, fetchLeads } = useLeads();
+  const [loading, setLoading] = useState(false);
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentDayTotalUsers, setCurrentDayTotalUsers] = useState(0);
   const [oneCallUsers, setOneCallUsers] = useState([]);
@@ -22,6 +24,19 @@ const UsersTab = () => {
     users: []
   });
   const darkMode = localStorage.getItem('darkMode') === 'true';
+
+  const fetchData = async () => {
+    setLoading(true);
+    await fetchUsers();
+    await fetchCalls();
+    await fetchLeads();
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     const currentDate = new Date().toLocaleDateString();
@@ -50,6 +65,7 @@ const UsersTab = () => {
     if (popupContent.title) {
       fetchPopupUsers(popupContent.title);
     }
+    // eslint-disable-next-line
   }, [users, calls, leads]);
 
   useEffect(() => {
@@ -96,6 +112,10 @@ const UsersTab = () => {
     setPopupContent({ title: '', users: [] });
     localStorage.removeItem('popupTitle');
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <LazyLoad>

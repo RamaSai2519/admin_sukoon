@@ -6,16 +6,26 @@ import CloseIcon from '@mui/icons-material/Close';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
 import { red, pink, green, yellow } from '@mui/material/colors';
-import { LoadingContext } from '../../AdminDashboard/AdminDashboard';
+import { useCalls } from '../../services/useData';
 import Loading from '../Loading/loading';
 import LazyLoad from '../LazyLoad/lazyload';
-import { useCalls } from '../../services/useData';
 
 const LastFiveCallsTable = () => {
-  const { calls } = useCalls();
-  const { loading } = React.useContext(LoadingContext);
+  const { calls, fetchCalls } = useCalls();
+  const [loading, setLoading] = useState(false);
   const [lastFiveCalls, setLastFiveCalls] = useState([]);
   const darkMode = localStorage.getItem('darkMode') === 'true';
+
+  const fetchData = async () => {
+    setLoading(true);
+    await fetchCalls();
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     const todayCalls = calls.filter(call => {

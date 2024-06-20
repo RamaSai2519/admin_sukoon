@@ -1,11 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, ConfigProvider, theme } from 'antd';
 import { useErrorLogs } from '../../services/useData';
+import Loading from '../../components/Loading/loading';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 
 const ErrorLogsComponent = () => {
-    const { errorLogs } = useErrorLogs();
+    const { errorLogs, fetchErrorLogs } = useErrorLogs();
+    const [loading, setLoading] = useState(false);
     const darkMode = localStorage.getItem('darkMode') === 'true';
+
+    const fetchData = async () => {
+        setLoading(true);
+        await fetchErrorLogs();
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchData();
+        // eslint-disable-next-line
+    }, []);
 
     const columns = [
         {
@@ -20,6 +33,10 @@ const ErrorLogsComponent = () => {
             key: 'message'
         }
     ];
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <LazyLoad>
