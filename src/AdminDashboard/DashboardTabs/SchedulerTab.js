@@ -13,13 +13,15 @@ const SchedulerTab = () => {
     const [selectedSlot, setSelectedSlot] = React.useState(null); // Selected slot state
     const [loading, setLoading] = React.useState(false);
     const { schedules, fetchSchedules } = useSchedules();
-    const { users } = useUsers();
-    const { experts } = useExperts();
+    const { users, fetchUsers } = useUsers();
+    const { experts, fetchExperts } = useExperts();
     const { Option } = Select;
 
     useEffect(() => {
         setLoading(true);
         fetchSchedules();
+        fetchUsers();
+        fetchExperts();
         setLoading(false);
         // eslint-disable-next-line
     }, []);
