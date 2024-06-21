@@ -8,12 +8,14 @@ const CreateEventPopup = ({ visible, setVisible }) => {
     const [form] = Form.useForm();
     const [uploadedImageUrl, setUploadedImageUrl] = React.useState('');
     const [ready, setReady] = React.useState(false);
-    const { experts } = useExperts();
+    const { experts, fetchExperts } = useExperts();
 
     useEffect(() => {
         if (visible) {
             form.resetFields();
+            fetchExperts();
         }
+        // eslint-disable-next-line
     }, [visible, form]);
 
     const handleCreate = (values) => {
