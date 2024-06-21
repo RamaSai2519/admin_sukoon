@@ -212,7 +212,7 @@ const SchedulerTab = () => {
                                 <div
                                     style={{ gridColumn: "1 / span 2" }}
                                 >
-                                    <div className="grid grid-cols-3 gap-2 bg-lightBlack p-2 rounded-xl my-2">
+                                    <div className="grid grid-cols-3 gap-2 dark:bg-lightBlack p-2 rounded-xl my-2">
                                         {slots.map(slot => (
                                             <Button
                                                 key={slot.label}
