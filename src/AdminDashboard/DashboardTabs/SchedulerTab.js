@@ -7,10 +7,10 @@ import Loading from "../../components/Loading/loading";
 
 const SchedulerTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
-    const [slots, setSlots] = React.useState([]);
-    const [sValues, setSValues] = React.useState({ user: "", expert: "", datetime: "" });
-    const [fslot, setFSlot] = React.useState([]); // Final slot state
-    const [selectedSlot, setSelectedSlot] = React.useState(null); // Selected slot state
+    // const [slots, setSlots] = React.useState([]);
+    // const [sValues, setSValues] = React.useState({ user: "", expert: "", datetime: "" });
+    // const [fslot, setFSlot] = React.useState([]); // Final slot state
+    // const [selectedSlot, setSelectedSlot] = React.useState(null); // Selected slot state
     const [loading, setLoading] = React.useState(false);
     const { schedules, fetchSchedules } = useSchedules();
     const { users, fetchUsers } = useUsers();
@@ -57,38 +57,33 @@ const SchedulerTab = () => {
         try {
             const response = await Raxios.post(endpoint, values);
             if (response.status === 200) {
-                if (endpoint === "/data/slots") {
-                    setSValues(values);
-                    setSlots(response.data.map(slot => ({
-                        label: slot.slot,
-                        value: slot
-                    })));
-                }
+                window.alert("Call connected successfully");
+                // if (endpoint === "/data/slots") {
+                //     setSValues(values);
+                //     setSlots(response.data.map(slot => ({
+                //         label: slot.slot,
+                //         value: slot
+                //     })));
+                // }
             }
         } catch (error) {
             console.error("Error:", error);
         }
     };
 
-    const onFinalSchedule = async () => {
-        if (fslot.length === 0) {
-            window.alert("Please select a slot to schedule the call");
-            return;
-        } else if (fslot.length > 1) {
-            window.alert("Please select only one slot to schedule the call");
-            return;
-        }
-
-        const updatedSValues = { ...sValues, datetime: fslot[0].datetime };
-
+    const onScheduleFinish = async values => {
         try {
-            const response = await Raxios.post("/data/schedules", updatedSValues);
-            if (response.status === 200) {
-                window.alert("Call scheduled successfully");
+            const selectedDateTime = values.datetime;
+            const now = new Date();
+            if (selectedDateTime <= now) {
+                window.alert("Selected time has already passed. Please select a future time.");
+            } else {
+                await Raxios.post("/data/schedules", values);
+                window.alert("Call Scheduled successfully");
                 window.location.reload();
             }
         } catch (error) {
-            console.error("Error scheduling call:", error);
+            console.error("Error:", error);
         }
     };
 
@@ -149,7 +144,7 @@ const SchedulerTab = () => {
                         <Form
                             name="schedule-call"
                             className="grid grid-cols-2 gap-2 mt-3"
-                            onFinish={(values) => onFinish(values, "/data/slots")}
+                            onFinish={onScheduleFinish}
                         >
                             <Form.Item
                                 name="user"
@@ -190,6 +185,7 @@ const SchedulerTab = () => {
                                 <DatePicker
                                     className="w-full"
                                     format="YYYY-MM-DD HH:mm:ss"
+                                    showTime
                                 />
                             </Form.Item>
                             <Form.Item
@@ -207,8 +203,8 @@ const SchedulerTab = () => {
                                     ))}
                                 </Select>
                             </Form.Item>
-                            <Button htmlType="submit" className="w-full">Get slots</Button>
-                            {slots.length !== 0 ?
+                            <Button htmlType="submit" className="w-full">Schedule Call</Button>
+                            {/* {slots.length !== 0 ?
                                 <div
                                     style={{ gridColumn: "1 / span 2" }}
                                 >
@@ -230,7 +226,7 @@ const SchedulerTab = () => {
                                     <Button onClick={onFinalSchedule} className="w-full">Schedule</Button>
                                 </div>
                                 : null
-                            }
+                            } */}
                         </Form>
                     </div>
                 </div>
