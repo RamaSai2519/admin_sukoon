@@ -69,7 +69,7 @@ const DashboardTab = () => {
               </DashboardTile>
               <DashboardTile title="Total Duration">
                 <h1>{stats.totalDuration}</h1>
-                <p className='text-right w-full'>all calls</p>
+                <p className='text-right w-full'>successful calls</p>
               </DashboardTile>
               <DashboardTile msg={"Number of successful scheduled calls with more than 1 minute duration"} title="Scheduled Calls">
                 <h1>{stats.scheduledCallsPercentage}%</h1>
