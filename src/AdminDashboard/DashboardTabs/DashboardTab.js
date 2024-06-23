@@ -77,7 +77,7 @@ const DashboardTab = () => {
               </DashboardTile>
               <DashboardTile title="Avg. Score">
                 <h1>{stats.averageConversationScore}</h1>
-                <p className='text-right w-full'>all calls</p>
+                <p className='text-right w-full'>successful calls</p>
               </DashboardTile>
               <DashboardTile title="Online Saarthis" style={{ "gridRow": "1 / span 2", "gridColumn": "5" }}>
                 <OnlineSaarthisTable onlineSaarthis={stats.onlineSaarthis} />
