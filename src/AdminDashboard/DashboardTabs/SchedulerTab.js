@@ -31,7 +31,7 @@ const SchedulerTab = () => {
         { title: "Expert", dataIndex: "expert", key: "expert" },
         { title: "Date & Time", dataIndex: "datetime", key: "datetime" },
         { title: "Status", dataIndex: "status", key: "status" },
-        { title: "Scheduled By", dataIndex: "lastModifiedBy", key: "lastModifiedBy" },
+        { title: "Scheduled By", dataIndex: "type", key: "type" },
         {
             title: "Action", key: "action",
             render: (_, record) => <Button onClick={() => handleDelete(record)}>Delete</Button>
@@ -56,7 +56,10 @@ const SchedulerTab = () => {
 
     const onFinish = async (values, endpoint) => {
         try {
-            const response = await Raxios.post(endpoint, values);
+            const response = await Raxios.post(endpoint, {
+                ...values,
+                type: "Admin"
+            });
             if (response.status === 200) {
                 window.alert("Call connected successfully");
                 // if (endpoint === "/data/slots") {
