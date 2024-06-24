@@ -31,6 +31,7 @@ const SchedulerTab = () => {
         { title: "Expert", dataIndex: "expert", key: "expert" },
         { title: "Date & Time", dataIndex: "datetime", key: "datetime" },
         { title: "Status", dataIndex: "status", key: "status" },
+        { title: "Scheduled By", dataIndex: "lastModifiedBy", key: "lastModifiedBy" },
         {
             title: "Action", key: "action",
             render: (_, record) => <Button onClick={() => handleDelete(record)}>Delete</Button>
