@@ -56,10 +56,7 @@ const SchedulerTab = () => {
 
     const onFinish = async (values, endpoint) => {
         try {
-            const response = await Raxios.post(endpoint, {
-                values,
-                type: "Admin"
-            });
+            const response = await Raxios.post(endpoint, values);
             if (response.status === 200) {
                 window.alert("Call connected successfully");
                 // if (endpoint === "/data/slots") {
@@ -82,7 +79,10 @@ const SchedulerTab = () => {
             if (selectedDateTime <= now) {
                 window.alert("Selected time has already passed. Please select a future time.");
             } else {
-                await Raxios.post("/data/schedules", values);
+                await Raxios.post("/data/schedules", {
+                    values,
+                    type: "Admin"
+                });
                 window.alert("Call Scheduled successfully");
                 window.location.reload();
             }
