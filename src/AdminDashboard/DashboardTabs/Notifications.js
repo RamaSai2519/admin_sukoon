@@ -4,7 +4,7 @@ import { useErrorLogs } from '../../services/useData';
 import Loading from '../../components/Loading/loading';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 
-const ErrorLogsComponent = () => {
+const NotificationsTab = () => {
     const { errorLogs, fetchErrorLogs } = useErrorLogs();
     const [loading, setLoading] = useState(false);
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -55,4 +55,4 @@ const ErrorLogsComponent = () => {
     );
 };
 
-export default ErrorLogsComponent;
+export default NotificationsTab;

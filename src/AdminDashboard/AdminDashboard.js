@@ -8,13 +8,14 @@ import SchedulerTab from './DashboardTabs/SchedulerTab';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import ThemeToggle from '../components/ThemeToggle/toggle';
-import ErrorLogsComponent from './DashboardTabs/Notifications';
+import NotificationsTab from './DashboardTabs/Notifications';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import EventsTab from './DashboardTabs/EventsTab';
 import CallsTable from '../CallList/CallList';
 import UserList from '../UserList/UserList';
 import ContentTab from './DashboardTabs/ContentTab';
 import GamesTab from './DashboardTabs/GamesTab';
+import WhatsappTab from './DashboardTabs/WhatsappTab';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken } from 'firebase/messaging';
 import Raxios from '../services/axiosHelper';
@@ -112,7 +113,7 @@ const AdminDashboard = ({ onLogout }) => {
               <img src="/logo.svg" alt="logo" className="max-h-24" />
               <div className='flex flex-col h-full justify-between'>
                 <div className='grid gap-2'>
-                  {['dashboard', 'users', 'applications', 'events', 'scheduler', 'calls list', 'experts list', 'users list', 'games', 'content'].map((tab) => (
+                  {['dashboard', 'users', 'applications', 'events', 'scheduler', 'calls list', 'experts list', 'users list', 'games', 'content', 'whatsapp'].map((tab) => (
                     <Link
                       key={tab}
                       to={`/admin/home/${tab}`}
@@ -153,12 +154,13 @@ const AdminDashboard = ({ onLogout }) => {
             <Route path="experts list" element={<SaarthisTab />} />
             <Route path="users" element={<UsersTab />} />
             <Route path="applications" element={<ApplicationsTab />} />
-            <Route path="notifications" element={<ErrorLogsComponent />} />
+            <Route path="notifications" element={<NotificationsTab />} />
             <Route path="scheduler" element={<SchedulerTab />} />
             <Route path="events" element={<EventsTab />} />
             <Route path="users list" element={<UserList />} />
             <Route path="games" element={<GamesTab />} />
             <Route path="content" element={<ContentTab />} />
+            <Route path="whatsapp" element={<WhatsappTab />} />
           </Routes>
         </div>
       </div>
