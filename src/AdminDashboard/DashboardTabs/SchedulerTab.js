@@ -80,7 +80,7 @@ const SchedulerTab = () => {
                 window.alert("Selected time has already passed. Please select a future time.");
             } else {
                 await Raxios.post("/data/schedules", {
-                    values,
+                    ...values,
                     type: "Admin"
                 });
                 window.alert("Call Scheduled successfully");
