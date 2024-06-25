@@ -6,38 +6,42 @@ import LazyLoad from '../../components/LazyLoad/lazyload';
 
 const WhatsappTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
-    const [loading, setLoading] = useState(false);
-    const [incomingData, setIncomingData] = useState([]);
-    const [outgoingData, setOutgoingData] = useState([]);
 
-    const fetchData = async () => {
+    const [currentPage, setCurrentPage] = React.useState(
+        localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1
+    );
+    const [totalItems, setTotalItems] = React.useState(0);
+    const [pageSize, setPageSize] = React.useState(10);
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState([]);
+
+    const fetchData = async (page, size) => {
         setLoading(true);
-        const response = await Raxios.get('/data/wahistory');
-        setIncomingData(response.data.filter((item) => item.type === 'Incoming'))
-        setOutgoingData(response.data.filter((item) => item.type === 'Outgoing'))
-        console.log(response.data, "incomingData");
+        const response = await Raxios.get('/data/wahistory', {
+            params: { page, size }
+        });
+        setData(response.data.data);
+        setTotalItems(response.data.total);
         setLoading(false);
     };
 
     useEffect(() => {
-        fetchData();
+        fetchData(currentPage, pageSize);
         // eslint-disable-next-line
-    }, []);
+    }, [currentPage, pageSize]);
 
-    const outgoingColumns = [
-        { title: "User Name", dataIndex: "userName", key: "userName" },
-        { title: "Phone Number", dataIndex: "userNumber", key: "userNumber" },
-        { title: "Template", dataIndex: "templateName", key: "templateName" },
-        { title: "Sent At", dataIndex: "createdAt", key: "createdAt" },
-        { title: "Status", dataIndex: "status", key: "status" },
-    ]
-
-    const incomingColumns = [
+    const columns = [
         { title: "User Name", dataIndex: "userName", key: "userName" },
         { title: "Phone Number", dataIndex: "userNumber", key: "userNumber" },
         { title: "Message", dataIndex: "body", key: "body" },
         { title: "Received At", dataIndex: "createdAt", key: "createdAt" },
     ]
+
+    const handleTableChange = (current, pageSize) => {
+        setCurrentPage(current);
+        localStorage.setItem('currentPage', current);
+        setPageSize(pageSize);
+    };
 
     if (loading) {
         return <Loading />;
@@ -51,16 +55,17 @@ const WhatsappTab = () => {
                 }
             }>
                 <div className="min-h-screen py-2">
-                    <div className='grid md:grid-cols-2 md:gap-4 w-full'>
-                        <div className='md:border-r-2 md:border-lightBlack md:pr-4'>
-                            <h1 className="text-2xl font-bold mb-2">Incoming Messages</h1>
-                            <Table dataSource={incomingData} columns={incomingColumns} />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold mb-2">Outgoing Messages</h1>
-                            <Table dataSource={outgoingData} columns={outgoingColumns} />
-                        </div>
-                    </div>
+                    <Table
+                        dataSource={data}
+                        columns={columns}
+                        rowKey={(record) => record._id}
+                        pagination={{
+                            current: currentPage,
+                            pageSize: pageSize,
+                            total: totalItems,
+                            onChange: handleTableChange
+                        }}
+                    />
                 </div>
             </ConfigProvider>
         </LazyLoad>

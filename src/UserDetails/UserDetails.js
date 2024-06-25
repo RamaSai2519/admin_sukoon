@@ -31,28 +31,45 @@ const UserDetails = () => {
     }
   }, [darkMode]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await Raxios.get(`/user/users/${userId}`);
-        setName(response.data.name);
-        setPhoneNumber(response.data.phoneNumber);
-        setCity(response.data.city);
-        setBirthDate(new Date(response.data.birthDate).toISOString().split('T')[0]);
-        setNumberOfCalls(response.data.numberOfCalls);
-        setSource(response.data.source);
-        setContext(response.data.context);
-        setPersona(response.data['Customer Persona']);
-        setNotifications(response.data.notifications);
-      } catch (error) {
-        console.error('Error fetching user details:', error);
-      }
-    };
 
+  const fetchData = async () => {
+    try {
+      const response = await Raxios.get(`/user/users/${userId}`);
+      setName(response.data.name);
+      setPhoneNumber(response.data.phoneNumber);
+      setCity(response.data.city);
+      setBirthDate(new Date(response.data.birthDate).toISOString().split('T')[0]);
+      setNumberOfCalls(response.data.numberOfCalls);
+      setSource(response.data.source);
+      setContext(response.data.context);
+      setPersona(response.data['Customer Persona']);
+      setNotifications(response.data.notifications);
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  };
+
+
+  useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, [userId]);
 
+  useEffect(() => {
+    if (window.location.hash === '#notifications-table') {
+      const notificationsElement = document.getElementById('notifications-table');
+      if (notificationsElement) {
+        notificationsElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [notifications]);
+
   const columns = [
+    {
+      title: 'Message',
+      dataIndex: 'body',
+      key: 'body',
+    },
     {
       title: 'Template',
       dataIndex: 'templateName',
@@ -67,6 +84,11 @@ const UserDetails = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
     }
   ];
 
@@ -204,7 +226,7 @@ const UserDetails = () => {
                   <h2 className='text-2xl whitespace-pre-wrap'>{persona}</h2>
                 )}
               </div>
-              <div className='grid-tile'>
+              <div id="notifications-table" className='grid-tile'>
                 <h3>Notifications</h3>
                 <Table
                   columns={columns}

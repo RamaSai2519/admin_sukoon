@@ -83,11 +83,20 @@ const UsersList = () => {
       title: 'Details',
       dataIndex: '_id',
       key: 'details',
-      render: (id) => <Link to={`/admin/users/${id}`}>
-        <Button>
-          View
-        </Button>
-      </Link>,
+      render: (id) =>
+        <div className='flex gap-2'>
+          <Link to={`/admin/users/${id}`}>
+            <Button>
+              View
+            </Button>
+          </Link>
+          <Link to={`/admin/users/${id}#notifications-table`}>
+            <Button>
+              WA Texts
+            </Button>
+          </Link>
+        </div>
+      ,
     },
   ];
 
