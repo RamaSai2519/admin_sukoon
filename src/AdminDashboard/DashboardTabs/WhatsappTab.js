@@ -52,12 +52,12 @@ const WhatsappTab = () => {
             }>
                 <div className="min-h-screen py-2">
                     <div className='grid md:grid-cols-2 md:gap-4 w-full'>
-                        <div>
-                            <h1 className="text-2xl font-bold">Incoming Messages</h1>
+                        <div className='md:border-r-2 md:border-lightBlack md:pr-4'>
+                            <h1 className="text-2xl font-bold mb-2">Incoming Messages</h1>
                             <Table dataSource={incomingData} columns={incomingColumns} />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold">Outgoing Messages</h1>
+                            <h1 className="text-2xl font-bold mb-2">Outgoing Messages</h1>
                             <Table dataSource={outgoingData} columns={outgoingColumns} />
                         </div>
                     </div>
