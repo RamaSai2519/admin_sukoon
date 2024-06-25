@@ -57,7 +57,7 @@ const SchedulerTab = () => {
     const onFinish = async (values, endpoint) => {
         try {
             const response = await Raxios.post(endpoint, {
-                ...values,
+                values,
                 type: "Admin"
             });
             if (response.status === 200) {
