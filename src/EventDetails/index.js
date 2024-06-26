@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
 import { Table, Button, ConfigProvider, theme } from 'antd';
+import React, { useEffect, useState } from 'react';
+import LazyLoad from '../components/LazyLoad/lazyload';
+import writeXlsxFile from 'write-excel-file';
 import Raxios from '../services/axiosHelper';
 import { useParams } from 'react-router-dom';
-import LazyLoad from '../components/LazyLoad/lazyload';
 import { FaArrowLeft } from 'react-icons/fa';
+import { saveAs } from 'file-saver';
 
 const EventDetails = () => {
     const { slug } = useParams();
@@ -62,42 +64,45 @@ const EventDetails = () => {
         // eslint-disable-next-line
     }, [slug]);
 
-
-
     const columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Contact',
-            dataIndex: 'phoneNumber',
-            key: 'phoneNumber'
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email'
-        },
-        {
-            title: 'City',
-            dataIndex: 'city',
-            key: 'city'
-        },
-        {
-            title: "Created At",
-            dataIndex: 'createdAt',
-            key: 'createdAt',
-            render: (time) => new Date(time).toLocaleString()
-        },
-        {
-            title: "Updated At",
-            dataIndex: 'updatedAt',
-            key: 'updatedAt',
-            render: (time) => new Date(time).toLocaleString()
-        },
+        { title: 'Name', dataIndex: 'name', key: 'name', },
+        { title: 'Contact', dataIndex: 'phoneNumber', key: 'phoneNumber' },
+        { title: 'Email', dataIndex: 'email', key: 'email' },
+        { title: 'City', dataIndex: 'city', key: 'city' },
+        { title: "Created At", dataIndex: 'createdAt', key: 'createdAt', render: (time) => new Date(time).toLocaleString() },
+        { title: "Updated At", dataIndex: 'updatedAt', key: 'updatedAt', render: (time) => new Date(time).toLocaleString() },
     ];
+
+    const downloadExcel = async () => {
+        const wsData = [
+            [
+                { value: 'Name' },
+                { value: 'Contact' },
+                { value: 'Email' },
+                { value: 'City' },
+                { value: 'Created At' },
+                { value: 'Updated At' },
+            ]
+        ];
+        users.forEach((user) => {
+            wsData.push([
+                { value: user.name },
+                { value: user.phoneNumber },
+                { value: user.email },
+                { value: user.city },
+                { value: new Date(user.createdAt).toLocaleString() },
+                { value: new Date(user.updatedAt).toLocaleString() },
+            ]);
+        });
+        const buffer = await writeXlsxFile(wsData, {
+            headerStyle: {
+                fontWeight: 'bold'
+            },
+            buffer: true
+        });
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'UserList.xlsx');
+    };
 
     return (
         <LazyLoad>
@@ -106,7 +111,7 @@ const EventDetails = () => {
                     algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
                 }
             }>
-                <div className="container flex flex-col p-5 min-h-screen">
+                <div className="container flex flex-col px-5 min-h-screen">
                     <div id='details-header' className='flex flex-row items-center justify-between'>
                         <h1>Event Details</h1>
                         <button className='back-button' onClick={() => window.history.back()}>
@@ -133,7 +138,10 @@ const EventDetails = () => {
                         </div>
                     </div>
                     <div className='w-full'>
-                        <h1>Registered Users</h1>
+                        <div className='flex justify-between'>
+                            <h1>Registered Users</h1>
+                            <Button onClick={downloadExcel}>Download Excel</Button>
+                        </div>
                         <Table dataSource={users} columns={columns} rowKey={(record) => record._id || record.email} />
                     </div>
                 </div>
