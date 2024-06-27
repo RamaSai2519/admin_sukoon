@@ -72,7 +72,6 @@ const ExpertDetails = () => {
   const fetchTimings = (expertId) => {
     Raxios.get(`/data/timings?expert=${expertId}`)
       .then(response => {
-        console.log('Timings:', response.data);
         setTimings(response.data);
       })
       .catch(error => {
