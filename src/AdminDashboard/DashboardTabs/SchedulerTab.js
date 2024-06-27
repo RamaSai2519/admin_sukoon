@@ -58,17 +58,11 @@ const SchedulerTab = () => {
         try {
             const response = await Raxios.post(endpoint, values);
             if (response.status === 200) {
-                window.alert("Call connected successfully");
-                // if (endpoint === "/data/slots") {
-                //     setSValues(values);
-                //     setSlots(response.data.map(slot => ({
-                //         label: slot.slot,
-                //         value: slot
-                //     })));
-                // }
+                window.alert(response.data.message);
             }
         } catch (error) {
             console.error("Error:", error);
+            window.alert(error);
         }
     };
 
