@@ -22,7 +22,7 @@ Raxios.interceptors.request.use(
 const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem('refresh_token');
   try {
-    const response = await axios.post('http://apiadmin.sukoon.love/admin/auth/refresh', null, {
+    const response = await axios.post('https://rama.sukoonunlimited.com/admin/auth/refresh', null, {
       headers: {
         Authorization: `Bearer ${refreshToken}`,
       },

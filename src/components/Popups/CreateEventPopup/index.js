@@ -153,7 +153,7 @@ const CreateEventPopup = ({ visible, setVisible }) => {
                     name="file"
                     listType="picture-card"
                     className="avatar-uploader"
-                    action="https://apiadmin.sukoon.love/admin/service/upload"
+                    action="https://rama.sukoonunlimited.com/admin/service/upload"
                     beforeUpload={beforeUpload}
                     onChange={handleChange}
                     maxCount={1}
