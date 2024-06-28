@@ -87,8 +87,10 @@ const SchedulerTab = () => {
     const onFinish = async (values, endpoint) => {
         try {
             const response = await Raxios.post(endpoint, values);
-            if (response.status === 200) {
-                window.alert(response.data.message);
+            if (response.data.success !== true) {
+                window.alert(response.data.error.message);
+            } else {
+                window.alert("Call connected successfully");
             }
         } catch (error) {
             console.error("Error:", error);
