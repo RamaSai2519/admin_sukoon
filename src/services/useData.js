@@ -9,7 +9,6 @@ import {
     fetchUsers,
     fetchCalls,
     fetchExperts,
-    fetchSchedules,
     fetchEvents,
 } from './fetchData';
 
@@ -23,7 +22,6 @@ const LeadsContext = createContext();
 const UsersContext = createContext();
 const CallsContext = createContext();
 const ExpertsContext = createContext();
-const SchedulesContext = createContext();
 const EventsContext = createContext();
 
 // Export hooks to use contexts
@@ -36,7 +34,6 @@ export const useLeads = () => useContext(LeadsContext);
 export const useUsers = () => useContext(UsersContext);
 export const useCalls = () => useContext(CallsContext);
 export const useExperts = () => useContext(ExpertsContext);
-export const useSchedules = () => useContext(SchedulesContext);
 export const useEvents = () => useContext(EventsContext);
 
 export const DataProvider = ({ children }) => {
@@ -47,7 +44,6 @@ export const DataProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [calls, setCalls] = useState([]);
     const [experts, setExperts] = useState([]);
-    const [schedules, setSchedules] = useState([]);
     const [events, setEvents] = useState([]);
     const [stats, setStats] = useState({
         totalCalls: 0,
@@ -91,7 +87,6 @@ export const DataProvider = ({ children }) => {
         users: { users, fetchUsers: () => fetchUsers(setUsers) },
         calls: { calls, fetchCalls: () => fetchCalls(setCalls) },
         experts: { experts, fetchExperts: () => fetchExperts(setExperts) },
-        schedules: { schedules, fetchSchedules: () => fetchSchedules(setSchedules) },
         events: { events, fetchEvents: () => fetchEvents(setEvents) },
     };
 
@@ -105,11 +100,9 @@ export const DataProvider = ({ children }) => {
                                 <UsersContext.Provider value={contextValues.users}>
                                     <CallsContext.Provider value={contextValues.calls}>
                                         <ExpertsContext.Provider value={contextValues.experts}>
-                                            <SchedulesContext.Provider value={contextValues.schedules}>
-                                                <EventsContext.Provider value={contextValues.events}>
-                                                    {children}
-                                                </EventsContext.Provider>
-                                            </SchedulesContext.Provider>
+                                            <EventsContext.Provider value={contextValues.events}>
+                                                {children}
+                                            </EventsContext.Provider>
                                         </ExpertsContext.Provider>
                                     </CallsContext.Provider>
                                 </UsersContext.Provider>

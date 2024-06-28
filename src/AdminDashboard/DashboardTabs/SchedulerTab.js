@@ -1,30 +1,60 @@
-import React, { useEffect } from "react";
 import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
-import Raxios from "../../services/axiosHelper";
-import { useSchedules, useUsers, useExperts } from "../../services/useData";
+import { useUsers, useExperts } from "../../services/useData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
+import Raxios from "../../services/axiosHelper";
+import React, { useEffect } from "react";
 
 const SchedulerTab = () => {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
     // const [slots, setSlots] = React.useState([]);
     // const [sValues, setSValues] = React.useState({ user: "", expert: "", datetime: "" });
     // const [fslot, setFSlot] = React.useState([]); // Final slot state
     // const [selectedSlot, setSelectedSlot] = React.useState(null); // Selected slot state
+
+    const [currentPage, setCurrentPage] = React.useState(
+        localStorage.getItem('scurrentPage') ? parseInt(localStorage.getItem('scurrentPage')) : 1
+    );
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    const [totalItems, setTotalItems] = React.useState(0);
+    const [schedules, setSchedules] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
-    const { schedules, fetchSchedules } = useSchedules();
-    const { users, fetchUsers } = useUsers();
+    const [pageSize, setPageSize] = React.useState(10);
     const { experts, fetchExperts } = useExperts();
+    const { users, fetchUsers } = useUsers();
     const { Option } = Select;
 
     useEffect(() => {
+        fetchSchedules(currentPage, pageSize);
+    }, [currentPage, pageSize]);
+
+    useEffect(() => {
         setLoading(true);
-        fetchSchedules();
         fetchUsers();
         fetchExperts();
         setLoading(false);
         // eslint-disable-next-line
     }, []);
+
+    const fetchSchedules = async (page, size) => {
+        setLoading(true);
+        try {
+            const response = await Raxios.get(`/data/schedules`, {
+                params: { page, size }
+            });
+            setSchedules(response.data.data);
+            setTotalItems(response.data.total);
+        } catch (error) {
+            console.error("Error fetching schedules:", error);
+            window.alert("Error fetching schedules. Please try again later.");
+        }
+        setLoading(false);
+    };
+
+    const handleTableChange = (current, pageSize) => {
+        setCurrentPage(current);
+        localStorage.setItem('scurrentPage', current);
+        setPageSize(pageSize);
+    };
 
     const columns = [
         { title: "User", dataIndex: "user", key: "user" },
@@ -93,7 +123,17 @@ const SchedulerTab = () => {
                 <div className="flex items-center justify-center gap-4 h-full">
                     <div className="w-3/4">
                         {loading ? <Loading /> :
-                            <Table dataSource={schedules.reverse()} columns={columns} />
+                            <Table
+                                rowKey={(record) => record._id}
+                                pagination={{
+                                    current: currentPage,
+                                    pageSize: pageSize,
+                                    total: totalItems,
+                                    onChange: handleTableChange
+                                }}
+                                dataSource={schedules}
+                                columns={columns}
+                            />
                         }
                     </div>
                     <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">

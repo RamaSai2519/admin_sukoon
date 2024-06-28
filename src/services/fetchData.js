@@ -81,18 +81,6 @@ export const fetchExperts = async (setExperts) => {
     }
 };
 
-export const fetchSchedules = async (setSchedules) => {
-    try {
-        const response = await Raxios.get('/data/schedules');
-        setSchedules(response.data.map(schedule => ({
-            ...schedule,
-            key: schedule._id
-        })));
-    } catch (error) {
-        console.error('Error fetching schedules:', error);
-    }
-};
-
 export const fetchEvents = async (setEvents) => {
     try {
         const response = await Raxios.get('/event/events');

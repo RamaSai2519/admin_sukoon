@@ -17,19 +17,18 @@ const UserEngagement = () => {
     const [loading, setLoading] = React.useState(false);
 
     const fetchEngagementData = async (page, size) => {
+        setLoading(true);
         try {
-            setLoading(true);
             const response = await Raxios.get('/user/engagementData', {
                 params: { page, size }
             });
             setEngagementData(response.data.data);
             setTotalItems(response.data.total);
-            setLoading(false);
         } catch (error) {
             console.error('Error fetching engagement data:', error);
-            setLoading(false);
             window.alert('Error fetching engagement data');
         }
+        setLoading(false);
     };
 
     React.useEffect(() => {
