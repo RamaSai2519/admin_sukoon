@@ -1,74 +1,140 @@
+import React, { useEffect, useState } from 'react';
+import WaWhHistory from '../../components/WaWhHistory';
+import WaFeedbacks from '../../components/WaFeedbacks';
 import Raxios from '../../services/axiosHelper';
-import React, { useState, useEffect } from 'react';
-import { Table, ConfigProvider, theme } from 'antd';
-import Loading from '../../components/Loading/loading';
-import LazyLoad from '../../components/LazyLoad/lazyload';
+import writeXlsxFile from 'write-excel-file';
+import { ConfigProvider, theme, Button, Flex, Radio } from 'antd';
+import { saveAs } from 'file-saver';
 
 const WhatsappTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
-
-    const [currentPage, setCurrentPage] = React.useState(
-        localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1
-    );
-    const [totalItems, setTotalItems] = React.useState(0);
-    const [pageSize, setPageSize] = React.useState(10);
+    const [table, setTable] = useState(localStorage.getItem('waTable') === 'history' ? 'history' : 'feedback');
+    const [currentPage, setCurrentPage] = useState(localStorage.getItem('fcurrentPage') ? parseInt(localStorage.getItem('fcurrentPage')) : 1);
+    const [totalItems, setTotalItems] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
-    const fetchData = async (page, size) => {
+    const fetchData = async (page, size, endpoint) => {
         setLoading(true);
-        const response = await Raxios.get('/data/wahistory', {
-            params: { page, size }
-        });
+        const response = await Raxios.get(endpoint, { params: { page, size } });
         setData(response.data.data);
         setTotalItems(response.data.total);
         setLoading(false);
     };
 
     useEffect(() => {
-        fetchData(currentPage, pageSize);
+        const endpoint = table === 'feedback' ? '/data/feedbacks' : '/data/wahistory';
+        fetchData(currentPage, pageSize, endpoint);
         // eslint-disable-next-line
-    }, [currentPage, pageSize]);
-
-    const columns = [
-        { title: "User Name", dataIndex: "userName", key: "userName" },
-        { title: "Phone Number", dataIndex: "userNumber", key: "userNumber" },
-        { title: "Message", dataIndex: "body", key: "body" },
-        { title: "Received At", dataIndex: "createdAt", key: "createdAt" },
-    ]
+    }, [currentPage, pageSize, table]);
 
     const handleTableChange = (current, pageSize) => {
         setCurrentPage(current);
-        localStorage.setItem('currentPage', current);
+        localStorage.setItem('fcurrentPage', current);
         setPageSize(pageSize);
     };
 
-    if (loading) {
-        return <Loading />;
-    }
+    const downloadData = async () => {
+        const filename = table === 'feedback' ? 'Feedbacks' : 'History';
+        const endpoint = table === 'feedback' ? '/data/feedbacks' : '/data/wahistory';
+
+        let allData = [];
+        try {
+            const response = await Raxios.get(endpoint, { params: { size: 'all' } });
+            allData = response.data.data;
+        } catch (error) {
+            console.error("Error fetching all data:", error);
+            return;
+        }
+
+        let dataToWrite = [];
+        if (filename === 'History') {
+            dataToWrite.push([
+                { value: 'User Name' },
+                { value: 'Phone Number' },
+                { value: 'Message' },
+                { value: 'Received At' }
+            ]);
+            allData.forEach((item) => {
+                dataToWrite.push([
+                    { value: item.userName },
+                    { value: item.userNumber },
+                    { value: item.body },
+                    { value: item.createdAt }
+                ]);
+            });
+        } else {
+            dataToWrite.push([
+                { value: 'User Name' },
+                { value: 'Expert Name' },
+                { value: 'Message' },
+                { value: 'Received At' }
+            ]);
+            allData.forEach((item) => {
+                dataToWrite.push([
+                    { value: item.userName },
+                    { value: item.expertName },
+                    { value: item.body },
+                    { value: item.createdAt }
+                ]);
+            });
+        }
+
+        try {
+            const buffer = await writeXlsxFile(dataToWrite, {
+                headerStyle: {
+                    fontWeight: 'bold'
+                },
+                buffer: true
+            });
+
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, `${filename}.xlsx`);
+        } catch (error) {
+            console.error("Error during export:", error);
+        }
+    };
 
     return (
-        <LazyLoad>
-            <ConfigProvider theme={
-                {
-                    algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-                }
-            }>
-                <div className="min-h-screen py-2">
-                    <Table
-                        dataSource={data}
-                        columns={columns}
-                        rowKey={(record) => record._id}
-                        pagination={{
-                            current: currentPage,
-                            pageSize: pageSize,
-                            total: totalItems,
-                            onChange: handleTableChange
-                        }}
-                    />
+        <ConfigProvider theme={{ algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
+            <div className='min-h-screen p-5 w-full overflow-auto'>
+                <div className='flex w-full justify-between items-center gap-2 mb-2'>
+                    <Flex vertical>
+                        <Radio.Group
+                            value={table}
+                            onChange={(e) => {
+                                localStorage.setItem('waTable', e.target.value);
+                                setTable(e.target.value);
+                            }}
+                        >
+                            <Radio.Button value='history'>History</Radio.Button>
+                            <Radio.Button value='feedback'>Feedback</Radio.Button>
+                        </Radio.Group>
+                    </Flex>
+                    <Button onClick={downloadData}>Export</Button>
                 </div>
-            </ConfigProvider>
-        </LazyLoad>
+                {table === 'history' ? (
+                    <WaWhHistory
+                        data={data}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
+                        totalItems={totalItems}
+                        handleTableChange={handleTableChange}
+                        loading={loading}
+                    />
+                ) : (
+                    <WaFeedbacks
+                        data={data}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
+                        totalItems={totalItems}
+                        handleTableChange={handleTableChange}
+                        loading={loading}
+                    />
+                )}
+            </div>
+        </ConfigProvider>
     );
 };
 

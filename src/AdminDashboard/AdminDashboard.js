@@ -110,7 +110,6 @@ const AdminDashboard = ({ onLogout }) => {
         ) : (
           <div className={`fixed z-50 left-0 top-0 flex flex-row w-screen bg-opacity-70 bg-black ${showMenu ? 'slide-in' : 'slide-out'}`} onClick={onMenuToggle}>
             <div className={`flex flex-col h-screen p-4 w-1/8 bg-gray-100 dark:bg-darkBlack ${showMenu ? 'slide-in' : 'slide-out'}`}>
-              <img src="/logo.svg" alt="logo" className="max-h-24" />
               <div className='flex flex-col h-full justify-between'>
                 <div className='grid gap-2'>
                   {['dashboard', 'users', 'applications', 'events', 'scheduler', 'calls list', 'experts list', 'users list', 'games', 'content', 'whatsapp'].map((tab) => (
