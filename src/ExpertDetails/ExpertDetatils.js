@@ -205,7 +205,7 @@ const ExpertDetails = () => {
       }
     }>
       {expert && (
-        <div className='h3-darkgrey'>
+        <div className='h3-darkgrey container'>
           <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
             <h1>Expert Details</h1>
             <button className='back-button' onClick={() => window.history.back()}>
