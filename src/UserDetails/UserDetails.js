@@ -229,9 +229,11 @@ const UserDetails = () => {
               <div id="notifications-table" className='grid-tile'>
                 <h3>Notifications</h3>
                 <Table
+                  className='overflow-auto'
                   columns={columns}
                   dataSource={notifications}
                   pagination={false}
+                  rowKey={(record) => record?.messageId || record?.createdAt}
                 />
               </div>
             </div>
