@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Table, Button, ConfigProvider, theme } from 'antd';
 import { useEvents } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
@@ -10,7 +10,7 @@ const EventsTab = () => {
     const [visible, setVisible] = React.useState(false);
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
-    React.useEffect(() => {
+    useEffect(() => {
         fetchEvents();
         // eslint-disable-next-line
     }, []);
@@ -25,6 +25,17 @@ const EventsTab = () => {
             title: 'Subtitle',
             dataIndex: 'subTitle',
             key: 'subTitle'
+        },
+        {
+            title: 'Expert',
+            dataIndex: 'expert',
+            key: 'expert'
+        },
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: (date) => date ? new Date(date).toLocaleDateString() : ''
         },
         {
             title: 'Author',
@@ -78,7 +89,17 @@ const EventsTab = () => {
                     <div className='w-full'>
                         {visible ?
                             <CreateEventPopup visible={visible} setVisible={setVisible} />
-                            : <Table dataSource={events} columns={columns} rowKey={(record) => record.slug} />
+                            : <Table
+                                dataSource={events}
+                                columns={columns}
+                                rowKey={(record) => record.slug}
+                                pagination={
+                                    {
+                                        pageSize: 8,
+                                        showSizeChanger: true
+                                    }
+                                }
+                            />
                         }
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// export const BASE_URL = 'http://172.22.50.9:8080/admin'
+// export const BASE_URL = 'http://localhost:8080/admin'
 export const BASE_URL = 'https://rama.sukoonunlimited.com/admin'
 // export const BASE_URL = 'https://m196vr75-8080.inc1.devtunnels.ms/admin'
 
