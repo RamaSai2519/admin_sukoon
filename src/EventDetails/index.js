@@ -17,50 +17,9 @@ const EventDetails = () => {
     const [subTitle, setSubTitle] = useState('');
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
-    
+
 
     const fetchEventDetails = async () => {
-<<<<<<< HEAD
-        try {
-            const response = await Raxios.get(`/event/event?slug=${slug}`);
-            setName(response.data.name);
-            setMainTitle(response.data.mainTitle);
-            setSubTitle(response.data.subTitle);
-            setImage(response.data.imageUrl);
-        } catch (error) {
-            console.error('Error fetching event details:', error);
-        }
-    };
-
-    const fetchUsers = async () => {
-        try {
-            const response = await Raxios.get(`/event/users?slug=${slug}`);
-            setUsers(Array.isArray(response.data) ? response.data : []);
-        } catch (error) {
-            console.error('Error fetching event users:', error);
-            setUsers([]);
-        }
-    };
-
-    const handleUpdate = async () => {
-        try {
-            const response = await Raxios.put(`/event/event?slug=${slug}`, {
-                name,
-                mainTitle,
-                subTitle,
-                slug,
-                imageUrl: image
-            });
-            setName(response.data.name);
-            setMainTitle(response.data.mainTitle);
-            setSubTitle(response.data.subTitle);
-            setImage(response.data.imageUrl);
-            window.alert('Event details updated successfully.');
-        } catch (error) {
-            console.error('Error updating event details:', error);
-            window.alert('Error updating event details:', error);
-        }
-=======
         Raxios.get(`/event/event?slug=${slug}`)
             .then(response => {
                 setName(response.data.name);
@@ -102,7 +61,6 @@ const EventDetails = () => {
                 console.error('Error updating event details:', error);
                 window.alert('Error updating event details:', error);
             });
->>>>>>> origin/HEAD
     };
 
     const handleUpload = (file) => {
@@ -208,15 +166,13 @@ const EventDetails = () => {
                             <h1>Registered Users</h1>
                             <Button onClick={downloadExcel}>Download Excel</Button>
                         </div>
-<<<<<<< HEAD
-                        <Table dataSource={users || []} columns={columns} rowKey={(record) => record._id || record.email} />
-=======
                         <Table dataSource={users} columns={columns} rowKey={(record) => record._id || record.email} />
->>>>>>> origin/HEAD
                     </div>
                 </div>
             </ConfigProvider>
         </LazyLoad>
     );
+}
+
 
 export default EventDetails;
