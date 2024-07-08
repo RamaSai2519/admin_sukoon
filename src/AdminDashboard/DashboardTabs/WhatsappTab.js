@@ -11,7 +11,7 @@ const WhatsappTab = () => {
     const [table, setTable] = useState(localStorage.getItem('waTable') === 'history' ? 'history' : 'feedback');
     const [currentPage, setCurrentPage] = useState(localStorage.getItem('fcurrentPage') ? parseInt(localStorage.getItem('fcurrentPage')) : 1);
     const [totalItems, setTotalItems] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(8);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
