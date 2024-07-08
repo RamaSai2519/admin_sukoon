@@ -29,6 +29,7 @@ const ExpertDetails = () => {
   const darkMode = localStorage.getItem('darkMode') === 'true';
 
   useEffect(() => {
+    setLoading(true);
     fetchCategories();
     Raxios.get(`/expert/experts/${expertId}`)
       .then(response => {

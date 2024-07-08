@@ -7,59 +7,61 @@ import { FaArrowLeft } from 'react-icons/fa';
 
 const EventDetails = () => {
     const { slug } = useParams();
-    const [users, setUsers] = useState(null);
+    const [users, setUsers] = useState([]);
     const [name, setName] = useState('');
     const [mainTitle, setMainTitle] = useState('');
     const [subTitle, setSubTitle] = useState('');
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
+    
+
     const fetchEventDetails = async () => {
-        Raxios.get(`/event/event?slug=${slug}`)
-            .then(response => {
-                setName(response.data.name);
-                setMainTitle(response.data.mainTitle);
-                setSubTitle(response.data.subTitle);
-            })
-            .catch(error => {
-                console.error('Error fetching event details:', error);
-            })
+        try {
+            const response = await Raxios.get(`/event/event?slug=${slug}`);
+            setName(response.data.name);
+            setMainTitle(response.data.mainTitle);
+            setSubTitle(response.data.subTitle);
+            setImage(response.data.imageUrl);
+        } catch (error) {
+            console.error('Error fetching event details:', error);
+        }
     };
 
     const fetchUsers = async () => {
-        Raxios.get(`/event/users?slug=${slug}`)
-            .then(response => {
-                setUsers(response.data);
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching event details:', error);
-            })
-    }
+        try {
+            const response = await Raxios.get(`/event/users?slug=${slug}`);
+            setUsers(Array.isArray(response.data) ? response.data : []);
+        } catch (error) {
+            console.error('Error fetching event users:', error);
+            setUsers([]);
+        }
+    };
 
-    const handleUpdate = () => {
-        Raxios.put(`/event/event?slug=${slug}`, {
-            name,
-            mainTitle,
-            subTitle,
-            slug
-        })
-            .then(response => {
-                setName(response.data.name);
-                setMainTitle(response.data.mainTitle);
-                setSubTitle(response.data.subTitle);
-                window.alert('Event details updated successfully.');
-            })
-            .catch(error => {
-                console.error('Error updating event details:', error);
-                window.alert('Error updating event details:', error);
+    const handleUpdate = async () => {
+        try {
+            const response = await Raxios.put(`/event/event?slug=${slug}`, {
+                name,
+                mainTitle,
+                subTitle,
+                slug,
+                imageUrl: image
             });
+            setName(response.data.name);
+            setMainTitle(response.data.mainTitle);
+            setSubTitle(response.data.subTitle);
+            setImage(response.data.imageUrl);
+            window.alert('Event details updated successfully.');
+        } catch (error) {
+            console.error('Error updating event details:', error);
+            window.alert('Error updating event details:', error);
+        }
+    };
 
     };
 
     useEffect(() => {
         fetchEventDetails();
         fetchUsers();
-        // eslint-disable-next-line
     }, [slug]);
 
 
@@ -133,13 +135,15 @@ const EventDetails = () => {
                         </div>
                     </div>
                     <div className='w-full'>
-                        <h1>Registered Users</h1>
-                        <Table dataSource={users} columns={columns} rowKey={(record) => record._id || record.email} />
+                        <div className='flex justify-between'>
+                            <h1>Registered Users</h1>
+                            <Button onClick={downloadExcel}>Download Excel</Button>
+                        </div>
+                        <Table dataSource={users || []} columns={columns} rowKey={(record) => record._id || record.email} />
                     </div>
                 </div>
             </ConfigProvider>
         </LazyLoad>
     );
-};
 
 export default EventDetails;

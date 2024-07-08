@@ -19,11 +19,29 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
+  const darkMode = useState(() => {
+    const localStorageDarkMode = localStorage.getItem('darkMode');
+    if (localStorageDarkMode !== null) {
+      return JSON.parse(localStorageDarkMode);
+    } else {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+  });
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.removeItem('isLoggedIn');
   };
+
+  useEffect(() => {
+    if (darkMode) {
+      localStorage.setItem('darkMode', 'true');
+      document.body.classList.add('dark');
+    } else {
+      localStorage.setItem('darkMode', 'false');
+      document.body.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   useEffect(() => {
     const storedVersion = localStorage.getItem('appVersion');

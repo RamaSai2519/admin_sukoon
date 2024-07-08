@@ -17,20 +17,34 @@ const UserDetails = () => {
   const [persona, setPersona] = useState('');
   const [editMode, setEditMode] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      const response = await Raxios.get(`/user/users/${userId}`);
+      setName(response.data.name);
+      setPhoneNumber(response.data.phoneNumber);
+      setCity(response.data.city);
+      setBirthDate(new Date(response.data.birthDate).toISOString().split('T')[0]);
+      setNumberOfCalls(response.data.numberOfCalls);
+      setSource(response.data.source);
+      setContext(response.data.context);
+      setPersona(response.data['Customer Persona']);
+      setNotifications(response.data.notifications);
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  };
+
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await Raxios.get(`/user/users/${userId}`);
-        setName(response.data.name);
-        setPhoneNumber(response.data.phoneNumber);
-        setCity(response.data.city);
-        setBirthDate(new Date(response.data.birthDate).toISOString().split('T')[0]);
-        setNumberOfCalls(response.data.numberOfCalls);
-        setSource(response.data.source);
-        setContext(response.data.context);
-        setPersona(response.data['Customer Persona']);
-      } catch (error) {
-        console.error('Error fetching user details:', error);
+    fetchData();
+    // eslint-disable-next-line
+  }, [userId]);
+
+  useEffect(() => {
+    if (window.location.hash === '#notifications-table') {
+      const notificationsElement = document.getElementById('notifications-table');
+      if (notificationsElement) {
+        notificationsElement.scrollIntoView({ behavior: 'smooth' });
       }
     };
 
