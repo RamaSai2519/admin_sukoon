@@ -1,48 +1,70 @@
-import React from "react";
 import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
-import Raxios from "../../services/axiosHelper";
-import { useSchedules, useUsers, useExperts } from "../../services/useData";
+import { useUsers, useExperts } from "../../services/useData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
-import { LoadingContext } from "../AdminDashboard";
+import Raxios from "../../services/axiosHelper";
+import React, { useEffect } from "react";
 
 const SchedulerTab = () => {
+    // const [slots, setSlots] = React.useState([]);
+    // const [sValues, setSValues] = React.useState({ user: "", expert: "", datetime: "" });
+    // const [fslot, setFSlot] = React.useState([]); // Final slot state
+    // const [selectedSlot, setSelectedSlot] = React.useState(null); // Selected slot state
+
+    const [currentPage, setCurrentPage] = React.useState(
+        localStorage.getItem('scurrentPage') ? parseInt(localStorage.getItem('scurrentPage')) : 1
+    );
     const darkMode = localStorage.getItem('darkMode') === 'true';
-    const { loading } = React.useContext(LoadingContext);
-    const { schedules } = useSchedules();
-    const { users } = useUsers();
-    const { experts } = useExperts();
+    const [totalItems, setTotalItems] = React.useState(0);
+    const [schedules, setSchedules] = React.useState([]);
+    const [loading, setLoading] = React.useState(false);
+    const [pageSize, setPageSize] = React.useState(10);
+    const { experts, fetchExperts } = useExperts();
+    const { users, fetchUsers } = useUsers();
     const { Option } = Select;
 
-    const columns = [
-        {
-            title: "User",
-            dataIndex: "user",
-            key: "user",
-        },
-        {
-            title: "Expert",
-            dataIndex: "expert",
-            key: "expert",
-        },
-        {
-            title: "Date & Time",
-            dataIndex: "datetime",
-            key: "datetime",
-        },
-        {
-            title: "Status",
-            dataIndex: "status",
-            key: "status",
-        },
-        {
-            title: "Action",
-            key: "action",
-            render: (_, record) =>
-                <>
+    useEffect(() => {
+        fetchSchedules(currentPage, pageSize);
+    }, [currentPage, pageSize]);
 
-                    <Button onClick={() => handleDelete(record)}>Delete</Button>
-                </>
+    useEffect(() => {
+        setLoading(true);
+        fetchUsers();
+        fetchExperts();
+        setLoading(false);
+        // eslint-disable-next-line
+    }, []);
+
+    const fetchSchedules = async (page, size) => {
+        setLoading(true);
+        try {
+            const response = await Raxios.get(`/data/schedules`, {
+                params: { page, size }
+            });
+            setSchedules(response.data.data);
+            setTotalItems(response.data.total);
+        } catch (error) {
+            console.error("Error fetching schedules:", error);
+            window.alert("Error fetching schedules. Please try again later.");
+        }
+        setLoading(false);
+    };
+
+    const handleTableChange = (current, pageSize) => {
+        setCurrentPage(current);
+        localStorage.setItem('scurrentPage', current);
+        setPageSize(pageSize);
+    };
+
+    const columns = [
+        { title: "User", dataIndex: "user", key: "user" },
+        { title: "Expert", dataIndex: "expert", key: "expert" },
+        { title: "Date & Time", dataIndex: "datetime", key: "datetime" },
+        { title: "Status", dataIndex: "status", key: "status" },
+        { title: "Scheduled By", dataIndex: "type", key: "type" },
+        {
+            title: "Action", key: "action",
+            render: (_, record) => <Button onClick={() => handleDelete(record)}>Delete</Button>
         },
     ];
 
@@ -56,18 +78,25 @@ const SchedulerTab = () => {
         }
     };
 
-
-    const userOptions = users.map(user => (
-        <Option key={user._id} value={user._id}>
-            {user.name}
+    const generateOptions = (data, key) => data.map(item => (
+        <Option key={item._id} value={item._id}>
+            {item[key]}
         </Option>
     ));
 
-    const expertOptions = experts.map(expert => (
-        <Option key={expert._id} value={expert._id}>
-            {expert.name}
-        </Option>
-    ));
+    const onFinish = async (values, endpoint) => {
+        try {
+            const response = await Raxios.post(endpoint, values);
+            if (response.data.success !== true) {
+                window.alert(response.data.error?.message || response.data.message);
+            } else {
+                window.alert("Call connected successfully");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            window.alert(error);
+        }
+    };
 
     const onScheduleFinish = async values => {
         try {
@@ -76,20 +105,13 @@ const SchedulerTab = () => {
             if (selectedDateTime <= now) {
                 window.alert("Selected time has already passed. Please select a future time.");
             } else {
-                await Raxios.post("/data/schedules", values);
+                await Raxios.post("/data/schedules", {
+                    ...values,
+                    type: "Admin"
+                });
                 window.alert("Call Scheduled successfully");
                 window.location.reload();
             }
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    };
-
-    const onConnectFinish = async values => {
-        try {
-            const response = await Raxios.post("/call/connect", values);
-            console.log(response);
-            window.alert("Call Connected successfully");
         } catch (error) {
             console.error("Error:", error);
         }
@@ -100,140 +122,157 @@ const SchedulerTab = () => {
             <ConfigProvider theme={{
                 algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
             }}>
-                <div className="mt-2">
-                    <div className="flex items-center justify-center">
-                        <Form name="connect-call" className="grid grid-cols-4 gap-2" onFinish={onConnectFinish}>
+                <div className="flex items-center justify-center gap-4 h-full">
+                    <div className="w-3/4">
+                        {loading ? <Loading /> :
+                            <Table
+                                rowKey={(record) => record._id}
+                                pagination={{
+                                    current: currentPage,
+                                    pageSize: pageSize,
+                                    total: totalItems,
+                                    onChange: handleTableChange
+                                }}
+                                dataSource={schedules}
+                                columns={columns}
+                            />
+                        }
+                    </div>
+                    <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
+                        <h1 className="text-2xl font-bold mb-3">Connect a Call</h1>
+                        <Form
+                            name="connect-call"
+                            className="grid grid-cols-2 gap-2 w-full border-b-2 dark:border-lightBlack pb-4"
+                            onFinish={(values) => onFinish(values, "/call/connect")}
+                        >
                             <Form.Item
-                                name={"user"}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please select a user",
-                                    },
-                                ]}
+                                name="user"
+                                rules={[{ required: true, message: "Please select a user" }]}
                             >
                                 <Select
-                                    id="user"
-                                    style={{ width: "100%" }}
+                                    className="w-full"
                                     showSearch
                                     placeholder="Select User"
                                     optionFilterProp="children"
                                     filterOption={(input, option) =>
-                                        option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        option.children.toLowerCase().includes(input.toLowerCase())
                                     }
                                 >
-                                    {userOptions}
+                                    {generateOptions(users, "name")}
                                 </Select>
                             </Form.Item>
                             <Form.Item
-                                className="m-0"
-                                name={"expert"}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please select an expert",
-                                    },
-                                ]}
+                                name="expert"
+                                rules={[{ required: true, message: "Please select an expert" }]}
                             >
                                 <Select
-                                    id="expert"
-                                    style={{ width: "100%" }}
+                                    className="w-full"
                                     showSearch
                                     placeholder="Select Expert"
                                     optionFilterProp="children"
                                     filterOption={(input, option) =>
-                                        option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        option.children.toLowerCase().includes(input.toLowerCase())
                                     }
                                 >
-                                    {expertOptions}
+                                    {generateOptions(experts, "name")}
                                 </Select>
                             </Form.Item>
-                            <Button htmlType="submit" style={{ width: "100%" }}>
-                                Connect Now
-                            </Button>
+                            <Button htmlType="submit" className="w-full">Connect Now</Button>
                         </Form>
-                    </div>
 
-                    <Form name="schedule-call" className="grid grid-cols-4 gap-2 mt-3" onFinish={onScheduleFinish}>
-                        <Form.Item
-                            name={"user"}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select a user",
-                                },
-                            ]}
+                        <h1 className="text-2xl font-bold mt-4">Schedule a Call</h1>
+                        <Form
+                            name="schedule-call"
+                            className="grid grid-cols-2 gap-2 mt-3"
+                            onFinish={onScheduleFinish}
                         >
-                            <Select
-                                id="user"
-                                style={{ width: "100%" }}
-                                showSearch
-                                placeholder="Select User"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
+                            <Form.Item
+                                name="user"
+                                rules={[{ required: true, message: "Please select a user" }]}
                             >
-                                {userOptions}
-                            </Select>
-                        </Form.Item>
-                        <Form.Item
-                            className="m-0"
-                            name={"expert"}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select an expert",
-                                },
-                            ]}
-                        >
-                            <Select
-                                id="expert"
-                                style={{ width: "100%" }}
-                                showSearch
-                                placeholder="Select Expert"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
+                                <Select
+                                    className="w-full"
+                                    showSearch
+                                    placeholder="Select User"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().includes(input.toLowerCase())
+                                    }
+                                >
+                                    {generateOptions(users, "name")}
+                                </Select>
+                            </Form.Item>
+                            <Form.Item
+                                name="expert"
+                                rules={[{ required: true, message: "Please select an expert" }]}
                             >
-                                {expertOptions}
-                            </Select>
-                        </Form.Item>
-
-                        <Form.Item
-                            className="m-0"
-                            name={"datetime"}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select a date and time",
-                                },
-                            ]}
-                        >
-                            <DatePicker
-                                id="datetime"
-                                style={{ width: "100%" }}
-                                showTime
-                                format="YYYY-MM-DD HH:mm:ss"
-                            />
-                        </Form.Item>
-
-                        <Button htmlType="submit" style={{ width: "100%" }}>
-                            Schedule
-                        </Button>
-                    </Form>
-
-                    <div className="m-0">
-                        {loading ? <Loading /> :
-                            <Table dataSource={schedules.reverse()} columns={columns} />
-                        }
+                                <Select
+                                    className="w-full"
+                                    showSearch
+                                    placeholder="Select Expert"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().includes(input.toLowerCase())
+                                    }
+                                >
+                                    {generateOptions(experts, "name")}
+                                </Select>
+                            </Form.Item>
+                            <Form.Item
+                                name="datetime"
+                                rules={[{ required: true, message: "Please select a date and time" }]}
+                            >
+                                <DatePicker
+                                    className="w-full"
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    showTime
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name="duration"
+                                rules={[{ required: true, message: "Please select a duration" }]}
+                            >
+                                <Select
+                                    className="w-full"
+                                    placeholder="Select Duration"
+                                >
+                                    {["30", "60"].map(duration => (
+                                        <Option key={duration} value={duration}>
+                                            {duration} minutes
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                            <Button htmlType="submit" className="w-full">Schedule Call</Button>
+                            {/* {slots.length !== 0 ?
+                                <div
+                                    style={{ gridColumn: "1 / span 2" }}
+                                >
+                                    <div className="grid grid-cols-3 gap-2 dark:bg-lightBlack p-2 rounded-xl my-2">
+                                        {slots.map(slot => (
+                                            <Button
+                                                key={slot.label}
+                                                className={`w-full my-2 ${selectedSlot === slot ? 'ant-btn-primary' : ''}`}
+                                                onClick={() => {
+                                                    setSelectedSlot(slot);
+                                                    setFSlot([slot.value]);
+                                                }}
+                                                disabled={!slot.value.available}
+                                            >
+                                                {slot.label}
+                                            </Button>
+                                        ))}
+                                    </div>
+                                    <Button onClick={onFinalSchedule} className="w-full">Schedule</Button>
+                                </div>
+                                : null
+                            } */}
+                        </Form>
                     </div>
                 </div>
             </ConfigProvider>
         </LazyLoad>
     );
 };
-
 
 export default SchedulerTab;

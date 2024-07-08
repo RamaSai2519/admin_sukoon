@@ -9,25 +9,26 @@ import EditableCell from '../components/EditableCell';
 const UserEngagement = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
     const [engagementData, setEngagementData] = React.useState([]);
-    const [currentPage, setCurrentPage] = React.useState(1);
+    const [currentPage, setCurrentPage] = React.useState(
+        localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1
+    );
     const [pageSize, setPageSize] = React.useState(10);
     const [totalItems, setTotalItems] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
 
     const fetchEngagementData = async (page, size) => {
+        setLoading(true);
         try {
-            setLoading(true);
             const response = await Raxios.get('/user/engagementData', {
                 params: { page, size }
             });
             setEngagementData(response.data.data);
             setTotalItems(response.data.total);
-            setLoading(false);
         } catch (error) {
             console.error('Error fetching engagement data:', error);
-            setLoading(false);
             window.alert('Error fetching engagement data');
         }
+        setLoading(false);
     };
 
     React.useEffect(() => {
@@ -172,6 +173,7 @@ const UserEngagement = () => {
 
     const handleTableChange = (current, pageSize) => {
         setCurrentPage(current);
+        localStorage.setItem('currentPage', current);
         setPageSize(pageSize);
     };
 

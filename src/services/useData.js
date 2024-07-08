@@ -9,9 +9,7 @@ import {
     fetchUsers,
     fetchCalls,
     fetchExperts,
-    fetchSchedules,
     fetchEvents,
-    fetchEngangementData
 } from './fetchData';
 
 // Create contexts
@@ -24,9 +22,7 @@ const LeadsContext = createContext();
 const UsersContext = createContext();
 const CallsContext = createContext();
 const ExpertsContext = createContext();
-const SchedulesContext = createContext();
 const EventsContext = createContext();
-const EngangementDataContext = createContext();
 
 // Export hooks to use contexts
 export const useErrorLogs = () => useContext(ErrorLogsContext);
@@ -38,7 +34,6 @@ export const useLeads = () => useContext(LeadsContext);
 export const useUsers = () => useContext(UsersContext);
 export const useCalls = () => useContext(CallsContext);
 export const useExperts = () => useContext(ExpertsContext);
-export const useSchedules = () => useContext(SchedulesContext);
 export const useEvents = () => useContext(EventsContext);
 
 export const DataProvider = ({ children }) => {
@@ -49,7 +44,6 @@ export const DataProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [calls, setCalls] = useState([]);
     const [experts, setExperts] = useState([]);
-    const [schedules, setSchedules] = useState([]);
     const [events, setEvents] = useState([]);
     const [stats, setStats] = useState({
         totalCalls: 0,
@@ -93,35 +87,30 @@ export const DataProvider = ({ children }) => {
         users: { users, fetchUsers: () => fetchUsers(setUsers) },
         calls: { calls, fetchCalls: () => fetchCalls(setCalls) },
         experts: { experts, fetchExperts: () => fetchExperts(setExperts) },
-        schedules: { schedules, fetchSchedules: () => fetchSchedules(setSchedules) },
         events: { events, fetchEvents: () => fetchEvents(setEvents) },
     };
 
     return (
-        <EngangementDataContext.Provider value={contextValues.engagementData}>
-            <ErrorLogsContext.Provider value={contextValues.errorLogs}>
-                <ApplicationsContext.Provider value={contextValues.applications}>
-                    <CategoriesContext.Provider value={contextValues.allCategories}>
-                        <StatsContext.Provider value={contextValues.stats}>
-                            <InsightsContext.Provider value={contextValues.insights}>
-                                <LeadsContext.Provider value={contextValues.leads}>
-                                    <UsersContext.Provider value={contextValues.users}>
-                                        <CallsContext.Provider value={contextValues.calls}>
-                                            <ExpertsContext.Provider value={contextValues.experts}>
-                                                <SchedulesContext.Provider value={contextValues.schedules}>
-                                                    <EventsContext.Provider value={contextValues.events}>
-                                                        {children}
-                                                    </EventsContext.Provider>
-                                                </SchedulesContext.Provider>
-                                            </ExpertsContext.Provider>
-                                        </CallsContext.Provider>
-                                    </UsersContext.Provider>
-                                </LeadsContext.Provider>
-                            </InsightsContext.Provider>
-                        </StatsContext.Provider>
-                    </CategoriesContext.Provider>
-                </ApplicationsContext.Provider>
-            </ErrorLogsContext.Provider>
-        </EngangementDataContext.Provider>
+        <ErrorLogsContext.Provider value={contextValues.errorLogs}>
+            <ApplicationsContext.Provider value={contextValues.applications}>
+                <CategoriesContext.Provider value={contextValues.allCategories}>
+                    <StatsContext.Provider value={contextValues.stats}>
+                        <InsightsContext.Provider value={contextValues.insights}>
+                            <LeadsContext.Provider value={contextValues.leads}>
+                                <UsersContext.Provider value={contextValues.users}>
+                                    <CallsContext.Provider value={contextValues.calls}>
+                                        <ExpertsContext.Provider value={contextValues.experts}>
+                                            <EventsContext.Provider value={contextValues.events}>
+                                                {children}
+                                            </EventsContext.Provider>
+                                        </ExpertsContext.Provider>
+                                    </CallsContext.Provider>
+                                </UsersContext.Provider>
+                            </LeadsContext.Provider>
+                        </InsightsContext.Provider>
+                    </StatsContext.Provider>
+                </CategoriesContext.Provider>
+            </ApplicationsContext.Provider>
+        </ErrorLogsContext.Provider>
     );
 };

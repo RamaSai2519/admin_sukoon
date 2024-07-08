@@ -8,11 +8,14 @@ const CreateEventPopup = ({ visible, setVisible }) => {
     const [form] = Form.useForm();
     const [uploadedImageUrl, setUploadedImageUrl] = React.useState('');
     const [ready, setReady] = React.useState(false);
+    const { experts, fetchExperts } = useExperts();
 
     useEffect(() => {
         if (visible) {
-            // form.resetFields();
+            form.resetFields();
+            fetchExperts();
         }
+        // eslint-disable-next-line
     }, [visible, form]);
 
     const handleCreate = (values) => {
@@ -175,7 +178,7 @@ const CreateEventPopup = ({ visible, setVisible }) => {
                     name="file"
                     listType="picture-card"
                     className="avatar-uploader"
-                    action="https://apiadmin.sukoon.love/admin/service/upload"
+                    action="https://rama.sukoonunlimited.com/admin/service/upload"
                     beforeUpload={beforeUpload}
                     onChange={handleChange}
                     maxCount={1}

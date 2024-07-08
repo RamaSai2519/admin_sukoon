@@ -11,16 +11,17 @@ import DashboardTile from '../../components/DashboardTile';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import InsightsTable from '../../components/DataTable';
 import { Button, ConfigProvider, theme } from 'antd';
-import { LoadingContext } from '../AdminDashboard';
 
 const DashboardTab = () => {
   const { stats, fetchStats } = useStats();
   const [view, setView] = React.useState('Split By Duration');
   const darkMode = localStorage.getItem('darkMode') === 'true';
-  const { loading } = React.useContext(LoadingContext);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
+    setLoading(true);
     fetchStats();
+    setLoading(false);
     // eslint-disable-next-line
   }, []);
 
@@ -68,7 +69,7 @@ const DashboardTab = () => {
               </DashboardTile>
               <DashboardTile title="Total Duration">
                 <h1>{stats.totalDuration}</h1>
-                <p className='text-right w-full'>all calls</p>
+                <p className='text-right w-full'>successful calls</p>
               </DashboardTile>
               <DashboardTile msg={"Number of successful scheduled calls with more than 1 minute duration"} title="Scheduled Calls">
                 <h1>{stats.scheduledCallsPercentage}%</h1>
@@ -76,7 +77,7 @@ const DashboardTab = () => {
               </DashboardTile>
               <DashboardTile title="Avg. Score">
                 <h1>{stats.averageConversationScore}</h1>
-                <p className='text-right w-full'>all calls</p>
+                <p className='text-right w-full'>successful calls</p>
               </DashboardTile>
               <DashboardTile title="Online Saarthis" style={{ "gridRow": "1 / span 2", "gridColumn": "5" }}>
                 <OnlineSaarthisTable onlineSaarthis={stats.onlineSaarthis} />

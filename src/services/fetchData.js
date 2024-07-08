@@ -81,18 +81,6 @@ export const fetchExperts = async (setExperts) => {
     }
 };
 
-export const fetchSchedules = async (setSchedules) => {
-    try {
-        const response = await Raxios.get('/data/schedules');
-        setSchedules(response.data.map(schedule => ({
-            ...schedule,
-            key: schedule._id
-        })));
-    } catch (error) {
-        console.error('Error fetching schedules:', error);
-    }
-};
-
 export const fetchEvents = async (setEvents) => {
     try {
         const response = await Raxios.get('/event/events');
@@ -102,11 +90,23 @@ export const fetchEvents = async (setEvents) => {
     }
 }
 
-export const fetchEngangementData = async (setEngagementData) => {
+export const fetchShorts = async (setShorts) => {
     try {
-        const response = await Raxios.get('/user/engagementData');
-        setEngagementData(response.data);
+        const response = await Raxios.get('/content/shorts');
+        setShorts(response.data);
+    } catch (error) {
+        console.error('Error fetching shorts:', error);
+    }
+};
+
+export const fetchEngagementData = async (page, size) => {
+    try {
+        const response = await Raxios.get('/user/engagementData', {
+            params: { page, size }
+        });
+        return response.data;
     } catch (error) {
         console.error('Error fetching engagement data:', error);
+        window.alert('Error fetching engagement data');
     }
 };

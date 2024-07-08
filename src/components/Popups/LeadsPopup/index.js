@@ -195,7 +195,6 @@ const LeadsPopup = ({ onClose }) => {
     const confirm = (user) => {
         Raxios.post(`/user/leads`, { user })
             .then((response) => {
-                console.log(response);
                 if (response.request.status === 200) {
                     window.alert('Lead deleted successfully');
                     window.location.reload();

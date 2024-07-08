@@ -12,11 +12,10 @@ import writeXlsxFile from 'write-excel-file';
 import { saveAs } from 'file-saver';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import Loading from '../components/Loading/loading';
-import { LoadingContext } from '../AdminDashboard/AdminDashboard';
 
 const CallsTable = () => {
-  const { loading } = React.useContext(LoadingContext);
-  const { calls } = useCalls();
+  const [loading, setLoading] = useState(false);
+  const { calls, fetchCalls } = useCalls();
   const [filters, setFilters] = useState({
     user: '',
     expert: '',
@@ -26,6 +25,17 @@ const CallsTable = () => {
     key: '',
     direction: '',
   });
+
+  const fetchData = async () => {
+    setLoading(true);
+    await fetchCalls();
+    setLoading(false);
+  };
+
+  React.useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line
+  }, []);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

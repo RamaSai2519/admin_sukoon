@@ -1,13 +1,11 @@
 import axios from 'axios';
 
-export const BASE_URL = 'http://localhost:8080/admin'
-// export const BASE_URL = 'https://rama.sukoonunlimited.com/admin'
+// export const BASE_URL = 'http://localhost:8080/admin'
+export const BASE_URL = 'https://rama.sukoonunlimited.com/admin'
 // export const BASE_URL = 'https://m196vr75-8080.inc1.devtunnels.ms/admin'
 
 const Raxios = axios.create({
-  baseURL: BASE_URL,
-  // baseURL: 'http://192.168.1.7:8080/admin',
-  // baseURL: 'https://m196vr75-8080.inc1.devtunnels.ms/admin',
+  baseURL: BASE_URL
 });
 
 Raxios.interceptors.request.use(
@@ -26,7 +24,7 @@ Raxios.interceptors.request.use(
 const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem('refresh_token');
   try {
-    const response = await axios.post(BASE_URL + '/auth/refresh', null, {
+    const response = await axios.post(`${BASE_URL}/auth/refresh`, null, {
       headers: {
         Authorization: `Bearer ${refreshToken}`,
       },

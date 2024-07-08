@@ -8,10 +8,16 @@ import { saveAs } from 'file-saver';
 import Raxios from '../../services/axiosHelper';
 
 const ExpertsList = () => {
-    const { experts } = useExperts();
-    const { calls } = useCalls();
+    const { experts, fetchExperts } = useExperts();
+    const { calls, fetchCalls } = useCalls();
     const [visible, setVisible] = React.useState(false);
     const darkMode = localStorage.getItem('darkMode') === 'true';
+
+    React.useEffect(() => {
+        fetchCalls();
+        fetchExperts();
+        // eslint-disable-next-line
+    }, []);
 
     const navigate = useNavigate();
 
