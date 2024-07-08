@@ -19,7 +19,7 @@ const CreateEventPopup = ({ visible, setVisible }) => {
     }, [visible, form]);
 
     const handleCreate = (values) => {
-        const { image, ...otherValues } = values; 
+        const { image, ...otherValues } = values;
         Raxios.post('/event/event', {
             ...otherValues,
             imageUrl: uploadedImageUrl
@@ -60,50 +60,30 @@ const CreateEventPopup = ({ visible, setVisible }) => {
 
     const formItems = [
         {
-            label: "Created By",
-            name: "name",
+            label: "Created By", name: "name", component: <Input />,
             rules: [{ required: true, message: 'Please enter the name' }],
-            component: <Input />
         },
         {
-            label: "Main Title",
-            name: "mainTitle",
+            label: "Main Title", name: "mainTitle", component: <Input />,
             rules: [{ required: true, message: 'Please enter the main title' }],
-            component: <Input />
+        },
+        { label: "Sub Title", name: "subTitle", rules: [], component: <Input /> },
+        { label: "Hosted By", name: "hostedBy", rules: [], component: <Input /> },
+        {
+            label: "Slug", name: "slug", component: <Input />,
+            rules: [{ required: true, message: 'Please enter the slug' }]
         },
         {
-            label: "Sub Title",
-            name: "subTitle",
-            rules: [],
-            component: <Input />
-        },
-        {
-            label: "Hosted By",
-            name: "hostedBy",
-            rules: [],
-            component: <Input />
-        },
-        {
-            label: "Slug",
-            name: "slug",
-            rules: [{ required: true, message: 'Please enter the slug' }],
-            component: <Input />
-        },
-        {
-            label: "Start Event Date",
-            name: "startEventDate",
-            rules: [],
+            label: "Start Event Date", name: "startEventDate", rules: [],
             component: <DatePicker className='w-full' />
         },
         {
-            label: "Valid Upto",
-            name: "validUpto",
+            label: "Valid Upto", name: "validUpto",
             rules: [{ required: true, message: 'Please select the valid upto' }],
             component: <DatePicker className='w-full' />
         },
         {
-            label: "Event Type",
-            name: "eventType",
+            label: "Event Type", name: "eventType",
             rules: [{ required: true, message: 'Please select the event type' }],
             component: (
                 <Select>
@@ -114,45 +94,19 @@ const CreateEventPopup = ({ visible, setVisible }) => {
                 </Select>
             )
         },
+        { label: "Description", name: "description", rules: [], component: <Input.TextArea /> },
+        { label: "Category", name: "category", rules: [], component: <Input /> },
+        { label: "Max Visitors Allowed", name: "maxVisitorsAllowed", rules: [], component: <InputNumber className='w-full' /> },
+        { label: "Prize Money", name: "prizeMoney", rules: [], component: <InputNumber className='w-full' /> },
         {
-            label: "Description",
-            name: "description",
-            rules: [],
-            component: <Input.TextArea />
-        },
-        {
-            label: "Category",
-            name: "category",
-            rules: [],
-            component: <Input />
-        },
-        {
-            label: "Max Visitors Allowed",
-            name: "maxVisitorsAllowed",
-            rules: [],
-            component: <InputNumber className='w-full' />
-        },
-        {
-            label: "Prize Money",
-            name: "prizeMoney",
-            rules: [],
-            component: <InputNumber className='w-full' />
-        },
-        {
-            label: "Guest Speaker",
-            name: "guestSpeaker",
+            label: "Guest Speaker", name: "guestSpeaker", component: <Input />,
             rules: [{ required: true, message: 'Please select the guest speaker' }],
-            component: <Input />
         },
         {
-            label: "Meeting Link",
-            name: "meetingLink",
-            rules: [],
-            component: <Input />
+            label: "Meeting Link", name: "meetingLink", rules: [], component: <Input />
         },
         {
-            label: "Repeat",
-            name: "repeat",
+            label: "Repeat", name: "repeat",
             rules: [{ required: true, message: 'Please select the repeat' }],
             component: (
                 <Select>
@@ -163,12 +117,7 @@ const CreateEventPopup = ({ visible, setVisible }) => {
                 </Select>
             )
         },
-        {
-            label: "Registration Allowed Till",
-            name: "registrationAllowedTill",
-            rules: [],
-            component: <DatePicker className='w-full' />
-        },
+        { label: "Registration Allowed Till", name: "registrationAllowedTill", rules: [], component: <DatePicker className='w-full' /> },
         {
             label: "Image",
             name: "image",

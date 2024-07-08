@@ -56,10 +56,14 @@ const AdminLogin = ({ setIsLoggedIn }) => {
             alert('Please fill in all fields');
             return;
         }
+        if (password !== values.confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
         try {
             const response = await Raxios.post('/auth/register', {
                 name,
-                phone: phoneNumber,
+                phoneNumber,
                 password,
             });
             if (response.status !== 200) {
@@ -139,7 +143,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                                 <Input.Password placeholder="Password" />
                             </Form.Item>
                             <Form.Item
-                                name="password"
+                                name="confirmPassword"
                                 rules={[{ required: true, message: 'Please input your password!' }]}
                             >
                                 <Input.Password placeholder="Confirm Password" />
