@@ -17,50 +17,50 @@ const EventDetails = () => {
     const [subTitle, setSubTitle] = useState('');
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
-
-
     const fetchEventDetails = async () => {
-        Raxios.get(`/event/event?slug=${slug}`)
-            .then(response => {
-                setName(response.data.name);
-                setMainTitle(response.data.mainTitle);
-                setSubTitle(response.data.subTitle);
-                setImage(response.data.imageUrl);
-            })
-            .catch(error => {
-                console.error('Error fetching event details:', error);
-            })
+        try {
+            const response = await Raxios.get(`/event/event?slug=${slug}`);
+            setName(response.data.name);
+            setMainTitle(response.data.mainTitle);
+            setSubTitle(response.data.subTitle);
+            setImage(response.data.imageUrl);
+        } catch (error) {
+            console.error('Error fetching event details:', error);
+        }
     };
 
     const fetchUsers = async () => {
-        Raxios.get(`/event/users?slug=${slug}`)
-            .then(response => {
+        try {
+            const response = await Raxios.get(`/event/users?slug=${slug}`);
+            if (Array.isArray(response.data)) {
                 setUsers(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching event details:', error);
-            })
+            } else {
+                console.error('Error: Users data is not an array:', response.data);
+                setUsers([]);
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
     };
 
-    const handleUpdate = () => {
-        Raxios.put(`/event/event?slug=${slug}`, {
-            name,
-            mainTitle,
-            subTitle,
-            slug,
-            imageUrl: image
-        })
-            .then(response => {
-                setName(response.data.name);
-                setMainTitle(response.data.mainTitle);
-                setSubTitle(response.data.subTitle);
-                setImage(response.data.imageUrl);
-                window.alert('Event details updated successfully.');
-            })
-            .catch(error => {
-                console.error('Error updating event details:', error);
-                window.alert('Error updating event details:', error);
+    const handleUpdate = async () => {
+        try {
+            const response = await Raxios.put(`/event/event?slug=${slug}`, {
+                name,
+                mainTitle,
+                subTitle,
+                slug,
+                imageUrl: image
             });
+            setName(response.data.name);
+            setMainTitle(response.data.mainTitle);
+            setSubTitle(response.data.subTitle);
+            setImage(response.data.imageUrl);
+            window.alert('Event details updated successfully.');
+        } catch (error) {
+            console.error('Error updating event details:', error);
+            window.alert('Error updating event details:', error);
+        }
     };
 
     const handleUpload = (file) => {
@@ -173,6 +173,5 @@ const EventDetails = () => {
         </LazyLoad>
     );
 }
-
 
 export default EventDetails;

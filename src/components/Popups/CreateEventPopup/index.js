@@ -1,22 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form, Input, Button, message, Select, DatePicker, Upload, InputNumber } from 'antd';
-import { useExperts } from '../../../services/useData';
 import Raxios from '../../../services/axiosHelper';
 import { PlusOutlined } from '@ant-design/icons';
 
-const CreateEventPopup = ({ visible, setVisible }) => {
-    const [form] = Form.useForm();
+const CreateEventPopup = ({ setVisible }) => {
     const [uploadedImageUrl, setUploadedImageUrl] = React.useState('');
     const [ready, setReady] = React.useState(false);
-    const { experts, fetchExperts } = useExperts();
-
-    useEffect(() => {
-        if (visible) {
-            form.resetFields();
-            fetchExperts();
-        }
-        // eslint-disable-next-line
-    }, [visible, form]);
 
     const handleCreate = (values) => {
         const { image, ...otherValues } = values;
@@ -147,7 +136,6 @@ const CreateEventPopup = ({ visible, setVisible }) => {
                     </Button>
                 </div>
                 <Form
-                    form={form}
                     onFinish={handleCreate}
                     layout="vertical"
                     className='w-full grid md:grid-cols-4 gap-4 justify-center items-center'
