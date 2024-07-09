@@ -181,6 +181,7 @@ const LeadsPopup = ({ onClose }) => {
                         const index = updatedLeads.findIndex((item) => key === item._id);
                         updatedLeads[index][field] = value;
                         setData(updatedLeads);
+                        window.alert(response.data.message);
                     }
                 })
                 .catch((error) => {

@@ -32,9 +32,14 @@ const EventsTab = () => {
             key: 'expert'
         },
         {
+            title: 'Hosted By',
+            dataIndex: 'hostedBy',
+            key: 'hostedBy'
+        },
+        {
             title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
+            dataIndex: 'validUpto',
+            key: 'validUpto',
             render: (date) => date ? new Date(date).toLocaleDateString() : ''
         },
         {
@@ -88,7 +93,7 @@ const EventsTab = () => {
                     }
                     <div className='w-full'>
                         {visible ?
-                            <CreateEventPopup visible={visible} setVisible={setVisible} />
+                            <CreateEventPopup setVisible={setVisible} />
                             : <Table
                                 dataSource={events}
                                 columns={columns}

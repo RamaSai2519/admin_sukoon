@@ -1,39 +1,17 @@
-import React, { useEffect } from 'react';
-import { Form, Input, Button, message, Select, DatePicker, Upload } from 'antd';
-import { useExperts } from '../../../services/useData';
+import React from 'react';
+import { Form, Input, Button, message, Select, DatePicker, Upload, InputNumber } from 'antd';
 import Raxios from '../../../services/axiosHelper';
 import { PlusOutlined } from '@ant-design/icons';
 
-const CreateEventPopup = ({ visible, setVisible }) => {
-    const [form] = Form.useForm();
+const CreateEventPopup = ({ setVisible }) => {
     const [uploadedImageUrl, setUploadedImageUrl] = React.useState('');
     const [ready, setReady] = React.useState(false);
-    const { experts, fetchExperts } = useExperts();
-
-    useEffect(() => {
-        if (visible) {
-            form.resetFields();
-            fetchExperts();
-        }
-        // eslint-disable-next-line
-    }, [visible, form]);
 
     const handleCreate = (values) => {
-        if (values.slug.length >= 4) {
-            message.error('Slug should be less than 4 characters');
-            return;
-        }
-
+        const { image, ...otherValues } = values;
         Raxios.post('/event/event', {
-            name: values.name,
-            mainTitle: values.mainTitle,
-            subTitle: values.subTitle,
-            slug: values.slug,
-            expert: values.expert,
-            zoomLink: values.zoomLink,
-            date: values.date,
-            duration: values.duration,
-            imageUrl: uploadedImageUrl  // Include the uploaded image URL
+            ...otherValues,
+            imageUrl: uploadedImageUrl
         })
             .then(response => {
                 message.success(response.data.message);
@@ -71,79 +49,64 @@ const CreateEventPopup = ({ visible, setVisible }) => {
 
     const formItems = [
         {
-            label: "Created by",
-            name: "name",
-            rules: [{ required: true, message: 'Please enter the event name' }],
-            component: <Input />
+            label: "Created By", name: "name", component: <Input />,
+            rules: [{ required: true, message: 'Please enter the name' }],
         },
         {
-            label: "Main Title",
-            name: "mainTitle",
+            label: "Main Title", name: "mainTitle", component: <Input />,
             rules: [{ required: true, message: 'Please enter the main title' }],
-            component: <Input />
+        },
+        { label: "Sub Title", name: "subTitle", rules: [], component: <Input /> },
+        { label: "Hosted By", name: "hostedBy", rules: [], component: <Input /> },
+        {
+            label: "Slug", name: "slug", component: <Input />,
+            rules: [{ required: true, message: 'Please enter the slug' }]
         },
         {
-            label: "Description",
-            name: "subTitle",
-            rules: [{ required: true, message: 'Please enter the description' }],
-            component: <Input />
+            label: "Start Event Date", name: "startEventDate", rules: [],
+            component: <DatePicker className='w-full' />
         },
         {
-            label: "Slug",
-            name: "slug",
-            rules: [
-                { required: true, message: 'Please enter the slug' },
-                { max: 3, message: 'Slug should be less than 4 characters' }
-            ],
-            component: <Input />
+            label: "Valid Upto", name: "validUpto",
+            rules: [{ required: true, message: 'Please select the valid upto' }],
+            component: <DatePicker className='w-full' />
         },
         {
-            label: "Expert",
-            name: "expert",
-            rules: [{ required: true, message: 'Please select the expert' }],
+            label: "Event Type", name: "eventType",
+            rules: [{ required: true, message: 'Please select the event type' }],
             component: (
-                <Select placeholder="Select expert">
-                    {experts.map(expert => (
-                        <Select.Option key={expert._id} value={expert._id}>
-                            {expert.name}
-                        </Select.Option>
-                    ))}
+                <Select>
+                    <Select.Option value="online">Online</Select.Option>
+                    <Select.Option value="offline">Offline</Select.Option>
+                    <Select.Option value="not_event">Not Event</Select.Option>
+                    <Select.Option value="challenge">Challenge</Select.Option>
                 </Select>
             )
         },
+        { label: "Description", name: "description", rules: [], component: <Input.TextArea /> },
+        { label: "Category", name: "category", rules: [], component: <Input /> },
+        { label: "Max Visitors Allowed", name: "maxVisitorsAllowed", rules: [], component: <InputNumber className='w-full' /> },
+        { label: "Prize Money", name: "prizeMoney", rules: [], component: <InputNumber className='w-full' /> },
         {
-            label: "Zoom Link",
-            name: "zoomLink",
-            rules: [{ required: true, message: 'Please enter the zoom link' }],
-            component: <Input />
+            label: "Guest Speaker", name: "guestSpeaker", component: <Input />,
+            rules: [{ required: true, message: 'Please select the guest speaker' }],
         },
         {
-            label: "Date",
-            name: "date",
-            rules: [{ required: true, message: 'Please enter the date' }],
-            component: (
-                <DatePicker
-                    id="datetime"
-                    style={{ width: "100%" }}
-                    showTime
-                    format="YYYY-MM-DD HH:mm:ss"
-                />
-            )
+            label: "Meeting Link", name: "meetingLink", rules: [], component: <Input />
         },
         {
-            label: "Duration",
-            name: "duration",
-            rules: [{ required: true, message: 'Please enter the duration' }],
+            label: "Repeat", name: "repeat",
+            rules: [{ required: true, message: 'Please select the repeat' }],
             component: (
-                <Select placeholder="Select duration">
-                    {["30", "60", "90", "120", "150", "180"].map(duration => (
-                        <Select.Option key={duration} value={duration}>
-                            {duration} minutes
-                        </Select.Option>
-                    ))}
+                <Select>
+                    <Select.Option value="once">Once</Select.Option>
+                    <Select.Option value="daily">Daily</Select.Option>
+                    <Select.Option value="weekly">Weekly</Select.Option>
+                    <Select.Option value="monthly">Monthly</Select.Option>
                 </Select>
             )
         },
+        { label: "Registration Allowed Till", name: "registrationAllowedTill", rules: [], component: <DatePicker className='w-full' /> },
         {
             label: "Image",
             name: "image",
@@ -173,10 +136,9 @@ const CreateEventPopup = ({ visible, setVisible }) => {
                     </Button>
                 </div>
                 <Form
-                    form={form}
                     onFinish={handleCreate}
                     layout="vertical"
-                    className='w-full grid grid-cols-2 gap-4'
+                    className='w-full grid md:grid-cols-4 gap-4 justify-center items-center'
                 >
                     {formItems.map(item => (
                         <Form.Item
@@ -188,8 +150,8 @@ const CreateEventPopup = ({ visible, setVisible }) => {
                             {item.component}
                         </Form.Item>
                     ))}
-                    <Form.Item>
-                        <div className='flex justify-end'>
+                    <Form.Item style={{ "gridColumn": "4" }}>
+                        <div className='flex justify-end items-end'>
                             <Button type="primary" htmlType="submit" disabled={!ready}>
                                 Create
                             </Button>
