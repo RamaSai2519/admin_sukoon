@@ -64,12 +64,14 @@ const CreateEventPopup = ({ setVisible }) => {
         },
         {
             label: "Start Event Date", name: "startEventDate", rules: [],
-            component: <DatePicker className='w-full' />
+            component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss"
+            showTime />
         },
         {
             label: "Valid Upto", name: "validUpto",
             rules: [{ required: true, message: 'Please select the valid upto' }],
-            component: <DatePicker className='w-full' />
+            component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss"
+            showTime />
         },
         {
             label: "Event Type", name: "eventType",
@@ -106,7 +108,8 @@ const CreateEventPopup = ({ setVisible }) => {
                 </Select>
             )
         },
-        { label: "Registration Allowed Till", name: "registrationAllowedTill", rules: [], component: <DatePicker className='w-full' /> },
+        { label: "Registration Allowed Till", name: "registrationAllowedTill", rules: [], component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss"
+            showTime /> },
         {
             label: "Image",
             name: "image",
