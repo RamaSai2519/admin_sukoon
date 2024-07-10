@@ -16,58 +16,27 @@ const EventsTab = () => {
     }, []);
 
     const columns = [
+        { title: 'Title', dataIndex: 'mainTitle', key: 'mainTitle', },
+        { title: 'Subtitle', dataIndex: 'subTitle', key: 'subTitle' },
+        { title: 'Expert', dataIndex: 'expert', key: 'expert' },
+        { title: 'Hosted By', dataIndex: 'hostedBy', key: 'hostedBy' },
         {
-            title: 'Title',
-            dataIndex: 'mainTitle',
-            key: 'mainTitle',
-        },
-        {
-            title: 'Subtitle',
-            dataIndex: 'subTitle',
-            key: 'subTitle'
-        },
-        {
-            title: 'Expert',
-            dataIndex: 'expert',
-            key: 'expert'
-        },
-        {
-            title: 'Hosted By',
-            dataIndex: 'hostedBy',
-            key: 'hostedBy'
-        },
-        {
-            title: 'Date',
-            dataIndex: 'validUpto',
-            key: 'validUpto',
+            title: 'Date', dataIndex: 'validUpto', key: 'validUpto',
             render: (date) => date ? new Date(date).toLocaleDateString() : ''
         },
+        { title: 'Author', dataIndex: 'name', key: 'name' },
+        { title: 'Slug', dataIndex: 'slug', key: 'slug' },
         {
-            title: 'Author',
-            dataIndex: 'name',
-            key: 'name'
-        },
-        {
-            title: 'Slug',
-            dataIndex: 'slug',
-            key: 'slug'
-        },
-        {
-            title: "Created At",
-            dataIndex: 'createdAt',
-            key: 'createdAt',
+            title: "Created At", dataIndex: 'createdAt', key: 'createdAt',
             render: (time) => new Date(time).toLocaleString()
         },
         {
-            title: "Updated At",
-            dataIndex: 'updatedAt',
-            key: 'updatedAt',
+            title: "Updated At", dataIndex: 'updatedAt', key: 'updatedAt',
             render: (time) => new Date(time).toLocaleString()
         },
         {
-            title: 'Details',
-            key: 'details',
-            render: (text, record) => (
+            title: 'Details', key: 'details',
+            render: (_, record) => (
                 <Link to={{ pathname: `/admin/events/${record.slug}` }} className="view-details-link">
                     View
                 </Link>

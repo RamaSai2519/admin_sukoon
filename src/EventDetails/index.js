@@ -42,7 +42,7 @@ const EventDetails = () => {
         fetchEventDetails();
         fetchUsers();
         // eslint-disable-next-line
-    }, [slug]);
+    }, [slug, editMode]);
 
     const columns = [
         { title: 'Name', dataIndex: 'name', key: 'name' },
@@ -86,7 +86,6 @@ const EventDetails = () => {
 
     const toggleEditMode = () => {
         setEditMode(!editMode);
-        console.log('Edit mode:', editMode);
     };
 
     return (
@@ -124,7 +123,7 @@ const EventDetails = () => {
                             </div>
                             <Table dataSource={users} columns={columns} rowKey={(record) => record._id || record.email} />
                         </div> :
-                        <CreateEventPopup setVisible={setEditMode} data={data} />
+                        <CreateEventPopup setVisible={setEditMode} data={data} editMode={editMode} />
                     }
                 </div>
             </ConfigProvider>

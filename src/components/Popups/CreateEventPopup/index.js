@@ -4,16 +4,10 @@ import Raxios from '../../../services/axiosHelper';
 import { UploadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
-const CreateEventPopup = ({ setVisible, data }) => {
+const CreateEventPopup = ({ setVisible, data, editMode }) => {
     const [uploadedImageUrl, setUploadedImageUrl] = useState(data?.imageUrl || '');
-    const [ready, setReady] = useState(false);
-
-    useEffect(() => {
-        setReady(true);
-    }, [data]);
-
+    
     const handleCreate = async (values) => {
-        console.log("🚀 ~ handleCreate ~ values:", values);
         const { image, ...otherValues } = values;
         try {
             const response = await Raxios.post('/event/event', {
@@ -52,7 +46,6 @@ const CreateEventPopup = ({ setVisible, data }) => {
         if (info.file.status === 'done') {
             setUploadedImageUrl(info.file.response.file_url);
             message.success(`${info.file.name} file uploaded successfully`);
-            setReady(true);
         } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
         }
@@ -80,7 +73,7 @@ const CreateEventPopup = ({ setVisible, data }) => {
 
     const formItems = [
         {
-            label: "Created By", name: "name", component: <Input />,
+            label: "Created By", name: "name", component: <Input disabled={editMode} />,
             rules: [{ required: true, message: 'Please enter the name' }],
         },
         {
@@ -93,7 +86,7 @@ const CreateEventPopup = ({ setVisible, data }) => {
         { label: "Sub Title", name: "subTitle", rules: [], component: <Input.TextArea /> },
         { label: "Hosted By", name: "hostedBy", rules: [], component: <Input /> },
         {
-            label: "Slug", name: "slug", component: <Input />,
+            label: "Slug", name: "slug", component: <Input disabled={editMode} />,
             rules: [{ required: true, message: 'Please enter the slug' }]
         },
         {
@@ -187,7 +180,7 @@ const CreateEventPopup = ({ setVisible, data }) => {
                     ))}
                     <Form.Item style={{ gridColumn: "4" }}>
                         <div className='flex justify-end items-end'>
-                            <Button type="primary" htmlType="submit" disabled={!ready}>
+                            <Button type="primary" htmlType="submit">
                                 {data ? 'Update' : 'Create'}
                             </Button>
                         </div>
