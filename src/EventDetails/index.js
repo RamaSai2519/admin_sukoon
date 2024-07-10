@@ -1,4 +1,4 @@
-import { Table, Button, ConfigProvider, Upload, message, theme } from 'antd';
+import { Table, Button, ConfigProvider, theme } from 'antd';
 import React, { useEffect, useState } from 'react';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import writeXlsxFile from 'write-excel-file';
@@ -41,6 +41,7 @@ const EventDetails = () => {
     useEffect(() => {
         fetchEventDetails();
         fetchUsers();
+        // eslint-disable-next-line
     }, [slug]);
 
     const columns = [

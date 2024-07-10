@@ -9,15 +9,6 @@ export const fetchErrorLogs = async (setErrorLogs) => {
     }
 };
 
-export const fetchApplications = async (setApplications) => {
-    try {
-        const response = await Raxios.get('/data/applications');
-        setApplications(response.data.reverse());
-    } catch (error) {
-        console.error('Error fetching applications:', error);
-    }
-};
-
 export const fetchCategories = async (setCategories) => {
     try {
         const response = await Raxios.get('/data/categories');
