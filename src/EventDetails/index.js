@@ -6,24 +6,19 @@ import Raxios from '../services/axiosHelper';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { saveAs } from 'file-saver';
-import { UploadOutlined } from '@ant-design/icons';
+import CreateEventPopup from '../components/Popups/CreateEventPopup';
 
 const EventDetails = () => {
     const { slug } = useParams();
     const [users, setUsers] = useState([]);
-    const [name, setName] = useState('');
-    const [image, setImage] = useState('');
-    const [mainTitle, setMainTitle] = useState('');
-    const [subTitle, setSubTitle] = useState('');
+    const [editMode, setEditMode] = useState(false);
+    const [data, setData] = useState({});
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
     const fetchEventDetails = async () => {
         try {
             const response = await Raxios.get(`/event/event?slug=${slug}`);
-            setName(response.data.name);
-            setMainTitle(response.data.mainTitle);
-            setSubTitle(response.data.subTitle);
-            setImage(response.data.imageUrl);
+            setData(response.data);
         } catch (error) {
             console.error('Error fetching event details:', error);
         }
@@ -41,43 +36,6 @@ const EventDetails = () => {
         } catch (error) {
             console.error('Error fetching users:', error);
         }
-    };
-
-    const handleUpdate = async () => {
-        try {
-            const response = await Raxios.put(`/event/event?slug=${slug}`, {
-                name,
-                mainTitle,
-                subTitle,
-                slug,
-                imageUrl: image
-            });
-            setName(response.data.name);
-            setMainTitle(response.data.mainTitle);
-            setSubTitle(response.data.subTitle);
-            setImage(response.data.imageUrl);
-            window.alert('Event details updated successfully.');
-        } catch (error) {
-            console.error('Error updating event details:', error);
-            window.alert('Error updating event details:', error);
-        }
-    };
-
-    const handleUpload = (file) => {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        Raxios.post('/service/upload', formData)
-            .then(response => {
-                setImage(response.data.file_url);
-                message.success('Image uploaded successfully.');
-            })
-            .catch(error => {
-                console.error('Error uploading image:', error);
-                message.error('Failed to upload image.');
-            });
-
-        return false; // Prevent upload to default action (browser upload)
     };
 
     useEffect(() => {
@@ -125,10 +83,15 @@ const EventDetails = () => {
         saveAs(blob, 'UserList.xlsx');
     };
 
+    const toggleEditMode = () => {
+        setEditMode(!editMode);
+        console.log('Edit mode:', editMode);
+    };
+
     return (
         <LazyLoad>
             <ConfigProvider theme={{ algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
-                <div className="container flex flex-col px-5 min-h-screen">
+                <div className="flex flex-col px-5 min-h-screen max-w-screen-2xl mx-auto">
                     <div id='details-header' className='flex flex-row items-center justify-between'>
                         <h1>Event Details</h1>
                         <button className='back-button' onClick={() => window.history.back()}>
@@ -136,38 +99,32 @@ const EventDetails = () => {
                         </button>
                     </div>
                     <div className='flex w-full items-center justify-stretch '>
-                        <div id='details-content' className='grid md:grid-cols-4 md:gap-4 items-center'>
-                            <div className='grid-tile'>
-                                <h3>Title</h3>
-                                <input type="text" value={mainTitle} onChange={(e) => setMainTitle(e.target.value)} />
+                        <div id='details-content' className='flex flex-col items-center'>
+                            <div className='grid-tile text-lg w-full'>
+                                <h3>Main Title:</h3>
+                                <h2 className='text-xl'>{data?.mainTitle}</h2>
+                                <br />
+                                <h3>Sub Title:</h3>
+                                <h2 className='text-xl'>{data?.subTitle}</h2>
+                                <br />
+                                <h3>Name:</h3>
+                                <h2 className='text-xl'>{data?.name}</h2>
                             </div>
-                            <div className='grid-tile'>
-                                <h3>Subtitle</h3>
-                                <input type="text" value={subTitle} onChange={(e) => setSubTitle(e.target.value)} />
+                            <div className='w-full'>
+                                <Button className='w-fit' onClick={toggleEditMode}>{editMode ? 'Cancel' : 'Edit Event Details'}</Button>
                             </div>
-                            <div className='grid-tile'>
-                                <h3>Name</h3>
-                                <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-                            </div>
-                            <div className='grid-tile'>
-                                <h3>Image</h3>
-                                <img src={image} alt='Event' />
-                                <Upload beforeUpload={handleUpload} showUploadList={false}>
-                                    <Button icon={<UploadOutlined />} className='w-full mt-2'>Edit Image</Button>
-                                </Upload>
-                            </div>
-                        </div>
-                        <div>
-                            <Button className='w-fit' onClick={handleUpdate}>Update Details</Button>
                         </div>
                     </div>
-                    <div className='w-full'>
-                        <div className='flex justify-between'>
-                            <h1>Registered Users</h1>
-                            <Button onClick={downloadExcel}>Download Excel</Button>
-                        </div>
-                        <Table dataSource={users} columns={columns} rowKey={(record) => record._id || record.email} />
-                    </div>
+                    {!editMode ?
+                        <div className='w-full'>
+                            <div className='flex justify-between'>
+                                <h1>Registered Users</h1>
+                                <Button onClick={downloadExcel}>Download Excel</Button>
+                            </div>
+                            <Table dataSource={users} columns={columns} rowKey={(record) => record._id || record.email} />
+                        </div> :
+                        <CreateEventPopup setVisible={setEditMode} data={data} />
+                    }
                 </div>
             </ConfigProvider>
         </LazyLoad>

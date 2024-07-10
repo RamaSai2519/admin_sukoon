@@ -97,7 +97,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                                 name="id"
                                 rules={[{ required: true, message: 'Please input your ID!' }]}
                             >
-                                <Input placeholder="ID" />
+                                <Input placeholder="Phone Number" />
                             </Form.Item>
                             <Form.Item
                                 name="password"

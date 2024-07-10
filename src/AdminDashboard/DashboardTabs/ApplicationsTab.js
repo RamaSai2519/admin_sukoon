@@ -52,7 +52,7 @@ const ApplicationsTab = () => {
                     algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
                 }
             }>
-                <div className="container">
+                <div className="min-h-screen">
                     <Table dataSource={applications} columns={columns} />
                 </div>
             </ConfigProvider>

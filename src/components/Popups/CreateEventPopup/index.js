@@ -1,26 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, message, Select, DatePicker, Upload, InputNumber } from 'antd';
 import Raxios from '../../../services/axiosHelper';
-import { PlusOutlined } from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 
-const CreateEventPopup = ({ setVisible }) => {
-    const [uploadedImageUrl, setUploadedImageUrl] = React.useState('');
-    const [ready, setReady] = React.useState(false);
+const CreateEventPopup = ({ setVisible, data }) => {
+    const [uploadedImageUrl, setUploadedImageUrl] = useState(data?.imageUrl || '');
+    const [ready, setReady] = useState(false);
 
-    const handleCreate = (values) => {
+    useEffect(() => {
+        setReady(true);
+    }, [data]);
+
+    const handleCreate = async (values) => {
+        console.log("🚀 ~ handleCreate ~ values:", values);
         const { image, ...otherValues } = values;
-        Raxios.post('/event/event', {
-            ...otherValues,
-            imageUrl: uploadedImageUrl
-        })
-            .then(response => {
-                message.success(response.data.message);
-                setVisible(false);
-            })
-            .catch(error => {
-                console.error('Error creating event:', error);
-                alert('Error creating event:', error);
+        try {
+            const response = await Raxios.post('/event/event', {
+                ...otherValues,
+                imageUrl: uploadedImageUrl
             });
+            if (response.data.success) {
+                message.success(
+                    `Event ${data ? 'updated' : 'created'} successfully`
+                );
+                setVisible(false);
+            } else {
+                message.error('Error creating event');
+            }
+        } catch (error) {
+            console.error('Error creating event:', error);
+            message.error('Error creating event');
+        }
     };
 
     const beforeUpload = (file) => {
@@ -47,6 +58,26 @@ const CreateEventPopup = ({ setVisible }) => {
         }
     };
 
+    const initialValues = {
+        name: data?.name,
+        mainTitle: data?.mainTitle,
+        subTitle: data?.subTitle,
+        hostedBy: data?.hostedBy,
+        slug: data?.slug,
+        startEventDate: data?.startEventDate ? dayjs(data?.startEventDate) : undefined,
+        validUpto: data?.validUpto ? dayjs(data?.validUpto) : undefined,
+        eventType: data?.eventType,
+        description: data?.description,
+        category: data?.category,
+        maxVisitorsAllowed: data?.maxVisitorsAllowed,
+        prizeMoney: data?.prizeMoney,
+        guestSpeaker: data?.guestSpeaker,
+        meetingLink: data?.meetingLink,
+        repeat: data?.repeat,
+        registrationAllowedTill: data?.registrationAllowedTill ? dayjs(data?.registrationAllowedTill) : undefined,
+        imageUrl: data?.imageUrl,
+    };
+
     const formItems = [
         {
             label: "Created By", name: "name", component: <Input />,
@@ -54,9 +85,12 @@ const CreateEventPopup = ({ setVisible }) => {
         },
         {
             label: "Main Title", name: "mainTitle", component: <Input />,
-            rules: [{ required: true, message: 'Please enter the main title' }],
+            rules: [
+                { required: true, message: 'Please enter the main title' },
+                { max: 40, message: 'Max length is 50' }
+            ],
         },
-        { label: "Sub Title", name: "subTitle", rules: [], component: <Input /> },
+        { label: "Sub Title", name: "subTitle", rules: [], component: <Input.TextArea /> },
         { label: "Hosted By", name: "hostedBy", rules: [], component: <Input /> },
         {
             label: "Slug", name: "slug", component: <Input />,
@@ -64,14 +98,12 @@ const CreateEventPopup = ({ setVisible }) => {
         },
         {
             label: "Start Event Date", name: "startEventDate", rules: [],
-            component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss"
-            showTime />
+            component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss" showTime />
         },
         {
             label: "Valid Upto", name: "validUpto",
             rules: [{ required: true, message: 'Please select the valid upto' }],
-            component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss"
-            showTime />
+            component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss" showTime />
         },
         {
             label: "Event Type", name: "eventType",
@@ -85,7 +117,7 @@ const CreateEventPopup = ({ setVisible }) => {
                 </Select>
             )
         },
-        { label: "Description", name: "description", rules: [], component: <Input.TextArea /> },
+        { label: "Description", name: "description", rules: [{ max: 125 }], component: <Input.TextArea /> },
         { label: "Category", name: "category", rules: [], component: <Input /> },
         { label: "Max Visitors Allowed", name: "maxVisitorsAllowed", rules: [], component: <InputNumber className='w-full' /> },
         { label: "Prize Money", name: "prizeMoney", rules: [], component: <InputNumber className='w-full' /> },
@@ -93,9 +125,7 @@ const CreateEventPopup = ({ setVisible }) => {
             label: "Guest Speaker", name: "guestSpeaker", component: <Input />,
             rules: [{ required: true, message: 'Please select the guest speaker' }],
         },
-        {
-            label: "Meeting Link", name: "meetingLink", rules: [], component: <Input />
-        },
+        { label: "Meeting Link", name: "meetingLink", rules: [], component: <Input /> },
         {
             label: "Repeat", name: "repeat",
             rules: [{ required: true, message: 'Please select the repeat' }],
@@ -108,24 +138,26 @@ const CreateEventPopup = ({ setVisible }) => {
                 </Select>
             )
         },
-        { label: "Registration Allowed Till", name: "registrationAllowedTill", rules: [], component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss"
-            showTime /> },
+        {
+            label: "Registration Allowed Till", name: "registrationAllowedTill", rules: [],
+            component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss" showTime />
+        },
         {
             label: "Image",
             name: "image",
             rules: [{ required: true, message: 'Please upload the image' }],
             component: (
-                <Upload
-                    name="file"
-                    listType="picture-card"
-                    className="avatar-uploader"
-                    action="https://rama.sukoonunlimited.com/admin/service/upload"
-                    beforeUpload={beforeUpload}
-                    onChange={handleChange}
-                    maxCount={1}
-                >
-                    <PlusOutlined />
-                </Upload>
+                <div>
+                    <img src={uploadedImageUrl || data?.imageUrl} alt='Event' />
+                    <Upload
+                        action="https://rama.sukoonunlimited.com/admin/service/upload"
+                        beforeUpload={beforeUpload}
+                        onChange={handleChange}
+                        maxCount={1}
+                    >
+                        <Button icon={<UploadOutlined />} className='w-full mt-2'>Edit Image</Button>
+                    </Upload>
+                </div>
             )
         }
     ];
@@ -133,30 +165,30 @@ const CreateEventPopup = ({ setVisible }) => {
     return (
         <div className='min-h-screen flex py-5 overflow-auto w-full'>
             <div className='w-full'>
-                <div className='flex justify-end mb-5'>
-                    <Button onClick={() => setVisible(false)} type="primary">
-                        Close
-                    </Button>
-                </div>
+                {!data && <div className='flex justify-end mb-5'>
+                    <Button onClick={() => setVisible(false)} type="primary">Close</Button>
+                </div>}
                 <Form
                     onFinish={handleCreate}
                     layout="vertical"
-                    className='w-full grid md:grid-cols-4 gap-4 justify-center items-center'
+                    initialValues={initialValues}
+                    className='w-full grid md:grid-cols-4 gap-4 justify-center'
                 >
                     {formItems.map(item => (
                         <Form.Item
                             key={item.name}
                             label={item.label}
                             name={item.name}
-                            rules={item.rules}
+                            rules={data ? [] : item.rules}
+                            className='h-full'
                         >
                             {item.component}
                         </Form.Item>
                     ))}
-                    <Form.Item style={{ "gridColumn": "4" }}>
+                    <Form.Item style={{ gridColumn: "4" }}>
                         <div className='flex justify-end items-end'>
                             <Button type="primary" htmlType="submit" disabled={!ready}>
-                                Create
+                                {data ? 'Update' : 'Create'}
                             </Button>
                         </div>
                     </Form.Item>
