@@ -11,7 +11,7 @@ const ApplicationsTab = () => {
     const [total, setTotal] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
     const [formType, setFormType] = React.useState(
-        localStorage.getItem('formType') === "sarathi" ? "sarathi" : "event"
+        localStorage.getItem('formType') === "event" ? "event" : "sarathi"
     );
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
@@ -67,8 +67,8 @@ const ApplicationsTab = () => {
                                     localStorage.setItem('formType', e.target.value);
                                 }}
                             >
-                                <Radio.Button value="sarathi">Sarathi</Radio.Button>
-                                <Radio.Button value="event">Event</Radio.Button>
+                                <Radio.Button value="sarathi">Sarathis</Radio.Button>
+                                <Radio.Button value="event">Event Hosts</Radio.Button>
                             </Radio.Group>
                         </Flex>
                     </div>
