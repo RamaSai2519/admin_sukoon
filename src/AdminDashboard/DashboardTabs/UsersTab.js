@@ -27,9 +27,7 @@ const UsersTab = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    await fetchUsers();
-    await fetchCalls();
-    await fetchLeads();
+    await Promise.all([fetchUsers(), fetchCalls(), fetchLeads()]);
     setLoading(false);
   };
 
