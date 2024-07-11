@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Button, message, Select, DatePicker, Upload, InputNumber } from 'antd';
 import Raxios from '../../../services/axiosHelper';
 import { UploadOutlined } from '@ant-design/icons';
