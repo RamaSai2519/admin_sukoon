@@ -164,7 +164,7 @@ const UsersList = () => {
         { value: user.userStatus || 'N/A' },
         { value: user.phoneNumber || 'N/A' },
         { value: user.city || 'N/A' },
-        { value: user.dateOfBirth || 'N/A' },
+        { value: user.birthDate || 'N/A' },
         { value: user.gender || 'N/A' },
         { value: user.lastCallDate || 'N/A' },
         { value: user.callAge || 0 },
