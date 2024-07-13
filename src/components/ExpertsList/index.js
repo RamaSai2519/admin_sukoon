@@ -52,63 +52,47 @@ const ExpertsList = () => {
 
     const columns = [
         {
-            title: 'Expert',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Expert', dataIndex: 'name', key: 'name',
             sorter: (a, b) => a.name.localeCompare(b.name),
         },
         {
-            title: 'Successful',
-            dataIndex: 'successfulCalls',
-            key: 'successfulCalls',
+            title: 'Time Spent', dataIndex: 'timeSpent', key: 'timeSpent',
+            sorter: (a, b) => a.timeSpent - b.timeSpent,
+        },
+        {
+            title: 'Successful', dataIndex: 'successfulCalls', key: 'successfulCalls',
             sorter: (a, b) => a.successfulCalls - b.successfulCalls,
         },
         {
-            title: 'Failed',
-            dataIndex: 'failedCalls',
-            key: 'failedCalls',
+            title: 'Failed', dataIndex: 'failedCalls', key: 'failedCalls',
             sorter: (a, b) => a.failedCalls - b.failedCalls,
         },
         {
-            title: 'Missed',
-            dataIndex: 'missedCalls',
-            key: 'missedCalls',
+            title: 'Missed', dataIndex: 'missedCalls', key: 'missedCalls',
             sorter: (a, b) => a.missedCalls - b.missedCalls,
         },
         {
-            title: 'Avg.',
-            dataIndex: 'avgCallsPerDay',
-            key: 'avgCallsPerDay',
+            title: 'Avg.', dataIndex: 'avgCallsPerDay', key: 'avgCallsPerDay',
             sorter: (a, b) => a.avgCallsPerDay - b.avgCallsPerDay,
         },
         {
-            title: 'C.Score',
-            dataIndex: 'score',
-            key: 'score',
+            title: 'C.Score', dataIndex: 'score', key: 'score',
             sorter: (a, b) => a.score - b.score,
         },
         {
-            title: 'Share',
-            dataIndex: 'callsShare',
-            key: 'callsShare',
+            title: 'Share', dataIndex: 'callsShare', key: 'callsShare',
             sorter: (a, b) => a.callsShare.localeCompare(b.callsShare),
         },
         {
-            title: 'Repeat %',
-            dataIndex: 'repeatRate',
-            key: 'repeatRate',
+            title: 'Repeat %', dataIndex: 'repeatRate', key: 'repeatRate',
             sorter: (a, b) => a.repeatRate.localeCompare(b.repeatRate),
         },
         {
-            title: 'T.Score',
-            dataIndex: 'totalScore',
-            key: 'totalScore',
+            title: 'T.Score', dataIndex: 'totalScore', key: 'totalScore',
             sorter: (a, b) => a.totalScore - b.totalScore,
         },
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
+            title: 'Status', dataIndex: 'status', key: 'status',
             sorter: (a, b) => a.status.localeCompare(b.status),
         },
         {
@@ -125,6 +109,7 @@ const ExpertsList = () => {
     const dataSource = experts.map((expert) => ({
         key: expert._id,
         name: expert.name,
+        timeSpent: expert.timeSpent + ' h',
         successfulCalls: calculateSuccessfulCalls(expert),
         failedCalls: calculateFailedCalls(expert),
         missedCalls: calculatemissedCalls(expert),
