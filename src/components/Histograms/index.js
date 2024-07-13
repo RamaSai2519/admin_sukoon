@@ -64,8 +64,7 @@ const Histograms = ({ usersData }) => {
             '56 - 60': 0,
             '61 - 65': 0,
             '66 - 70': 0,
-            'Over 70': 0,
-            'Unknown': 0
+            'Over 70': 0
         };
         const currentDate = new Date();
         users.forEach(user => {
@@ -86,8 +85,6 @@ const Histograms = ({ usersData }) => {
                 ageGroup = '66 - 70';
             } else if (age > 70) {
                 ageGroup = 'Over 70';
-            } else {
-                ageGroup = 'Unknown';
             }
             ageGroupCounts[ageGroup] += 1;
         });
