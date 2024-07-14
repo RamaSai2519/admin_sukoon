@@ -1,42 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { Table, ConfigProvider, theme } from 'antd';
-import { useErrorLogs } from '../../services/useData';
 import Loading from '../../components/Loading/loading';
 import LazyLoad from '../../components/LazyLoad/lazyload';
+import Raxios from "../../services/axiosHelper";
 
 const NotificationsTab = () => {
-    const { errorLogs, fetchErrorLogs } = useErrorLogs();
     const [loading, setLoading] = useState(false);
     const darkMode = localStorage.getItem('darkMode') === 'true';
+    const [errorLogs, setErrorLogs] = useState([]);
+    const [errorLogsPage, setErrorLogsPage] = useState(
+        localStorage.getItem('errorLogsPage') ? parseInt(localStorage.getItem('errorLogsPage')) : 1
+    );
+    const [errorLogsPageSize, setErrorLogsPageSize] = useState(10);
+    const [errorLogsTotal, setErrorLogsTotal] = useState(0);
 
-    const fetchData = async () => {
+    const fetchErrorLogs = async (page, size) => {
         setLoading(true);
-        await fetchErrorLogs();
+        const response = await Raxios.get('/data/errorlogs', { params: { page, size } });
+        setErrorLogs(response.data.data);
+        setErrorLogsTotal(response.data.total);
         setLoading(false);
     };
 
+    const handleTableChange = (current, pageSize) => {
+        setErrorLogsPage(current);
+        localStorage.setItem('errorLogsPage', current);
+        setErrorLogsPageSize(pageSize);
+    };
+
     useEffect(() => {
-        fetchData();
-        // eslint-disable-next-line
-    }, []);
+        fetchErrorLogs(errorLogsPage, errorLogsPageSize);
+    }, [errorLogsPage, errorLogsPageSize]);
 
     const columns = [
         {
-            title: 'Time',
-            dataIndex: 'time',
-            key: 'time',
+            title: 'Time', dataIndex: 'time', key: 'time',
             render: (time) => new Date(time).toLocaleString()
         },
-        {
-            title: 'Message',
-            dataIndex: 'message',
-            key: 'message'
-        }
+        { title: 'Message', dataIndex: 'message', key: 'message' }
     ];
 
-    if (loading) {
-        return <Loading />;
-    }
+    if (loading) { return <Loading />; }
 
     return (
         <LazyLoad>
@@ -47,7 +51,17 @@ const NotificationsTab = () => {
             }>
                 <div className="min-h-screen py-2">
                     <div className='w-full'>
-                        <Table dataSource={errorLogs} columns={columns} />
+                        <Table
+                            dataSource={errorLogs}
+                            columns={columns}
+                            pagination={{
+                                current: errorLogsPage,
+                                pageSize: errorLogsPageSize,
+                                total: errorLogsTotal,
+                                onChange: handleTableChange
+                            }}
+                            rowKey={(record) => record._id}
+                        />
                     </div>
                 </div>
             </ConfigProvider>

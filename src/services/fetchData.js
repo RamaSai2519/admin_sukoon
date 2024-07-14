@@ -1,14 +1,5 @@
 import Raxios from './axiosHelper';
 
-export const fetchErrorLogs = async (setErrorLogs) => {
-    try {
-        const response = await Raxios.get('/data/errorlogs');
-        setErrorLogs(response.data.reverse());
-    } catch (error) {
-        console.error('Error fetching error logs:', error);
-    }
-};
-
 export const fetchCategories = async (setCategories) => {
     try {
         const response = await Raxios.get('/data/categories');

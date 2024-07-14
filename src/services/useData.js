@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
 import {
-    fetchErrorLogs,
     fetchCategories,
     fetchStats,
     fetchInsights,
@@ -12,7 +11,6 @@ import {
 } from './fetchData';
 
 // Create contexts
-const ErrorLogsContext = createContext();
 const CategoriesContext = createContext();
 const StatsContext = createContext();
 const InsightsContext = createContext();
@@ -23,7 +21,6 @@ const ExpertsContext = createContext();
 const EventsContext = createContext();
 
 // Export hooks to use contexts
-export const useErrorLogs = () => useContext(ErrorLogsContext);
 export const useCategories = () => useContext(CategoriesContext);
 export const useStats = () => useContext(StatsContext);
 export const useInsights = () => useContext(InsightsContext);
@@ -34,7 +31,6 @@ export const useExperts = () => useContext(ExpertsContext);
 export const useEvents = () => useContext(EventsContext);
 
 export const DataProvider = ({ children }) => {
-    const [errorLogs, setErrorLogs] = useState([]);
     const [allCategories, setCategories] = useState([]);
     const [leads, setLeads] = useState([]);
     const [users, setUsers] = useState([]);
@@ -74,7 +70,6 @@ export const DataProvider = ({ children }) => {
 
 
     const contextValues = {
-        errorLogs: { errorLogs, fetchErrorLogs: () => fetchErrorLogs(setErrorLogs) },
         allCategories: { allCategories, fetchCategories: () => fetchCategories(setCategories) },
         stats: { stats, fetchStats: () => fetchStats(setStats) },
         insights: { insights, fetchInsights: () => fetchInsights(setInsights) },
@@ -86,24 +81,22 @@ export const DataProvider = ({ children }) => {
     };
 
     return (
-        <ErrorLogsContext.Provider value={contextValues.errorLogs}>
-            <CategoriesContext.Provider value={contextValues.allCategories}>
-                <StatsContext.Provider value={contextValues.stats}>
-                    <InsightsContext.Provider value={contextValues.insights}>
-                        <LeadsContext.Provider value={contextValues.leads}>
-                            <UsersContext.Provider value={contextValues.users}>
-                                <CallsContext.Provider value={contextValues.calls}>
-                                    <ExpertsContext.Provider value={contextValues.experts}>
-                                        <EventsContext.Provider value={contextValues.events}>
-                                            {children}
-                                        </EventsContext.Provider>
-                                    </ExpertsContext.Provider>
-                                </CallsContext.Provider>
-                            </UsersContext.Provider>
-                        </LeadsContext.Provider>
-                    </InsightsContext.Provider>
-                </StatsContext.Provider>
-            </CategoriesContext.Provider>
-        </ErrorLogsContext.Provider>
+        <CategoriesContext.Provider value={contextValues.allCategories}>
+            <StatsContext.Provider value={contextValues.stats}>
+                <InsightsContext.Provider value={contextValues.insights}>
+                    <LeadsContext.Provider value={contextValues.leads}>
+                        <UsersContext.Provider value={contextValues.users}>
+                            <CallsContext.Provider value={contextValues.calls}>
+                                <ExpertsContext.Provider value={contextValues.experts}>
+                                    <EventsContext.Provider value={contextValues.events}>
+                                        {children}
+                                    </EventsContext.Provider>
+                                </ExpertsContext.Provider>
+                            </CallsContext.Provider>
+                        </UsersContext.Provider>
+                    </LeadsContext.Provider>
+                </InsightsContext.Provider>
+            </StatsContext.Provider>
+        </CategoriesContext.Provider>
     );
 };
