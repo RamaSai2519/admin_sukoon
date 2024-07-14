@@ -15,7 +15,7 @@ const EventsTab = () => {
     const [eventsPage, setEventsPage] = useState(
         localStorage.getItem('eventsPage') ? parseInt(localStorage.getItem('eventsPage')) : 1
     );
-    const [eventsPageSize, setEventsPageSize] = useState(8);
+    const [eventsPageSize, setEventsPageSize] = useState(10);
     const [eventsTotal, setEventsTotal] = useState(0);
 
     const handleTableChange = (current, pageSize) => {
@@ -25,7 +25,7 @@ const EventsTab = () => {
     };
 
     useEffect(() => {
-        fetchPagedData(eventsPage, eventsPageSize, setEvents, setEventsTotal, setLoading, '/event/events');
+        fetchPagedData(eventsPage, eventsPageSize, setEvents, setEventsTotal, setLoading, '/event/data');
     }, [eventsPage, eventsPageSize]);
 
     const columns = [

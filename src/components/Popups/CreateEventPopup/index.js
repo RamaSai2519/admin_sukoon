@@ -10,7 +10,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
     const handleCreate = async (values) => {
         const { image, ...otherValues } = values;
         try {
-            const response = await Raxios.post('/event/event', {
+            const response = await Raxios.post('/event/handle', {
                 ...otherValues,
                 imageUrl: uploadedImageUrl
             });

@@ -17,7 +17,7 @@ const EventDetails = () => {
 
     const fetchEventDetails = async () => {
         try {
-            const response = await Raxios.get(`/event/event?slug=${slug}`);
+            const response = await Raxios.get(`/event/handle?slug=${slug}`);
             setData(response.data);
         } catch (error) {
             console.error('Error fetching event details:', error);

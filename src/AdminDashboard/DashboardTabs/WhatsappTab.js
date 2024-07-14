@@ -12,12 +12,12 @@ const WhatsappTab = () => {
     const [table, setTable] = useState(localStorage.getItem('waTable') === 'history' ? 'history' : 'feedback');
     const [currentPage, setCurrentPage] = useState(localStorage.getItem('fcurrentPage') ? parseInt(localStorage.getItem('fcurrentPage')) : 1);
     const [totalItems, setTotalItems] = useState(0);
-    const [pageSize, setPageSize] = useState(8);
+    const [pageSize, setPageSize] = useState(10);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        const endpoint = table === 'feedback' ? '/data/feedbacks' : '/data/wahistory';
+        const endpoint = table === 'feedback' ? '/wa/feedbacks' : '/wa/wahistory';
         fetchPagedData(currentPage, pageSize, setData, setTotalItems, setLoading, endpoint);
         // eslint-disable-next-line
     }, [currentPage, pageSize, table]);
@@ -30,7 +30,7 @@ const WhatsappTab = () => {
 
     const downloadData = async () => {
         const filename = table === 'feedback' ? 'Feedbacks' : 'History';
-        const endpoint = table === 'feedback' ? '/data/feedbacks' : '/data/wahistory';
+        const endpoint = table === 'feedback' ? '/wa/feedbacks' : '/wa/wahistory';
 
         let allData = [];
         try {
