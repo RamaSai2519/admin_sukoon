@@ -2,6 +2,7 @@ import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "
 import { useUsers, useExperts } from "../../services/useData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
+import { fetchPagedData } from "../../services/fetchData";
 import Raxios from "../../services/axiosHelper";
 import React, { useEffect } from "react";
 
@@ -24,7 +25,7 @@ const SchedulerTab = () => {
     const { Option } = Select;
 
     useEffect(() => {
-        fetchSchedules(currentPage, pageSize);
+        fetchPagedData(currentPage, pageSize, setSchedules, setTotalItems, setLoading, '/data/schedules');
     }, [currentPage, pageSize]);
 
     useEffect(() => {
@@ -34,21 +35,6 @@ const SchedulerTab = () => {
         setLoading(false);
         // eslint-disable-next-line
     }, []);
-
-    const fetchSchedules = async (page, size) => {
-        setLoading(true);
-        try {
-            const response = await Raxios.get(`/data/schedules`, {
-                params: { page, size }
-            });
-            setSchedules(response.data.data);
-            setTotalItems(response.data.total);
-        } catch (error) {
-            console.error("Error fetching schedules:", error);
-            window.alert("Error fetching schedules. Please try again later.");
-        }
-        setLoading(false);
-    };
 
     const handleTableChange = (current, pageSize) => {
         setCurrentPage(current);

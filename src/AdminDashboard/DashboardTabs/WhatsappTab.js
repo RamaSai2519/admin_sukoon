@@ -5,6 +5,7 @@ import Raxios from '../../services/axiosHelper';
 import writeXlsxFile from 'write-excel-file';
 import { ConfigProvider, theme, Button, Flex, Radio } from 'antd';
 import { saveAs } from 'file-saver';
+import { fetchPagedData } from '../../services/fetchData';
 
 const WhatsappTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -15,17 +16,9 @@ const WhatsappTab = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
-    const fetchData = async (page, size, endpoint) => {
-        setLoading(true);
-        const response = await Raxios.get(endpoint, { params: { page, size } });
-        setData(response.data.data);
-        setTotalItems(response.data.total);
-        setLoading(false);
-    };
-
     useEffect(() => {
         const endpoint = table === 'feedback' ? '/data/feedbacks' : '/data/wahistory';
-        fetchData(currentPage, pageSize, endpoint);
+        fetchPagedData(currentPage, pageSize, setData, setTotalItems, setLoading, endpoint);
         // eslint-disable-next-line
     }, [currentPage, pageSize, table]);
 

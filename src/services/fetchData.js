@@ -1,5 +1,18 @@
 import Raxios from './axiosHelper';
 
+export const fetchPagedData = async (page, size, setData, setTotal, setLoading, endpoint) => {
+    setLoading(true);
+    try {
+        const response = await Raxios.get(endpoint, { params: { page, size } });
+        setData(response.data.data);
+        setTotal(response.data.total);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        window.alert('Error fetching data');
+    }
+    setLoading(false);
+};
+
 export const fetchCategories = async (setCategories) => {
     try {
         const response = await Raxios.get('/data/categories');
@@ -62,15 +75,6 @@ export const fetchExperts = async (setExperts) => {
         console.error('Error fetching experts:', error);
     }
 };
-
-export const fetchEvents = async (setEvents) => {
-    try {
-        const response = await Raxios.get('/event/events');
-        setEvents(response.data);
-    } catch (error) {
-        console.error('Error fetching events:', error);
-    }
-}
 
 export const fetchShorts = async (setShorts) => {
     try {

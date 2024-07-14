@@ -1,19 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, ConfigProvider, theme } from 'antd';
-import { useEvents } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import CreateEventPopup from '../../components/Popups/CreateEventPopup';
 import { Link } from 'react-router-dom';
+import Loading from '../../components/Loading/loading';
+import { fetchPagedData } from '../../services/fetchData';
 
 const EventsTab = () => {
-    const { events, fetchEvents } = useEvents();
-    const [visible, setVisible] = React.useState(false);
     const darkMode = localStorage.getItem('darkMode') === 'true';
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [events, setEvents] = useState([]);
+
+    const [eventsPage, setEventsPage] = useState(
+        localStorage.getItem('eventsPage') ? parseInt(localStorage.getItem('eventsPage')) : 1
+    );
+    const [eventsPageSize, setEventsPageSize] = useState(8);
+    const [eventsTotal, setEventsTotal] = useState(0);
+
+    const handleTableChange = (current, pageSize) => {
+        setEventsPage(current);
+        localStorage.setItem('eventsPage', current);
+        setEventsPageSize(pageSize);
+    };
 
     useEffect(() => {
-        fetchEvents();
-        // eslint-disable-next-line
-    }, []);
+        fetchPagedData(eventsPage, eventsPageSize, setEvents, setEventsTotal, setLoading, '/event/events');
+    }, [eventsPage, eventsPageSize]);
 
     const columns = [
         { title: 'Title', dataIndex: 'mainTitle', key: 'mainTitle', },
@@ -44,6 +57,8 @@ const EventsTab = () => {
         },
     ];
 
+    if (loading) { return <Loading />; }
+
     return (
         <LazyLoad>
             <ConfigProvider theme={
@@ -69,8 +84,11 @@ const EventsTab = () => {
                                 rowKey={(record) => record.slug}
                                 pagination={
                                     {
-                                        pageSize: 8,
-                                        showSizeChanger: true
+                                        showSizeChanger: true,
+                                        current: eventsPage,
+                                        pageSize: eventsPageSize,
+                                        total: eventsTotal,
+                                        onChange: handleTableChange,
                                     }
                                 }
                             />

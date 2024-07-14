@@ -7,36 +7,32 @@ import {
     fetchUsers,
     fetchCalls,
     fetchExperts,
-    fetchEvents,
 } from './fetchData';
 
 // Create contexts
 const CategoriesContext = createContext();
-const StatsContext = createContext();
 const InsightsContext = createContext();
+const ExpertsContext = createContext();
+const StatsContext = createContext();
 const LeadsContext = createContext();
 const UsersContext = createContext();
 const CallsContext = createContext();
-const ExpertsContext = createContext();
-const EventsContext = createContext();
 
 // Export hooks to use contexts
 export const useCategories = () => useContext(CategoriesContext);
-export const useStats = () => useContext(StatsContext);
 export const useInsights = () => useContext(InsightsContext);
+export const useExperts = () => useContext(ExpertsContext);
+export const useStats = () => useContext(StatsContext);
 export const useLeads = () => useContext(LeadsContext);
 export const useUsers = () => useContext(UsersContext);
 export const useCalls = () => useContext(CallsContext);
-export const useExperts = () => useContext(ExpertsContext);
-export const useEvents = () => useContext(EventsContext);
 
 export const DataProvider = ({ children }) => {
     const [allCategories, setCategories] = useState([]);
+    const [experts, setExperts] = useState([]);
     const [leads, setLeads] = useState([]);
     const [users, setUsers] = useState([]);
     const [calls, setCalls] = useState([]);
-    const [experts, setExperts] = useState([]);
-    const [events, setEvents] = useState([]);
     const [stats, setStats] = useState({
         totalCalls: 0,
         todayCalls: 0,
@@ -71,13 +67,12 @@ export const DataProvider = ({ children }) => {
 
     const contextValues = {
         allCategories: { allCategories, fetchCategories: () => fetchCategories(setCategories) },
-        stats: { stats, fetchStats: () => fetchStats(setStats) },
         insights: { insights, fetchInsights: () => fetchInsights(setInsights) },
+        experts: { experts, fetchExperts: () => fetchExperts(setExperts) },
+        stats: { stats, fetchStats: () => fetchStats(setStats) },
         leads: { leads, fetchLeads: () => fetchLeads(setLeads) },
         users: { users, fetchUsers: () => fetchUsers(setUsers) },
         calls: { calls, fetchCalls: () => fetchCalls(setCalls) },
-        experts: { experts, fetchExperts: () => fetchExperts(setExperts) },
-        events: { events, fetchEvents: () => fetchEvents(setEvents) },
     };
 
     return (
@@ -88,9 +83,7 @@ export const DataProvider = ({ children }) => {
                         <UsersContext.Provider value={contextValues.users}>
                             <CallsContext.Provider value={contextValues.calls}>
                                 <ExpertsContext.Provider value={contextValues.experts}>
-                                    <EventsContext.Provider value={contextValues.events}>
-                                        {children}
-                                    </EventsContext.Provider>
+                                    {children}
                                 </ExpertsContext.Provider>
                             </CallsContext.Provider>
                         </UsersContext.Provider>

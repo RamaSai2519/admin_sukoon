@@ -5,6 +5,7 @@ import LazyLoad from '../components/LazyLoad/lazyload';
 import Raxios from '../services/axiosHelper';
 import Loading from '../components/Loading/loading';
 import EditableCell from '../components/EditableCell';
+import { fetchPagedData } from '../services/fetchData';
 
 const UserEngagement = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -16,23 +17,8 @@ const UserEngagement = () => {
     const [totalItems, setTotalItems] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
 
-    const fetchEngagementData = async (page, size) => {
-        setLoading(true);
-        try {
-            const response = await Raxios.get('/user/engagementData', {
-                params: { page, size }
-            });
-            setEngagementData(response.data.data);
-            setTotalItems(response.data.total);
-        } catch (error) {
-            console.error('Error fetching engagement data:', error);
-            window.alert('Error fetching engagement data');
-        }
-        setLoading(false);
-    };
-
     React.useEffect(() => {
-        fetchEngagementData(currentPage, pageSize);
+        fetchPagedData(currentPage, pageSize, setEngagementData, setTotalItems, setLoading, '/user/engagementData');
     }, [currentPage, pageSize]);
 
     const data = engagementData.map((item) => ({
