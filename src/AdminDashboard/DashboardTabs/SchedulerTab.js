@@ -5,7 +5,7 @@ import Loading from "../../components/Loading/loading";
 import { fetchPagedData } from "../../services/fetchData";
 import Raxios from "../../services/axiosHelper";
 import React, { useEffect } from "react";
-import { formatDate } from "../../Utils/formatHelper";
+import { formatTime } from "../../Utils/formatHelper";
 
 const SchedulerTab = () => {
     // const [slots, setSlots] = React.useState([]);
@@ -48,7 +48,7 @@ const SchedulerTab = () => {
         { title: "Expert", dataIndex: "expert", key: "expert" },
         {
             title: "Date & Time", dataIndex: "datetime", key: "datetime",
-            render: (datetime) => formatDate(datetime)
+            render: (datetime) => formatTime(datetime)
         },
         { title: "Status", dataIndex: "status", key: "status" },
         { title: "Scheduled By", dataIndex: "type", key: "type" },
