@@ -3,6 +3,7 @@ import { Table } from 'antd';
 import { Link } from 'react-router-dom';
 import Loading from '../Loading/loading';
 import LazyLoad from '../LazyLoad/lazyload';
+import { formatTime } from '../../Utils/formatHelper';
 
 
 const WaFeedbacks = ({ data, currentPage, pageSize, totalItems, handleTableChange, loading }) => {
@@ -10,7 +11,10 @@ const WaFeedbacks = ({ data, currentPage, pageSize, totalItems, handleTableChang
         { title: "User Name", dataIndex: "userName", key: "userName" },
         { title: "Expert Name", dataIndex: "expertName", key: "expertName" },
         { title: "Message", dataIndex: "body", key: "body" },
-        { title: "Received At", dataIndex: "createdAt", key: "createdAt" },
+        {
+            title: "Received At", dataIndex: "createdAt", key: "createdAt",
+            render: (time) => time ? formatTime(time) : ''
+        },
         {
             title: "Call Details", key: "callId",
             render: (_, record) => (

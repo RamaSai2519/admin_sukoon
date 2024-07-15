@@ -5,6 +5,7 @@ import { SearchOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useLeads } from '../../../services/useData';
 import EditableCell from '../../EditableCell';
 import Raxios from '../../../services/axiosHelper';
+import { formatDate } from '../../../Utils/formatHelper';
 
 const LeadsPopup = ({ onClose }) => {
     const { leads } = useLeads();
@@ -104,12 +105,7 @@ const LeadsPopup = ({ onClose }) => {
             key: 'createdDate',
             ...getColumnSearchProps('createdDate', 'Date Joined'),
             sorter: (a, b) => new Date(a.createdDate) - new Date(b.createdDate),
-            render: (createdDate) =>
-                new Date(createdDate).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                }),
+            render: (createdDate) => formatDate(createdDate),
         },
         {
             title: 'Source',

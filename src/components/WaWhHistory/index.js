@@ -2,13 +2,17 @@ import React from 'react';
 import { Table } from 'antd';
 import Loading from '../Loading/loading';
 import LazyLoad from '../LazyLoad/lazyload';
+import { formatTime } from '../../Utils/formatHelper';
 
 const WaWhHistory = ({ data, currentPage, pageSize, totalItems, handleTableChange, loading }) => {
     const columns = [
         { title: "User Name", dataIndex: "userName", key: "userName" },
         { title: "Phone Number", dataIndex: "userNumber", key: "userNumber" },
         { title: "Message", dataIndex: "body", key: "body" },
-        { title: "Received At", dataIndex: "createdAt", key: "createdAt" },
+        {
+            title: "Received At", dataIndex: "createdAt", key: "createdAt",
+            render: (time) => time ? formatTime(time) : ''
+        },
     ];
 
     if (loading) {

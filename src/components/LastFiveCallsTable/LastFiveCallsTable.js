@@ -9,6 +9,7 @@ import { red, pink, green, yellow } from '@mui/material/colors';
 import { useCalls } from '../../services/useData';
 import Loading from '../Loading/loading';
 import LazyLoad from '../LazyLoad/lazyload';
+import { formatTime } from '../../Utils/formatHelper';
 
 const LastFiveCallsTable = () => {
   const { calls, fetchCalls } = useCalls();
@@ -68,7 +69,7 @@ const LastFiveCallsTable = () => {
       dataIndex: 'initiatedTime',
       key: 'initiatedTime',
       sorter: (a, b) => new Date(a.initiatedTime) - new Date(b.initiatedTime),
-      render: (text) => new Date(text).toLocaleString(),
+      render: (time) => formatTime(time),
     },
     {
       title: 'Duration',

@@ -3,6 +3,7 @@ import { Table, ConfigProvider, theme } from 'antd';
 import Loading from '../../components/Loading/loading';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import { fetchPagedData } from '../../services/fetchData';
+import { formatTime } from '../../Utils/formatHelper';
 
 const NotificationsTab = () => {
     const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ const NotificationsTab = () => {
     const columns = [
         {
             title: 'Time', dataIndex: 'time', key: 'time',
-            render: (time) => new Date(time).toLocaleString()
+            render: (time) => formatTime(time)
         },
         { title: 'Message', dataIndex: 'message', key: 'message' }
     ];

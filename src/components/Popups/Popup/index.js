@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, ConfigProvider, theme } from 'antd';
+import { formatDate } from '../../../Utils/formatHelper';
 
 const Popup = ({ title, users, onClose }) => {
   const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -13,21 +14,13 @@ const Popup = ({ title, users, onClose }) => {
       title: "Date Joined",
       dataIndex: "createdDate",
       key: "date",
-      render: (createdDate) => new Date(createdDate).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      }),
+      render: (createdDate) => formatDate(createdDate),
     },
     {
       title: "Date of Birth",
       dataIndex: "birthDate",
       key: "birthDate",
-      render: (createdDate) => new Date(createdDate).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      }),
+      render: (createdDate) => formatDate(createdDate),
     },
   ];
 

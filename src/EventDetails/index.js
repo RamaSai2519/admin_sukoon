@@ -1,12 +1,12 @@
 import { Table, Button, ConfigProvider, theme } from 'antd';
 import React, { useEffect, useState } from 'react';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import writeXlsxFile from 'write-excel-file';
 import Raxios from '../services/axiosHelper';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import { saveAs } from 'file-saver';
 import CreateEventPopup from '../components/Popups/CreateEventPopup';
+import { formatTime } from '../Utils/formatHelper';
+import { downloadExcel } from '../Utils/exportHelper';
 
 const EventDetails = () => {
     const { slug } = useParams();
@@ -49,39 +49,12 @@ const EventDetails = () => {
         { title: 'Contact', dataIndex: 'phoneNumber', key: 'phoneNumber' },
         { title: 'Email', dataIndex: 'email', key: 'email' },
         { title: 'City', dataIndex: 'city', key: 'city' },
-        { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt', render: (time) => new Date(time).toLocaleString() },
-        { title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt', render: (time) => new Date(time).toLocaleString() }
+        { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt', render: (time) => formatTime(time) },
+        { title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt', render: (time) => formatTime(time) }
     ];
 
-    const downloadExcel = async () => {
-        const wsData = [
-            [
-                { value: 'Name' },
-                { value: 'Contact' },
-                { value: 'Email' },
-                { value: 'City' },
-                { value: 'Created At' },
-                { value: 'Updated At' }
-            ]
-        ];
-        users.forEach(user => {
-            wsData.push([
-                { value: user.name },
-                { value: user.phoneNumber },
-                { value: user.email },
-                { value: user.city },
-                { value: new Date(user.createdAt).toLocaleString() },
-                { value: new Date(user.updatedAt).toLocaleString() }
-            ]);
-        });
-        const buffer = await writeXlsxFile(wsData, {
-            headerStyle: {
-                fontWeight: 'bold'
-            },
-            buffer: true
-        });
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, 'UserList.xlsx');
+    const handleExport = async () => {
+        downloadExcel(users, 'Event Users.xlsx');
     };
 
     const toggleEditMode = () => {
@@ -119,7 +92,7 @@ const EventDetails = () => {
                         <div className='w-full'>
                             <div className='flex justify-between'>
                                 <h1>Registered Users</h1>
-                                <Button onClick={downloadExcel}>Download Excel</Button>
+                                <Button onClick={handleExport}>Download Excel</Button>
                             </div>
                             <Table dataSource={users} columns={columns} rowKey={(record) => record._id || record.email} />
                         </div> :

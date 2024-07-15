@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useUsers } from '../services/useData';
-import writeXlsxFile from 'write-excel-file';
-import { saveAs } from 'file-saver';
+import { formatDate } from '../Utils/formatHelper';
+import { fetchEngagementData } from '../services/fetchData';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import { ConfigProvider, theme, Table, Button, Flex, Radio } from 'antd';
 import UserEngagement from '../UserEngagement';
 import Loading from '../components/Loading/loading';
-import { fetchEngagementData } from '../services/fetchData';
+import { downloadExcel } from '../Utils/exportHelper';
 
 const UsersList = () => {
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ const UsersList = () => {
       title: 'Joined Date',
       dataIndex: 'createdDate',
       key: 'createdDate',
-      render: (date) => new Date(date).toLocaleDateString(),
+      render: (date) => formatDate(date),
       sorter: (a, b) => new Date(a.createdDate) - new Date(b.createdDate),
       filters: users.reduce((acc, user) => {
         if (!acc.some((date) => date.text === new Date(user.createdDate).toLocaleDateString())) {
@@ -70,7 +70,7 @@ const UsersList = () => {
       title: 'DOB',
       dataIndex: 'birthDate',
       key: 'birthDate',
-      render: (date) => new Date(date).toLocaleDateString(),
+      render: (date) => formatDate(date),
       sorter: (a, b) => new Date(a.birthDate) - new Date(b.birthDate),
     },
     {
@@ -100,87 +100,42 @@ const UsersList = () => {
     },
   ];
 
-  const downloadExcel = async () => {
-    const wsData = [
-      [
-        { value: 'Name' },
-        { value: 'City' },
-        { value: 'Number' },
-        { value: 'Joined Date' },
-        { value: 'Birth Date' }
-      ]
-    ];
-    users.forEach((user) => {
-      wsData.push([
-        { value: user.name },
-        { value: user.city },
-        { value: user.phoneNumber },
-        { value: new Date(user.createdDate).toLocaleDateString() },
-        { value: new Date(user.birthDate).toLocaleDateString() }
-      ]);
-    });
-    const buffer = await writeXlsxFile(wsData, {
-      headerStyle: {
-        fontWeight: 'bold'
-      },
-      buffer: true
-    });
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'UserList.xlsx');
+  const downloadUsersExcel = async () => {
+    const dataToWrite = users.map((user) => ({
+      'Name': user.name,
+      'City': user.city,
+      'Number': user.phoneNumber,
+      'Joined Date': formatDate(user.createdDate),
+      'Birth Date': formatDate(user.birthDate),
+    }));
+
+    await downloadExcel(dataToWrite, 'UserList.xlsx');
   };
 
   const downloadEngagementExcel = async () => {
-    const wsData = [
-      [
-        { value: 'POC' },
-        { value: 'Name' },
-        { value: 'DOJ' },
-        { value: 'SL Days' },
-        { value: 'Call Status' },
-        { value: 'User Status' },
-        { value: 'Contact' },
-        { value: 'City' },
-        { value: 'DOB' },
-        { value: 'Gender' },
-        { value: 'Last Call Date' },
-        { value: 'Call Age' },
-        { value: 'Calls' },
-        { value: 'Saarthi' },
-        { value: 'Remarks' }
-      ]
-    ];
-
     setFetchLoading(true);
     const data = await fetchEngagementData(1, 10000);
     setFetchLoading(false);
 
-    data.data.forEach((user) => {
-      wsData.push([
-        { value: user.poc || 'N/A' },
-        { value: user.name || 'N/A' },
-        { value: user.createdDate || 'N/A' },
-        { value: user.slDays || 0 },
-        { value: user.callStatus || 'N/A' },
-        { value: user.userStatus || 'N/A' },
-        { value: user.phoneNumber || 'N/A' },
-        { value: user.city || 'N/A' },
-        { value: user.birthDate || 'N/A' },
-        { value: user.gender || 'N/A' },
-        { value: user.lastCallDate || 'N/A' },
-        { value: user.callAge || 0 },
-        { value: user.callsDone || 0 },
-        { value: user.expert || 'N/A' },
-        { value: user.remarks || 'N/A' }
-      ]);
-    });
-    const buffer = await writeXlsxFile(wsData, {
-      headerStyle: {
-        fontWeight: 'bold'
-      },
-      buffer: true
-    });
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'UserEngagement.xlsx');
+    const dataToWrite = data.data.map((user) => ({
+      'POC': user.poc || 'N/A',
+      'Name': user.name || 'N/A',
+      'DOJ': user.createdDate || 'N/A',
+      'SL Days': user.slDays || 0,
+      'Call Status': user.callStatus || 'N/A',
+      'User Status': user.userStatus || 'N/A',
+      'Contact': user.phoneNumber || 'N/A',
+      'City': user.city || 'N/A',
+      'DOB': user.birthDate || 'N/A',
+      'Gender': user.gender || 'N/A',
+      'Last Call Date': user.lastCallDate || 'N/A',
+      'Call Age': user.callAge || 0,
+      'Calls': user.callsDone || 0,
+      'Saarthi': user.expert || 'N/A',
+      'Remarks': user.remarks || 'N/A'
+    }));
+
+    await downloadExcel(dataToWrite, 'UserEngagement.xlsx');
   };
 
   const fetchdata = async () => {
@@ -198,7 +153,7 @@ const UsersList = () => {
     if (table === 'engagement') {
       downloadEngagementExcel();
     } else {
-      downloadExcel();
+      downloadUsersExcel();
     }
   };
 

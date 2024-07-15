@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import WaWhHistory from '../../components/WaWhHistory';
 import WaFeedbacks from '../../components/WaFeedbacks';
 import Raxios from '../../services/axiosHelper';
-import writeXlsxFile from 'write-excel-file';
 import { ConfigProvider, theme, Button, Flex, Radio } from 'antd';
-import { saveAs } from 'file-saver';
 import { fetchPagedData } from '../../services/fetchData';
+import { downloadExcel } from '../../Utils/exportHelper';
 
 const WhatsappTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -43,47 +42,27 @@ const WhatsappTab = () => {
 
         let dataToWrite = [];
         if (filename === 'History') {
-            dataToWrite.push([
-                { value: 'User Name' },
-                { value: 'Phone Number' },
-                { value: 'Message' },
-                { value: 'Received At' }
-            ]);
             allData.forEach((item) => {
-                dataToWrite.push([
-                    { value: item.userName },
-                    { value: item.userNumber },
-                    { value: item.body },
-                    { value: item.createdAt }
-                ]);
+                dataToWrite.push({
+                    'User Name': item.userName,
+                    'Phone Number': item.userNumber,
+                    'Message': item.body,
+                    'Received At': item.createdAt
+                });
             });
         } else {
-            dataToWrite.push([
-                { value: 'User Name' },
-                { value: 'Expert Name' },
-                { value: 'Message' },
-                { value: 'Received At' }
-            ]);
             allData.forEach((item) => {
-                dataToWrite.push([
-                    { value: item.userName },
-                    { value: item.expertName },
-                    { value: item.body },
-                    { value: item.createdAt }
-                ]);
+                dataToWrite.push({
+                    'User Name': item.userName,
+                    'Expert Name': item.expertName,
+                    'Message': item.body,
+                    'Received At': item.createdAt
+                });
             });
         }
 
         try {
-            const buffer = await writeXlsxFile(dataToWrite, {
-                headerStyle: {
-                    fontWeight: 'bold'
-                },
-                buffer: true
-            });
-
-            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(blob, `${filename}.xlsx`);
+            await downloadExcel(dataToWrite, `${filename}.xlsx`);
         } catch (error) {
             console.error("Error during export:", error);
         }

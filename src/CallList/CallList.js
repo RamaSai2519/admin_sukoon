@@ -8,10 +8,10 @@ import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
 import { useCalls } from '../services/useData';
 import { red, pink, green, yellow } from '@mui/material/colors';
-import writeXlsxFile from 'write-excel-file';
-import { saveAs } from 'file-saver';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import Loading from '../components/Loading/loading';
+import { formatTime } from '../Utils/formatHelper';
+import { downloadExcel } from '../Utils/exportHelper';
 
 const CallsTable = () => {
   const [loading, setLoading] = useState(false);
@@ -100,38 +100,8 @@ const CallsTable = () => {
     return null;
   };
 
-  const downloadExcel = async () => {
-    const wsData = [
-      [
-        { value: 'User' },
-        { value: 'Expert' },
-        { value: 'Time' },
-        { value: 'Duration' },
-        { value: 'Status' },
-        { value: 'Score' }
-      ]
-    ];
-
-    calls.forEach((call) => {
-      wsData.push([
-        { value: call.userName },
-        { value: call.expertName },
-        { value: new Date(call.initiatedTime).toLocaleString() },
-        { value: `${call.duration} min` },
-        { value: call.status },
-        { value: call.ConversationScore }
-      ]);
-    });
-
-    const buffer = await writeXlsxFile(wsData, {
-      headerStyle: {
-        fontWeight: 'bold'
-      },
-      buffer: true
-    });
-
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'calls.xlsx');
+  const handleExport = () => {
+    downloadExcel(calls, 'Calls.xlsx');
   };
 
   return (
@@ -165,7 +135,7 @@ const CallsTable = () => {
                   <td></td>
                   <td></td>
                   <td>
-                    <button className='popup-button' onClick={downloadExcel}>
+                    <button className='popup-button' onClick={handleExport}>
                       Export
                     </button>
                   </td>
@@ -197,7 +167,7 @@ const CallsTable = () => {
                     <tr key={call.callId} className='default-row'>
                       <td>{renderStatusIcon(call.status)} {call.userName}</td>
                       <td>{call.expertName}</td>
-                      <td>{new Date(call.initiatedTime).toLocaleString()}</td>
+                      <td>{formatTime(call.initiatedTime)}</td>
                       <td>{call.duration} min</td>
                       <td style={{ textAlign: 'center' }}>{call.status}</td>
                       <td>{call.ConversationScore}</td>

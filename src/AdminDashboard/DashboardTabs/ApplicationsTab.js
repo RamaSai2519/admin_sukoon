@@ -3,6 +3,7 @@ import Raxios from "../../services/axiosHelper";
 import { Table, ConfigProvider, theme, Flex, Radio } from "antd";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
+import { formatDate } from "../../Utils/formatHelper";
 
 const ApplicationsTab = () => {
     const [applications, setApplications] = React.useState([]);
@@ -33,20 +34,20 @@ const ApplicationsTab = () => {
     }, [currentPage, pageSize, formType]);
 
     const columns = [
-        { title: "Name", dataIndex: "name", key: "name",},
+        { title: "Name", dataIndex: "name", key: "name" },
         { title: "Email", dataIndex: "email", key: "email" },
         { title: "Gender", dataIndex: "gender", key: "gender" },
         { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber" },
         {
             title: "Date of Birth", dataIndex: "dateOfBirth", key: "dateOfBirth",
-            render: (dateOfBirth) => new Date(dateOfBirth).toLocaleDateString()
+            render: (dateOfBirth) => formatDate(dateOfBirth)
         },
         { title: "languages", dataIndex: "languages", key: "languages" },
         { title: "workingHours", dataIndex: "workingHours", key: "workingHours" },
         { title: "skills", dataIndex: "skills", key: "skills" },
         {
             title: "Applied Date", dataIndex: "createdDate", key: "createdDate",
-            render: (createdDate) => new Date(createdDate).toLocaleDateString(),
+            render: (createdDate) => formatDate(createdDate)
         },
     ];
 

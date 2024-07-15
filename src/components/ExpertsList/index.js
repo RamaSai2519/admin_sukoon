@@ -3,9 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useExperts, useCalls } from '../../services/useData';
 import { Table, Button, ConfigProvider, theme } from 'antd';
 import CreateCategoryPopup from '../Popups/CreateCategoryPopup';
-import writeXlsxFile from 'write-excel-file';
-import { saveAs } from 'file-saver';
 import Raxios from '../../services/axiosHelper';
+import { downloadExcel } from '../../Utils/exportHelper';
 
 const ExpertsList = () => {
     const { experts, fetchExperts } = useExperts();
@@ -122,22 +121,7 @@ const ExpertsList = () => {
     }));
 
     const exportToExcel = async () => {
-        const wsData = [
-            Object.keys(dataSource[0]).map(key => ({ value: key }))  // Header row
-        ];
-        dataSource.forEach((row) => {
-            wsData.push(
-                Object.values(row).map(value => ({ value }))
-            );
-        });
-        const buffer = await writeXlsxFile(wsData, {
-            headerStyle: {
-                fontWeight: 'bold'
-            },
-            buffer: true
-        });
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, 'ExpertsData.xlsx');
+        downloadExcel(dataSource, 'experts.xlsx');
     };
 
     const createExpert = async () => {

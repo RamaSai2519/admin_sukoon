@@ -5,6 +5,7 @@ import CreateEventPopup from '../../components/Popups/CreateEventPopup';
 import { Link } from 'react-router-dom';
 import Loading from '../../components/Loading/loading';
 import { fetchPagedData } from '../../services/fetchData';
+import { formatDate, formatTime } from '../../Utils/formatHelper';
 
 const EventsTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -34,18 +35,18 @@ const EventsTab = () => {
         { title: 'Expert', dataIndex: 'expert', key: 'expert' },
         { title: 'Hosted By', dataIndex: 'hostedBy', key: 'hostedBy' },
         {
-            title: 'Date', dataIndex: 'validUpto', key: 'validUpto',
-            render: (date) => date ? new Date(date).toLocaleDateString() : ''
+            title: 'Date', dataIndex: 'validUpto', key: 'validUpto', width: '125px',
+            render: (date) => date ? formatDate(date) : ''
         },
         { title: 'Author', dataIndex: 'name', key: 'name' },
         { title: 'Slug', dataIndex: 'slug', key: 'slug' },
         {
             title: "Created At", dataIndex: 'createdAt', key: 'createdAt',
-            render: (time) => new Date(time).toLocaleString()
+            render: (time) => formatTime(time), width: '125px',
         },
         {
             title: "Updated At", dataIndex: 'updatedAt', key: 'updatedAt',
-            render: (time) => new Date(time).toLocaleString()
+            render: (time) => formatTime(time), width: '125px',
         },
         {
             title: 'Details', key: 'details',
