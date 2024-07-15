@@ -70,7 +70,7 @@ const SchedulerTab = () => {
 
     const generateOptions = (data, key) => data.map(item => (
         <Option key={item._id} value={item._id}>
-            {item[key]}
+            {item[key] || item["phoneNumber"]}
         </Option>
     ));
 
