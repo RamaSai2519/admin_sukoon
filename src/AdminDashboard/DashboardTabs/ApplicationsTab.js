@@ -78,9 +78,7 @@ const ApplicationsTab = () => {
     };
 
     const mergedColumns = columns.map((col) => {
-        if (!col.editable) {
-            return col;
-        }
+        if (!col.editable) return col;
         return {
             ...col,
             onCell: (record) => ({
@@ -89,7 +87,7 @@ const ApplicationsTab = () => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave,
-            }),
+            })
         };
     });
 
