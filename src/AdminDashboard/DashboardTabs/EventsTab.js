@@ -153,7 +153,7 @@ const EventsTab = () => {
                                         setTable(e.target.value);
                                     }}
                                 >
-                                    <Radio.Button value="events">EvenTots</Radio.Button>
+                                    <Radio.Button value="events">Events</Radio.Button>
                                     <Radio.Button value="users">All Users</Radio.Button>
                                 </Radio.Group>
                                 {table === 'users' &&
