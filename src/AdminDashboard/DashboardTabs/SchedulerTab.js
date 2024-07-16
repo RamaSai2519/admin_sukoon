@@ -46,10 +46,7 @@ const SchedulerTab = () => {
     const columns = [
         { title: "User", dataIndex: "user", key: "user" },
         { title: "Expert", dataIndex: "expert", key: "expert" },
-        {
-            title: "Date & Time", dataIndex: "datetime", key: "datetime",
-            render: (datetime) => formatTime(datetime)
-        },
+        { title: "Date & Time", dataIndex: "datetime", key: "datetime", },
         { title: "Status", dataIndex: "status", key: "status" },
         { title: "Scheduled By", dataIndex: "type", key: "type" },
         {
