@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import WaWhHistory from '../../components/WaWhHistory';
 import WaFeedbacks from '../../components/WaFeedbacks';
+import SendWAForm from '../../components/SendWAForm';
 import Raxios from '../../services/axiosHelper';
 import { ConfigProvider, theme, Button, Flex, Radio } from 'antd';
 import { fetchPagedData } from '../../services/fetchData';
@@ -70,41 +71,46 @@ const WhatsappTab = () => {
 
     return (
         <ConfigProvider theme={{ algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
-            <div className='min-h-screen p-5 w-full overflow-auto'>
-                <div className='flex w-full justify-between items-center gap-2 mb-2'>
-                    <Flex vertical>
-                        <Radio.Group
-                            value={table}
-                            onChange={(e) => {
-                                localStorage.setItem('waTable', e.target.value);
-                                setTable(e.target.value);
-                            }}
-                        >
-                            <Radio.Button value='history'>History</Radio.Button>
-                            <Radio.Button value='feedback'>Feedback</Radio.Button>
-                        </Radio.Group>
-                    </Flex>
-                    <Button onClick={downloadData}>Export</Button>
+            <div className='min-h-screen p-5 w-full overflow-auto flex h-max '>
+                <div className='flex flex-col w-1/2 mr-2'>
+                    <div className='flex w-full justify-between items-center gap-2 mb-2'>
+                        <Flex vertical>
+                            <Radio.Group
+                                value={table}
+                                onChange={(e) => {
+                                    localStorage.setItem('waTable', e.target.value);
+                                    setTable(e.target.value);
+                                }}
+                            >
+                                <Radio.Button value='history'>History</Radio.Button>
+                                <Radio.Button value='feedback'>Feedback</Radio.Button>
+                            </Radio.Group>
+                        </Flex>
+                        <Button onClick={downloadData}>Export</Button>
+                    </div>
+                    {table === 'history' ? (
+                        <WaWhHistory
+                            data={data}
+                            currentPage={currentPage}
+                            pageSize={pageSize}
+                            totalItems={totalItems}
+                            handleTableChange={handleTableChange}
+                            loading={loading}
+                        />
+                    ) : (
+                        <WaFeedbacks
+                            data={data}
+                            currentPage={currentPage}
+                            pageSize={pageSize}
+                            totalItems={totalItems}
+                            handleTableChange={handleTableChange}
+                            loading={loading}
+                        />
+                    )}
                 </div>
-                {table === 'history' ? (
-                    <WaWhHistory
-                        data={data}
-                        currentPage={currentPage}
-                        pageSize={pageSize}
-                        totalItems={totalItems}
-                        handleTableChange={handleTableChange}
-                        loading={loading}
-                    />
-                ) : (
-                    <WaFeedbacks
-                        data={data}
-                        currentPage={currentPage}
-                        pageSize={pageSize}
-                        totalItems={totalItems}
-                        handleTableChange={handleTableChange}
-                        loading={loading}
-                    />
-                )}
+                <div className='flex w-1/2 pl-2 md:border-l-2 md:border-lightBlack'>
+                    <SendWAForm />
+                </div>
             </div>
         </ConfigProvider>
     );
