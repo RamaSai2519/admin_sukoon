@@ -1,9 +1,14 @@
 import Raxios from './axiosHelper';
 
-export const fetchPagedData = async (page, size, setData, setTotal, setLoading, endpoint) => {
+export const fetchPagedData = async (page, size, setData, setTotal, setLoading, endpoint, optional) => {
     setLoading(true);
     try {
-        const response = await Raxios.get(endpoint, { params: { page, size } });
+        const response = await Raxios.get(endpoint, {
+            params: {
+                page, size,
+                ...(optional && { ...optional })
+            }
+        });
         setData(response.data.data);
         setTotal(response.data.total);
     } catch (error) {
@@ -37,15 +42,6 @@ export const fetchInsights = async (setInsights) => {
         setInsights(response.data);
     } catch (error) {
         console.error('Error fetching insights:', error);
-    }
-};
-
-export const fetchLeads = async (setLeads) => {
-    try {
-        const response = await Raxios.get('/user/leads');
-        setLeads(response.data);
-    } catch (error) {
-        console.error('Error fetching leads:', error);
     }
 };
 

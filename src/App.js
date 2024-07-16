@@ -15,7 +15,7 @@ import UserEngagement from './UserEngagement';
 import './App.css';
 
 const App = () => {
-  const appVersion = '13.5.6';
+  const appVersion = '13.6.8';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );

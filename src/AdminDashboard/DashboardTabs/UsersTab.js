@@ -4,14 +4,16 @@ import Popup from '../../components/Popups/Popup';
 import LeadsPopup from '../../components/Popups/LeadsPopup';
 import DashboardTile from '../../components/DashboardTile';
 import Loading from '../../components/Loading/loading';
-import { useUsers, useCalls, useLeads } from '../../services/useData';
+import { useUsers, useCalls } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import { ConfigProvider, theme } from 'antd';
+import Raxios from '../../services/axiosHelper';
+import { Link } from 'react-router-dom';
 
 const UsersTab = () => {
   const { users, fetchUsers } = useUsers();
   const { calls, fetchCalls } = useCalls();
-  const { leads, fetchLeads } = useLeads();
+  const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentDayTotalUsers, setCurrentDayTotalUsers] = useState(0);
@@ -24,6 +26,16 @@ const UsersTab = () => {
     users: []
   });
   const darkMode = localStorage.getItem('darkMode') === 'true';
+
+  const fetchLeads = async () => {
+    try {
+        const response = await Raxios.get('/user/leads');
+        setLeads(response.data.data);
+        setTotalUsers(response.data.totalUsers);
+    } catch (error) {
+        console.error('Error fetching leads:', error);
+    }
+};
 
   const fetchData = async () => {
     setLoading(true);
@@ -55,7 +67,6 @@ const UsersTab = () => {
     const twoCallsUsersList = users.filter(user => callCounts[user._id] === 2);
     const moreThanTwoCallsUsersList = users.filter(user => callCounts[user._id] > 2);
 
-    setTotalUsers(users.length);
     setOneCallUsers(oneCallUsersList);
     setTwoCallsUsers(twoCallsUsersList);
     setMoreThanTwoCallsUsers(moreThanTwoCallsUsersList);
@@ -126,12 +137,14 @@ const UsersTab = () => {
           <div className="flex flex-wrap justify-between">
             <div className="w-full">
               <div className="grid grid-cols-3 md:grid-cols-5">
-                <DashboardTile title="Total Signups">
-                  <div className='flex justify-between items-center w-full'>
-                    <h1>{totalUsers}</h1>
-                    <h4>Today: {currentDayTotalUsers}</h4>
-                  </div>
-                </DashboardTile>
+                <Link to="/admin/home/users%20list">
+                  <DashboardTile title="Registered Users">
+                    <div className='flex justify-between items-center w-full'>
+                      <h1>{totalUsers}</h1>
+                      <h4>Today: {currentDayTotalUsers}</h4>
+                    </div>
+                  </DashboardTile>
+                </Link>
                 <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('Users with One Call')}>
                   <h1 className='cursor-pointer'>{oneCallUsers.length}</h1>
                 </DashboardTile>
@@ -141,7 +154,7 @@ const UsersTab = () => {
                 <DashboardTile title="Repeat Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls')}>
                   <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
                 </DashboardTile>
-                <DashboardTile title="Partial Signups" pointer='pointer' onClick={() => openPopup('Partial Signups')}>
+                <DashboardTile title="Leads" pointer='pointer' onClick={() => openPopup('Partial Signups')}>
                   <div className='flex justify-between items-center w-full'>
                     <h1>{leads.length}</h1>
                     <h4>Today: {currentDayPartialSignups}</h4>
@@ -156,6 +169,7 @@ const UsersTab = () => {
               popupContent.title === 'Partial Signups' ? (
                 <LeadsPopup
                   title={popupContent.title}
+                  leads={leads}
                   onClose={closePopup}
                 />
               ) : (

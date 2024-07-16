@@ -3,7 +3,6 @@ import {
     fetchCategories,
     fetchStats,
     fetchInsights,
-    fetchLeads,
     fetchUsers,
     fetchCalls,
     fetchExperts,
@@ -14,7 +13,6 @@ const CategoriesContext = createContext();
 const InsightsContext = createContext();
 const ExpertsContext = createContext();
 const StatsContext = createContext();
-const LeadsContext = createContext();
 const UsersContext = createContext();
 const CallsContext = createContext();
 
@@ -23,14 +21,12 @@ export const useCategories = () => useContext(CategoriesContext);
 export const useInsights = () => useContext(InsightsContext);
 export const useExperts = () => useContext(ExpertsContext);
 export const useStats = () => useContext(StatsContext);
-export const useLeads = () => useContext(LeadsContext);
 export const useUsers = () => useContext(UsersContext);
 export const useCalls = () => useContext(CallsContext);
 
 export const DataProvider = ({ children }) => {
     const [allCategories, setCategories] = useState([]);
     const [experts, setExperts] = useState([]);
-    const [leads, setLeads] = useState([]);
     const [users, setUsers] = useState([]);
     const [calls, setCalls] = useState([]);
     const [stats, setStats] = useState({
@@ -70,7 +66,6 @@ export const DataProvider = ({ children }) => {
         insights: { insights, fetchInsights: () => fetchInsights(setInsights) },
         experts: { experts, fetchExperts: () => fetchExperts(setExperts) },
         stats: { stats, fetchStats: () => fetchStats(setStats) },
-        leads: { leads, fetchLeads: () => fetchLeads(setLeads) },
         users: { users, fetchUsers: () => fetchUsers(setUsers) },
         calls: { calls, fetchCalls: () => fetchCalls(setCalls) },
     };
@@ -79,15 +74,13 @@ export const DataProvider = ({ children }) => {
         <CategoriesContext.Provider value={contextValues.allCategories}>
             <StatsContext.Provider value={contextValues.stats}>
                 <InsightsContext.Provider value={contextValues.insights}>
-                    <LeadsContext.Provider value={contextValues.leads}>
-                        <UsersContext.Provider value={contextValues.users}>
-                            <CallsContext.Provider value={contextValues.calls}>
-                                <ExpertsContext.Provider value={contextValues.experts}>
-                                    {children}
-                                </ExpertsContext.Provider>
-                            </CallsContext.Provider>
-                        </UsersContext.Provider>
-                    </LeadsContext.Provider>
+                    <UsersContext.Provider value={contextValues.users}>
+                        <CallsContext.Provider value={contextValues.calls}>
+                            <ExpertsContext.Provider value={contextValues.experts}>
+                                {children}
+                            </ExpertsContext.Provider>
+                        </CallsContext.Provider>
+                    </UsersContext.Provider>
                 </InsightsContext.Provider>
             </StatsContext.Provider>
         </CategoriesContext.Provider>

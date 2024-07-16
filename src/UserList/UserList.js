@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useUsers } from '../services/useData';
 import { formatDate } from '../Utils/formatHelper';
@@ -8,6 +8,7 @@ import { ConfigProvider, theme, Table, Button, Flex, Radio } from 'antd';
 import UserEngagement from '../UserEngagement';
 import Loading from '../components/Loading/loading';
 import { downloadExcel } from '../Utils/exportHelper';
+import getColumnSearchProps from '../Utils/antTableHelper';
 
 const UsersList = () => {
   const [loading, setLoading] = useState(false);
@@ -17,68 +18,27 @@ const UsersList = () => {
   );
   const { users, fetchUsers } = useUsers();
   const [fetchLoading, setFetchLoading] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInputRef = useRef(null);
+
+  const createColumn = (title, dataIndex, key, render) => {
+    return {
+      title,
+      dataIndex,
+      key,
+      ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+      ...(render && { render }),
+    };
+  };
 
   const columns = [
-    {
-      title: 'User',
-      dataIndex: 'name',
-      key: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
-      filters: users.map((user) => ({ text: user.name, value: user.name })),
-      filterSearch: true,
-      onFilter: (value, record) => record.name.includes(value),
-    },
-    {
-      title: 'City',
-      dataIndex: 'city',
-      key: 'city',
-      sorter: (a, b) => a.city.localeCompare(b.city),
-      filters: users.reduce((acc, user) => {
-        if (!acc.some((city) => city.text === user.city)) {
-          acc.push({ text: user.city, value: user.city });
-        }
-        return acc;
-      }, []).map((city) => ({ text: city.text, value: city.value })),
-      filterSearch: true,
-      onFilter: (value, record) => record.city.includes(value),
-    },
-    {
-      title: 'Number',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber',
-      sorter: (a, b) => a.phoneNumber.localeCompare(b.phoneNumber),
-      filters: users.map((user) => ({ text: user.phoneNumber, value: user.phoneNumber })),
-      filterSearch: true,
-      onFilter: (value, record) => record.phoneNumber.includes(value),
-    },
-    {
-      title: 'Joined Date',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
-      render: (date) => formatDate(date),
-      sorter: (a, b) => new Date(a.createdDate) - new Date(b.createdDate),
-      filters: users.reduce((acc, user) => {
-        if (!acc.some((date) => date.text === new Date(user.createdDate).toLocaleDateString())) {
-          acc.push({ text: new Date(user.createdDate).toLocaleDateString(), value: new Date(user.createdDate).toLocaleDateString() });
-        }
-        return acc;
-      }, []).map((date) => ({ text: date.text, value: date.value })),
-      filterSearch: true,
-      onFilter: (value, record) => record.createdDate.includes(value),
-    },
-    {
-      title: 'DOB',
-      dataIndex: 'birthDate',
-      key: 'birthDate',
-      render: (date) => formatDate(date),
-      sorter: (a, b) => new Date(a.birthDate) - new Date(b.birthDate),
-    },
-    {
-      title: 'Balance',
-      dataIndex: 'numberOfCalls',
-      key: 'numberOfCalls',
-      sorter: (a, b) => a.numberOfCalls - b.numberOfCalls,
-    },
+    createColumn('User', 'name', 'name'),
+    createColumn('City', 'city', 'city'),
+    createColumn('Number', 'phoneNumber', 'phoneNumber'),
+    createColumn('Joined Date', 'createdDate', 'createdDate', (date) => formatDate(date)),
+    createColumn('DOB', 'birthDate', 'birthDate', (date) => formatDate(date)),
+    createColumn('Balance', 'numberOfCalls', 'numberOfCalls'),
     {
       title: 'Details',
       dataIndex: '_id',
@@ -96,7 +56,6 @@ const UsersList = () => {
             </Button>
           </Link>
         </div>
-      ,
     },
   ];
 

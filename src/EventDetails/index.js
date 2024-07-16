@@ -1,12 +1,12 @@
-import { Table, Button, ConfigProvider, theme } from 'antd';
+import { Button, ConfigProvider, theme } from 'antd';
 import React, { useEffect, useState } from 'react';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import Raxios from '../services/axiosHelper';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import CreateEventPopup from '../components/Popups/CreateEventPopup';
-import { formatTime } from '../Utils/formatHelper';
 import { downloadExcel } from '../Utils/exportHelper';
+import EventUsersTable from '../components/EventUsersTable';
 
 const EventDetails = () => {
     const { slug } = useParams();
@@ -43,15 +43,6 @@ const EventDetails = () => {
         fetchUsers();
         // eslint-disable-next-line
     }, [slug, editMode]);
-
-    const columns = [
-        { title: 'Name', dataIndex: 'name', key: 'name' },
-        { title: 'Contact', dataIndex: 'phoneNumber', key: 'phoneNumber' },
-        { title: 'Email', dataIndex: 'email', key: 'email' },
-        { title: 'City', dataIndex: 'city', key: 'city' },
-        { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt', render: (time) => formatTime(time) },
-        { title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt', render: (time) => formatTime(time) }
-    ];
 
     const handleExport = async () => {
         downloadExcel(users, 'Event Users.xlsx');
@@ -94,7 +85,7 @@ const EventDetails = () => {
                                 <h1>Registered Users</h1>
                                 <Button onClick={handleExport}>Download Excel</Button>
                             </div>
-                            <Table dataSource={users} columns={columns} rowKey={(record) => record._id || record.email} />
+                            <EventUsersTable users={users} />
                         </div> :
                         <CreateEventPopup setVisible={setEditMode} data={data} editMode={editMode} />
                     }

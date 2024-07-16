@@ -1,172 +1,62 @@
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Input, Button, Space, ConfigProvider, theme, Popconfirm } from 'antd';
-import { SearchOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { useLeads } from '../../../services/useData';
+import { Table, Button, ConfigProvider, theme, Popconfirm } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import EditableCell from '../../EditableCell';
 import Raxios from '../../../services/axiosHelper';
 import { formatDate } from '../../../Utils/formatHelper';
+import getColumnSearchProps from '../../../Utils/antTableHelper';
 
-const LeadsPopup = ({ onClose }) => {
-    const { leads } = useLeads();
+const LeadsPopup = ({ onClose, leads }) => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [data, setData] = useState(leads);
     const searchInputRef = useRef(null);
     const darkMode = localStorage.getItem('darkMode') === 'true';
 
-    const getColumnSearchProps = (dataIndex, displayName) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-            <div style={{ padding: 8 }}>
-                <Input
-                    ref={searchInputRef}
-                    placeholder={`Search ${displayName}`}
-                    value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                    style={{ marginBottom: 8, display: 'block' }}
-                />
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                        icon={<SearchOutlined />}
-                        size="small"
-                        style={{ width: 90 }}
-                    >
-                        Search
-                    </Button>
-                    <Button onClick={() => handleReset(clearFilters, confirm)} size="small" style={{ width: 90 }}>
-                        Reset
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-        onFilter: (value, record) =>
-            record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '',
-        onFilterDropdownOpenChange: (visible) => {
-            if (visible) {
-                setTimeout(() => searchInputRef.current.select(), 100);
-            }
-        },
-        sorter: (a, b) => {
-            return a[dataIndex] && b[dataIndex] ? a[dataIndex].localeCompare(b[dataIndex]) : 0;
-        },
-        render: (text) => {
-            return searchedColumn === dataIndex ? (
-                <span>
-                    {text &&
-                        text
-                            .toString()
-                            .split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i'))
-                            .map((fragment, i) =>
-                                fragment && typeof fragment === 'string' ? (
-                                    fragment.toLowerCase() === searchText ? (
-                                        <span key={i} style={{ backgroundColor: '#ffc069' }}>
-                                            {fragment}
-                                        </span>
-                                    ) : (
-                                        fragment
-                                    )
-                                ) : (
-                                    fragment
-                                )
-                            )}
-                </span>
-            ) : (
-                text
-            );
-        },
-    });
+    const createColumn = (title, dataIndex, key, render, editable) => {
+        return {
+            title,
+            dataIndex,
+            key,
+            ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+            ...(editable && { editable }),
+            ...(render && { render }),
+        };
+    };
 
     const columns = [
+        createColumn('Name', 'name', 'name'),
+        createColumn('Contact', 'phoneNumber', 'phoneNumber'),
+        createColumn('City', 'city', 'city'),
+        createColumn('Date of Lead', 'createdDate', 'createdDate', (createdDate) => formatDate(createdDate)),
+        createColumn('Remarks', 'remarks', 'remarks', null, true),
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            ...getColumnSearchProps('name', 'Name'),
-        },
-        {
-            title: 'Contact',
-            dataIndex: 'phoneNumber',
-            key: 'phoneNumber',
-            ...getColumnSearchProps('phoneNumber', 'Contact'),
-        },
-        {
-            title: 'City',
-            dataIndex: 'city',
-            key: 'city',
-            ...getColumnSearchProps('city', 'City'),
-        },
-        {
-            title: 'Date of Lead',
-            dataIndex: 'createdDate',
-            key: 'createdDate',
-            ...getColumnSearchProps('createdDate', 'Date Joined'),
-            sorter: (a, b) => new Date(a.createdDate) - new Date(b.createdDate),
-            render: (createdDate) => formatDate(createdDate),
-        },
-        {
-            title: 'Source',
-            dataIndex: 'source',
-            key: 'source',
-            ...getColumnSearchProps('source', 'Source'),
-            sorter: (a, b) => a.source.localeCompare(b.source),
-        },
-        {
-            title: "Remarks", dataIndex: "remarks",
-            key: "remarks", width: 250, editable: true,
-            ...getColumnSearchProps('remarks', 'Remarks')
-        },
-        {
-            title: 'Actions',
-            key: 'actions',
+            title: 'Actions', key: 'actions',
             render: (user) => {
-                if (user.source === 'Users Lead') {
-                    return (
+                return (
+                    <div className='flex gap-2'>
                         <Link to={`/admin/users/${user._id}`}>
                             <Button className='w-full'>
-                                View
+                                Edit
                             </Button>
                         </Link>
-                    );
-                } else {
-                    return (
                         <Popconfirm
                             title="Delete the record"
                             description="Are you sure to delete this record?"
-                            onConfirm={() => confirm(user)}
-                            onCancel={cancel}
-                            okText="Yes"
-                            cancelText="No"
+                            onConfirm={() => confirm(user)} onCancel={cancel}
+                            okText="Yes" cancelText="No"
                             icon={
-                                <QuestionCircleOutlined
-                                    style={{
-                                        color: 'red',
-                                    }} />
+                                <QuestionCircleOutlined style={{ color: 'red' }} />
                             }
                         >
                             <Button>Delete</Button>
                         </Popconfirm>
-                    );
-                }
-            },
+                    </div>
+                );
+            }
         },
     ];
-
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
-
-    const handleReset = (clearFilters, confirm) => {
-        clearFilters();
-        setSearchText('');
-        setSearchedColumn('');
-        confirm();
-    };
 
     const handleSave = async ({ key, field, value }) => {
         try {
