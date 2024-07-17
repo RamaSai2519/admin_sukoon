@@ -30,6 +30,8 @@ const LeadsPopup = ({ onClose, leads }) => {
         createColumn('Contact', 'phoneNumber', 'phoneNumber'),
         createColumn('City', 'city', 'city'),
         createColumn('Date of Lead', 'createdDate', 'createdDate', (createdDate) => formatDate(createdDate)),
+        createColumn('Lead Source', 'leadSource', 'leadSource'),
+        createColumn('Source', 'source', 'source'),
         createColumn('Remarks', 'remarks', 'remarks', null, true),
         {
             title: 'Actions', key: 'actions',
@@ -67,11 +69,11 @@ const LeadsPopup = ({ onClose, leads }) => {
                         const index = updatedLeads.findIndex((item) => key === item._id);
                         updatedLeads[index][field] = value;
                         setData(updatedLeads);
-                        window.alert(response.data.message);
                     }
                 })
                 .catch((error) => {
                     console.log(error);
+                    window.alert('Error updating data');
                 });
         } catch (error) {
             console.error('Error updating data:', error);
