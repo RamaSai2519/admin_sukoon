@@ -18,6 +18,22 @@ export const fetchPagedData = async (page, size, setData, setTotal, setLoading, 
     setLoading(false);
 };
 
+export const fetchData = async (setData, setLoading, endpoint, optional) => {
+    setLoading(true);
+    try {
+        const response = await Raxios.get(endpoint, {
+            params: {
+                ...(optional && { ...optional })
+            }
+        });
+        setData(response.data.data);
+    } catch (error) {
+        console.error('Error fetching templates:', error);
+        window.alert('Error fetching templates');
+    }
+    setLoading(false);
+};
+
 export const fetchCategories = async (setCategories) => {
     try {
         const response = await Raxios.get('/data/categories');
