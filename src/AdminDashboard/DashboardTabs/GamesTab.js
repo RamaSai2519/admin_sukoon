@@ -162,7 +162,6 @@ const GamesTab = () => {
                                     >
                                         <Upload
                                             name="file"
-                                            fileList={[]}
                                             listType="picture-card"
                                             className="avatar-uploader"
                                             action="https://rama.sukoonunlimited.com/admin/service/upload"
