@@ -161,23 +161,25 @@ const UserDetails = () => {
                   <h2 className='text-2xl'>{phoneNumber}</h2>
                 )}
               </div>
-              <div className='grid-tile'>
-                <h3>City</h3>
-                {editMode ? (
-                  <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
-                ) : (
-                  <h2 className='text-2xl'>{city}</h2>
-                )}
+              <div className='flex w-full h-full'>
+                <div className='grid-tile w-full h-fit'>
+                  <h3>City</h3>
+                  {editMode ? (
+                    <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
+                  ) : (
+                    <h2 className='text-2xl'>{city}</h2>
+                  )}
+                </div>
+                <div className='grid-tile w-full h-fit'>
+                  <h3>Birth Date</h3>
+                  {editMode ? (
+                    <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+                  ) : (
+                    <h2 className='text-2xl'>{birthDate}</h2>
+                  )}
+                </div>
               </div>
-              <div className='grid-tile'>
-                <h3>Birth Date</h3>
-                {editMode ? (
-                  <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
-                ) : (
-                  <h2 className='text-2xl'>{birthDate}</h2>
-                )}
-              </div>
-              {context && context.length > 0 && (
+              {context && (
                 <div className='grid-tile'>
                   <h3>Context</h3>
                   {editMode ? (
@@ -188,9 +190,7 @@ const UserDetails = () => {
                       onChange={handleContextChange}
                     />
                   ) : (
-                    context.map((item, index) => (
-                      <h2 key={index}>{item}</h2>
-                    ))
+                    <h2 className='whitespace-pre-wrap'>{context}</h2>
                   )}
                 </div>
               )}
@@ -199,14 +199,14 @@ const UserDetails = () => {
                   <h3>Number of Calls</h3>
                   <h2 className='text-2xl'>{numberOfCalls}</h2>
                 </div>
-                <div className='grid-tile'>
+                {source && <div className='grid-tile'>
                   <h3>Source</h3>
                   {editMode ? (
                     <input type="text" value={source} onChange={(e) => setSource(e.target.value)} />
                   ) : (
                     <h2 className='text-2xl'>{source}</h2>
                   )}
-                </div>
+                </div>}
                 {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
                 {editMode ? (
                   <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
@@ -220,9 +220,6 @@ const UserDetails = () => {
               <div className='grid-tile'>
                 <h3>Customer Persona</h3>
                 {persona && (
-                  // persona.map((item, index) => (
-                  //   <h2 className='text-2xl' key={index}>{item}</h2>
-                  // ))
                   <h2 className='text-2xl whitespace-pre-wrap'>{persona}</h2>
                 )}
               </div>
