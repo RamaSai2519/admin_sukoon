@@ -9,6 +9,8 @@ const SendWAForm = () => {
     const [template, setTemplate] = useState(null);
     const [loading, setLoading] = useState(false);
     const [inputs, setInputs] = useState({});
+    const [selectedType, setSelectedType] = useState("");
+    const [selectedCity, setSelectedCity] = useState("mumbai");
     const [messagePreview, setMessagePreview] = useState('');
 
     useEffect(() => {
@@ -19,7 +21,7 @@ const SendWAForm = () => {
         if (template) {
             setMessagePreview(template.message);
             const initialInputs = {};
-            const placeholders = template.message.match(/<\d+>/g) || [];
+            const placeholders = template.message.match(/<\w+>/g) || [];
             placeholders.forEach((placeholder) => {
                 initialInputs[placeholder] = '';
             });
@@ -42,7 +44,7 @@ const SendWAForm = () => {
 
     return (
         <div className='flex w-full gap-2'>
-            <div className='flex flex-col w-full'>
+            <div className='flex flex-col w-full gap-2'>
                 <Select
                     allowClear
                     showSearch
@@ -66,12 +68,32 @@ const SendWAForm = () => {
                     {generateOptions(templates, 'name')}
                 </Select>
 
+                <Select
+                    allowClear
+                    placeholder="Select Type"
+                    onChange={(value) => console.log('value:', value)}
+                >
+                    <Select.Option value="partial">Partial Signups</Select.Option>
+                    <Select.Option value="full">Complete Signups</Select.Option>
+                    <Select.Option value="all">All Users</Select.Option>
+                </Select>
+
+                <Select
+                    allowClear
+                    placeholder="Select City"
+                    onChange={(value) => setSelectedCity(value)}
+                    value={selectedCity}
+                >
+                    <Select.Option value="delhi">Delhi</Select.Option>
+                    <Select.Option value="mumbai">Mumbai</Select.Option>
+                    <Select.Option value="bangalore">Bangalore</Select.Option>
+                </Select>
+
                 {template && Object.keys(inputs).map((placeholder, index) => (
-                    <div className='flex gap-2 my-1'>
+                    <div className='flex gap-2 my-1' key={index}>
                         <Card size='small'><p>{placeholder}</p></Card>
                         <Input
-                            key={index}
-                            placeholder={"Enter value"}
+                            placeholder="Enter value"
                             value={inputs[placeholder]}
                             onChange={(e) => handleInputChange(placeholder, e.target.value)}
                         />

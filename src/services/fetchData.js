@@ -28,8 +28,8 @@ export const fetchData = async (setData, setLoading, endpoint, optional) => {
         });
         setData(response.data.data);
     } catch (error) {
-        console.error('Error fetching templates:', error);
-        window.alert('Error fetching templates');
+        console.error('Error fetching data:', error);
+        window.alert('Error fetching data');
     }
     setLoading(false);
 };
