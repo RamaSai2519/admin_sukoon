@@ -236,7 +236,7 @@ const SendWAForm = () => {
                     Send Message
                 </Button>
             </div>
-            <div className='flex flex-col'>
+            {template && <div className='flex flex-col'>
                 <Card className='w-full h-fit rounded-b-none'>
                     <div className='w-full flex justify-between items-center'>
                         <h1>Preview</h1>
@@ -246,7 +246,7 @@ const SendWAForm = () => {
                 <Card className='w-full h-fit rounded-t-none'>
                     <span className='whitespace-pre-wrap'>{messagePreview}</span>
                 </Card>
-            </div>
+            </div>}
         </div>
     );
 };
