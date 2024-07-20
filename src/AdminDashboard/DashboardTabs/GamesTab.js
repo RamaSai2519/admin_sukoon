@@ -7,6 +7,7 @@ import LazyLoad from '../../components/LazyLoad/lazyload';
 import Raxios from '../../services/axiosHelper';
 import Loading from '../../components/Loading/loading';
 import { PlusOutlined } from '@ant-design/icons';
+import { beforeUpload } from '../../Utils/antSelectHelper';
 
 const GamesTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -46,20 +47,6 @@ const GamesTab = () => {
         const newOptions = [...options];
         newOptions[index] = value;
         setOptions(newOptions);
-    };
-
-    const beforeUpload = (file) => {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJpgOrPng) {
-            message.error('You can only upload JPG/PNG file!');
-            return Upload.LIST_IGNORE;
-        }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-            message.error('Image must be smaller than 2MB!');
-            return Upload.LIST_IGNORE;
-        }
-        return true;
     };
 
     const handleChange = (info) => {
@@ -163,7 +150,6 @@ const GamesTab = () => {
                                         <Upload
                                             name="file"
                                             listType="picture-card"
-                                            className="avatar-uploader"
                                             action="https://rama.sukoonunlimited.com/admin/service/upload"
                                             beforeUpload={beforeUpload}
                                             onChange={handleChange}

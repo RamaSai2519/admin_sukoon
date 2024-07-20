@@ -1,43 +1,127 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Select, Input } from 'antd';
-import { generateOptions } from '../../Utils/antSelectHelper';
+import { Button, Card, Select, Input, Upload, message } from 'antd';
+import { beforeUpload, generateOptions } from '../../Utils/antSelectHelper';
 import { fetchData } from '../../services/fetchData';
 import Loading from '../Loading/loading';
+import Raxios from '../../services/axiosHelper';
+import { UploadOutlined } from '@ant-design/icons';
 
 const SendWAForm = () => {
     const [templates, setTemplates] = useState([]);
     const [template, setTemplate] = useState(null);
     const [loading, setLoading] = useState(false);
     const [inputs, setInputs] = useState({});
+    const [cities, setCities] = useState([]);
     const [selectedType, setSelectedType] = useState("");
-    const [selectedCity, setSelectedCity] = useState("mumbai");
+    const [selectedCities, setSelectedCities] = useState([]);
     const [messagePreview, setMessagePreview] = useState('');
+    const [slugs, setSlugs] = useState([]);
+    const [slug, setSlug] = useState('');
+    const [uploadedImageUrl, setUploadedImageUrl] = useState('');
+    const [usersCount, setUsersCount] = useState(0);
+
+
+    const fetchAllData = async () => {
+        setLoading(true);
+        await fetchData(setCities, setLoading, '/data/userCities');
+        await fetchData(setTemplates, setLoading, '/wa/templates');
+        await fetchData(setSlugs, setLoading, '/event/slugs');
+        setLoading(false);
+    };
 
     useEffect(() => {
-        fetchData(setTemplates, setLoading, '/wa/templates');
+        fetchAllData();
+
+        return () => {
+            setTemplate(null);
+            setInputs({});
+            setSelectedType('');
+            setSelectedCities([]);
+            setMessagePreview('');
+            setSlug('');
+            setUploadedImageUrl('');
+        };
     }, []);
 
     useEffect(() => {
+        const fetchPreview = async () => {
+            const response = await Raxios.post('/wa/preview', {
+                usersType: selectedType,
+                cities: selectedCities,
+            });
+            if (response.status !== 200) {
+                message.error('Failed to fetch preview data');
+            } else {
+                setUsersCount(response.data.usersCount);
+            }
+        };
+
+        if (selectedType || selectedCities.length > 0) {
+            fetchPreview();
+        }
+    }, [selectedCities, selectedType]);
+
+    useEffect(() => {
         if (template) {
-            setMessagePreview(template.message);
             const initialInputs = {};
             const placeholders = template.message.match(/<\w+>/g) || [];
             placeholders.forEach((placeholder) => {
-                initialInputs[placeholder] = '';
+                if (placeholder === '<user_name>') {
+                    initialInputs['<user_name>'] = "Mayank Dwivedi";
+                } else {
+                    initialInputs[placeholder] = '';
+                }
             });
             setInputs(initialInputs);
         }
     }, [template]);
 
-    const handleInputChange = (placeholder, value) => {
-        const updatedInputs = { ...inputs, [placeholder]: value };
-        setInputs(updatedInputs);
+    useEffect(() => {
+        if (template) {
+            let updatedMessage = template.message;
+            Object.keys(inputs).forEach((key) => {
+                updatedMessage = updatedMessage.replace(key, inputs[key] || key);
+            });
+            setMessagePreview(updatedMessage);
+        }
+    }, [inputs, template]);
 
-        let updatedMessage = template.message;
-        Object.keys(updatedInputs).forEach((key) => {
-            updatedMessage = updatedMessage.replace(key, updatedInputs[key] || key);
+    const handleInputChange = (placeholder, value) => {
+        setInputs((prevInputs) => ({
+            ...prevInputs,
+            [placeholder]: value,
+        }));
+    };
+
+    const handleUploadChange = (info) => {
+        if (info.file.status === 'done') {
+            setUploadedImageUrl(info.file.response.file_url);
+            message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
+    };
+
+    const handleSend = async () => {
+        if (template.extra_args && template.extra_args.includes('reqistration_link_slug') && !slug) {
+            message.error('Please select a registration link slug');
+            return;
+        } else if (template.extra_args && template.extra_args.includes('image_link') && !uploadedImageUrl) {
+            message.error('Please upload an image');
+            return;
+        }
+        const finalInputs = {
+            ...inputs,
+            '<registraion_link_slug>': slug,
+            '<image_link>': uploadedImageUrl
+        };
+        const response = await Raxios.post('/wa/send', {
+            templateId: template._id,
+            usersType: selectedType,
+            cities: selectedCities,
+            inputs: finalInputs,
         });
-        setMessagePreview(updatedMessage);
+        console.log('response:', response);
     };
 
     if (loading) return <Loading />;
@@ -57,7 +141,6 @@ const SendWAForm = () => {
                     onChange={(value) => {
                         const selectedTemplate = templates.find(template => template._id === value);
                         setTemplate(selectedTemplate);
-                        console.log('selectedTemplate:', selectedTemplate);
                     }}
                     onClear={() => {
                         setTemplate(null);
@@ -70,42 +153,100 @@ const SendWAForm = () => {
 
                 <Select
                     allowClear
-                    placeholder="Select Type"
-                    onChange={(value) => console.log('value:', value)}
+                    placeholder="Select Users By Type"
+                    className='w-full'
+                    onChange={(value) => {
+                        setSelectedType(value);
+                        setSelectedCities([]);
+                    }}
+                    onClear={() => setSelectedType('')}
+                    disabled={selectedCities.length > 0}
                 >
                     <Select.Option value="partial">Partial Signups</Select.Option>
                     <Select.Option value="full">Complete Signups</Select.Option>
                     <Select.Option value="all">All Users</Select.Option>
                 </Select>
-
                 <Select
+                    mode="multiple"
                     allowClear
-                    placeholder="Select City"
-                    onChange={(value) => setSelectedCity(value)}
-                    value={selectedCity}
+                    showSearch
+                    className='w-full'
+                    placeholder="Select Users By City"
+                    optionFilterProp='children'
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().includes(input.toLowerCase())
+                    }
+                    onChange={(value) => {
+                        setSelectedCities(value);
+                        setSelectedType('');
+                    }}
+                    onClear={() => setSelectedCities([])}
+                    disabled={selectedType}
                 >
-                    <Select.Option value="delhi">Delhi</Select.Option>
-                    <Select.Option value="mumbai">Mumbai</Select.Option>
-                    <Select.Option value="bangalore">Bangalore</Select.Option>
+                    {generateOptions(cities, 'city')}
                 </Select>
 
                 {template && Object.keys(inputs).map((placeholder, index) => (
-                    <div className='flex gap-2 my-1' key={index}>
-                        <Card size='small'><p>{placeholder}</p></Card>
+                    <div className='grid grid-cols-2 gap-2 my-1' key={index}>
+                        <Card size='small'><p className='overflow-clip text-ellipsis'>{placeholder}</p></Card>
                         <Input
                             placeholder="Enter value"
                             value={inputs[placeholder]}
                             onChange={(e) => handleInputChange(placeholder, e.target.value)}
+                            disabled={placeholder === '<user_name>'}
                         />
                     </div>
                 ))}
+                <div className='flex items-center justify-center gap-2'>
+                    {template && template.extra_args && template.extra_args.includes('image_link') && (
+                        <Upload
+                            name="file"
+                            // listType="picture-card"
+                            beforeUpload={beforeUpload}
+                            onChange={handleUploadChange}
+                            action="https://rama.sukoonunlimited.com/admin/service/upload"
+                            maxCount={1}
+                        >
+                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                        </Upload>
+                    )}
+                    {template && template.extra_args && template.extra_args.includes('reqistration_link_slug') && (
+                        <Select
+                            allowClear
+                            showSearch
+                            className='w-full'
+                            placeholder="Select Registration Link Slug"
+                            optionFilterProp='children'
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().includes(input.toLowerCase())
+                            }
+                            onChange={(value) => setSlug(value)}
+                            onClear={() => setSlug('')}
+                        >
+                            {generateOptions(slugs, 'slug')}
+                        </Select>
+                    )}
+                </div>
+                <Button
+                    type='primary'
+                    className='w-full'
+                    disabled={!template || (!selectedType && selectedCities.length === 0)}
+                    onClick={handleSend}
+                >
+                    Send Message
+                </Button>
             </div>
-            <Card
-                title="Preview"
-                className='w-full h-fit'
-            >
-                <span className='whitespace-pre-wrap'>{messagePreview}</span>
-            </Card>
+            <div className='flex flex-col'>
+                <Card className='w-full h-fit rounded-b-none'>
+                    <div className='w-full flex justify-between items-center'>
+                        <h1>Preview</h1>
+                        <span>Users Count: {usersCount}</span>
+                    </div>
+                </Card>
+                <Card className='w-full h-fit rounded-t-none'>
+                    <span className='whitespace-pre-wrap'>{messagePreview}</span>
+                </Card>
+            </div>
         </div>
     );
 };

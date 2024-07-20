@@ -108,7 +108,7 @@ const WhatsappTab = () => {
                         />
                     )}
                 </div>
-                <div className='flex w-1/2 pl-2 md:border-l-2 md:border-lightBlack'>
+                <div className='flex w-1/2 pl-2 md:border-l-2 dark:md:border-lightBlack'>
                     <SendWAForm />
                 </div>
             </div>
