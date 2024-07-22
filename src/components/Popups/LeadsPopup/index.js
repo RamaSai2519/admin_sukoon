@@ -37,12 +37,12 @@ const LeadsPopup = ({ onClose, leads }) => {
             title: 'Actions', key: 'actions',
             render: (user) => {
                 return (
-                    <div className='flex gap-2'>
-                        <Link to={`/admin/users/${user._id}`}>
+                    <div className='flex gap-2 justify-end items-center'>
+                        {user.leadSource === "Website" && <Link to={`/admin/users/${user._id}`}>
                             <Button className='w-full'>
                                 Edit
                             </Button>
-                        </Link>
+                        </Link>}
                         <Popconfirm
                             title="Delete the record"
                             description="Are you sure to delete this record?"
