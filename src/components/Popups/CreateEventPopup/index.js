@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 const CreateEventPopup = ({ setVisible, data, editMode }) => {
     const [uploadedImageUrl, setUploadedImageUrl] = useState(data?.imageUrl || '');
-    
+
     const handleCreate = async (values) => {
         const { image, ...otherValues } = values;
         try {
@@ -69,6 +69,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
         repeat: data?.repeat,
         registrationAllowedTill: data?.registrationAllowedTill ? dayjs(data?.registrationAllowedTill) : undefined,
         imageUrl: data?.imageUrl,
+        isPremiumUserOnly: data?.isPremiumUserOnly
     };
 
     const formItems = [
@@ -134,6 +135,14 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
         {
             label: "Registration Allowed Till", name: "registrationAllowedTill", rules: [],
             component: <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss" showTime />
+        },
+        {
+            label: "Premium Users Only", name: "isPremiumUserOnly", rules: [{ required: true, message: 'Please select an option' }],
+            component:
+                <Select placeholder="Select a option" allowClear>
+                    <Select.Option value={true}>Yes</Select.Option>
+                    <Select.Option value={false}>No</Select.Option>
+                </Select>
         },
         {
             label: "Image",
