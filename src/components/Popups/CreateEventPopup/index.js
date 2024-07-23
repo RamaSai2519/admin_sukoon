@@ -139,7 +139,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
         {
             label: "Premium Users Only", name: "isPremiumUserOnly", rules: [{ required: true, message: 'Please select an option' }],
             component:
-                <Select placeholder="Select a option" allowClear>
+                <Select placeholder="Select a option">
                     <Select.Option value={true}>Yes</Select.Option>
                     <Select.Option value={false}>No</Select.Option>
                 </Select>
