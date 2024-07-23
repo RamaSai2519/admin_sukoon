@@ -15,7 +15,7 @@ import UserEngagement from './UserEngagement';
 import './App.css';
 
 const App = () => {
-  const appVersion = '13.6.8';
+  const appVersion = '14.0.2';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
@@ -30,7 +30,10 @@ const App = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem('isLoggedIn');
+    window.location.reload();
+    localStorage.clear();
+    sessionStorage.clear();
+    localStorage.setItem('appVersion', appVersion);
   };
 
   useEffect(() => {
