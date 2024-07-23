@@ -123,36 +123,11 @@ const ExpertDetails = () => {
   };
 
   const columns = [
-    {
-      title: 'Day',
-      dataIndex: 'day',
-      key: 'day',
-      editable: false,
-    },
-    {
-      title: 'Start Time 1',
-      dataIndex: 'PrimaryStartTime',
-      key: 'PrimaryStartTime',
-      editable: true,
-    },
-    {
-      title: 'End Time 1',
-      dataIndex: 'PrimaryEndTime',
-      key: 'PrimaryEndTime',
-      editable: true,
-    },
-    {
-      title: 'Start Time 2',
-      dataIndex: 'SecondaryStartTime',
-      key: 'SecondaryStartTime',
-      editable: true,
-    },
-    {
-      title: 'End Time 2',
-      dataIndex: 'SecondaryEndTime',
-      key: 'SecondaryEndTime',
-      editable: true,
-    },
+    { title: 'Day', dataIndex: 'day', key: 'day', editable: false, },
+    { title: 'Start Time 1', dataIndex: 'PrimaryStartTime', key: 'PrimaryStartTime', editable: true, },
+    { title: 'End Time 1', dataIndex: 'PrimaryEndTime', key: 'PrimaryEndTime', editable: true, },
+    { title: 'Start Time 2', dataIndex: 'SecondaryStartTime', key: 'SecondaryStartTime', editable: true, },
+    { title: 'End Time 2', dataIndex: 'SecondaryEndTime', key: 'SecondaryEndTime', editable: true, },
   ];
 
   const handleSave = async (row) => {
@@ -292,7 +267,7 @@ const ExpertDetails = () => {
             </div>
             <div className='grid-tile'>
               <h3>Status</h3>
-              <div className="toggle-container">
+              <div className="flex justify-between">
                 <h2 className="status-label">{status === 'online' ? 'Online' : 'Offline'}</h2>
                 <label className="switch">
                   <input

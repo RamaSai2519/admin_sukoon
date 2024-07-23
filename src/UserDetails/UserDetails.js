@@ -18,6 +18,7 @@ const UserDetails = () => {
   const [persona, setPersona] = useState('');
   const [notifications, setNotifications] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
 
   const darkMode = localStorage.getItem('darkMode') === 'true';
 
@@ -36,6 +37,7 @@ const UserDetails = () => {
     try {
       const response = await Raxios.get(`/user/users/${userId}`);
       setName(response.data.name);
+      setIsPremium(response.data.isPaidUser);
       setPhoneNumber(response.data.phoneNumber);
       setCity(response.data.city);
       setBirthDate(new Date(response.data.birthDate).toISOString().split('T')[0]);
@@ -65,31 +67,11 @@ const UserDetails = () => {
   }, [notifications]);
 
   const columns = [
-    {
-      title: 'Message',
-      dataIndex: 'body',
-      key: 'body',
-    },
-    {
-      title: 'Template',
-      dataIndex: 'templateName',
-      key: 'templateName',
-    },
-    {
-      title: 'Date',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-    },
-    {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-    }
+    { title: 'Message', dataIndex: 'body', key: 'body', },
+    { title: 'Template', dataIndex: 'templateName', key: 'templateName', },
+    { title: 'Date', dataIndex: 'createdAt', key: 'createdAt', },
+    { title: 'Status', dataIndex: 'status', key: 'status', },
+    { title: "Type", dataIndex: "type", key: "type", }
   ];
 
   const handleUpdate = () => {
@@ -105,12 +87,26 @@ const UserDetails = () => {
       .then(response => {
         window.alert('User details updated successfully.');
         setEditMode(false);
+        fetchData();
       })
       .catch(error => {
         console.error('Error updating user details:', error);
         window.alert('Error updating user details:', error);
       });
   };
+
+  const handlePremium = () => {
+    try {
+      const response = Raxios.put(`/user/users/${userId}`, {
+        isPaidUser: !isPremium,
+      });
+      fetchData();
+    } catch (error) {
+      console.error('Error updating user details:', error);
+      window.alert('Error updating user details:', error);
+    }
+  };
+
 
   const handleDelete = () => {
     Raxios.delete(`/user/users/${userId}`)
@@ -122,11 +118,6 @@ const UserDetails = () => {
         console.error('Error deleting user:', error);
         window.alert('Error deleting user:', error);
       });
-  };
-
-  const handleContextChange = (e) => {
-    const sentences = e.target.value.split('\n');
-    setContext(sentences);
   };
 
   return (
@@ -145,13 +136,26 @@ const UserDetails = () => {
               </button>
             </div>
             <div id='details-content' className='grid md:grid-cols-2 md:gap-4'>
-              <div className='grid-tile'>
-                <h3>Name</h3>
-                {editMode ? (
-                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-                ) : (
-                  <h2 className='text-2xl'>{name}</h2>
-                )}
+              <div className='flex gap-2 w-full'>
+                <div className='grid-tile w-full'>
+                  <h3>Name</h3>
+                  {editMode ? (
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                  ) : (
+                    <h2 className='text-2xl'>{name}</h2>
+                  )}
+                </div>
+                <div className='grid-tile w-full flex justify-between items-center'>
+                  <span className='text-2xl'>Premium User</span>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={isPremium === true}
+                      onChange={() => handlePremium()}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </div>
               </div>
               <div className='grid-tile'>
                 <h3>Phone Number</h3>
@@ -184,10 +188,8 @@ const UserDetails = () => {
                   <h3>Context</h3>
                   {editMode ? (
                     <textarea
-                      className='h-4/5 w-full'
-                      value={context.join('\n')}
-                      rows={context.length}
-                      onChange={handleContextChange}
+                      className='h-4/5 w-full' value={context}
+                      onChange={(e) => setContext(e.target.value)}
                     />
                   ) : (
                     <h2 className='whitespace-pre-wrap'>{context}</h2>

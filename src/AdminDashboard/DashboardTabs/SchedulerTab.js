@@ -4,8 +4,8 @@ import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
 import { fetchPagedData } from "../../services/fetchData";
 import Raxios from "../../services/axiosHelper";
+import { generateOptions } from "../../Utils/antSelectHelper";
 import React, { useEffect } from "react";
-import { formatTime } from "../../Utils/formatHelper";
 
 const SchedulerTab = () => {
     // const [slots, setSlots] = React.useState([]);
@@ -64,12 +64,6 @@ const SchedulerTab = () => {
             console.error("Error deleting schedule:", error);
         }
     };
-
-    const generateOptions = (data, key) => data.map(item => (
-        <Option key={item._id} value={item._id}>
-            {item[key] || item["phoneNumber"]}
-        </Option>
-    ));
 
     const onFinish = async (values, endpoint) => {
         try {
