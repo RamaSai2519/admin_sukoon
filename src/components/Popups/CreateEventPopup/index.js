@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, message, Select, DatePicker, Upload, InputNumber } from 'antd';
-import Raxios from '../../../services/axiosHelper';
 import { UploadOutlined } from '@ant-design/icons';
+import Raxios from '../../../services/axiosHelper';
 import dayjs from 'dayjs';
+import axios from 'axios';
 
 const CreateEventPopup = ({ setVisible, data, editMode }) => {
     const [uploadedImageUrl, setUploadedImageUrl] = useState(data?.imageUrl || '');
@@ -14,13 +15,19 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
                 ...otherValues,
                 imageUrl: uploadedImageUrl
             });
-            if (response.data.success) {
-                message.success(
-                    `Event ${data ? 'updated' : 'created'} successfully`
-                );
-                setVisible(false);
-            } else {
-                message.error('Error creating event');
+            if (response.status === 200) {
+                const fResponse = await axios.post("https://prod-backend.sukoonunlimited.com/api/events/config", {
+                    ...otherValues,
+                    imageUrl: uploadedImageUrl
+                });
+                if (fResponse.data.success) {
+                    message.success(
+                        `Event ${data ? 'updated' : 'created'} successfully`
+                    );
+                    setVisible(false);
+                } else {
+                    message.error('Error creating event');
+                }
             }
         } catch (error) {
             console.error('Error creating event:', error);
