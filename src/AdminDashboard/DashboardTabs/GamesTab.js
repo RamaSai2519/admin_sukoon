@@ -8,6 +8,7 @@ import Raxios from '../../services/axiosHelper';
 import Loading from '../../components/Loading/loading';
 import { PlusOutlined } from '@ant-design/icons';
 import { beforeUpload } from '../../Utils/antSelectHelper';
+import Gamelinks from '../../components/Gamelinks';
 
 const GamesTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -77,94 +78,93 @@ const GamesTab = () => {
                             setGame(e.target.value);
                         }}
                     >
+                        <Radio.Button value="games">Games</Radio.Button>
                         <Radio.Button value="quiz">Quiz</Radio.Button>
                         <Radio.Button disabled value="cards">Match Cards</Radio.Button>
                         <Radio.Button disabled value="colour">Colour Trap</Radio.Button>
                     </Radio.Group>
-                    <div className="flex w-full h-max justify-between pt-1">
+                    {game === "quiz" && (<div className="flex w-full h-max justify-between pt-1">
                         <div className="w-1/2 p-2 px-5">
-                            {game === "quiz" && (
-                                <Form
-                                    layout="vertical"
-                                    onFinish={onFormSubmit}
+                            <Form
+                                layout="vertical"
+                                onFinish={onFormSubmit}
+                            >
+                                <Form.Item
+                                    label="Select Level"
+                                    name="level"
+                                    rules={[{ required: true }]}
                                 >
-                                    <Form.Item
-                                        label="Select Level"
-                                        name="level"
-                                        rules={[{ required: true }]}
-                                    >
-                                        <Select placeholder="Select Level">
-                                            {uniqueLevels.map((level) => (
-                                                <Select.Option key={level} value={level}>
-                                                    {level}
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="Question"
-                                        name="question"
-                                        rules={[{ required: true }]}
-                                    >
-                                        <Input placeholder="Enter question" />
-                                    </Form.Item>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        {[1, 2, 3, 4].map((option, index) => (
-                                            <Form.Item
-                                                key={index}
-                                                label={`Option ${index + 1}`}
-                                                name={`option${index + 1}`}
-                                                rules={[{ required: true }]}
-                                            >
-                                                <Input
-                                                    placeholder={`Enter Option ${index + 1}`}
-                                                    onChange={(e) => handleOptionChange(index, e.target.value)}
-                                                />
-                                            </Form.Item>
+                                    <Select placeholder="Select Level">
+                                        {uniqueLevels.map((level) => (
+                                            <Select.Option key={level} value={level}>
+                                                {level}
+                                            </Select.Option>
                                         ))}
-                                    </div>
-                                    <Form.Item
-                                        label="Correct Answer"
-                                        name="correctAnswer"
-                                        rules={[{ required: true }]}
-                                        shouldUpdate={(prevValues, currentValues) =>
-                                            prevValues.options !== currentValues.options
-                                        }
-                                    >
-                                        <Select
-                                            placeholder="Select Correct Answer"
-                                            disabled={options.length < 4}
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item
+                                    label="Question"
+                                    name="question"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input placeholder="Enter question" />
+                                </Form.Item>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {[1, 2, 3, 4].map((option, index) => (
+                                        <Form.Item
+                                            key={index}
+                                            label={`Option ${index + 1}`}
+                                            name={`option${index + 1}`}
+                                            rules={[{ required: true }]}
                                         >
-                                            {options.map((option, index) => (
-                                                <Select.Option key={index} value={option}>
-                                                    {option}
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="Image"
-                                        name="image"
-                                        rules={[{ required: true, message: 'Please upload an image' }]}
+                                            <Input
+                                                placeholder={`Enter Option ${index + 1}`}
+                                                onChange={(e) => handleOptionChange(index, e.target.value)}
+                                            />
+                                        </Form.Item>
+                                    ))}
+                                </div>
+                                <Form.Item
+                                    label="Correct Answer"
+                                    name="correctAnswer"
+                                    rules={[{ required: true }]}
+                                    shouldUpdate={(prevValues, currentValues) =>
+                                        prevValues.options !== currentValues.options
+                                    }
+                                >
+                                    <Select
+                                        placeholder="Select Correct Answer"
+                                        disabled={options.length < 4}
                                     >
-                                        <Upload
-                                            name="file"
-                                            listType="picture-card"
-                                            action="https://rama.sukoonunlimited.com/admin/service/upload"
-                                            beforeUpload={beforeUpload}
-                                            onChange={handleChange}
-                                            maxCount={1}
-                                        >
-                                            <PlusOutlined />
-                                        </Upload>
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Button type="primary" htmlType="submit" disabled={!ready}>
-                                            Submit
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                            )}
+                                        {options.map((option, index) => (
+                                            <Select.Option key={index} value={option}>
+                                                {option}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item
+                                    label="Image"
+                                    name="image"
+                                    rules={[{ required: true, message: 'Please upload an image' }]}
+                                >
+                                    <Upload
+                                        name="file"
+                                        listType="picture-card"
+                                        action="https://rama.sukoonunlimited.com/admin/service/upload"
+                                        beforeUpload={beforeUpload}
+                                        onChange={handleChange}
+                                        maxCount={1}
+                                    >
+                                        <PlusOutlined />
+                                    </Upload>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit" disabled={!ready}>
+                                        Submit
+                                    </Button>
+                                </Form.Item>
+                            </Form>
                         </div>
                         <div className="border-l-2 border-lightBlack h-max w-1/2 p-2">
                             <h1 className="text-center text-2xl">Questions</h1>
@@ -237,7 +237,10 @@ const GamesTab = () => {
                                 : <Loading />
                             }
                         </div>
-                    </div>
+                    </div>)}
+                    {game === "games" &&
+                     <Gamelinks />
+                    }
                 </div>
             </ConfigProvider>
         </LazyLoad>
