@@ -12,7 +12,7 @@ import Gamelinks from '../../components/Gamelinks';
 
 const GamesTab = () => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
-    const [game, setGame] = useState(localStorage.getItem('game') || 'quiz');
+    const [game, setGame] = useState(localStorage.getItem('game') || 'games');
     const [options, setOptions] = useState([]);
     const [questions, setQuestions] = useState([]);
     const [uploadedImageUrl, setUploadedImageUrl] = useState('');
