@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Raxios, { Paxios } from '../../services/axiosHelper';
 import getColumnSearchProps from '../../Utils/antTableHelper';
 import { useLocation } from 'react-router-dom';
+import { formatDate, formatTime } from '../../Utils/formatHelper';
 
 const Gamelinks = () => {
     const { Option } = Select;
@@ -16,16 +17,6 @@ const Gamelinks = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [selectedExpert, setSelectedExpert] = useState(expertId || null);
     const [loading, setLoading] = useState(false);
-
-    const createColumn = (title, dataIndex, key, render) => {
-        return {
-            title,
-            dataIndex,
-            key,
-            ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
-            ...(render && { render }),
-        };
-    };
 
     const fetchAllLinks = async () => {
         setLoading(true);
@@ -70,10 +61,21 @@ const Gamelinks = () => {
         setSelectedExpert(value);
     };
 
+    const createColumn = (title, dataIndex, key, render) => {
+        return {
+            title,
+            dataIndex,
+            key,
+            ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+            ...(render && { render }),
+        };
+    };
+
+
     const columns = [
         createColumn('Expert Name', 'sarathiID', 'name', sarathiID => sarathiID.name),
-        createColumn('Created At', 'createdAt', 'createdAt'),
-        createColumn('Last Updated', 'updatedAt', 'updatedAt'),
+        createColumn('User Name', 'gameLink', 'userName', gameLink => new URLSearchParams(gameLink.split('?')[1]).get('userName')),
+        createColumn('Game Started At', 'createdAt', 'createdAt', createdAt => formatTime(createdAt)),
         { title: 'Actions', dataIndex: 'gameLink', key: 'actions', render: (record) => <Button onClick={() => { navigator.clipboard.writeText(record); }}>Copy Link</Button> }
     ];
 
@@ -103,7 +105,7 @@ const Gamelinks = () => {
             <Table
                 rowKey={(record) => record._id}
                 columns={columns}
-                dataSource={allData}
+                dataSource={allData.reverse()}
                 loading={loading}
             />
         </div>
