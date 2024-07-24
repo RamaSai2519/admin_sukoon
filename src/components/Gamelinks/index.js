@@ -1,8 +1,8 @@
-import { Button, Select, Table } from 'antd';
-import { useParams, useLocation } from 'react-router-dom';
+import { Button, message, Select, Table } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import Raxios, { Paxios } from '../../services/axiosHelper';
 import getColumnSearchProps from '../../Utils/antTableHelper';
+import { useLocation } from 'react-router-dom';
 
 const Gamelinks = () => {
     const { Option } = Select;
@@ -15,6 +15,7 @@ const Gamelinks = () => {
     const [expertNames, setExpertNames] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState('');
     const [selectedExpert, setSelectedExpert] = useState(expertId || null);
+    const [loading, setLoading] = useState(false);
 
     const createColumn = (title, dataIndex, key, render) => {
         return {
@@ -27,41 +28,34 @@ const Gamelinks = () => {
     };
 
     const fetchAllLinks = async () => {
+        setLoading(true);
         try {
             const response = selectedExpert
                 ? await Paxios.get(`/expert/getGamesByExpert?expertId=${selectedExpert}`)
                 : await Paxios.get("/expert/getAllLinks");
-
-            console.log(response.data);
             setAllData(response.data);
         } catch (error) {
-            console.error('Error fetching links:', error);
+            if (error.response.status === 404) {
+                message.error("Expert doesn't have any links");
+            } else if (error.response.status === 400) {
+                message.error('Invalid expert ID');
+            }
+            console.error('Error fetching game links:', error);
+            message.error('Failed to fetch data');
         }
-    };
-
-    const fetchExpertLinks = async (expertId) => {
-        try {
-            const response = await Paxios.get(`/expert/getGamesByExpert?expertId=${expertId}`);
-            console.log(response.data);
-            setAllData(response.data);
-        } catch (error) {
-            console.error('Error fetching expert links:', error);
-        }
+        setLoading(false);
     };
 
     const fetchExpertOptions = async () => {
+        setLoading(true);
         try {
             const response = await Raxios.get("/expert/getExpertNames");
-            console.log(response.data);
             setExpertNames(response.data);
         } catch (error) {
             console.error('Error fetching experts:', error);
         }
+        setLoading(false);
     };
-
-    useEffect(() => {
-        fetchExpertLinks(expertId);
-    }, [expertId]);
 
     useEffect(() => {
         fetchExpertOptions();
@@ -69,11 +63,11 @@ const Gamelinks = () => {
 
     useEffect(() => {
         fetchAllLinks();
+        // eslint-disable-next-line
     }, [selectedExpert]);
 
     const handleExpertChange = (value) => {
         setSelectedExpert(value);
-        console.log(expertId);
     };
 
     const fcolumns = [
@@ -85,7 +79,7 @@ const Gamelinks = () => {
 
     return (
         <div className="w-full overflow-auto mt-5 gap-5 flex flex-col">
-            <div>
+            <div className='flex gap-2'>
                 <Select
                     className='w-fit'
                     allowClear
@@ -102,12 +96,15 @@ const Gamelinks = () => {
                         </Option>
                     ))}
                 </Select>
+                <Button
+                    onClick={() => { setSelectedExpert(null); }}
+                >Clear Selection</Button>
             </div>
             <Table
                 rowKey={(record) => record._id}
                 columns={fcolumns}
                 dataSource={allData}
-                loading={allData.length === 0}
+                loading={loading}
             />
         </div>
     );
