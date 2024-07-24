@@ -70,7 +70,7 @@ const Gamelinks = () => {
         setSelectedExpert(value);
     };
 
-    const fcolumns = [
+    const columns = [
         createColumn('Expert Name', 'sarathiID', 'name', sarathiID => sarathiID.name),
         createColumn('Created At', 'createdAt', 'createdAt'),
         createColumn('Last Updated', 'updatedAt', 'updatedAt'),
@@ -102,7 +102,7 @@ const Gamelinks = () => {
             </div>
             <Table
                 rowKey={(record) => record._id}
-                columns={fcolumns}
+                columns={columns}
                 dataSource={allData}
                 loading={loading}
             />
