@@ -113,7 +113,7 @@ const LastFiveCallsTable = () => {
   };
 
   return (
-    <div>
+    <div className='w-full h-full'>
       {loading ? <Loading /> :
         <LazyLoad>
           <Table
