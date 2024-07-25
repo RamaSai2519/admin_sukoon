@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Table, ConfigProvider, theme, Flex, Radio } from "antd";
+import { Table, Flex, Radio } from "antd";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
 import { formatDate } from "../../Utils/formatHelper";
@@ -17,7 +17,6 @@ const ApplicationsTab = () => {
     const [formType, setFormType] = React.useState(
         localStorage.getItem('formType') === "event" ? "event" : "sarathi"
     );
-    const darkMode = localStorage.getItem('darkMode') === 'true';
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInputRef = useRef(null);
@@ -93,50 +92,44 @@ const ApplicationsTab = () => {
 
     return (
         <LazyLoad>
-            <ConfigProvider theme={
-                {
-                    algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-                }
-            }>
-                <div className="min-h-screen p-5 w-full overflow-auto">
-                    <div className="flex w-full justify-between items-center gap-2">
-                        <Flex vertical>
-                            <Radio.Group
-                                value={formType}
-                                onChange={(e) => {
-                                    setFormType(e.target.value);
-                                    localStorage.setItem('formType', e.target.value);
-                                }}
-                            >
-                                <Radio.Button value="sarathi">Sarathis</Radio.Button>
-                                <Radio.Button value="event">Event Hosts</Radio.Button>
-                            </Radio.Group>
-                        </Flex>
-                    </div>
-                    {loading ? (
-                        <Loading />
-                    ) : (
-                        <LazyLoad>
-                            <Table
-                                className="my-5"
-                                columns={mergedColumns}
-                                components={components}
-                                dataSource={applications}
-                                rowKey={(record) => record._id}
-                                pagination={{
-                                    current: currentPage,
-                                    pageSize: pageSize,
-                                    total: total,
-                                    onChange: (page, pageSize) => {
-                                        setCurrentPage(page);
-                                        setPageSize(pageSize);
-                                    },
-                                }}
-                            />
-                        </LazyLoad>
-                    )}
+            <div className="min-h-screen p-5 w-full overflow-auto">
+                <div className="flex w-full justify-between items-center gap-2">
+                    <Flex vertical>
+                        <Radio.Group
+                            value={formType}
+                            onChange={(e) => {
+                                setFormType(e.target.value);
+                                localStorage.setItem('formType', e.target.value);
+                            }}
+                        >
+                            <Radio.Button value="sarathi">Sarathis</Radio.Button>
+                            <Radio.Button value="event">Event Hosts</Radio.Button>
+                        </Radio.Group>
+                    </Flex>
                 </div>
-            </ConfigProvider>
+                {loading ? (
+                    <Loading />
+                ) : (
+                    <LazyLoad>
+                        <Table
+                            className="my-5"
+                            columns={mergedColumns}
+                            components={components}
+                            dataSource={applications}
+                            rowKey={(record) => record._id}
+                            pagination={{
+                                current: currentPage,
+                                pageSize: pageSize,
+                                total: total,
+                                onChange: (page, pageSize) => {
+                                    setCurrentPage(page);
+                                    setPageSize(pageSize);
+                                },
+                            }}
+                        />
+                    </LazyLoad>
+                )}
+            </div>
         </LazyLoad>
     );
 };

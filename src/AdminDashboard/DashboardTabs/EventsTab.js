@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Loading from '../../components/Loading/loading';
 import { fetchPagedData } from '../../services/fetchData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import { Table, Button, ConfigProvider, theme, Flex, Radio, Checkbox } from 'antd';
+import { Table, Button, Flex, Radio, Checkbox } from 'antd';
 import { formatDate, formatTime } from '../../Utils/formatHelper';
 import CreateEventPopup from '../../components/Popups/CreateEventPopup';
 import getColumnSearchProps from '../../Utils/antTableHelper';
@@ -11,7 +11,6 @@ import Raxios from '../../services/axiosHelper';
 import EditableCell from '../../components/EditableCell';
 
 const EventsTab = () => {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [events, setEvents] = useState([]);
@@ -137,82 +136,76 @@ const EventsTab = () => {
 
     return (
         <LazyLoad>
-            <ConfigProvider theme={
-                {
-                    algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-                }
-            }>
-                <div className="min-h-screen overflow-auto">
-                    {!visible ?
-                        <div className='flex justify-between my-2'>
-                            <Flex className='gap-2 justify-center items-center '>
-                                <Radio.Group
-                                    value={table}
-                                    onChange={(e) => {
-                                        localStorage.setItem('eventsTable', e.target.value);
-                                        setTable(e.target.value);
-                                    }}
-                                >
-                                    <Radio.Button value="events">Events</Radio.Button>
-                                    <Radio.Button value="users">All Users</Radio.Button>
-                                </Radio.Group>
-                                {table === 'users' &&
-                                    <div>
-                                        <Checkbox
-                                            checked={filterOn}
-                                            onChange={(e) => {
-                                                setFilterOn(e.target.checked);
-                                            }}
-                                        >Filter Out Complete Signups</Checkbox>
-                                    </div>
-                                }
-                            </Flex>
-                            <Button onClick={() => setVisible(true)} type="primary">
-                                Create Event
-                            </Button>
-                        </div>
-                        : null
-                    }
-                    <div className='w-full'>
-                        {visible ?
-                            <CreateEventPopup setVisible={setVisible} />
-                            : table === 'events' ?
-                                <Table
-                                    dataSource={events}
-                                    columns={columns}
-                                    rowKey={(record) => record.slug}
-                                    pagination={
-                                        {
-                                            showSizeChanger: true,
-                                            current: eventsPage,
-                                            pageSize: eventsPageSize,
-                                            total: eventsTotal,
-                                            onChange: handleTableChange,
-                                        }
-                                    }
-                                />
-                                : <Table
-                                    dataSource={eventUsers}
-                                    columns={mergedColumns}
-                                    components={components}
-                                    rowKey={(record) => record._id}
-                                    pagination={
-                                        {
-                                            showSizeChanger: true,
-                                            current: usersPage,
-                                            pageSize: usersPageSize,
-                                            total: totalEventUsers,
-                                            onChange: (current, pageSize) => {
-                                                setUsersPage(current);
-                                                localStorage.setItem('usersPage', current);
-                                                setUsersPageSize(pageSize);
-                                            },
-                                        }
-                                    }
-                                />}
+            <div className="min-h-screen overflow-auto">
+                {!visible ?
+                    <div className='flex justify-between my-2'>
+                        <Flex className='gap-2 justify-center items-center '>
+                            <Radio.Group
+                                value={table}
+                                onChange={(e) => {
+                                    localStorage.setItem('eventsTable', e.target.value);
+                                    setTable(e.target.value);
+                                }}
+                            >
+                                <Radio.Button value="events">Events</Radio.Button>
+                                <Radio.Button value="users">All Users</Radio.Button>
+                            </Radio.Group>
+                            {table === 'users' &&
+                                <div>
+                                    <Checkbox
+                                        checked={filterOn}
+                                        onChange={(e) => {
+                                            setFilterOn(e.target.checked);
+                                        }}
+                                    >Filter Out Complete Signups</Checkbox>
+                                </div>
+                            }
+                        </Flex>
+                        <Button onClick={() => setVisible(true)} type="primary">
+                            Create Event
+                        </Button>
                     </div>
+                    : null
+                }
+                <div className='w-full'>
+                    {visible ?
+                        <CreateEventPopup setVisible={setVisible} />
+                        : table === 'events' ?
+                            <Table
+                                dataSource={events}
+                                columns={columns}
+                                rowKey={(record) => record.slug}
+                                pagination={
+                                    {
+                                        showSizeChanger: true,
+                                        current: eventsPage,
+                                        pageSize: eventsPageSize,
+                                        total: eventsTotal,
+                                        onChange: handleTableChange,
+                                    }
+                                }
+                            />
+                            : <Table
+                                dataSource={eventUsers}
+                                columns={mergedColumns}
+                                components={components}
+                                rowKey={(record) => record._id}
+                                pagination={
+                                    {
+                                        showSizeChanger: true,
+                                        current: usersPage,
+                                        pageSize: usersPageSize,
+                                        total: totalEventUsers,
+                                        onChange: (current, pageSize) => {
+                                            setUsersPage(current);
+                                            localStorage.setItem('usersPage', current);
+                                            setUsersPageSize(pageSize);
+                                        },
+                                    }
+                                }
+                            />}
                 </div>
-            </ConfigProvider>
+            </div>
         </LazyLoad>
     );
 };

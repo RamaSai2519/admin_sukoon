@@ -1,4 +1,3 @@
-// CallGraph.js
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
 import { useCalls } from '../../services/useData';
@@ -108,23 +107,13 @@ const CallGraph = () => {
           },
           options: {
             scales: {
-              x: {
-                display: true,
-                grid: {
-                  display: false,
-                },
-              },
-              y: {
-                display: false,
-                grid: {
-                  display: false,
-                },
-              },
+              x: { display: true, grid: { display: false } },
+              y: { display: false, grid: { display: false } }
             },
             plugins: {
-              legend: {
-                display: false,
-              },
+              legend: { display: false },
+              hover: { mode: 'nearest', intersect: false, },
+              tooltip: { mode: 'nearest', intersect: false, },
             },
           },
         })

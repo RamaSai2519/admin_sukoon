@@ -1,4 +1,4 @@
-import { Select, DatePicker, Form, Button, Table, ConfigProvider, theme } from "antd";
+import { Select, DatePicker, Form, Button, Table } from "antd";
 import { useUsers, useExperts } from "../../services/useData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
@@ -16,7 +16,6 @@ const SchedulerTab = () => {
     const [currentPage, setCurrentPage] = React.useState(
         localStorage.getItem('scurrentPage') ? parseInt(localStorage.getItem('scurrentPage')) : 1
     );
-    const darkMode = localStorage.getItem('darkMode') === 'true';
     const [totalItems, setTotalItems] = React.useState(0);
     const [schedules, setSchedules] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
@@ -100,132 +99,129 @@ const SchedulerTab = () => {
 
     return (
         <LazyLoad>
-            <ConfigProvider theme={{
-                algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-            }}>
-                <div className="flex items-center justify-center gap-4 h-full">
-                    <div className="w-3/4">
-                        {loading ? <Loading /> :
-                            <Table
-                                rowKey={(record) => record._id}
-                                pagination={{
-                                    current: currentPage,
-                                    pageSize: pageSize,
-                                    total: totalItems,
-                                    onChange: handleTableChange
-                                }}
-                                dataSource={schedules}
-                                columns={columns}
-                            />
-                        }
-                    </div>
-                    <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
-                        <h1 className="text-2xl font-bold mb-3">Connect a Call</h1>
-                        <Form
-                            name="connect-call"
-                            className="grid grid-cols-2 gap-2 w-full border-b-2 dark:border-lightBlack pb-4"
-                            onFinish={(values) => onFinish(values, "/call/connect")}
+            <div className="flex items-center justify-center gap-4 h-full">
+                <div className="w-3/4">
+                    {loading ? <Loading /> :
+                        <Table
+                            rowKey={(record) => record._id}
+                            pagination={{
+                                current: currentPage,
+                                pageSize: pageSize,
+                                total: totalItems,
+                                onChange: handleTableChange
+                            }}
+                            dataSource={schedules}
+                            columns={columns}
+                        />
+                    }
+                </div>
+                <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
+                    <h1 className="text-2xl font-bold mb-3">Connect a Call</h1>
+                    <Form
+                        name="connect-call"
+                        className="grid grid-cols-2 gap-2 w-full border-b-2 dark:border-lightBlack pb-4"
+                        onFinish={(values) => onFinish(values, "/call/connect")}
+                    >
+                        <Form.Item
+                            name="user"
+                            rules={[{ required: true, message: "Please select a user" }]}
                         >
-                            <Form.Item
-                                name="user"
-                                rules={[{ required: true, message: "Please select a user" }]}
+                            <Select
+                                className="w-full"
+                                showSearch
+                                placeholder="Select User"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().includes(input.toLowerCase())
+                                }
                             >
-                                <Select
-                                    className="w-full"
-                                    showSearch
-                                    placeholder="Select User"
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) =>
-                                        option.children.toLowerCase().includes(input.toLowerCase())
-                                    }
-                                >
-                                    {generateOptions(users, "name")}
-                                </Select>
-                            </Form.Item>
-                            <Form.Item
-                                name="expert"
-                                rules={[{ required: true, message: "Please select an expert" }]}
+                                {generateOptions(users, "name")}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="expert"
+                            rules={[{ required: true, message: "Please select an expert" }]}
+                        >
+                            <Select
+                                className="w-full"
+                                showSearch
+                                placeholder="Select Expert"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().includes(input.toLowerCase())
+                                }
                             >
-                                <Select
-                                    className="w-full"
-                                    showSearch
-                                    placeholder="Select Expert"
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) =>
-                                        option.children.toLowerCase().includes(input.toLowerCase())
-                                    }
-                                >
-                                    {generateOptions(experts, "name")}
-                                </Select>
-                            </Form.Item>
-                            <Button htmlType="submit" className="w-full">Connect Now</Button>
-                        </Form>
+                                {generateOptions(experts, "name")}
+                            </Select>
+                        </Form.Item>
+                        <Button htmlType="submit" className="w-full">Connect Now</Button>
+                    </Form>
 
-                        <h1 className="text-2xl font-bold mt-4">Schedule a Call</h1>
-                        <Form
-                            name="schedule-call"
-                            className="grid grid-cols-2 gap-2 mt-3"
-                            onFinish={onScheduleFinish}
+                    <h1 className="text-2xl font-bold mt-4">Schedule a Call</h1>
+                    <Form
+                        name="schedule-call"
+                        className="grid grid-cols-2 gap-2 mt-3"
+                        onFinish={onScheduleFinish}
+                    >
+                        <Form.Item
+                            name="user"
+                            rules={[{ required: true, message: "Please select a user" }]}
                         >
-                            <Form.Item
-                                name="user"
-                                rules={[{ required: true, message: "Please select a user" }]}
+                            <Select
+                                className="w-full"
+                                showSearch
+                                placeholder="Select User"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().includes(input.toLowerCase())
+                                }
                             >
-                                <Select
-                                    className="w-full"
-                                    showSearch
-                                    placeholder="Select User"
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) =>
-                                        option.children.toLowerCase().includes(input.toLowerCase())
-                                    }
-                                >
-                                    {generateOptions(users, "name")}
-                                </Select>
-                            </Form.Item>
-                            <Form.Item
-                                name="expert"
-                                rules={[{ required: true, message: "Please select an expert" }]}
+                                {generateOptions(users, "name")}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="expert"
+                            rules={[{ required: true, message: "Please select an expert" }]}
+                        >
+                            <Select
+                                className="w-full"
+                                showSearch
+                                placeholder="Select Expert"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().includes(input.toLowerCase())
+                                }
                             >
-                                <Select
-                                    className="w-full"
-                                    showSearch
-                                    placeholder="Select Expert"
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) =>
-                                        option.children.toLowerCase().includes(input.toLowerCase())
-                                    }
-                                >
-                                    {generateOptions(experts, "name")}
-                                </Select>
-                            </Form.Item>
-                            <Form.Item
-                                name="datetime"
-                                rules={[{ required: true, message: "Please select a date and time" }]}
+                                {generateOptions(experts, "name")}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="datetime"
+                            rules={[{ required: true, message: "Please select a date and time" }]}
+                        >
+                            <DatePicker
+                                className="w-full"
+                                format="YYYY-MM-DD HH:mm:ss"
+                                showTime
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="duration"
+                            rules={[{ required: true, message: "Please select a duration" }]}
+                        >
+                            <Select
+                                className="w-full"
+                                placeholder="Select Duration"
                             >
-                                <DatePicker
-                                    className="w-full"
-                                    format="YYYY-MM-DD HH:mm:ss"
-                                    showTime
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                name="duration"
-                                rules={[{ required: true, message: "Please select a duration" }]}
-                            >
-                                <Select
-                                    className="w-full"
-                                    placeholder="Select Duration"
-                                >
-                                    {["30", "60"].map(duration => (
-                                        <Option key={duration} value={duration}>
-                                            {duration} minutes
-                                        </Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                            <Button htmlType="submit" className="w-full">Schedule Call</Button>
-                            {/* {slots.length !== 0 ?
+                                {["30", "60"].map(duration => (
+                                    <Option key={duration} value={duration}>
+                                        {duration} minutes
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Button htmlType="submit" className="w-full">Schedule Call</Button>
+                        {/* {slots.length !== 0 ?
                                 <div
                                     style={{ gridColumn: "1 / span 2" }}
                                 >
@@ -248,10 +244,9 @@ const SchedulerTab = () => {
                                 </div>
                                 : null
                             } */}
-                        </Form>
-                    </div>
+                    </Form>
                 </div>
-            </ConfigProvider>
+            </div>
         </LazyLoad>
     );
 };

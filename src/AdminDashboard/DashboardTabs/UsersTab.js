@@ -6,7 +6,6 @@ import DashboardTile from '../../components/DashboardTile';
 import Loading from '../../components/Loading/loading';
 import { useUsers, useCalls } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import { ConfigProvider, theme } from 'antd';
 import Raxios from '../../services/axiosHelper';
 import { Link } from 'react-router-dom';
 
@@ -25,17 +24,16 @@ const UsersTab = () => {
     title: localStorage.getItem('popupTitle') || '',
     users: []
   });
-  const darkMode = localStorage.getItem('darkMode') === 'true';
 
   const fetchLeads = async () => {
     try {
-        const response = await Raxios.get('/user/leads');
-        setLeads(response.data.data);
-        setTotalUsers(response.data.totalUsers);
+      const response = await Raxios.get('/user/leads');
+      setLeads(response.data.data);
+      setTotalUsers(response.data.totalUsers);
     } catch (error) {
-        console.error('Error fetching leads:', error);
+      console.error('Error fetching leads:', error);
     }
-};
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -128,61 +126,55 @@ const UsersTab = () => {
 
   return (
     <LazyLoad>
-      <ConfigProvider theme={
-        {
-          algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        }
-      }>
-        <div className="w-full min-h-screen">
-          <div className="flex flex-wrap justify-between">
-            <div className="w-full">
-              <div className="grid grid-cols-3 md:grid-cols-5">
-                <Link to="/admin/home/users%20list">
-                  <DashboardTile title="Registered Users">
-                    <div className='flex justify-between items-center w-full'>
-                      <h1>{totalUsers}</h1>
-                      <h4>Today: {currentDayTotalUsers}</h4>
-                    </div>
-                  </DashboardTile>
-                </Link>
-                <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('Users with One Call')}>
-                  <h1 className='cursor-pointer'>{oneCallUsers.length}</h1>
-                </DashboardTile>
-                <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('Users with Two Calls')}>
-                  <h1 className='cursor-pointer'>{twoCallsUsers.length}</h1>
-                </DashboardTile>
-                <DashboardTile title="Repeat Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls')}>
-                  <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
-                </DashboardTile>
-                <DashboardTile title="Leads" pointer='pointer' onClick={() => openPopup('Partial Signups')}>
+      <div className="w-full min-h-screen">
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full">
+            <div className="grid grid-cols-3 md:grid-cols-5">
+              <Link to="/admin/home/users%20list">
+                <DashboardTile title="Registered Users">
                   <div className='flex justify-between items-center w-full'>
-                    <h1>{leads.length}</h1>
-                    <h4>Today: {currentDayPartialSignups}</h4>
+                    <h1>{totalUsers}</h1>
+                    <h4>Today: {currentDayTotalUsers}</h4>
                   </div>
                 </DashboardTile>
-              </div>
+              </Link>
+              <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('Users with One Call')}>
+                <h1 className='cursor-pointer'>{oneCallUsers.length}</h1>
+              </DashboardTile>
+              <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('Users with Two Calls')}>
+                <h1 className='cursor-pointer'>{twoCallsUsers.length}</h1>
+              </DashboardTile>
+              <DashboardTile title="Repeat Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls')}>
+                <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
+              </DashboardTile>
+              <DashboardTile title="Leads" pointer='pointer' onClick={() => openPopup('Partial Signups')}>
+                <div className='flex justify-between items-center w-full'>
+                  <h1>{leads.length}</h1>
+                  <h4>Today: {currentDayPartialSignups}</h4>
+                </div>
+              </DashboardTile>
             </div>
-          </div >
-          <Histograms usersData={users} />
-          {
-            popupContent.title && (
-              popupContent.title === 'Partial Signups' ? (
-                <LeadsPopup
-                  title={popupContent.title}
-                  leads={leads}
-                  onClose={closePopup}
-                />
-              ) : (
-                <Popup
-                  title={popupContent.title}
-                  users={popupContent.users}
-                  onClose={closePopup}
-                />
-              )
+          </div>
+        </div >
+        <Histograms usersData={users} />
+        {
+          popupContent.title && (
+            popupContent.title === 'Partial Signups' ? (
+              <LeadsPopup
+                title={popupContent.title}
+                leads={leads}
+                onClose={closePopup}
+              />
+            ) : (
+              <Popup
+                title={popupContent.title}
+                users={popupContent.users}
+                onClose={closePopup}
+              />
             )
-          }
-        </div>
-      </ConfigProvider>
+          )
+        }
+      </div>
     </LazyLoad>
   );
 };

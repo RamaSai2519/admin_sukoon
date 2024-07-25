@@ -1,6 +1,6 @@
 import React from "react";
 import { fetchShorts } from "../../services/fetchData";
-import { Table, Tooltip, Button, ConfigProvider, theme } from "antd";
+import { Table, Tooltip, Button } from "antd";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
 import Raxios from "../../services/axiosHelper";
@@ -9,7 +9,6 @@ const ContentTab = () => {
     const [shorts, setShorts] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [selectedVideo, setSelectedVideo] = React.useState(null);
-    const darkMode = localStorage.getItem('darkMode') === 'true';
 
     React.useEffect(() => {
         setLoading(true);
@@ -38,9 +37,7 @@ const ContentTab = () => {
 
     const columns = [
         {
-            title: "Title",
-            dataIndex: "title",
-            key: "title",
+            title: "Title", dataIndex: "title", key: "title",
             render: (text) => (
                 <Tooltip title={text}>
                     <span>
@@ -49,15 +46,9 @@ const ContentTab = () => {
                 </Tooltip>
             ),
         },
+        { title: "Keyword", dataIndex: "keyword", key: "keyword" },
         {
-            title: "Keyword",
-            dataIndex: "keyword",
-            key: "keyword",
-        },
-        {
-            title: "Status",
-            dataIndex: "approved",
-            key: "approved",
+            title: "Status", dataIndex: "approved", key: "approved",
             render: (text) => (
                 <span>
                     {text === undefined ? "Pending" : text ? "Approved" : "Rejected"}
@@ -65,8 +56,7 @@ const ContentTab = () => {
             ),
         },
         {
-            title: "View",
-            key: "details",
+            title: "View", key: "details",
             render: (record) => (
                 <Button type="primary" onClick={() => handleViewClick(record)}>View</Button>
             ),
@@ -74,13 +64,10 @@ const ContentTab = () => {
     ];
 
     return (
-        <ConfigProvider theme={
-            {
-                algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-            }
-        }>
+        <div>
             <h1>Content Tab</h1>
-            {loading ? <Loading /> :
+            {loading ?
+                <Loading /> :
                 <LazyLoad>
                     <div className="grid grid-cols-2 gap-4">
                         <Table className="w-full h-full" dataSource={shorts} columns={columns} rowKey={(record) => record.videoId} />
@@ -94,7 +81,7 @@ const ContentTab = () => {
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
                                         title={selectedVideo.title}
-                                    ></iframe>
+                                    />
                                     <div className="flex w-full p-10 pt-5 justify-between items-center">
                                         <Button
                                             type="primary"
@@ -113,8 +100,9 @@ const ContentTab = () => {
                             )}
                         </div>
                     </div>
-                </LazyLoad>}
-        </ConfigProvider>
+                </LazyLoad>
+            }
+        </div>
     );
 };
 

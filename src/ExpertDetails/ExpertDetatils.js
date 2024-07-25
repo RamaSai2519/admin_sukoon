@@ -3,7 +3,7 @@ import Raxios from '../services/axiosHelper';
 import { useParams, Link } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useCategories } from '../services/useData';
-import { Select, Table, ConfigProvider, theme } from 'antd';
+import { Select, Table } from 'antd';
 import EditableTimeCell from '../components/EditableTimeCell'; // Import the new component
 import Loading from '../components/Loading/loading';
 import './ExpertDetails.css';
@@ -30,17 +30,6 @@ const ExpertDetails = () => {
   const [timings, setTimings] = useState([]);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
-  const darkMode = localStorage.getItem('darkMode') === 'true';
-
-  useEffect(() => {
-    if (darkMode) {
-      localStorage.setItem('darkMode', 'true');
-      document.body.classList.add('dark');
-    } else {
-      localStorage.setItem('darkMode', 'false');
-      document.body.classList.remove('dark');
-    }
-  }, [darkMode]);
 
   useEffect(() => {
     setLoading(true);
@@ -174,11 +163,7 @@ const ExpertDetails = () => {
   }
 
   return (
-    <ConfigProvider theme={
-      {
-        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-      }
-    }>
+    <div>
       {expert && (
         <div className='h3-darkgrey container'>
           <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
@@ -337,7 +322,7 @@ const ExpertDetails = () => {
           </div>
         </div>
       )}
-    </ConfigProvider>
+    </div>
   );
 };
 

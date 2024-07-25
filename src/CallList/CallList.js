@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ScrollBottom from '../AdminDashboard/ScrollBottom';
+import ScrollBottom from '../components/ScrollBottom';
 import './CallList.css';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';

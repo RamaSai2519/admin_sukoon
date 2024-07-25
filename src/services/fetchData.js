@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import Raxios from './axiosHelper';
 
 export const fetchPagedData = async (page, size, setData, setTotal, setLoading, endpoint, optional) => {
@@ -12,7 +13,7 @@ export const fetchPagedData = async (page, size, setData, setTotal, setLoading, 
         setData(response.data.data);
         setTotal(response.data.total);
     } catch (error) {
-        console.error('Error fetching data:', error);
+        message.error('Error fetching data:', error);
         window.alert('Error fetching data');
     }
     setLoading(false);
@@ -28,7 +29,7 @@ export const fetchData = async (setData, setLoading, endpoint, optional) => {
         });
         setData(response.data.data);
     } catch (error) {
-        console.error('Error fetching data:', error);
+        message.error('Error fetching data:', error);
         window.alert('Error fetching data');
     }
     setLoading(false);
@@ -39,7 +40,7 @@ export const fetchCategories = async (setCategories) => {
         const response = await Raxios.get('/data/categories');
         setCategories(response.data);
     } catch (error) {
-        console.error('Error fetching categories:', error);
+        message.error('Error fetching categories:', error);
     }
 };
 
@@ -48,7 +49,7 @@ export const fetchStats = async (setStats) => {
         const response = await Raxios.get('/service/dashboardstats');
         setStats(response.data);
     } catch (error) {
-        console.error('Error fetching stats:', error);
+        message.error('Error fetching stats:', error);
     }
 };
 
@@ -57,7 +58,7 @@ export const fetchInsights = async (setInsights) => {
         const response = await Raxios.get('/service/callinsights');
         setInsights(response.data);
     } catch (error) {
-        console.error('Error fetching insights:', error);
+        message.error('Error fetching insights:', error);
     }
 };
 
@@ -66,7 +67,7 @@ export const fetchUsers = async (setUsers) => {
         const response = await Raxios.get('/data/users');
         setUsers(response.data);
     } catch (error) {
-        console.error('Error fetching users:', error);
+        message.error('Error fetching users:', error);
     }
 };
 
@@ -75,7 +76,7 @@ export const fetchCalls = async (setCalls) => {
         const response = await Raxios.get('/data/calls');
         setCalls(response.data.reverse());
     } catch (error) {
-        console.error('Error fetching calls:', error);
+        message.error('Error fetching calls:', error);
     }
 };
 
@@ -84,7 +85,7 @@ export const fetchExperts = async (setExperts) => {
         const response = await Raxios.get('/data/experts');
         setExperts(response.data);
     } catch (error) {
-        console.error('Error fetching experts:', error);
+        message.error('Error fetching experts:', error);
     }
 };
 
@@ -93,7 +94,7 @@ export const fetchShorts = async (setShorts) => {
         const response = await Raxios.get('/content/shorts');
         setShorts(response.data);
     } catch (error) {
-        console.error('Error fetching shorts:', error);
+        message.error('Error fetching shorts:', error);
     }
 };
 
@@ -104,7 +105,7 @@ export const fetchEngagementData = async (page, size) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching engagement data:', error);
+        message.error('Error fetching engagement data:', error);
         window.alert('Error fetching engagement data');
     }
 };

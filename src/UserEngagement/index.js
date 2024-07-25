@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Table, ConfigProvider, theme, Select } from 'antd';
+import { Button, Table, Select } from 'antd';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import Raxios from '../services/axiosHelper';
 import Loading from '../components/Loading/loading';
@@ -8,7 +8,6 @@ import EditableCell from '../components/EditableCell';
 import { fetchPagedData } from '../services/fetchData';
 
 const UserEngagement = () => {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
     const [engagementData, setEngagementData] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(
         localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1
@@ -216,7 +215,7 @@ const UserEngagement = () => {
     });
 
     return (
-        <ConfigProvider theme={{ algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
+        <div>
             {loading ? <Loading /> :
                 <LazyLoad>
                     <div className='flex py-5 overflow-auto w-full'>
@@ -238,7 +237,7 @@ const UserEngagement = () => {
                     </div>
                 </LazyLoad>
             }
-        </ConfigProvider>
+        </div>
     );
 };
 

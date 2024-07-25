@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Table, ConfigProvider, theme } from 'antd';
 import Loading from '../../components/Loading/loading';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import { fetchPagedData } from '../../services/fetchData';
 import { formatTime } from '../../Utils/formatHelper';
+import { Table } from 'antd';
 
 const NotificationsTab = () => {
     const [loading, setLoading] = useState(false);
-    const darkMode = localStorage.getItem('darkMode') === 'true';
     const [errorLogs, setErrorLogs] = useState([]);
     const [errorLogsPage, setErrorLogsPage] = useState(
         localStorage.getItem('errorLogsPage') ? parseInt(localStorage.getItem('errorLogsPage')) : 1
@@ -37,27 +36,21 @@ const NotificationsTab = () => {
 
     return (
         <LazyLoad>
-            <ConfigProvider theme={
-                {
-                    algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-                }
-            }>
-                <div className="min-h-screen py-2">
-                    <div className='w-full'>
-                        <Table
-                            dataSource={errorLogs}
-                            columns={columns}
-                            pagination={{
-                                current: errorLogsPage,
-                                pageSize: errorLogsPageSize,
-                                total: errorLogsTotal,
-                                onChange: handleTableChange
-                            }}
-                            rowKey={(record) => record._id}
-                        />
-                    </div>
+            <div className="min-h-screen py-2">
+                <div className='w-full'>
+                    <Table
+                        dataSource={errorLogs}
+                        columns={columns}
+                        pagination={{
+                            current: errorLogsPage,
+                            pageSize: errorLogsPageSize,
+                            total: errorLogsTotal,
+                            onChange: handleTableChange
+                        }}
+                        rowKey={(record) => record._id}
+                    />
                 </div>
-            </ConfigProvider>
+            </div>
         </LazyLoad>
     );
 };

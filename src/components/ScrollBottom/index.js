@@ -1,8 +1,8 @@
-// components/Admin/AdminDashboard/ScrollToBottomButton.js
+// components/Admin/AdminDashboard/ScrollBottom.js
 import React, { useState, useEffect } from 'react';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 
-const ScrollToBottomButton = () => {
+const ScrollBottom = () => {
     const [showUpArrow, setShowUpArrow] = useState(false);
 
     const handleScroll = () => {
@@ -45,4 +45,4 @@ const ScrollToBottomButton = () => {
     );
 };
 
-export default ScrollToBottomButton;
+export default ScrollBottom;

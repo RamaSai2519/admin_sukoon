@@ -4,7 +4,7 @@ import { useUsers } from '../services/useData';
 import { formatDate } from '../Utils/formatHelper';
 import { fetchEngagementData } from '../services/fetchData';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import { ConfigProvider, theme, Table, Button, Flex, Radio } from 'antd';
+import { Table, Button, Flex, Radio } from 'antd';
 import UserEngagement from '../UserEngagement';
 import Loading from '../components/Loading/loading';
 import { downloadExcel } from '../Utils/exportHelper';
@@ -12,7 +12,6 @@ import getColumnSearchProps from '../Utils/antTableHelper';
 
 const UsersList = () => {
   const [loading, setLoading] = useState(false);
-  const darkMode = localStorage.getItem('darkMode') === 'true';
   const [table, setTable] = useState(
     localStorage.getItem('table') === 'engagement' ? 'engagement' : 'users'
   );
@@ -117,42 +116,35 @@ const UsersList = () => {
   };
 
   return (
-    <ConfigProvider theme={
-      {
-        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-      }
-    }>
-
-      <div className="min-h-screen p-5 w-full overflow-auto">
-        <div className="flex w-full justify-between items-center gap-2">
-          <Flex vertical>
-            <Radio.Group
-              value={table}
-              onChange={(e) => {
-                localStorage.setItem('table', e.target.value);
-                setTable(e.target.value);
-              }}
-            >
-              <Radio.Button value="users">Users</Radio.Button>
-              <Radio.Button value="engagement">Engagement</Radio.Button>
-            </Radio.Group>
-          </Flex>
-          <Button loading={fetchLoading} onClick={handleExport}>
-            Export
-          </Button>
-        </div>
-        {table === 'engagement' ? <UserEngagement /> :
-          loading ? <Loading /> :
-            <LazyLoad>
-              <Table
-                className='my-5'
-                columns={columns}
-                dataSource={users}
-                rowKey={(record) => record._id}
-              />
-            </LazyLoad>}
+    <div className="min-h-screen p-5 w-full overflow-auto">
+      <div className="flex w-full justify-between items-center gap-2">
+        <Flex vertical>
+          <Radio.Group
+            value={table}
+            onChange={(e) => {
+              localStorage.setItem('table', e.target.value);
+              setTable(e.target.value);
+            }}
+          >
+            <Radio.Button value="users">Users</Radio.Button>
+            <Radio.Button value="engagement">Engagement</Radio.Button>
+          </Radio.Group>
+        </Flex>
+        <Button loading={fetchLoading} onClick={handleExport}>
+          Export
+        </Button>
       </div>
-    </ConfigProvider >
+      {table === 'engagement' ? <UserEngagement /> :
+        loading ? <Loading /> :
+          <LazyLoad>
+            <Table
+              className='my-5'
+              columns={columns}
+              dataSource={users}
+              rowKey={(record) => record._id}
+            />
+          </LazyLoad>}
+    </div>
   );
 };
 

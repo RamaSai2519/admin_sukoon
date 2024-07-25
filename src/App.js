@@ -13,6 +13,7 @@ import ExpertReport from './ExpertDetails/ExpertReport';
 import ApprovePage from './ApprovePage/ApprovePage';
 import UserEngagement from './UserEngagement';
 import './App.css';
+import { ConfigProvider, theme } from 'antd';
 
 const App = () => {
   const appVersion = '14.0.5';
@@ -57,32 +58,38 @@ const App = () => {
   }, []);
 
   return (
-    <div className='dark:text-white min-w-screen min-h-screen overflow-clip dark:bg-darkBlack'>
-      <Routes>
-        {isLoggedIn ? (
-          <>
-            <Route path="/" element={<Navigate to="/admin/home" />} />
-            <Route path="/admin/home/*" element={<AdminDashboard onLogout={handleLogout} />} />
-            <Route path="/admin/calls" element={<CallList />} />
-            <Route path="/admin/users" element={<UsersList />} />
-            <Route path="/admin/calls/:callId" element={<CallDetails />} />
-            <Route path="/admin/users/:userId" element={<UserDetails />} />
-            <Route path="/admin/events/:slug" element={<EventDetails />} />
-            <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
-            <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
-            <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
-            <Route path="/admin/userEngage" element={<UserEngagement />} />
-            <Route path="/*" element={<Navigate to="/admin/home" />} />
-          </>
-        ) : (
-          <>
-            <Route path="/*" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
-            <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
-          </>
-        )}
-      </Routes>
-      <SpeedInsights />
-    </div>
+    <ConfigProvider theme={
+      {
+        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+      }
+    }>
+      <div className='dark:text-white min-w-screen min-h-screen overflow-clip dark:bg-darkBlack'>
+        <Routes>
+          {isLoggedIn ? (
+            <>
+              <Route path="/" element={<Navigate to="/admin/home" />} />
+              <Route path="/admin/home/*" element={<AdminDashboard onLogout={handleLogout} />} />
+              <Route path="/admin/calls" element={<CallList />} />
+              <Route path="/admin/users" element={<UsersList />} />
+              <Route path="/admin/calls/:callId" element={<CallDetails />} />
+              <Route path="/admin/users/:userId" element={<UserDetails />} />
+              <Route path="/admin/events/:slug" element={<EventDetails />} />
+              <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
+              <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
+              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
+              <Route path="/admin/userEngage" element={<UserEngagement />} />
+              <Route path="/*" element={<Navigate to="/admin/home" />} />
+            </>
+          ) : (
+            <>
+              <Route path="/*" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
+              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
+            </>
+          )}
+        </Routes>
+        <SpeedInsights />
+      </div>
+    </ConfigProvider>
   );
 };
 

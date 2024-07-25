@@ -20,6 +20,8 @@ import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken } from 'firebase/messaging';
 import Raxios from '../services/axiosHelper';
 import firebaseConfig from './firebaseConfig';
+import ClubSukoon from './DashboardTabs/ClubSukoon';
+import { ConfigProvider, theme } from 'antd';
 
 const AdminDashboard = ({ onLogout }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -58,14 +60,6 @@ const AdminDashboard = ({ onLogout }) => {
     setShowMenu(!showMenu);
   };
 
-  const handleMouseEnter = () => {
-    setShowMenu(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowMenu(false);
-  };
-
   useEffect(() => {
     try {
       if ('serviceWorker' in navigator) {
@@ -99,71 +93,78 @@ const AdminDashboard = ({ onLogout }) => {
   };
 
   return (
-    <LazyLoad>
-      <div className="flex flex-row">
-        {!showMenu ? (
-          <div
-            className="fixed z-50 left-0 top-0 rounded-r-full rounded-br-full h-screen cursor-pointer bg-black bg-opacity-50 flex items-center"
-            onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <KeyboardArrowRightIcon />
-          </div>
-        ) : (
-          <div className={`fixed z-50 left-0 top-0 flex flex-row w-screen bg-opacity-70 bg-black ${showMenu ? 'slide-in' : 'slide-out'}`} onClick={onMenuToggle}>
-            <div className={`flex flex-col h-screen p-4 w-1/8 bg-gray-100 dark:bg-darkBlack ${showMenu ? 'slide-in' : 'slide-out'}`}>
-              <div className='flex flex-col h-full justify-between'>
-                <div className='grid gap-2'>
-                  {['dashboard', 'users', 'applications', 'events', 'scheduler', 'calls list', 'experts list', 'users list', 'games', 'content', 'whatsapp'].map((tab) => (
-                    <Link
-                      key={tab}
-                      to={`/admin/home/${tab}`}
-                      className={`cshadow p-2 px-4 rounded-3xl font-bold text-xl hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack 
+    <ConfigProvider theme={
+      {
+        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+      }
+    }>
+      <LazyLoad>
+        <div className="flex flex-row">
+          {!showMenu ? (
+            <div
+              className="fixed z-50 left-0 top-0 rounded-r-full rounded-br-full h-screen cursor-pointer bg-black bg-opacity-50 flex items-center"
+              onMouseEnter={() => setShowMenu(true)} onMouseLeave={() => setShowMenu(false)}>
+              <KeyboardArrowRightIcon />
+            </div>
+          ) : (
+            <div className={`fixed z-50 left-0 top-0 flex flex-row w-screen bg-opacity-70 bg-black ${showMenu ? 'slide-in' : 'slide-out'}`} onClick={onMenuToggle}>
+              <div className={`flex flex-col h-screen p-4 w-1/8 bg-gray-100 dark:bg-darkBlack ${showMenu ? 'slide-in' : 'slide-out'}`}>
+                <div className='flex flex-col h-full justify-between'>
+                  <div className='grid gap-2'>
+                    {['dashboard', 'users', 'applications', 'events', 'scheduler', 'calls list', 'experts list', 'users list', 'games', 'content', 'whatsapp', 'club'].map((tab) => (
+                      <Link
+                        key={tab}
+                        to={`/admin/home/${tab}`}
+                        className={`cshadow p-2 px-4 rounded-3xl font-bold text-lg hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack 
                           ${location.pathname.endsWith(tab) ? 'scale-110' : ''
-                        }`}
-                    >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </Link>
-                  ))}
-                </div>
-                <div className='grid grid-rows-2'>
-                  <Link to="/admin/home/notifications" className={`cshadow p-2 px-4 my-1 rounded-3xl font-bold text-xl hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack 
+                          }`}
+                      >
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      </Link>
+                    ))}
+                  </div>
+                  <div className='grid grid-rows-2'>
+                    <Link to="/admin/home/notifications" className={`cshadow p-2 px-4 my-1 rounded-3xl font-bold text-lg hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack 
                       ${location.pathname.endsWith('notifications') ? 'scale-110' : ''
-                    }`}>
-                    Notifications
-                  </Link>
-                  <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-                  <div
-                    className="cshadow p-2 px-4 my-2 rounded-3xl font-bold text-xl hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack"
-                    onClick={onLogout}
-                  >
-                    Logout
+                      }`}>
+                      Notifications
+                    </Link>
+                    <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+                    <div
+                      className="cshadow p-2 px-4 my-2 rounded-3xl font-bold text-lg hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack"
+                      onClick={onLogout}
+                    >
+                      Logout
+                    </div>
                   </div>
                 </div>
               </div>
+              <div className='grid w-screen h-screen items-center cursor-pointer' onClick={onMenuToggle}>
+                <KeyboardArrowLeftIcon />
+              </div>
             </div>
-            <div className='grid w-screen h-screen items-center cursor-pointer' onClick={onMenuToggle}>
-              <KeyboardArrowLeftIcon />
-            </div>
+          )}
+          <div className="flex-1 px-10 min-h-screen overflow-auto">
+            <Routes>
+              <Route path="/" element={<DashboardTab />} />
+              <Route path="dashboard" element={<DashboardTab />} />
+              <Route path="calls list" element={<CallsTable />} />
+              <Route path="experts list" element={<SaarthisTab />} />
+              <Route path="users" element={<UsersTab />} />
+              <Route path="applications" element={<ApplicationsTab />} />
+              <Route path="notifications" element={<NotificationsTab />} />
+              <Route path="scheduler" element={<SchedulerTab />} />
+              <Route path="events" element={<EventsTab />} />
+              <Route path="users list" element={<UserList />} />
+              <Route path="games" element={<GamesTab />} />
+              <Route path="content" element={<ContentTab />} />
+              <Route path="whatsapp" element={<WhatsappTab />} />
+              <Route path="club" element={<ClubSukoon />} />
+            </Routes>
           </div>
-        )}
-        <div className="flex-1 px-10 min-h-screen overflow-auto">
-          <Routes>
-            <Route path="/" element={<DashboardTab />} />
-            <Route path="dashboard" element={<DashboardTab />} />
-            <Route path="calls list" element={<CallsTable />} />
-            <Route path="experts list" element={<SaarthisTab />} />
-            <Route path="users" element={<UsersTab />} />
-            <Route path="applications" element={<ApplicationsTab />} />
-            <Route path="notifications" element={<NotificationsTab />} />
-            <Route path="scheduler" element={<SchedulerTab />} />
-            <Route path="events" element={<EventsTab />} />
-            <Route path="users list" element={<UserList />} />
-            <Route path="games" element={<GamesTab />} />
-            <Route path="content" element={<ContentTab />} />
-            <Route path="whatsapp" element={<WhatsappTab />} />
-          </Routes>
         </div>
-      </div>
-    </LazyLoad>
+      </LazyLoad>
+    </ConfigProvider>
   );
 };
 

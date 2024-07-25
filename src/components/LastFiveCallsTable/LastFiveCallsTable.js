@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, ConfigProvider, theme } from 'antd';
+import { Table } from 'antd';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
@@ -15,7 +15,6 @@ const LastFiveCallsTable = () => {
   const { calls, fetchCalls } = useCalls();
   const [loading, setLoading] = useState(false);
   const [lastFiveCalls, setLastFiveCalls] = useState([]);
-  const darkMode = localStorage.getItem('darkMode') === 'true';
 
   const fetchData = async () => {
     setLoading(true);
@@ -114,9 +113,7 @@ const LastFiveCallsTable = () => {
   };
 
   return (
-    <ConfigProvider theme={{
-      algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-    }}>
+    <div>
       {loading ? <Loading /> :
         <LazyLoad>
           <Table
@@ -129,7 +126,7 @@ const LastFiveCallsTable = () => {
           />
         </LazyLoad>
       }
-    </ConfigProvider>
+    </div>
   );
 };
 

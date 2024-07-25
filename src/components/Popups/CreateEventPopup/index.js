@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, message, Select, DatePicker, Upload, InputNumber } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import Raxios, { Paxios } from '../../../services/axiosHelper';
+import Raxios, { BASE_URL, Paxios } from '../../../services/axiosHelper';
 import dayjs from 'dayjs';
 
 const CreateEventPopup = ({ setVisible, data, editMode }) => {
@@ -158,7 +158,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
                 <div>
                     <img src={uploadedImageUrl || data?.imageUrl} alt='Event' />
                     <Upload
-                        action="https://rama.sukoonunlimited.com/admin/service/upload"
+                        action={`${BASE_URL}/service/upload`}
                         beforeUpload={beforeUpload}
                         onChange={handleChange}
                         maxCount={1}

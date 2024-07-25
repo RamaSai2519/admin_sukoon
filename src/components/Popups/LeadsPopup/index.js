@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button, ConfigProvider, theme, Popconfirm } from 'antd';
+import { Table, Button, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import EditableCell from '../../EditableCell';
 import Raxios from '../../../services/axiosHelper';
@@ -12,7 +12,6 @@ const LeadsPopup = ({ onClose, leads }) => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [data, setData] = useState(leads);
     const searchInputRef = useRef(null);
-    const darkMode = localStorage.getItem('darkMode') === 'true';
 
     const createColumn = (title, dataIndex, key, render, editable) => {
         return {
@@ -127,16 +126,12 @@ const LeadsPopup = ({ onClose, leads }) => {
                         <button className="pback-button" onClick={onClose}>X</button>
                     </div>
                     {data.length > 0 ? (
-                        <ConfigProvider theme={{
-                            algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-                        }}>
-                            <Table
-                                components={components}
-                                dataSource={data}
-                                columns={mergedColumns}
-                                rowKey={(user) => user._id}
-                            />
-                        </ConfigProvider>
+                        <Table
+                            components={components}
+                            dataSource={data}
+                            columns={mergedColumns}
+                            rowKey={(user) => user._id}
+                        />
                     ) : (
                         <p>No users to display</p>
                     )}

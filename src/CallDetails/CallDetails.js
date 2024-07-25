@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import ScrollBottom from '../AdminDashboard/ScrollBottom';
+import ScrollBottom from '../components/ScrollBottom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Button } from 'antd';
 import Raxios from '../services/axiosHelper';

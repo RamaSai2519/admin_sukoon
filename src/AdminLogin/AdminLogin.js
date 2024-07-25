@@ -1,24 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Input, ConfigProvider, theme } from 'antd';
+import React, { useState } from 'react';
+import { Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Raxios from '../services/axiosHelper';
 import './AdminLogin.css';
 
 const AdminLogin = ({ setIsLoggedIn }) => {
-    const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const navigate = useNavigate();
     const [newAdmin, setNewAdmin] = useState(false);
-
-    useEffect(() => {
-        if (darkMode) {
-            localStorage.setItem('darkMode', 'true');
-            document.body.classList.add('dark');
-        } else {
-            localStorage.setItem('darkMode', 'false');
-            document.body.classList.remove('dark');
-        }
-    }, [darkMode]);
-
 
     const onFinish = async (values) => {
         const { id, password } = values;
@@ -78,84 +66,79 @@ const AdminLogin = ({ setIsLoggedIn }) => {
     };
 
     return (
-        <ConfigProvider theme={
-            {
-                algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-            }
-        }>
-            <div className='h-screen flex justify-center items-center'>
-                <div className="dark:bg-lightBlack flex flex-col justify-center p-10 rounded-3xl">
-                    <h1 className='text-3xl m-5 mt-0'>Login to access dashboard</h1>
-                    {!newAdmin &&
-                        <Form
-                            className='h-full'
-                            name="admin_login"
-                            onFinish={onFinish}
-                            initialValues={{ remember: true }}
+
+        <div className='h-screen flex justify-center items-center'>
+            <div className="dark:bg-lightBlack flex flex-col justify-center p-10 rounded-3xl">
+                <h1 className='text-3xl m-5 mt-0'>Login to access dashboard</h1>
+                {!newAdmin &&
+                    <Form
+                        className='h-full'
+                        name="admin_login"
+                        onFinish={onFinish}
+                        initialValues={{ remember: true }}
+                    >
+                        <Form.Item
+                            name="id"
+                            rules={[{ required: true, message: 'Please input your ID!' }]}
                         >
-                            <Form.Item
-                                name="id"
-                                rules={[{ required: true, message: 'Please input your ID!' }]}
-                            >
-                                <Input placeholder="Phone Number" />
-                            </Form.Item>
-                            <Form.Item
-                                name="password"
-                                rules={[{ required: true, message: 'Please input your password!' }]}
-                            >
-                                <Input.Password placeholder="Password" />
-                            </Form.Item>
-                            <Form.Item>
-                                <button>Sign In</button>
-                            </Form.Item>
-                        </Form>
-                    }
-                    {newAdmin &&
-                        <Form
-                            className='h-full'
-                            name="admin_login"
-                            onFinish={onCreateAdmin}
-                            initialValues={{ remember: true }}
+                            <Input placeholder="Phone Number" />
+                        </Form.Item>
+                        <Form.Item
+                            name="password"
+                            rules={[{ required: true, message: 'Please input your password!' }]}
                         >
-                            <Form.Item
-                                name="name"
-                                label="Name"
-                                rules={[{ required: true, message: 'Please input your name!' }]}
-                            >
-                                <Input placeholder="Name" />
-                            </Form.Item>
-                            <Form.Item
-                                name="phone"
-                                label="Phone Number"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input your phone number!',
-                                    },
-                                ]}
-                            >
-                                <Input placeholder="Phone Number" />
-                            </Form.Item>
-                            <Form.Item
-                                name="password"
-                                rules={[{ required: true, message: 'Please input your password!' }]}
-                            >
-                                <Input.Password placeholder="Password" />
-                            </Form.Item>
-                            <Form.Item
-                                name="confirmPassword"
-                                rules={[{ required: true, message: 'Please input your password!' }]}
-                            >
-                                <Input.Password placeholder="Confirm Password" />
-                            </Form.Item>
-                            <Form.Item>
-                                <button>Sign In</button>
-                            </Form.Item>
-                        </Form>
-                    }
-                </div>
+                            <Input.Password placeholder="Password" />
+                        </Form.Item>
+                        <Form.Item>
+                            <button>Sign In</button>
+                        </Form.Item>
+                    </Form>
+                }
+                {newAdmin &&
+                    <Form
+                        className='h-full'
+                        name="admin_login"
+                        onFinish={onCreateAdmin}
+                        initialValues={{ remember: true }}
+                    >
+                        <Form.Item
+                            name="name"
+                            label="Name"
+                            rules={[{ required: true, message: 'Please input your name!' }]}
+                        >
+                            <Input placeholder="Name" />
+                        </Form.Item>
+                        <Form.Item
+                            name="phone"
+                            label="Phone Number"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your phone number!',
+                                },
+                            ]}
+                        >
+                            <Input placeholder="Phone Number" />
+                        </Form.Item>
+                        <Form.Item
+                            name="password"
+                            rules={[{ required: true, message: 'Please input your password!' }]}
+                        >
+                            <Input.Password placeholder="Password" />
+                        </Form.Item>
+                        <Form.Item
+                            name="confirmPassword"
+                            rules={[{ required: true, message: 'Please input your password!' }]}
+                        >
+                            <Input.Password placeholder="Confirm Password" />
+                        </Form.Item>
+                        <Form.Item>
+                            <button>Sign In</button>
+                        </Form.Item>
+                    </Form>
+                }
             </div>
-        </ConfigProvider>
+        </div>
     );
 };
 
