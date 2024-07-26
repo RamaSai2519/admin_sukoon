@@ -32,13 +32,12 @@ export const fetchPagedData = async (page, size, setData, setTotal, setLoading, 
         setTotal(response.data.total);
     } catch (error) {
         message.error('Error fetching data:', error);
-        window.alert('Error fetching data');
     }
     setLoading(false);
 };
 
 export const fetchData = async (setData, setLoading, endpoint, optional) => {
-    setLoading(true);
+    setLoading && setLoading(true);
     try {
         const response = await Raxios.get(endpoint, {
             params: {
@@ -48,9 +47,8 @@ export const fetchData = async (setData, setLoading, endpoint, optional) => {
         setData(response.data.data);
     } catch (error) {
         message.error('Error fetching data:', error);
-        window.alert('Error fetching data');
     }
-    setLoading(false);
+    setLoading && setLoading(false);
 };
 
 export const fetchCategories = async (setCategories) => {
