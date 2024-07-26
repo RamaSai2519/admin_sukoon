@@ -32,6 +32,7 @@
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
     "source-map-explorer": "^2.5.3",
+    "uuid": "^10.0.0",
     "web-vitals": "^2.1.4",
     "write-excel-file": "^2.0.2"
   },

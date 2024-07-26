@@ -26,9 +26,10 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                 setNewAdmin(true);
                 return;
             }
-            const { access_token, refresh_token } = response.data;
+            const { access_token, refresh_token, user } = response.data;
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token);
+            localStorage.setItem('adminName', user.name);
             setIsLoggedIn(true);
             localStorage.setItem('isLoggedIn', 'true');
             navigate('/admin/dashboard');

@@ -23,6 +23,15 @@
     height: fit-content;
     margin-bottom: 6px;
     animation: motion 1s linear infinite;
+    position: relative;
+}
+
+.truckLogo {
+    position: absolute;
+    width: 60px;
+    height: auto;
+    top: 10%;
+    left: 10%;
 }
 
 /* truck suspension animation*/

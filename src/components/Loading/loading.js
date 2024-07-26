@@ -1,5 +1,6 @@
 import React from 'react';
 import './loading.css';
+import { ReactComponent as Logo } from './logo.svg'; 
 
 const Loading = () => {
     return (
@@ -70,6 +71,7 @@ const Loading = () => {
                             x="1"
                         ></rect>
                     </svg>
+                    <Logo className="truckLogo" />
                 </div>
                 <div className="truckTires">
                     <svg

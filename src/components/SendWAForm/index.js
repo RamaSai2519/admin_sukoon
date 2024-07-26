@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Select, Input, Upload, message } from 'antd';
+import { Button, Card, Select, Input, Upload, message, Progress } from 'antd';
 import { beforeUpload, generateOptions } from '../../Utils/antSelectHelper';
 import { fetchData } from '../../services/fetchData';
 import Loading from '../Loading/loading';
 import Raxios from '../../services/axiosHelper';
 import { UploadOutlined } from '@ant-design/icons';
+import { v4 as uuidv4 } from 'uuid';
 
 const SendWAForm = () => {
     const [templates, setTemplates] = useState([]);
@@ -19,7 +20,12 @@ const SendWAForm = () => {
     const [slug, setSlug] = useState('');
     const [uploadedImageUrl, setUploadedImageUrl] = useState('');
     const [usersCount, setUsersCount] = useState(0);
-
+    const [fetchStatus, setFetchStatus] = useState(false);
+    // const [proNum, setProNum] = useState({
+    //     count: 0,
+    //     status: 'pending',
+    // });
+    const [messageId, setMessageId] = useState('');
 
     const fetchAllData = async () => {
         setLoading(true);
@@ -28,6 +34,32 @@ const SendWAForm = () => {
         await fetchData(setSlugs, setLoading, '/event/slugs');
         setLoading(false);
     };
+
+    // const fetchMessageStatus = async () => {
+    //     try {
+    //         const response = await Raxios.get('wa/proNum', {
+    //             params: {
+    //                 messageId,
+    //                 proNum: proNum.count,
+    //             },
+    //         });
+
+    //     } catch (error) {
+    //         message.error('Error fetching message status:', error);
+
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     if (fetchStatus && (proNum.status === "pending")) {
+    //         console.log(proNum, "proNum");
+    //         fetchMessageStatus()
+    //     } else if (fetchStatus && (proNum.status === "done")) {
+    //         message.success('Sent All Messages');
+    //         setFetchStatus(false);
+    //         setProNum(0);
+    //     }
+    // }, [proNum.count, fetchStatus]);
 
     useEffect(() => {
         fetchAllData();
@@ -67,7 +99,7 @@ const SendWAForm = () => {
             const placeholders = template.message.match(/<\w+>/g) || [];
             placeholders.forEach((placeholder) => {
                 if (placeholder === '<user_name>') {
-                    initialInputs['<user_name>'] = "Mayank Dwivedi";
+                    initialInputs['<user_name>'] = localStorage.getItem('adminName') || 'Mr. X';
                 } else {
                     initialInputs[placeholder] = '';
                 }
@@ -110,18 +142,26 @@ const SendWAForm = () => {
             message.error('Please upload an image');
             return;
         }
+        const newMessageId = uuidv4();
+        setMessageId(newMessageId);
         const finalInputs = {
             ...inputs,
             '<registraion_link_slug>': slug,
             '<image_link>': uploadedImageUrl
         };
         const response = await Raxios.post('/wa/send', {
+            messageId: newMessageId,
             templateId: template._id,
             usersType: selectedType,
             cities: selectedCities,
             inputs: finalInputs,
         });
-        console.log('response:', response);
+        if (response.status !== 200) {
+            message.error('Failed to send messages');
+        } else {
+            message.success(`Messages are being sent, please note down the message ID: ${newMessageId} for future reference`);
+            // setFetchStatus(true);
+        }
     };
 
     if (loading) return <Loading />;
@@ -235,6 +275,7 @@ const SendWAForm = () => {
                 >
                     Send Message
                 </Button>
+                {/* {fetchStatus && <Progress percent={(proNum / usersCount) * 100} />} */}
             </div>
             {template && <div className='flex flex-col'>
                 <Card className='w-full h-fit rounded-b-none'>
