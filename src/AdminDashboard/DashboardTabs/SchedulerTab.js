@@ -2,31 +2,39 @@ import { Select, DatePicker, Form, Button, Table } from "antd";
 import { useUsers, useExperts } from "../../services/useData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
-import { fetchPagedData } from "../../services/fetchData";
+import { fetchFilteredData, fetchPagedData } from "../../services/fetchData";
 import Raxios from "../../services/axiosHelper";
 import { generateOptions } from "../../Utils/antSelectHelper";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { handleFilterDropdownVisibleChange } from "../../Utils/antTableHelper";
 
 const SchedulerTab = () => {
-    // const [slots, setSlots] = React.useState([]);
-    // const [sValues, setSValues] = React.useState({ user: "", expert: "", datetime: "" });
-    // const [fslot, setFSlot] = React.useState([]); // Final slot state
-    // const [selectedSlot, setSelectedSlot] = React.useState(null); // Selected slot state
+    // const [slots, setSlots] = useState([]);
+    // const [sValues, setSValues] = useState({ user: "", expert: "", datetime: "" });
+    // const [fslot, setFSlot] = useState([]); // Final slot state
+    // const [selectedSlot, setSelectedSlot] = useState(null); // Selected slot state
 
-    const [currentPage, setCurrentPage] = React.useState(
+    const [currentPage, setCurrentPage] = useState(
         localStorage.getItem('scurrentPage') ? parseInt(localStorage.getItem('scurrentPage')) : 1
     );
-    const [totalItems, setTotalItems] = React.useState(0);
-    const [schedules, setSchedules] = React.useState([]);
-    const [loading, setLoading] = React.useState(false);
-    const [pageSize, setPageSize] = React.useState(10);
+    const [totalItems, setTotalItems] = useState(0);
+    const [schedules, setSchedules] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [pageSize, setPageSize] = useState(10);
+    const [filters, setFilters] = useState({});
+    const [selectedFilters, setSelectedFilters] = useState({});
+    const [filterOn, setFilterOn] = useState(false);
     const { experts, fetchExperts } = useExperts();
     const { users, fetchUsers } = useUsers();
     const { Option } = Select;
 
     useEffect(() => {
-        fetchPagedData(currentPage, pageSize, setSchedules, setTotalItems, setLoading, '/data/schedules');
-    }, [currentPage, pageSize]);
+        if (filterOn) {
+            fetchFilteredData(currentPage, pageSize, setCurrentPage, setPageSize, setSchedules, setTotalItems, setLoading, selectedFilters, 'schedules');
+        } else {
+            fetchPagedData(currentPage, pageSize, setSchedules, setTotalItems, setLoading, '/data/schedules');
+        }
+    }, [currentPage, pageSize, filterOn, selectedFilters]);
 
     useEffect(() => {
         setLoading(true);
@@ -36,16 +44,26 @@ const SchedulerTab = () => {
         // eslint-disable-next-line
     }, []);
 
-    const handleTableChange = (current, pageSize) => {
-        setCurrentPage(current);
-        localStorage.setItem('scurrentPage', current);
-        setPageSize(pageSize);
+    const handleTableChange = (pagination, filters, sorter) => {
+        localStorage.setItem('scurrentPage', pagination.current);
+        setCurrentPage(pagination.current);
+        setPageSize(pagination.pageSize);
+        if ((filters.user || filters.expert) && (filters !== selectedFilters)) {
+            setSelectedFilters(filters);
+            setFilterOn(true);
+        }
     };
 
     const columns = [
-        { title: "User", dataIndex: "user", key: "user" },
-        { title: "Expert", dataIndex: "expert", key: "expert" },
-        { title: "Date & Time", dataIndex: "datetime", key: "datetime", },
+        {
+            title: "User", dataIndex: "user", key: "user", filters: filters.user, filterSearch: true, filteredValue: selectedFilters.user,
+            filterDropdownVisibleChange: handleFilterDropdownVisibleChange('users', 'name', 'user', setFilters, filters),
+        },
+        {
+            title: "Expert", dataIndex: "expert", key: "expert", filters: filters.expert || [], filterSearch: true, filteredValue: selectedFilters.expert,
+            filterDropdownVisibleChange: handleFilterDropdownVisibleChange('experts', 'name', 'expert', setFilters, filters),
+        },
+        { title: "Date & Time", dataIndex: "datetime", key: "datetime" },
         { title: "Status", dataIndex: "status", key: "status" },
         { title: "Scheduled By", dataIndex: "type", key: "type" },
         {
@@ -97,22 +115,31 @@ const SchedulerTab = () => {
         }
     };
 
+    const handleResetFilters = () => {
+        setFilterOn(false);
+        setFilters({});
+        setSelectedFilters({});
+    };
+
     return (
         <LazyLoad>
             <div className="flex items-center justify-center gap-4 h-full">
                 <div className="w-3/4">
                     {loading ? <Loading /> :
-                        <Table
-                            rowKey={(record) => record._id}
-                            pagination={{
-                                current: currentPage,
-                                pageSize: pageSize,
-                                total: totalItems,
-                                onChange: handleTableChange
-                            }}
-                            dataSource={schedules}
-                            columns={columns}
-                        />
+                        <div className="flex flex-col gap-2">
+                            {filterOn && <div className="flex justify-end"><Button onClick={handleResetFilters} className="w-fit">Reset Filters</Button></div>}
+                            <Table
+                                rowKey={(record) => record._id}
+                                pagination={{
+                                    current: currentPage,
+                                    pageSize: pageSize,
+                                    total: totalItems,
+                                }}
+                                onChange={handleTableChange}
+                                dataSource={schedules}
+                                columns={columns}
+                            />
+                        </div>
                     }
                 </div>
                 <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">

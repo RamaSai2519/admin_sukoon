@@ -1,6 +1,7 @@
 import React from 'react';
-import { Input, Button, Space } from 'antd';
+import { Input, Button, Space, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import Raxios from '../services/axiosHelper';
 
 const getColumnSearchProps = (dataIndex, displayName, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -81,5 +82,23 @@ const handleReset = (clearFilters, confirm, setSearchText, setSearchedColumn) =>
     setSearchedColumn('');
     confirm();
 };
+
+const getFilterOptions = async (collection, field) => {
+    try {
+        const response = await Raxios.post('/data/generateFilters', { collection, field });
+        return response.data;
+    } catch (error) {
+        console.error('Error in getFilterOptions', error);
+        message.error('Error in generating filter options');
+    }
+};
+
+export const handleFilterDropdownVisibleChange = async (collection, field, key, setFilters, filters) => {
+    if (filters[key]) return;
+    const filterOptions = await getFilterOptions(collection, field);
+    setFilters(prevFilters => ({ ...prevFilters, [key]: filterOptions }));
+};
+
+
 
 export default getColumnSearchProps;

@@ -1,6 +1,24 @@
 import { message } from 'antd';
 import Raxios from './axiosHelper';
 
+export const fetchFilteredData = async (page, size, setPage, setSize, setData, setTotal, setLoading, filter, collection, optional) => {
+    setLoading(true);
+    try {
+        const response = await Raxios.post('/data/filter', {
+            page, size, filter, collection,
+            ...(optional && { ...optional })
+        });
+        setSize(response.data.size);
+        setPage(response.data.page);
+        setData(response.data.data);
+        setTotal(response.data.total);
+    } catch (error) {
+        message.error('Error fetching data:', error);
+        window.alert('Error fetching data');
+    }
+    setLoading(false);
+};
+
 export const fetchPagedData = async (page, size, setData, setTotal, setLoading, endpoint, optional) => {
     setLoading(true);
     try {
