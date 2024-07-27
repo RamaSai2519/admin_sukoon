@@ -64,7 +64,7 @@ const SchedulerTab = () => {
             filterDropdownVisibleChange: handleFilterDropdownVisibleChange('experts', 'name', 'expert', setFilters, filters),
         },
         { title: "Date & Time", dataIndex: "datetime", key: "datetime" },
-        { title: "Status", dataIndex: "status", key: "status" },
+        { title: "Call Status", dataIndex: "callStatus", key: "callStatus" },
         { title: "Scheduled By", dataIndex: "type", key: "type" },
         {
             title: "Action", key: "action",
