@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import getColumnSearchProps from '../../Utils/antTableHelper';
 import { fetchPagedData } from '../../services/fetchData';
 import Loading from '../../components/Loading/loading';
+import { formatTime } from '../../Utils/formatHelper';
 import { Link } from 'react-router-dom';
 
 const ClubSukoon = () => {
@@ -34,6 +35,7 @@ const ClubSukoon = () => {
     const columns = [
         createColumn('Name', 'name', 'name'),
         createColumn('Phone Number', 'phoneNumber', 'phoneNumber'),
+        createColumn('Interest Shown At', 'createdAt', 'createdAt', (record) => formatTime(record)),
         {
             title: 'Actions', dataIndex: "userId", key: 'actions', render: (record) =>
                 <Link to={`/admin/users/${record}`}>
