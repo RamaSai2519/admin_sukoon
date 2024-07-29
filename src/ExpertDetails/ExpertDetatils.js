@@ -309,14 +309,6 @@ const ExpertDetails = () => {
                   <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
                 </>
               )}
-              <Link
-                to={{
-                  pathname: `/admin/experts/${expertId}/report`
-                }}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <button className='update-button'>View Detailed Scores</button>
-              </Link>
               <button className='update-button' style={{ backgroundColor: 'red' }} onClick={handleDelete}>Delete Expert</button>
             </div>
           </div>

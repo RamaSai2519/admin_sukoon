@@ -6,6 +6,7 @@ import Raxios from '../services/axiosHelper';
 import Loading from '../components/Loading/loading';
 import EditableCell from '../components/EditableCell';
 import { fetchPagedData } from '../services/fetchData';
+import { formatDate } from '../Utils/formatHelper';
 
 const UserEngagement = () => {
     const [engagementData, setEngagementData] = React.useState([]);
@@ -72,7 +73,8 @@ const UserEngagement = () => {
         {
             title: "DOJ", dataIndex: "createdDate", key: "createdDate", width: 110,
             filters: generateFilters(data, 'createdDate'),
-            onFilter: (value, record) => record.createdDate.includes(value)
+            onFilter: (value, record) => record.createdDate.includes(value),
+            render: (record) => formatDate(record)
         },
         {
             title: "SL Days", dataIndex: "slDays", key: "slDays", width: 90,
@@ -111,7 +113,8 @@ const UserEngagement = () => {
         {
             title: "DOB", dataIndex: "dateOfBirth", key: "dateOfBirth", width: 110,
             filters: generateFilters(data, 'dateOfBirth'),
-            onFilter: (value, record) => record.dateOfBirth.includes(value)
+            onFilter: (value, record) => record.dateOfBirth.includes(value),
+            render: (record) => formatDate(record)
         },
         {
             title: "Gender", dataIndex: "gender", key: "gender", width: 90, editable: true,
@@ -121,7 +124,8 @@ const UserEngagement = () => {
         {
             title: "Last Call Date", dataIndex: "lastCallDate", key: "lastCallDate", width: 135,
             filters: generateFilters(data, 'lastCallDate'),
-            onFilter: (value, record) => record.lastCallDate.includes(value)
+            onFilter: (value, record) => record.lastCallDate.includes(value),
+            render: (record) => formatDate(record)
         },
         {
             title: "Call Age", dataIndex: "callAge", key: "callAge", width: 90,
