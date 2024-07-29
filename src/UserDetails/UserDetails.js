@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import Raxios from '../services/axiosHelper';
-import { Table } from 'antd';
+import { message, Table } from 'antd';
 import './UserDetails.css';
 
 const UserDetails = () => {
@@ -89,10 +89,10 @@ const UserDetails = () => {
         isPaidUser: !isPremium,
       });
       console.log(response);
+      message.success('User marked as Premium.');
       fetchData();
     } catch (error) {
-      console.error('Error updating user details:', error);
-      window.alert('Error updating user details:', error);
+      message.error('Error updating user details:', error);
     }
   };
 
