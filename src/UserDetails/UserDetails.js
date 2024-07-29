@@ -89,7 +89,7 @@ const UserDetails = () => {
         isPaidUser: !isPremium,
       });
       console.log(response);
-      message.success('User marked as Premium.');
+      message.success(`User marked as ${isPremium ? "Premium" : "not Premium"}.`);
       fetchData();
     } catch (error) {
       message.error('Error updating user details:', error);
