@@ -37,8 +37,9 @@ const UsersTab = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    await Promise.all([fetchUsers(), fetchCalls(), fetchLeads()]);
+    await Promise.all([fetchUsers(), fetchLeads()]);
     setLoading(false);
+    fetchCalls();
   };
 
   useEffect(() => {
