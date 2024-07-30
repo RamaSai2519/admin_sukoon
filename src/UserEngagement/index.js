@@ -38,6 +38,7 @@ const UserEngagement = () => {
         callAge: item.callAge || 0,
         callsDone: item.callsDone || 0,
         remarks: item.remarks || 'N/A',
+        source: item.source || 'N/A',
     }));
 
     const userStatusOptions = [
@@ -138,14 +139,19 @@ const UserEngagement = () => {
             onFilter: (value, record) => record.callsDone === value
         },
         {
-            title: "Saarthi", dataIndex: "expert", key: "saarthi", width: 150, editable: true,
-            filters: generateFilters(data, 'expert'),
-            onFilter: (value, record) => record.expert.includes(value)
-        },
-        {
             title: "Remarks", dataIndex: "remarks", key: "remarks", width: 250, editable: true,
             filters: generateFilters(data, 'remarks'),
             onFilter: (value, record) => record.remarks.includes(value)
+        },
+        {
+            title: "Source", dataIndex: "source", key: "source", width: 150, editable: true,
+            filters: generateFilters(data, 'source'),
+            onFilter: (value, record) => record.source.includes(value)
+        },
+        {
+            title: "Sarathi", dataIndex: "expert", key: "saarthi", width: 150, editable: true,
+            filters: generateFilters(data, 'expert'),
+            onFilter: (value, record) => record.expert.includes(value)
         },
         {
             title: 'Details',

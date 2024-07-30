@@ -90,7 +90,8 @@ const UsersList = () => {
       'Call Age': user.callAge || 0,
       'Calls': user.callsDone || 0,
       'Saarthi': user.expert || 'N/A',
-      'Remarks': user.remarks || 'N/A'
+      'Remarks': user.remarks || 'N/A',
+      'Source': user.source || 'N/A',
     }));
 
     await downloadExcel(dataToWrite, 'UserEngagement.xlsx');
