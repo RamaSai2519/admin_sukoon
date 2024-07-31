@@ -58,6 +58,16 @@ const ExpertDetails = () => {
     // eslint-disable-next-line
   }, [expertId]);
 
+  useEffect(() => {
+    if (window.location.hash === '#timings') {
+      const timingsElement = document.getElementById('timings');
+      if (timingsElement) {
+        timingsElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [timings]);
+
+
   const fetchTimings = (expertId) => {
     Raxios.get(`/data/timings?expert=${expertId}`)
       .then(response => {
@@ -288,7 +298,7 @@ const ExpertDetails = () => {
                 <h2>{description}</h2>
               )}
             </div>
-            <div className='grid-tile'>
+            <div className='grid-tile' id='timings'>
               <h3>Timings</h3>
               <Table
                 components={components}
