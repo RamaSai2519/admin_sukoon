@@ -59,13 +59,15 @@ const ExpertDetails = () => {
   }, [expertId]);
 
   useEffect(() => {
-    if (window.location.hash === '#timings') {
-      const timingsElement = document.getElementById('timings');
-      if (timingsElement) {
-        timingsElement.scrollIntoView({ behavior: 'smooth' });
+    if (!loading) {
+      if (window.location.hash === '#timings') {
+        const timingsElement = document.getElementById('timings');
+        if (timingsElement) {
+          timingsElement.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     }
-  }, [timings]);
+  }, [loading, timings]);
 
 
   const fetchTimings = (expertId) => {
@@ -298,7 +300,7 @@ const ExpertDetails = () => {
                 <h2>{description}</h2>
               )}
             </div>
-            <div className='grid-tile' id='timings'>
+            <div id='timings' className='grid-tile'>
               <h3>Timings</h3>
               <Table
                 components={components}
