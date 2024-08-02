@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Raxios from '../services/axiosHelper';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useCategories } from '../services/useData';
 import { Select, Table } from 'antd';

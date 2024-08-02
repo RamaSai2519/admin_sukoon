@@ -127,8 +127,8 @@ const UsersList = () => {
               setTable(e.target.value);
             }}
           >
-            <Radio.Button value="users">Users</Radio.Button>
-            <Radio.Button value="engagement">Engagement</Radio.Button>
+            <Radio.Button value="users">Registered Users</Radio.Button>
+            <Radio.Button value="engagement">Registered Users + Leads</Radio.Button>
           </Radio.Group>
         </Flex>
         <Button loading={fetchLoading} onClick={handleExport}>

@@ -23,7 +23,7 @@ const UserEngagement = () => {
 
     const data = engagementData.map((item) => ({
         _id: item._id,
-        poc: item.poc || 'N/A',
+        type: item.type || 'N/A',
         name: item.name || 'N/A',
         createdDate: item.createdDate || 'N/A',
         slDays: item.slDays || 0,
@@ -61,9 +61,9 @@ const UserEngagement = () => {
 
     const columns = [
         {
-            title: "POC", dataIndex: "poc", key: "poc", width: 100, editable: true,
-            filters: generateFilters(data, 'poc'),
-            onFilter: (value, record) => record.poc.includes(value)
+            title: "Type", dataIndex: "type", key: "type", width: 100,
+            filters: generateFilters(data, 'type'),
+            onFilter: (value, record) => record.type.includes(value)
         },
         {
             title: "Name", dataIndex: "name", key: "name", width: 150, fixed: 'left',
