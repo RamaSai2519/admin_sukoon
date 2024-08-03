@@ -50,10 +50,10 @@ const App = () => {
   useEffect(() => {
     const storedVersion = localStorage.getItem('appVersion');
     if (storedVersion !== appVersion) {
-      window.location.reload();
       localStorage.clear();
       sessionStorage.clear();
       localStorage.setItem('appVersion', appVersion);
+      window.location.reload();
     }
   }, []);
 
