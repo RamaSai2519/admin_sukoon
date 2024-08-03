@@ -54,7 +54,7 @@ const ExpertsList = () => {
             sorter: (a, b) => a.name.localeCompare(b.name),
         },
         {
-            title: 'Time Spent', dataIndex: 'timeSpent', key: 'timeSpent',
+            title: 'Logged In Hours', dataIndex: 'timeSpent', key: 'timeSpent',
             sorter: (a, b) => a.timeSpent - b.timeSpent,
         },
         {

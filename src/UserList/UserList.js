@@ -78,19 +78,20 @@ const UsersList = () => {
     const dataToWrite = data.data.map((user) => ({
       'POC': user.poc || 'N/A',
       'Name': user.name || 'N/A',
-      'DOJ': user.createdDate || 'N/A',
+      'DOJ': formatDate(user.createdDate) || 'N/A',
       'SL Days': user.slDays || 0,
       'Call Status': user.callStatus || 'N/A',
       'User Status': user.userStatus || 'N/A',
       'Contact': user.phoneNumber || 'N/A',
       'City': user.city || 'N/A',
-      'DOB': user.birthDate || 'N/A',
+      'DOB': formatDate(user.birthDate) || 'N/A',
       'Gender': user.gender || 'N/A',
-      'Last Call Date': user.lastCallDate || 'N/A',
+      'Last Call Date': formatDate(user.lastCallDate) || 'N/A',
       'Call Age': user.callAge || 0,
       'Calls': user.callsDone || 0,
       'Saarthi': user.expert || 'N/A',
-      'Remarks': user.remarks || 'N/A'
+      'Remarks': user.remarks || 'N/A',
+      'Source': user.source || 'N/A',
     }));
 
     await downloadExcel(dataToWrite, 'UserEngagement.xlsx');
@@ -126,8 +127,8 @@ const UsersList = () => {
               setTable(e.target.value);
             }}
           >
-            <Radio.Button value="users">Users</Radio.Button>
-            <Radio.Button value="engagement">Engagement</Radio.Button>
+            <Radio.Button value="users">Registered Users</Radio.Button>
+            <Radio.Button value="engagement">Registered Users + Leads</Radio.Button>
           </Radio.Group>
         </Flex>
         <Button loading={fetchLoading} onClick={handleExport}>

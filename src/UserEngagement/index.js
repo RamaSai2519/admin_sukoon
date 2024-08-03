@@ -6,6 +6,7 @@ import Raxios from '../services/axiosHelper';
 import Loading from '../components/Loading/loading';
 import EditableCell from '../components/EditableCell';
 import { fetchPagedData } from '../services/fetchData';
+import { formatDate } from '../Utils/formatHelper';
 
 const UserEngagement = () => {
     const [engagementData, setEngagementData] = React.useState([]);
@@ -22,7 +23,7 @@ const UserEngagement = () => {
 
     const data = engagementData.map((item) => ({
         _id: item._id,
-        poc: item.poc || 'N/A',
+        type: item.type || 'N/A',
         name: item.name || 'N/A',
         createdDate: item.createdDate || 'N/A',
         slDays: item.slDays || 0,
@@ -37,6 +38,7 @@ const UserEngagement = () => {
         callAge: item.callAge || 0,
         callsDone: item.callsDone || 0,
         remarks: item.remarks || 'N/A',
+        source: item.source || 'N/A',
     }));
 
     const userStatusOptions = [
@@ -59,9 +61,9 @@ const UserEngagement = () => {
 
     const columns = [
         {
-            title: "POC", dataIndex: "poc", key: "poc", width: 100, editable: true,
-            filters: generateFilters(data, 'poc'),
-            onFilter: (value, record) => record.poc.includes(value)
+            title: "Type", dataIndex: "type", key: "type", width: 100,
+            filters: generateFilters(data, 'type'),
+            onFilter: (value, record) => record.type.includes(value)
         },
         {
             title: "Name", dataIndex: "name", key: "name", width: 150, fixed: 'left',
@@ -72,7 +74,8 @@ const UserEngagement = () => {
         {
             title: "DOJ", dataIndex: "createdDate", key: "createdDate", width: 110,
             filters: generateFilters(data, 'createdDate'),
-            onFilter: (value, record) => record.createdDate.includes(value)
+            onFilter: (value, record) => record.createdDate.includes(value),
+            render: (record) => formatDate(record)
         },
         {
             title: "SL Days", dataIndex: "slDays", key: "slDays", width: 90,
@@ -111,7 +114,8 @@ const UserEngagement = () => {
         {
             title: "DOB", dataIndex: "dateOfBirth", key: "dateOfBirth", width: 110,
             filters: generateFilters(data, 'dateOfBirth'),
-            onFilter: (value, record) => record.dateOfBirth.includes(value)
+            onFilter: (value, record) => record.dateOfBirth.includes(value),
+            render: (record) => formatDate(record)
         },
         {
             title: "Gender", dataIndex: "gender", key: "gender", width: 90, editable: true,
@@ -121,7 +125,8 @@ const UserEngagement = () => {
         {
             title: "Last Call Date", dataIndex: "lastCallDate", key: "lastCallDate", width: 135,
             filters: generateFilters(data, 'lastCallDate'),
-            onFilter: (value, record) => record.lastCallDate.includes(value)
+            onFilter: (value, record) => record.lastCallDate.includes(value),
+            render: (record) => formatDate(record)
         },
         {
             title: "Call Age", dataIndex: "callAge", key: "callAge", width: 90,
@@ -134,14 +139,19 @@ const UserEngagement = () => {
             onFilter: (value, record) => record.callsDone === value
         },
         {
-            title: "Saarthi", dataIndex: "expert", key: "saarthi", width: 150, editable: true,
-            filters: generateFilters(data, 'expert'),
-            onFilter: (value, record) => record.expert.includes(value)
-        },
-        {
             title: "Remarks", dataIndex: "remarks", key: "remarks", width: 250, editable: true,
             filters: generateFilters(data, 'remarks'),
             onFilter: (value, record) => record.remarks.includes(value)
+        },
+        {
+            title: "Source", dataIndex: "source", key: "source", width: 150, editable: true,
+            filters: generateFilters(data, 'source'),
+            onFilter: (value, record) => record.source.includes(value)
+        },
+        {
+            title: "Sarathi", dataIndex: "expert", key: "saarthi", width: 150, editable: true,
+            filters: generateFilters(data, 'expert'),
+            onFilter: (value, record) => record.expert.includes(value)
         },
         {
             title: 'Details',

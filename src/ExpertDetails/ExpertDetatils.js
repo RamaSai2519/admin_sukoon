@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Raxios from '../services/axiosHelper';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useCategories } from '../services/useData';
 import { Select, Table } from 'antd';
@@ -57,6 +57,18 @@ const ExpertDetails = () => {
       });
     // eslint-disable-next-line
   }, [expertId]);
+
+  useEffect(() => {
+    if (!loading) {
+      if (window.location.hash === '#timings') {
+        const timingsElement = document.getElementById('timings');
+        if (timingsElement) {
+          timingsElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+  }, [loading, timings]);
+
 
   const fetchTimings = (expertId) => {
     Raxios.get(`/data/timings?expert=${expertId}`)
@@ -288,7 +300,7 @@ const ExpertDetails = () => {
                 <h2>{description}</h2>
               )}
             </div>
-            <div className='grid-tile'>
+            <div id='timings' className='grid-tile'>
               <h3>Timings</h3>
               <Table
                 components={components}
@@ -309,14 +321,6 @@ const ExpertDetails = () => {
                   <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
                 </>
               )}
-              <Link
-                to={{
-                  pathname: `/admin/experts/${expertId}/report`
-                }}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <button className='update-button'>View Detailed Scores</button>
-              </Link>
               <button className='update-button' style={{ backgroundColor: 'red' }} onClick={handleDelete}>Delete Expert</button>
             </div>
           </div>
