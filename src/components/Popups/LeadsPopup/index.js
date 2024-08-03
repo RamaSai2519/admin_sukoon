@@ -28,6 +28,7 @@ const LeadsPopup = ({ onClose, leads }) => {
         createColumn('Name', 'name', 'name'),
         createColumn('Contact', 'phoneNumber', 'phoneNumber'),
         createColumn('City', 'city', 'city'),
+        createColumn('Date of Birth', 'birthDate', 'birthDate', (birthDate) => formatDate(birthDate)),
         createColumn('Date of Lead', 'createdDate', 'createdDate', (createdDate) => formatDate(createdDate)),
         createColumn('Lead Source', 'leadSource', 'leadSource'),
         createColumn('Source', 'source', 'source'),
