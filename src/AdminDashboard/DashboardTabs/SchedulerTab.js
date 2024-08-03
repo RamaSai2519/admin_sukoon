@@ -68,7 +68,7 @@ const SchedulerTab = () => {
         { title: "Scheduled By", dataIndex: "type", key: "type" },
         {
             title: "Action", key: "action",
-            render: (_, record) => <Button onClick={() => handleDelete(record)}>Delete</Button>
+            render: (_, record) => <Button disabled onClick={() => handleDelete(record)}>Delete</Button>
         },
     ];
 
