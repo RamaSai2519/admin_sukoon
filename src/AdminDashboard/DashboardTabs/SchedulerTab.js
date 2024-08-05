@@ -1,4 +1,4 @@
-import { Select, DatePicker, Form, Button, Table } from "antd";
+import { Select, DatePicker, Form, Button, Table, message } from "antd";
 import { useUsers, useExperts } from "../../services/useData";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import getColumnSearchProps from "../../Utils/antTableHelper";
@@ -57,14 +57,15 @@ const SchedulerTab = () => {
         createColumn("Status", "scheduledJobStatus", "status"),
         {
             title: "Action", key: "action",
-            render: (_, record) => <Button disabled onClick={() => handleDelete(record)}>Delete</Button>
+            render: (_, record) => <Button onClick={() => handleDelete(record)}>Delete</Button>
         },
     ];
 
     const handleDelete = async (record) => {
         try {
-            await Raxios.delete(`/service/schedule/${record._id}`);
-            window.alert("Schedule deleted successfully");
+            console.log(record);
+            await Raxios.delete(`/data/schedule/${record.id}`);
+            message.success("Schedule deleted successfully");
             window.location.reload();
         } catch (error) {
             console.error("Error deleting schedule:", error);
