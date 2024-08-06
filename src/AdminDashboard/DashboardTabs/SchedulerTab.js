@@ -1,4 +1,4 @@
-import { Select, DatePicker, Form, Button, Table } from "antd";
+import { Select, DatePicker, Form, Button, Table, message } from "antd";
 import { useUsers, useExperts } from "../../services/useData";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import getColumnSearchProps from "../../Utils/antTableHelper";
@@ -64,7 +64,7 @@ const SchedulerTab = () => {
     const handleDelete = async (record) => {
         try {
             await Raxios.delete(`/data/schedule/${record.id}`);
-            window.alert("Schedule deleted successfully");
+            message.success("Schedule deleted successfully");
             window.location.reload();
         } catch (error) {
             console.error("Error deleting schedule:", error);
