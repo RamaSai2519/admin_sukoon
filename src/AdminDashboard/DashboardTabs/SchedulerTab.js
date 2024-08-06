@@ -57,13 +57,13 @@ const SchedulerTab = () => {
         createColumn("Status", "scheduledJobStatus", "status"),
         {
             title: "Action", key: "action",
-            render: (_, record) => <Button disabled onClick={() => handleDelete(record)}>Delete</Button>
+            render: (_, record) => <Button onClick={() => handleDelete(record)}>Delete</Button>
         },
     ];
 
     const handleDelete = async (record) => {
         try {
-            await Raxios.delete(`/service/schedule/${record._id}`);
+            await Raxios.delete(`/data/schedule/${record.id}`);
             window.alert("Schedule deleted successfully");
             window.location.reload();
         } catch (error) {
