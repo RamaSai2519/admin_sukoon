@@ -1,12 +1,13 @@
-import { Select, DatePicker, Form, Button, Table } from "antd";
+import { Select, DatePicker, Form, Button, Table, message } from "antd";
 import { useUsers, useExperts } from "../../services/useData";
+import { generateOptions } from "../../Utils/antSelectHelper";
+import getColumnSearchProps from "../../Utils/antTableHelper";
+import React, { useEffect, useRef, useState } from "react";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
-import { fetchFilteredData, fetchPagedData } from "../../services/fetchData";
+import { formatTime } from "../../Utils/formatHelper";
+import { fetchData } from "../../services/fetchData";
 import Raxios from "../../services/axiosHelper";
-import { generateOptions } from "../../Utils/antSelectHelper";
-import React, { useEffect, useState } from "react";
-import { handleFilterDropdownVisibleChange } from "../../Utils/antTableHelper";
 
 const SchedulerTab = () => {
     // const [slots, setSlots] = useState([]);
@@ -14,27 +15,18 @@ const SchedulerTab = () => {
     // const [fslot, setFSlot] = useState([]); // Final slot state
     // const [selectedSlot, setSelectedSlot] = useState(null); // Selected slot state
 
-    const [currentPage, setCurrentPage] = useState(
-        localStorage.getItem('scurrentPage') ? parseInt(localStorage.getItem('scurrentPage')) : 1
-    );
-    const [totalItems, setTotalItems] = useState(0);
     const [schedules, setSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [pageSize, setPageSize] = useState(10);
-    const [filters, setFilters] = useState({});
-    const [selectedFilters, setSelectedFilters] = useState({});
-    const [filterOn, setFilterOn] = useState(false);
     const { experts, fetchExperts } = useExperts();
     const { users, fetchUsers } = useUsers();
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInputRef = useRef(null);
     const { Option } = Select;
 
     useEffect(() => {
-        if (filterOn) {
-            fetchFilteredData(currentPage, pageSize, setCurrentPage, setPageSize, setSchedules, setTotalItems, setLoading, selectedFilters, 'schedules');
-        } else {
-            fetchPagedData(currentPage, pageSize, setSchedules, setTotalItems, setLoading, '/data/schedules');
-        }
-    }, [currentPage, pageSize, filterOn, selectedFilters]);
+        fetchData(setSchedules, setLoading, '/data/newSchedules');
+    }, []);
 
     useEffect(() => {
         setLoading(true);
@@ -44,38 +36,35 @@ const SchedulerTab = () => {
         // eslint-disable-next-line
     }, []);
 
-    const handleTableChange = (pagination, filters, sorter) => {
-        localStorage.setItem('scurrentPage', pagination.current);
-        setCurrentPage(pagination.current);
-        setPageSize(pagination.pageSize);
-        if ((filters.user || filters.expert) && (filters !== selectedFilters)) {
-            setSelectedFilters(filters);
-            setFilterOn(true);
-        }
+    const createColumn = (title, dataIndex, key, sorter, render, defaultSortOrder) => {
+        return {
+            title,
+            dataIndex,
+            key,
+            ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+            ...(sorter && { sorter: sorter }),
+            ...(render && { render: render }),
+            ...(defaultSortOrder && { defaultSortOrder: defaultSortOrder }),
+        };
     };
 
     const columns = [
-        {
-            title: "User", dataIndex: "user", key: "user", filters: filters.user, filterSearch: true, filteredValue: selectedFilters.user,
-            filterDropdownVisibleChange: handleFilterDropdownVisibleChange('users', 'name', 'user', setFilters, filters),
-        },
-        {
-            title: "Expert", dataIndex: "expert", key: "expert", filters: filters.expert || [], filterSearch: true, filteredValue: selectedFilters.expert,
-            filterDropdownVisibleChange: handleFilterDropdownVisibleChange('experts', 'name', 'expert', setFilters, filters),
-        },
-        { title: "Date & Time", dataIndex: "datetime", key: "datetime" },
-        { title: "Call Status", dataIndex: "callStatus", key: "callStatus" },
-        { title: "Scheduled By", dataIndex: "type", key: "type" },
+        createColumn("User", "user", "user"),
+        createColumn("Expert", "expert", "expert"),
+        createColumn("Date & Time", "datetime", "datetime",
+            (a, b) => new Date(a.datetime) - new Date(b.datetime),
+            (record) => formatTime(record), "descend"),
+        createColumn("Status", "scheduledJobStatus", "status"),
         {
             title: "Action", key: "action",
-            render: (_, record) => <Button disabled onClick={() => handleDelete(record)}>Delete</Button>
+            render: (_, record) => <Button onClick={() => handleDelete(record)}>Delete</Button>
         },
     ];
 
     const handleDelete = async (record) => {
         try {
-            await Raxios.delete(`/service/schedule/${record._id}`);
-            window.alert("Schedule deleted successfully");
+            await Raxios.delete(`/data/schedule/${record.id}`);
+            message.success("Schedule deleted successfully");
             window.location.reload();
         } catch (error) {
             console.error("Error deleting schedule:", error);
@@ -115,27 +104,14 @@ const SchedulerTab = () => {
         }
     };
 
-    const handleResetFilters = () => {
-        setFilterOn(false);
-        setFilters({});
-        setSelectedFilters({});
-    };
-
     return (
         <LazyLoad>
             <div className="flex items-center justify-center gap-4 h-full">
                 <div className="w-3/4">
                     {loading ? <Loading /> :
                         <div className="flex flex-col gap-2">
-                            {filterOn && <div className="flex justify-end"><Button onClick={handleResetFilters} className="w-fit">Reset Filters</Button></div>}
                             <Table
                                 rowKey={(record) => record._id}
-                                pagination={{
-                                    current: currentPage,
-                                    pageSize: pageSize,
-                                    total: totalItems,
-                                }}
-                                onChange={handleTableChange}
                                 dataSource={schedules}
                                 columns={columns}
                             />
