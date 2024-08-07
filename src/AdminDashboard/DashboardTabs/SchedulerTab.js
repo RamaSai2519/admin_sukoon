@@ -54,7 +54,7 @@ const SchedulerTab = () => {
         createColumn("Date & Time", "datetime", "datetime",
             (a, b) => new Date(a.datetime) - new Date(b.datetime),
             (record) => formatTime(record), "descend"),
-        createColumn("Status", "scheduledJobStatus", "status"),
+        createColumn("Status", "status", "status"),
         {
             title: "Action", key: "action",
             render: (_, record) => <Button onClick={() => handleDelete(record)}>Delete</Button>
@@ -103,6 +103,8 @@ const SchedulerTab = () => {
             console.error("Error:", error);
         }
     };
+
+    if (loading) return <Loading />;
 
     return (
         <LazyLoad>
