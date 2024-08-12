@@ -15,6 +15,7 @@ const SchedulerTab = () => {
     // const [fslot, setFSlot] = useState([]); // Final slot state
     // const [selectedSlot, setSelectedSlot] = useState(null); // Selected slot state
 
+    const [responseLoading, setResponseLoading] = useState(false);
     const [schedules, setSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
     const { experts, fetchExperts } = useExperts();
@@ -57,11 +58,12 @@ const SchedulerTab = () => {
         createColumn("Status", "status", "status"),
         {
             title: "Action", key: "action",
-            render: (_, record) => <Button onClick={() => handleDelete(record)}>Delete</Button>
+            render: (_, record) => <Button loading={responseLoading} onClick={() => handleDelete(record)}>Delete</Button>
         },
     ];
 
     const handleDelete = async (record) => {
+        setResponseLoading(true);
         try {
             await Raxios.delete(`/data/schedule/${record.id}`);
             message.success("Schedule deleted successfully");
@@ -69,9 +71,11 @@ const SchedulerTab = () => {
         } catch (error) {
             console.error("Error deleting schedule:", error);
         }
+        setResponseLoading(false);
     };
 
     const onFinish = async (values, endpoint) => {
+        setResponseLoading(true);
         try {
             const response = await Raxios.post(endpoint, values);
             if (response.data.success !== true) {
@@ -83,9 +87,11 @@ const SchedulerTab = () => {
             console.error("Error:", error);
             window.alert(error);
         }
+        setResponseLoading(false);
     };
 
     const onScheduleFinish = async values => {
+        setResponseLoading(true);
         try {
             const selectedDateTime = values.datetime;
             const now = new Date();
@@ -102,6 +108,7 @@ const SchedulerTab = () => {
         } catch (error) {
             console.error("Error:", error);
         }
+        setResponseLoading(false);
     };
 
     if (loading) return <Loading />;
@@ -159,7 +166,7 @@ const SchedulerTab = () => {
                                 {generateOptions(experts, "name")}
                             </Select>
                         </Form.Item>
-                        <Button htmlType="submit" className="w-full">Connect Now</Button>
+                        <Button loading={responseLoading} htmlType="submit" className="w-full">Connect Now</Button>
                     </Form>
 
                     <h1 className="text-2xl font-bold mt-4">Schedule a Call</h1>
@@ -225,7 +232,7 @@ const SchedulerTab = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Button htmlType="submit" className="w-full">Schedule Call</Button>
+                        <Button loading={responseLoading} htmlType="submit" className="w-full">Schedule Call</Button>
                         {/* {slots.length !== 0 ?
                                 <div
                                     style={{ gridColumn: "1 / span 2" }}
