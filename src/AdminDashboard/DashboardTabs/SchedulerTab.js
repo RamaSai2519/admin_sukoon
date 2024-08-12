@@ -58,7 +58,13 @@ const SchedulerTab = () => {
         createColumn("Status", "status", "status"),
         {
             title: "Action", key: "action",
-            render: (_, record) => <Button loading={responseLoading} onClick={() => handleDelete(record)}>Delete</Button>
+            render: (_, record) => {
+                if (record.isDeleted) {
+                    return <Button disabled>Deleted</Button>;
+                } else {
+                    return <Button loading={responseLoading} onClick={() => handleDelete(record)}>Delete</Button>
+                }
+            }
         },
     ];
 
@@ -120,6 +126,7 @@ const SchedulerTab = () => {
                     {loading ? <Loading /> :
                         <div className="flex flex-col gap-2">
                             <Table
+                                scroll={{ x: 768 }}
                                 rowKey={(record) => record._id}
                                 dataSource={schedules}
                                 columns={columns}
