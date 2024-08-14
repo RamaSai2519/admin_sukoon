@@ -140,7 +140,7 @@ const SendWAForm = () => {
     };
 
     const handleSend = async () => {
-        if (template.extra_args && template.extra_args.includes('reqistration_link_slug') && !slug) {
+        if (template.extra_args && template.extra_args.includes('registraion_link_slug') && !slug) {
             message.error('Please select a registration link slug');
             return;
         } else if (template.extra_args && template.extra_args.includes('image_link') && !uploadedImageUrl) {
@@ -274,7 +274,7 @@ const SendWAForm = () => {
                             <Button icon={<UploadOutlined />}>Click to Upload</Button>
                         </Upload>
                     )}
-                    {template && template.extra_args && template.extra_args.includes('reqistration_link_slug') && (
+                    {template && template.extra_args && template.extra_args.includes('registraion_link_slug') && (
                         <Select
                             allowClear
                             showSearch
