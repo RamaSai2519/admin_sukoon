@@ -287,7 +287,9 @@ const SendWAForm = () => {
                             onChange={(value) => setSlug(value)}
                             onClear={() => setSlug('')}
                         >
-                            {generateOptions(slugs, 'slug')}
+                            {slugs.map((slug, index) => (
+                                <Select.Option key={index} value={slug.slug}>{slug.slug}</Select.Option>
+                            ))}
                         </Select>
                     )}
                 </div>
