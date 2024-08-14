@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Select, Input, Upload, message, Progress } from 'antd';
+import { Button, Card, Select, Input, Upload, message } from 'antd';
 import { beforeUpload, generateOptions } from '../../Utils/antSelectHelper';
 import { fetchData } from '../../services/fetchData';
 import Loading from '../Loading/loading';
@@ -20,12 +20,13 @@ const SendWAForm = () => {
     const [slug, setSlug] = useState('');
     const [uploadedImageUrl, setUploadedImageUrl] = useState('');
     const [usersCount, setUsersCount] = useState(0);
-    const [fetchStatus, setFetchStatus] = useState(false);
+    const [eventSlug, setEventSlug] = useState('');
+    // const [fetchStatus, setFetchStatus] = useState(false);
     // const [proNum, setProNum] = useState({
     //     count: 0,
     //     status: 'pending',
     // });
-    const [messageId, setMessageId] = useState('');
+    // const [messageId, setMessageId] = useState('');
 
     const fetchAllData = async () => {
         setLoading(true);
@@ -75,23 +76,27 @@ const SendWAForm = () => {
         };
     }, []);
 
-    useEffect(() => {
-        const fetchPreview = async () => {
-            const response = await Raxios.post('/wa/preview', {
-                usersType: selectedType,
-                cities: selectedCities,
-            });
-            if (response.status !== 200) {
-                message.error('Failed to fetch preview data');
-            } else {
-                setUsersCount(response.data.usersCount);
-            }
-        };
+    const fetchPreview = async () => {
+        if (selectedType === "event" && !eventSlug) {
+            return;
+        }
+        const response = await Raxios.post('/wa/preview', {
+            usersType: selectedType,
+            cities: selectedCities,
+            eventSlug,
+        });
+        if (response.status !== 200) {
+            message.error('Failed to fetch preview data');
+        } else {
+            setUsersCount(response.data.usersCount);
+        }
+    };
 
+    useEffect(() => {
         if (selectedType || selectedCities.length > 0) {
             fetchPreview();
         }
-    }, [selectedCities, selectedType]);
+    }, [selectedCities, selectedType, eventSlug]);
 
     useEffect(() => {
         if (template) {
@@ -141,9 +146,12 @@ const SendWAForm = () => {
         } else if (template.extra_args && template.extra_args.includes('image_link') && !uploadedImageUrl) {
             message.error('Please upload an image');
             return;
+        } else if (selectedType === "event" && !eventSlug) {
+            message.error('Please select an event slug');
+            return;
         }
         const newMessageId = uuidv4();
-        setMessageId(newMessageId);
+        // setMessageId(newMessageId);
         const finalInputs = {
             ...inputs,
             '<registraion_link_slug>': slug,
@@ -153,6 +161,7 @@ const SendWAForm = () => {
             messageId: newMessageId,
             templateId: template._id,
             usersType: selectedType,
+            eventSlug,
             cities: selectedCities,
             inputs: finalInputs,
         });
@@ -204,8 +213,23 @@ const SendWAForm = () => {
                 >
                     <Select.Option value="partial">Partial Signups</Select.Option>
                     <Select.Option value="full">Complete Signups</Select.Option>
+                    <Select.Option value="event">Event Signups</Select.Option>
                     <Select.Option value="all">All Users</Select.Option>
                 </Select>
+                {selectedType === "event" && <Select
+                    allowClear
+                    showSearch
+                    className='w-full'
+                    placeholder="Select Event Slug"
+                    optionFilterProp='children'
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().includes(input.toLowerCase())
+                    }
+                    onChange={(value) => setEventSlug(value)}
+                    onClear={() => setEventSlug('')}
+                >
+                    {generateOptions(slugs, 'slug')}
+                </Select>}
                 <Select
                     mode="multiple"
                     allowClear
