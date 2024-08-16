@@ -35,8 +35,8 @@ const UsersList = () => {
     createColumn('User', 'name', 'name'),
     createColumn('City', 'city', 'city'),
     createColumn('Number', 'phoneNumber', 'phoneNumber'),
-    createColumn('Joined Date', 'createdDate', 'createdDate', (date) => formatDate(date)),
-    createColumn('DOB', 'birthDate', 'birthDate', (date) => formatDate(date)),
+    { title: 'Joined Date', dataIndex: 'createdDate', key: 'createdDate', render: (date) => formatDate(date), sorter: (a, b) => new Date(a.createdDate) - new Date(b.createdDate) },
+    { title: 'DOB', dataIndex: 'birthDate', key: 'birthDate', render: (date) => formatDate(date), sorter: (a, b) => new Date(a.birthDate) - new Date(b.birthDate) },
     createColumn('Balance', 'numberOfCalls', 'numberOfCalls'),
     {
       title: 'Details',
