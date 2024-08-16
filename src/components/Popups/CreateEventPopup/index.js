@@ -58,7 +58,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
     };
 
     const initialValues = {
-        name: data?.name,
+        name: localStorage.getItem("adminName"),
         mainTitle: data?.mainTitle,
         subTitle: data?.subTitle,
         hostedBy: data?.hostedBy,
@@ -80,17 +80,19 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
 
     const formItems = [
         {
-            label: "Created By", name: "name", component: <Input disabled={editMode} />,
+            label: "Created By", name: "name", component: <Input disabled={true} />,
             rules: [{ required: true, message: 'Please enter the name' }],
         },
         {
             label: "Main Title", name: "mainTitle", component: <Input />,
             rules: [
                 { required: true, message: 'Please enter the main title' },
-                { max: 40, message: 'Max length is 50' }
+                { max: 40, message: 'Max length is 40' }
             ],
         },
-        { label: "Sub Title", name: "subTitle", rules: [], component: <Input.TextArea /> },
+        { label: "Sub Title", name: "subTitle", rules: [
+            { max: 130, message: 'Max length is 130' }
+        ], component: <Input.TextArea /> },
         { label: "Hosted By", name: "hostedBy", rules: [], component: <Input /> },
         {
             label: "Slug", name: "slug", component: <Input disabled={editMode} />,
