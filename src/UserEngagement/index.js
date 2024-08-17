@@ -48,6 +48,7 @@ const UserEngagement = () => {
         { value: 'Invalid/ Test user', label: 'Invalid/ Test user' },
         { value: 'Engaged User', label: 'Engaged User' },
         { value: 'Not reachable user', label: 'Not reachable user' },
+        { value: 'Not interested in Calls', label: 'Not interested in Calls' },
     ];
 
     const generateFilters = (data, key) => {
