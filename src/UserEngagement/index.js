@@ -39,6 +39,7 @@ const UserEngagement = () => {
         callsDone: item.callsDone || 0,
         remarks: item.remarks || 'N/A',
         source: item.source || 'N/A',
+        wa_opt_out: item.wa_opt_out || false,
     }));
 
     const userStatusOptions = [
@@ -154,15 +155,26 @@ const UserEngagement = () => {
             onFilter: (value, record) => record.expert.includes(value)
         },
         {
-            title: 'Details',
-            key: 'details',
-            width: 100,
+            title: 'Actions',
+            key: 'actions',
+            width: 200,
             fixed: 'right',
-            render: (record) => (
-                <Link to={`/admin/users/${record._id}`}>
-                    <Button>View</Button>
-                </Link>
-            ),
+            render: (record) => {
+                console.log('record:', record);
+                return (
+                    <div className='flex justify-between w-full'>
+                        <Button
+                            danger={record.wa_opt_out}
+                            onClick={() => handleSave({ key: record._id, field: 'wa_opt_out', value: !record.wa_opt_out })}
+                        >
+                            {record.wa_opt_out ? 'Opt In' : 'Opt Out'}
+                        </Button>
+                        <Link to={`/admin/users/${record._id}`}>
+                            <Button>View</Button>
+                        </Link>
+                    </div>
+                )
+            },
         },
     ];
 
