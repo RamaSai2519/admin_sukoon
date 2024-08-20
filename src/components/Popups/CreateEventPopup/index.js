@@ -90,9 +90,11 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
                 { max: 40, message: 'Max length is 40' }
             ],
         },
-        { label: "Sub Title", name: "subTitle", rules: [
-            { max: 130, message: 'Max length is 130' }
-        ], component: <Input.TextArea /> },
+        {
+            label: "Sub Title", name: "subTitle", rules: [
+                { max: 130, message: 'Max length is 130' }
+            ], component: <Input.TextArea />
+        },
         { label: "Hosted By", name: "hostedBy", rules: [], component: <Input /> },
         {
             label: "Slug", name: "slug", component: <Input disabled={editMode} />,
@@ -120,7 +122,15 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
             )
         },
         { label: "Description", name: "description", rules: [{ max: 125 }], component: <Input.TextArea /> },
-        { label: "Category", name: "category", rules: [], component: <Input /> },
+        {
+            label: "Category", name: "category", rules: [], component: (
+                <Select>
+                    <Select.Option value="support_groups">Support Groups</Select.Option>
+                    <Select.Option value="active_together">Active Together</Select.Option>
+                    <Select.Option value="wellness_connect">Wellness Connect</Select.Option>
+                </Select>
+            )
+        },
         { label: "Max Visitors Allowed", name: "maxVisitorsAllowed", rules: [], component: <InputNumber className='w-full' /> },
         { label: "Prize Money", name: "prizeMoney", rules: [], component: <InputNumber className='w-full' /> },
         {
