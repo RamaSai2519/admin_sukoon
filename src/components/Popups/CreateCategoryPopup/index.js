@@ -11,18 +11,17 @@ const CreateCategoryPopup = ({ visible, setVisible }) => {
         }
     }, [visible]);
 
-    const handleCreate = () => {
-        Raxios.post('/data/categories', {
-            name,
-        })
-            .then(response => {
-                window.alert('Category created successfully.');
-                setVisible(false);
-            })
-            .catch(error => {
-                console.error('Error creating Category:', error);
-                window.alert('Error creating Category:', error);
+    const handleCreate = async () => {
+        try {
+            await Raxios.post('/data/categories', {
+                name,
             });
+            window.alert('Category created successfully.');
+            setVisible(false);
+        } catch (error) {
+            console.error('Error creating Category:', error);
+            window.alert('Error creating Category, Category already exists.');
+        }
         setVisible(false);
     };
 
