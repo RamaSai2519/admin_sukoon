@@ -21,6 +21,7 @@ const SendWAForm = () => {
     const [uploadedImageUrl, setUploadedImageUrl] = useState('');
     const [usersCount, setUsersCount] = useState(0);
     const [eventSlug, setEventSlug] = useState('');
+    const [response, setResponse] = useState(false);
     // const [fetchStatus, setFetchStatus] = useState(false);
     // const [proNum, setProNum] = useState({
     //     count: 0,
@@ -76,6 +77,12 @@ const SendWAForm = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (messagePreview.length > 1024) {
+            message.error('Message length exceeds 1024 characters');
+        }
+    }, [messagePreview]);
+
     const fetchPreview = async () => {
         if (selectedType === "event" && !eventSlug) {
             return;
@@ -105,7 +112,12 @@ const SendWAForm = () => {
             placeholders.forEach((placeholder) => {
                 if (placeholder === '<user_name>') {
                     initialInputs['<user_name>'] = localStorage.getItem('adminName') || 'Mr. X';
-                } else {
+                } else if (placeholder === '<phone_number>') {
+                    initialInputs['<phone_number>'] = '+91-9110673203';
+                } else if (placeholder === '<whatsapp_community_link>') {
+                    initialInputs['<whatsapp_community_link>'] = 'https://chat.whatsapp.com/Cqt90TSiCKv26piERkBroB'
+                }
+                else {
                     initialInputs[placeholder] = '';
                 }
             });
@@ -149,14 +161,17 @@ const SendWAForm = () => {
         } else if (selectedType === "event" && !eventSlug) {
             message.error('Please select an event slug');
             return;
+        } else if (messagePreview.length > 1024) {
+            message.error('Message length exceeds 1024 characters');
+            return;
         }
         const newMessageId = uuidv4();
-        // setMessageId(newMessageId);
         const finalInputs = {
             ...inputs,
             '<registraion_link_slug>': slug,
             '<image_link>': uploadedImageUrl
         };
+        setResponse(true);
         const response = await Raxios.post('/wa/send', {
             messageId: newMessageId,
             templateId: template._id,
@@ -168,9 +183,11 @@ const SendWAForm = () => {
         if (response.status !== 200) {
             message.error('Failed to send messages');
         } else {
-            message.success(`Messages are being sent, please note down the message ID: ${newMessageId} for future reference`);
+            window.alert(`Messages are being sent, please note down the message ID: ${newMessageId} for future reference`);
             // setFetchStatus(true);
         }
+        setResponse(false);
+        window.location.reload();
     };
 
     if (loading) return <Loading />;
@@ -298,6 +315,7 @@ const SendWAForm = () => {
                     className='w-full'
                     disabled={!template || (!selectedType && selectedCities.length === 0)}
                     onClick={handleSend}
+                    loading={response}
                 >
                     Send Message
                 </Button>
@@ -307,7 +325,11 @@ const SendWAForm = () => {
                 <Card className='w-full h-fit rounded-b-none'>
                     <div className='w-full flex justify-between items-center'>
                         <h1>Preview</h1>
-                        <span>Users Count: {usersCount}</span>
+                        <div className='flex flex-col'>
+                            <span>Users Count: {usersCount}</span>
+                            <span>Character Count: {messagePreview.length}</span>
+                        </div>
+
                     </div>
                 </Card>
                 <Card className='w-full h-fit rounded-t-none'>
