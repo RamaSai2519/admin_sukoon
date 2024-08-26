@@ -123,7 +123,9 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
         },
         { label: "Description", name: "description", rules: [{ max: 125 }], component: <Input.TextArea /> },
         {
-            label: "Category", name: "category", rules: [], component: (
+            label: "Category", name: "category", rules: [
+                { required: true, message: 'Please select the category' }
+            ], component: (
                 <Select>
                     <Select.Option value="support_groups">Support Groups</Select.Option>
                     <Select.Option value="active_together">Active Together</Select.Option>

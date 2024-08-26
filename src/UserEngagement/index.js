@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Table, Select } from 'antd';
+import { Button, Table, Select, DatePicker } from 'antd';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import Raxios from '../services/axiosHelper';
 import Loading from '../components/Loading/loading';
 import EditableCell from '../components/EditableCell';
 import { fetchPagedData } from '../services/fetchData';
 import { formatDate } from '../Utils/formatHelper';
+import moment from 'moment/moment';
 
 const UserEngagement = () => {
     const [engagementData, setEngagementData] = React.useState([]);
@@ -40,6 +41,7 @@ const UserEngagement = () => {
         remarks: item.remarks || 'N/A',
         source: item.source || 'N/A',
         wa_opt_out: item.wa_opt_out || false,
+        lastReached: item.lastReached,
     }));
 
     const userStatusOptions = [
@@ -141,6 +143,20 @@ const UserEngagement = () => {
             onFilter: (value, record) => record.callsDone === value
         },
         {
+            title: "Last Reached",
+            dataIndex: "lastReached",
+            key: "lastReached",
+            width: 200,
+            filters: generateFilters(data, 'lastReached'),
+            onFilter: (value, record) => record.lastReached.includes(value),
+            render: (text, record) => (
+                <DatePicker
+                    value={text ? moment(text) : null}
+                    onChange={(date) => handleLastReachedChange(date, record)}
+                />
+            )
+        },
+        {
             title: "Remarks", dataIndex: "remarks", key: "remarks", width: 250, editable: true,
             filters: generateFilters(data, 'remarks'),
             onFilter: (value, record) => record.remarks.includes(value)
@@ -201,18 +217,12 @@ const UserEngagement = () => {
     };
 
     const handleUserStatusChange = async (value, record) => {
-        try {
-            await Raxios.post('/user/engagementData', { key: record._id, field: 'userStatus', value });
-            const newData = [...engagementData];
-            const index = newData.findIndex((item) => item._id === record._id);
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, { ...item, userStatus: value });
-                setEngagementData(newData);
-            }
-        } catch (error) {
-            console.error('Error updating user status:', error);
-        }
+        await handleSave({ key: record._id, field: 'userStatus', value });
+    };
+
+    const handleLastReachedChange = async (date, record) => {
+        const value = date ? date.toISOString() : null;
+        await handleSave({ key: record._id, field: 'lastReached', value });
     };
 
     const components = {
