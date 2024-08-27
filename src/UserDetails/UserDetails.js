@@ -62,6 +62,10 @@ const UserDetails = () => {
   ];
 
   const handleUpdate = async () => {
+    if (numberOfCalls > 3) {
+      message.error('Number of calls cannot be greater than 3.');
+      return;
+    }
     try {
       await Raxios.put(`/user/users/${userId}`, {
         name,
@@ -72,12 +76,12 @@ const UserDetails = () => {
         source,
         context,
       })
-      window.alert('User details updated successfully.');
+      message.success('User details updated successfully.');
       setEditMode(false);
       fetchData();
     } catch (error) {
-      console.error('Error updating user details:', error);
-      window.alert('Error updating user details:', error);
+      console.log('Error updating user details:', error);
+      message.error('Error updating user details:', error);
     }
   };
 
@@ -183,7 +187,6 @@ const UserDetails = () => {
                     type="number"
                     value={numberOfCalls}
                     onChange={(e) => setNumberOfCalls(e.target.value)}
-                    max={3}
                   />
                   : <h2 className='text-2xl'>{numberOfCalls}</h2>}
               </div>
