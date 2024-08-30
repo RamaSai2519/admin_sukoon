@@ -14,9 +14,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
         const { phoneNumber, password } = values;
         try {
             const response = await Faxios.post('/admin_auth', {
-                phoneNumber,
-                password,
-                action: 'login'
+                phoneNumber, password, action: 'login'
             });
             if (response.data.message === 'Authorized Admin') {
                 setShowSignUpModal(true);
@@ -48,9 +46,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
         }
         try {
             const response = await Faxios.post('/auth/register', {
-                name,
-                phoneNumber,
-                password,
+                name, phoneNumber, password, action: 'register'
             });
             if (response.status !== 200) {
                 throw new Error('Admin creation failed');
