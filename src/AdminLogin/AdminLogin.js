@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Form, Input, message } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Faxios from '../services/raxiosHelper';
 import './AdminLogin.css';
 
 const AdminLogin = ({ setIsLoggedIn }) => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
 
     const onFinish = async (values) => {
+        setLoading(true);
         const { phoneNumber, password } = values;
         try {
             const response = await Faxios.post('/admin_auth', {
@@ -31,6 +33,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
             console.error('Login failed', error);
             alert('Login failed, Please recheck your credentials. If the problem persists, please contact your IT Administrator.');
         }
+        setLoading(false);
     };
 
     const onCreateAdmin = async (values) => {
@@ -85,7 +88,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                             <Input.Password placeholder="Password" />
                         </Form.Item>
                         <Form.Item>
-                            <button>Sign In</button>
+                            <Button loading={loading} type="primary" htmlType="submit">Sign In</Button>
                         </Form.Item>
                     </Form>
                 }
