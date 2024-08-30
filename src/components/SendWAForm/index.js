@@ -103,6 +103,8 @@ const SendWAForm = () => {
         if (selectedType || selectedCities.length > 0) {
             fetchPreview();
         }
+
+        // eslint-disable-next-line
     }, [selectedCities, selectedType, eventSlug]);
 
     useEffect(() => {

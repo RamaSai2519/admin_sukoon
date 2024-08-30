@@ -30,19 +30,19 @@ export const DataProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [calls, setCalls] = useState([]);
     const [stats, setStats] = useState({
-        totalCalls: 0,
-        todayCalls: 0,
-        successfulCalls: 0,
-        todaySuccessfulCalls: 0,
-        failedCalls: 0,
-        todayFailedCalls: 0,
-        missedCalls: 0,
-        todayMissedCalls: 0,
-        averageCallDuration: "",
-        totalDuration: 0,
-        scheduledCallsPercentage: 0,
-        averageConversationScore: 0,
-        onlineSaarthis: []
+            total_calls: 'N/A',
+            today_calls: 'N/A',
+            successful_calls: 'N/A',
+            today_successful_calls: 'N/A',
+            failed_calls: 'N/A',
+            today_failed_calls: 'N/A',
+            missed_calls: 'N/A',
+            today_missed_calls: 'N/A',
+            average_call_duration: 'N/A',
+            total_duration: 'N/A',
+            scheduled_calls_percentage: 'N/A',
+            avg_conversation_score: 'N/A',
+            onlineSarathis: []
     });
     const [insights, setInsights] = useState({
         _15min: "",
