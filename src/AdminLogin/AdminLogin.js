@@ -1,29 +1,23 @@
 import React, { useState } from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import Raxios from '../services/axiosHelper';
+import Faxios from '../services/raxiosHelper';
 import './AdminLogin.css';
 
 const AdminLogin = ({ setIsLoggedIn }) => {
     const navigate = useNavigate();
-    const [newAdmin, setNewAdmin] = useState(false);
+    const [showSignUpModal, setShowSignUpModal] = useState(false);
 
     const onFinish = async (values) => {
-        const { id, password } = values;
-        if (!id || !password) {
-            alert('Please fill in all fields');
-            return;
-        }
+        const { phoneNumber, password } = values;
         try {
-            const response = await Raxios.post('/auth/login', {
-                id,
+            const response = await Faxios.post('/admin_auth', {
+                phoneNumber,
                 password,
+                action: 'login'
             });
-            if (response.status !== 200) {
-                throw new Error('Login failed');
-            }
             if (response.data.message === 'Authorized Admin') {
-                setNewAdmin(true);
+                setShowSignUpModal(true);
                 return;
             }
             const { access_token, refresh_token, user } = response.data;
@@ -50,7 +44,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
             return;
         }
         try {
-            const response = await Raxios.post('/auth/register', {
+            const response = await Faxios.post('/auth/register', {
                 name,
                 phoneNumber,
                 password,
@@ -59,10 +53,10 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                 throw new Error('Admin creation failed');
             }
             alert('Admin created successfully');
-            setNewAdmin(false);
+            setShowSignUpModal(false);
         } catch (error) {
             console.error('Admin creation failed', error);
-            alert('Admin creation failed, Please recheck your credentials. If the problem persists, please contact your IT Administrator.');
+            message.error('Admin creation failed, Please recheck your credentials. If the problem persists, please contact your IT Administrator.');
         }
     };
 
@@ -71,7 +65,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
         <div className='h-screen flex justify-center items-center'>
             <div className="dark:bg-lightBlack flex flex-col justify-center p-10 rounded-3xl">
                 <h1 className='text-3xl m-5 mt-0'>Login to access dashboard</h1>
-                {!newAdmin &&
+                {!showSignUpModal &&
                     <Form
                         className='h-full'
                         name="admin_login"
@@ -79,8 +73,8 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                         initialValues={{ remember: true }}
                     >
                         <Form.Item
-                            name="id"
-                            rules={[{ required: true, message: 'Please input your ID!' }]}
+                            name="phoneNumber"
+                            rules={[{ required: true, message: 'Please input your Phone Number!' }]}
                         >
                             <Input placeholder="Phone Number" />
                         </Form.Item>
@@ -95,7 +89,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                         </Form.Item>
                     </Form>
                 }
-                {newAdmin &&
+                {showSignUpModal &&
                     <Form
                         className='h-full'
                         name="admin_login"

@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import Raxios from './axiosHelper';
+import Faxios from './raxiosHelper';
 
 export const fetchFilteredData = async (page, size, setPage, setSize, setData, setTotal, setLoading, filter, collection, optional) => {
     setLoading(true);
@@ -62,7 +63,7 @@ export const fetchCategories = async (setCategories) => {
 
 export const fetchStats = async (setStats) => {
     try {
-        const response = await Raxios.get('/service/dashboardstats');
+        const response = await Faxios.get('/dashboard_stats?item=stats');
         setStats(response.data);
     } catch (error) {
         message.error('Error fetching stats:', error);
@@ -71,7 +72,7 @@ export const fetchStats = async (setStats) => {
 
 export const fetchInsights = async (setInsights) => {
     try {
-        const response = await Raxios.get('/service/callinsights');
+        const response = await Faxios.get('/dashboard_stats?item=insights');
         setInsights(response.data);
     } catch (error) {
         message.error('Error fetching insights:', error);
