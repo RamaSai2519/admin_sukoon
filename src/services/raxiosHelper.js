@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const FINAL_URL_DEV = 'https://ij8f1oonya.execute-api.ap-south-1.amazonaws.com/dev/actions';
-export const FINAL_URL_PROD = 'https://6x4j0qxbmk.execute-api.ap-south-1.amazonaws.com/main/actions';
+export const FINAL_URL = 'https://ij8f1oonya.execute-api.ap-south-1.amazonaws.com/dev/actions';
+// export const FINAL_URL = "http://localhost:8080/actions";
 
-export const Faxios = axios.create({ baseURL: FINAL_URL_DEV });
+export const Faxios = axios.create({ baseURL: FINAL_URL });
 
 Faxios.interceptors.request.use(
     (config) => {
@@ -45,7 +45,7 @@ Faxios.interceptors.response.use(
 const refreshFaxiosAccessToken = async () => {
     const refreshToken = localStorage.getItem('refresh_token');
     try {
-        const response = await axios.post(`${FINAL_URL_DEV}/auth/refresh`,
+        const response = await axios.post(`${FINAL_URL}/auth/refresh`,
             { action: 'refresh' }, {
             headers: {
                 Authorization: `Bearer ${refreshToken}`,
