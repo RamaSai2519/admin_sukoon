@@ -3,7 +3,7 @@ import axios from "axios";
 export const FINAL_URL = 'https://ij8f1oonya.execute-api.ap-south-1.amazonaws.com/dev/actions';
 // export const FINAL_URL = "http://localhost:8080/actions";
 
-export const Faxios = axios.create({ baseURL: FINAL_URL });
+export const Faxios = axios.create({ baseURL: FINAL_URL, timeout: 10000 });
 
 Faxios.interceptors.request.use(
     (config) => {
