@@ -18,10 +18,10 @@ import GamesTab from './DashboardTabs/GamesTab';
 import WhatsappTab from './DashboardTabs/WhatsappTab';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken } from 'firebase/messaging';
-import Raxios from '../services/axiosHelper';
 import firebaseConfig from './firebaseConfig';
 import ClubSukoon from './DashboardTabs/ClubSukoon';
 import { ConfigProvider, theme } from 'antd';
+import Faxios from '../services/raxiosHelper';
 
 const AdminDashboard = ({ onLogout }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -86,7 +86,7 @@ const AdminDashboard = ({ onLogout }) => {
 
   const sendFCMTokenToServer = async (token) => {
     try {
-      await Raxios.post('/service/save-fcm-token', { token });
+      await Faxios.post('/save_fcm_token', { token });
     } catch (error) {
       console.error('Failed to send FCM token to server:', error);
     }

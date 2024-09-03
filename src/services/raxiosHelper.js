@@ -18,6 +18,25 @@ Faxios.interceptors.request.use(
     }
 );
 
+const refreshFaxiosAccessToken = async () => {
+    const refreshToken = localStorage.getItem('refresh_token');
+    try {
+        const response = await axios.post(`${FINAL_URL}/admin_auth`,
+            { action: 'refresh' }, {
+            headers: {
+                Authorization: `Bearer ${refreshToken}`,
+            },
+        });
+        const newAccessToken = response.data.output_details.access_token;
+        localStorage.setItem('access_token', newAccessToken);
+        return newAccessToken;
+    } catch (error) {
+        console.error('Failed to refresh access token', error);
+        localStorage.clear();
+        window.location.href = '/';
+    }
+};
+
 Faxios.interceptors.response.use(
     (response) => {
         if ("output_details" in response.data) {
@@ -30,7 +49,7 @@ Faxios.interceptors.response.use(
     },
     async (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
+        if (error.response.status === 500 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
                 const newAccessToken = await refreshFaxiosAccessToken();
@@ -43,24 +62,5 @@ Faxios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
-const refreshFaxiosAccessToken = async () => {
-    const refreshToken = localStorage.getItem('refresh_token');
-    try {
-        const response = await axios.post(`${FINAL_URL}/auth/refresh`,
-            { action: 'refresh' }, {
-            headers: {
-                Authorization: `Bearer ${refreshToken}`,
-            },
-        });
-        const newAccessToken = response.data.access_token;
-        localStorage.setItem('access_token', newAccessToken);
-        return newAccessToken;
-    } catch (error) {
-        console.error('Failed to refresh access token', error);
-        localStorage.clear();
-        window.location.href = '/';
-    }
-}
 
 export default Faxios;
