@@ -6,6 +6,7 @@ import Loading from '../../components/Loading/loading';
 import { PlusOutlined } from '@ant-design/icons';
 import { beforeUpload } from '../../Utils/antSelectHelper';
 import Gamelinks from '../../components/Gamelinks';
+import Faxios, { FINAL_URL } from '../../services/raxiosHelper';
 
 const GamesTab = () => {
     const [game, setGame] = useState(localStorage.getItem('game') || 'games');
@@ -142,7 +143,16 @@ const GamesTab = () => {
                                 <Upload
                                     name="file"
                                     listType="picture-card"
-                                    action={`${BASE_URL}/service/upload`}
+                                    customRequest={async ({ file, onSuccess, onError }) => {
+                                        const formData = new FormData();
+                                        formData.append('file', file);
+                                        try {
+                                            const response = await Faxios.post('/upload', formData);
+                                            onSuccess(response.data, file);
+                                        } catch (error) {
+                                            onError(error);
+                                        }
+                                    }}
                                     beforeUpload={beforeUpload}
                                     onChange={handleChange}
                                     maxCount={1}

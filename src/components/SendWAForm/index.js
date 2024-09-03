@@ -6,6 +6,7 @@ import Loading from '../Loading/loading';
 import Raxios from '../../services/axiosHelper';
 import { UploadOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
+import Faxios, { FINAL_URL } from '../../services/raxiosHelper';
 
 const SendWAForm = () => {
     const [templates, setTemplates] = useState([]);
@@ -103,6 +104,8 @@ const SendWAForm = () => {
         if (selectedType || selectedCities.length > 0) {
             fetchPreview();
         }
+
+        // eslint-disable-next-line
     }, [selectedCities, selectedType, eventSlug]);
 
     useEffect(() => {
@@ -282,10 +285,18 @@ const SendWAForm = () => {
                     {template && template.extra_args && template.extra_args.includes('image_link') && (
                         <Upload
                             name="file"
-                            // listType="picture-card"
                             beforeUpload={beforeUpload}
                             onChange={handleUploadChange}
-                            action="https://rama.sukoonunlimited.com/admin/service/upload"
+                            customRequest={async ({ file, onSuccess, onError }) => {
+                                const formData = new FormData();
+                                formData.append('file', file);
+                                try {
+                                    const response = await Faxios.post('/upload', formData);
+                                    onSuccess(response.data, file);
+                                } catch (error) {
+                                    onError(error);
+                                }
+                            }}
                             maxCount={1}
                         >
                             <Button icon={<UploadOutlined />}>Click to Upload</Button>

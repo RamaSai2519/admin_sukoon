@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, message, Select, DatePicker, Upload, InputNumber } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import Raxios, { BASE_URL, Paxios } from '../../../services/axiosHelper';
+import Raxios, { Paxios } from '../../../services/axiosHelper';
+import Faxios from '../../../services/raxiosHelper';
 import dayjs from 'dayjs';
 
 const CreateEventPopup = ({ setVisible, data, editMode }) => {
@@ -172,7 +173,16 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
                 <div>
                     <img src={uploadedImageUrl || data?.imageUrl} alt='Event' />
                     <Upload
-                        action={`${BASE_URL}/service/upload`}
+                        customRequest={async ({ file, onSuccess, onError }) => {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            try {
+                                const response = await Faxios.post('/upload', formData);
+                                onSuccess(response.data, file);
+                            } catch (error) {
+                                onError(error);
+                            }
+                        }}
                         beforeUpload={beforeUpload}
                         onChange={handleChange}
                         maxCount={1}
