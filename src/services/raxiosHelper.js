@@ -3,7 +3,7 @@ import axios from "axios";
 export const FINAL_URL = 'https://ij8f1oonya.execute-api.ap-south-1.amazonaws.com/dev/actions';
 // export const FINAL_URL = "http://localhost:8080/actions";
 
-export const Faxios = axios.create({ baseURL: FINAL_URL, timeout: 10000 });
+export const Faxios = axios.create({ baseURL: FINAL_URL });
 
 Faxios.interceptors.request.use(
     (config) => {
@@ -20,10 +20,12 @@ Faxios.interceptors.request.use(
 
 Faxios.interceptors.response.use(
     (response) => {
-        console.log('response', response);
-        response.data = response.data.output_details;
-        response.status = response.data.output_status === 'SUCCESS' ? 200 : 400;
-        response.msg = response.data.output_message;
+        if ("output_details" in response.data) {
+            response.data = response.data.output_details;
+            response.status = response.data.output_status === 'SUCCESS' ? 200 : 400;
+            response.msg = response.data.output_message;
+            return response;
+        }
         return response;
     },
     async (error) => {

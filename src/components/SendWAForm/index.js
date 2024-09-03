@@ -6,7 +6,7 @@ import Loading from '../Loading/loading';
 import Raxios from '../../services/axiosHelper';
 import { UploadOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
-import { FINAL_URL } from '../../services/raxiosHelper';
+import Faxios, { FINAL_URL } from '../../services/raxiosHelper';
 
 const SendWAForm = () => {
     const [templates, setTemplates] = useState([]);
@@ -147,7 +147,7 @@ const SendWAForm = () => {
 
     const handleUploadChange = (info) => {
         if (info.file.status === 'done') {
-            setUploadedImageUrl(info.file.response.output_details.file_url);
+            setUploadedImageUrl(info.file.response.file_url);
             message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
@@ -285,10 +285,18 @@ const SendWAForm = () => {
                     {template && template.extra_args && template.extra_args.includes('image_link') && (
                         <Upload
                             name="file"
-                            // listType="picture-card"
                             beforeUpload={beforeUpload}
                             onChange={handleUploadChange}
-                            action={`${FINAL_URL}/upload`}
+                            customRequest={async ({ file, onSuccess, onError }) => {
+                                const formData = new FormData();
+                                formData.append('file', file);
+                                try {
+                                    const response = await Faxios.post('/upload', formData);
+                                    onSuccess(response.data, file);
+                                } catch (error) {
+                                    onError(error);
+                                }
+                            }}
                             maxCount={1}
                         >
                             <Button icon={<UploadOutlined />}>Click to Upload</Button>

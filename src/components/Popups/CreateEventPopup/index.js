@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, message, Select, DatePicker, Upload, InputNumber } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import Raxios, { Paxios } from '../../../services/axiosHelper';
-import { FINAL_URL } from '../../../services/raxiosHelper';
+import Faxios from '../../../services/raxiosHelper';
 import dayjs from 'dayjs';
 
 const CreateEventPopup = ({ setVisible, data, editMode }) => {
@@ -51,7 +51,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
 
     const handleChange = (info) => {
         if (info.file.status === 'done') {
-            setUploadedImageUrl(info.file.response.output_details.file_url);
+            setUploadedImageUrl(info.file.response.file_url);
             message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
@@ -173,7 +173,16 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
                 <div>
                     <img src={uploadedImageUrl || data?.imageUrl} alt='Event' />
                     <Upload
-                        action={`${FINAL_URL}/upload`}
+                        customRequest={async ({ file, onSuccess, onError }) => {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            try {
+                                const response = await Faxios.post('/upload', formData);
+                                onSuccess(response.data, file);
+                            } catch (error) {
+                                onError(error);
+                            }
+                        }}
                         beforeUpload={beforeUpload}
                         onChange={handleChange}
                         maxCount={1}
