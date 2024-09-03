@@ -26,7 +26,7 @@ const EditableTimeCell = ({
         try {
             const values = await form.validateFields();
             toggleEdit();
-            handleSave({ key: record._id, field: dataIndex, value: values[dataIndex] });
+            handleSave({ key: record.day, field: dataIndex, value: values[dataIndex] });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }
