@@ -61,27 +61,27 @@ const AdminDashboard = ({ onLogout }) => {
   };
 
   useEffect(() => {
-    try {
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/firebase-messaging-sw.js')
-            .catch((err) => {
-              console.error('Service worker registration failed: ', err);
+    const requestNotificationPermission = async () => {
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          const app = initializeApp(firebaseConfig);
+          const messaging = getMessaging(app);
+          getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
+            .then((currentToken) => {
+              if (currentToken) {
+                sendFCMTokenToServer(currentToken);
+              }
             });
-        });
+        } else {
+          console.error('Notification permission denied');
+        }
+      } catch (error) {
+        console.error('Failed to request notification permission:', error);
       }
+    };
 
-      const app = initializeApp(firebaseConfig);
-      const messaging = getMessaging(app);
-      getToken(messaging, { vapidKey: 'BMLRhMhDBoEX1EBBdQHIbPEsVHsZlWixm5tCKH4jJmZgzW4meFmYqGEu8xdY-J1TKmISjTI6hbYMEzcMicd3AKo' })
-        .then((currentToken) => {
-          if (currentToken) {
-            sendFCMTokenToServer(currentToken);
-          }
-        })
-    } catch (error) {
-      console.error('Failed to initialize Firebase:', error);
-    }
+    requestNotificationPermission();
   }, []);
 
   const sendFCMTokenToServer = async (token) => {
