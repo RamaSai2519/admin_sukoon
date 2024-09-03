@@ -3,7 +3,7 @@ import Raxios from '../services/axiosHelper';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useCategories } from '../services/useData';
-import { Select, Table } from 'antd';
+import { message, Select, Table } from 'antd';
 import EditableTimeCell from '../components/EditableTimeCell'; // Import the new component
 import Loading from '../components/Loading/loading';
 import './ExpertDetails.css';
@@ -137,7 +137,7 @@ const ExpertDetails = () => {
       row
     })
       .then(() => {
-        window.alert('Timings updated successfully!');
+        message.success('Timings updated successfully!');
         window.location.reload();
       })
       .catch(error => {
