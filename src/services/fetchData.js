@@ -81,7 +81,7 @@ export const fetchInsights = async (setInsights) => {
 
 export const fetchUsers = async (setUsers) => {
     try {
-        const response = await Raxios.get('/data/users');
+        const response = await Faxios.get('/user');
         setUsers(response.data);
     } catch (error) {
         message.error('Error fetching users:', error);
@@ -99,7 +99,7 @@ export const fetchCalls = async (setCalls) => {
 
 export const fetchExperts = async (setExperts) => {
     try {
-        const response = await Raxios.get('/data/experts');
+        const response = await Faxios.get('/expert');
         setExperts(response.data);
     } catch (error) {
         message.error('Error fetching experts:', error);

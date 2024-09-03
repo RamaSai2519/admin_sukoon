@@ -141,7 +141,7 @@ const UsersList = () => {
             <Table
               className='my-5'
               columns={columns}
-              dataSource={users}
+              dataSource={users.filter((user) => user.profileCompleted)}
               rowKey={(record) => record._id}
             />
           </LazyLoad>}

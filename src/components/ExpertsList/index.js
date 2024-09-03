@@ -78,16 +78,16 @@ const ExpertsList = () => {
             sorter: (a, b) => a.score - b.score,
         },
         {
-            title: 'Share', dataIndex: 'callsShare', key: 'callsShare',
-            sorter: (a, b) => a.callsShare.localeCompare(b.callsShare),
+            title: 'Share', dataIndex: 'calls_share', key: 'calls_share',
+            sorter: (a, b) => a.calls_share.localeCompare(b.calls_share),
         },
         {
-            title: 'Repeat %', dataIndex: 'repeatRate', key: 'repeatRate',
-            sorter: (a, b) => a.repeatRate.localeCompare(b.repeatRate),
+            title: 'Repeat %', dataIndex: 'repeat_score', key: 'repeat_score',
+            sorter: (a, b) => a.repeat_score.localeCompare(b.repeat_score),
         },
         {
-            title: 'T.Score', dataIndex: 'totalScore', key: 'totalScore',
-            sorter: (a, b) => a.totalScore - b.totalScore,
+            title: 'T.Score', dataIndex: 'total_score', key: 'total_score',
+            sorter: (a, b) => a.total_score - b.total_score,
         },
         {
             title: 'Status', dataIndex: 'status', key: 'status',
@@ -112,10 +112,10 @@ const ExpertsList = () => {
         failedCalls: calculateFailedCalls(expert),
         missedCalls: calculatemissedCalls(expert),
         avgCallsPerDay: calculateAvgCallsPerDay(expert).toFixed(2),
-        score: expert.score * 20,
-        callsShare: expert.callsShare + '%',
-        repeatRate: expert.repeatRate + '%',
-        totalScore: expert.totalScore,
+        score: expert?.score || 0,
+        calls_share: (expert?.calls_share || 0) + '%',
+        repeat_score: (expert?.repeat_score || 0) + '%',
+        total_score: expert?.total_score || 0,
         status: expert.status,
     }));
 
