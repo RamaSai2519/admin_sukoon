@@ -42,6 +42,7 @@ const UserEngagement = () => {
         source: item.source || 'N/A',
         wa_opt_out: item.wa_opt_out || false,
         lastReached: item.lastReached,
+        refSource: item.refSource || 'N/A',
     }));
 
     const userStatusOptions = [
@@ -165,6 +166,11 @@ const UserEngagement = () => {
             title: "Source", dataIndex: "source", key: "source", width: 150, editable: true,
             filters: generateFilters(data, 'source'),
             onFilter: (value, record) => record.source.includes(value)
+        },
+        {
+            title: "Ref Source", dataIndex: "refSource", key: "refSource", width: 150, editable: true,
+            filters: generateFilters(data, 'refSource'),
+            onFilter: (value, record) => record.refSource.includes(value)
         },
         {
             title: "Sarathi", dataIndex: "expert", key: "saarthi", width: 150, editable: true,
