@@ -115,7 +115,7 @@ const SendWAForm = () => {
                 } else if (placeholder === '<phone_number>') {
                     initialInputs['<phone_number>'] = '+91-9110673203';
                 } else if (placeholder === '<whatsapp_community_link>') {
-                    initialInputs['<whatsapp_community_link>'] = 'https://chat.whatsapp.com/Cqt90TSiCKv26piERkBroB'
+                    initialInputs['<whatsapp_community_link>'] = 'https://chat.whatsapp.com/Gvl7RE4Zu0i2C1tJIKSeYW'
                 }
                 else {
                     initialInputs[placeholder] = '';
