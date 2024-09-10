@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import DashboardTab from './DashboardTabs/DashboardTab';
-import SaarthisTab from './DashboardTabs/ExpertsTab';
-import UsersTab from './DashboardTabs/UsersTab';
-import ApplicationsTab from './DashboardTabs/ApplicationsTab';
-import SchedulerTab from './DashboardTabs/SchedulerTab';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import ThemeToggle from '../components/ThemeToggle/toggle';
-import NotificationsTab from './DashboardTabs/Notifications';
-import LazyLoad from '../components/LazyLoad/lazyload';
-import EventsTab from './DashboardTabs/EventsTab';
-import CallsTable from '../CallList/CallList';
 import UserList from '../UserList/UserList';
-import ContentTab from './DashboardTabs/ContentTab';
-import GamesTab from './DashboardTabs/GamesTab';
-import WhatsappTab from './DashboardTabs/WhatsappTab';
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken } from 'firebase/messaging';
-import firebaseConfig from './firebaseConfig';
-import ClubSukoon from './DashboardTabs/ClubSukoon';
 import { ConfigProvider, theme } from 'antd';
+import { initializeApp } from 'firebase/app';
+import firebaseConfig from './firebaseConfig';
+import CallsTable from '../CallList/CallList';
 import Faxios from '../services/raxiosHelper';
+import UsersTab from './DashboardTabs/UsersTab';
+import EventsTab from './DashboardTabs/EventsTab';
+import React, { useState, useEffect } from 'react';
+import ClubSukoon from './DashboardTabs/ClubSukoon';
+import SaarthisTab from './DashboardTabs/ExpertsTab';
+import WhatsappTab from './DashboardTabs/WhatsappTab';
+import LazyLoad from '../components/LazyLoad/lazyload';
+import DashboardTab from './DashboardTabs/DashboardTab';
+import SchedulerTab from './DashboardTabs/SchedulerTab';
+import ThemeToggle from '../components/ThemeToggle/toggle';
+import { getMessaging, getToken } from 'firebase/messaging';
+import NotificationsTab from './DashboardTabs/Notifications';
+import ApplicationsTab from './DashboardTabs/ApplicationsTab';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 
 const AdminDashboard = ({ onLogout }) => {
   const [showMenu, setShowMenu] = useState(false);
+
+  // Dark mode
   const [darkMode, setDarkMode] = useState(() => {
     const localStorageDarkMode = localStorage.getItem('darkMode');
     if (localStorageDarkMode !== null) {
@@ -34,13 +34,11 @@ const AdminDashboard = ({ onLogout }) => {
     }
   });
 
-  const location = useLocation();
-
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     localStorage.setItem('darkMode', !darkMode);
   };
-
+  
   useEffect(() => {
     if (darkMode) {
       localStorage.setItem('darkMode', 'true');
@@ -51,6 +49,8 @@ const AdminDashboard = ({ onLogout }) => {
     }
   }, [darkMode]);
 
+  
+  const location = useLocation();
   useEffect(() => {
     const activeTab = location.pathname.split('/').pop();
     localStorage.setItem('adminActiveTab', activeTab);
@@ -92,6 +92,19 @@ const AdminDashboard = ({ onLogout }) => {
     }
   };
 
+  const pages = [
+    { name: 'dashboard', component: <DashboardTab /> },
+    { name: 'users', component: <UsersTab /> },
+    { name: 'users list', component: <UserList /> },
+    { name: 'experts list', component: <SaarthisTab /> },
+    { name: 'calls list', component: <CallsTable /> },
+    { name: 'events', component: <EventsTab /> },
+    { name: 'scheduler', component: <SchedulerTab /> },
+    { name: 'whatsapp', component: <WhatsappTab /> },
+    { name: 'applications', component: <ApplicationsTab /> },
+    { name: 'club', component: <ClubSukoon /> },
+  ];
+
   return (
     <ConfigProvider theme={
       {
@@ -111,15 +124,14 @@ const AdminDashboard = ({ onLogout }) => {
               <div className={`flex flex-col h-screen p-4 w-1/8 bg-gray-100 dark:bg-darkBlack ${showMenu ? 'slide-in' : 'slide-out'}`}>
                 <div className='flex flex-col h-full justify-between'>
                   <div className='grid gap-2'>
-                    {['dashboard', 'users', 'applications', 'events', 'scheduler', 'calls list', 'experts list', 'users list', 'games', 'content', 'whatsapp', 'club'].map((tab) => (
+                    {pages.map(({ name }) => (
                       <Link
-                        key={tab}
-                        to={`/admin/home/${tab}`}
+                        key={name}
+                        to={`/admin/home/${name}`}
                         className={`cshadow p-2 px-4 rounded-3xl font-bold text-lg hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack 
-                          ${location.pathname.endsWith(tab) ? 'scale-110' : ''
-                          }`}
+                          ${location.pathname.endsWith(name) ? 'scale-110' : ''}`}
                       >
-                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                        {name.charAt(0).toUpperCase() + name.slice(1)}
                       </Link>
                     ))}
                   </div>
@@ -146,20 +158,11 @@ const AdminDashboard = ({ onLogout }) => {
           )}
           <div className="flex-1 px-10 min-h-screen overflow-auto">
             <Routes>
-              <Route path="/" element={<DashboardTab />} />
-              <Route path="dashboard" element={<DashboardTab />} />
-              <Route path="calls list" element={<CallsTable />} />
-              <Route path="experts list" element={<SaarthisTab />} />
-              <Route path="users" element={<UsersTab />} />
-              <Route path="applications" element={<ApplicationsTab />} />
+              {pages.map(({ name, component }) => (
+                <Route key={name} path={name} element={component} />
+              ))}
+              <Route path="/" element={<Navigate to="/admin/home/dashboard" />} />
               <Route path="notifications" element={<NotificationsTab />} />
-              <Route path="scheduler" element={<SchedulerTab />} />
-              <Route path="events" element={<EventsTab />} />
-              <Route path="users list" element={<UserList />} />
-              <Route path="games" element={<GamesTab />} />
-              <Route path="content" element={<ContentTab />} />
-              <Route path="whatsapp" element={<WhatsappTab />} />
-              <Route path="club" element={<ClubSukoon />} />
             </Routes>
           </div>
         </div>
