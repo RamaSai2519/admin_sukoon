@@ -13,6 +13,7 @@ import WhatsappTab from './DashboardTabs/WhatsappTab';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import DashboardTab from './DashboardTabs/DashboardTab';
 import SchedulerTab from './DashboardTabs/SchedulerTab';
+import ReferralsTab from './DashboardTabs/ReferralsTab';
 import ThemeToggle from '../components/ThemeToggle/toggle';
 import { getMessaging, getToken } from 'firebase/messaging';
 import NotificationsTab from './DashboardTabs/Notifications';
@@ -38,7 +39,7 @@ const AdminDashboard = ({ onLogout }) => {
     setDarkMode(!darkMode);
     localStorage.setItem('darkMode', !darkMode);
   };
-  
+
   useEffect(() => {
     if (darkMode) {
       localStorage.setItem('darkMode', 'true');
@@ -49,7 +50,7 @@ const AdminDashboard = ({ onLogout }) => {
     }
   }, [darkMode]);
 
-  
+
   const location = useLocation();
   useEffect(() => {
     const activeTab = location.pathname.split('/').pop();
@@ -103,6 +104,7 @@ const AdminDashboard = ({ onLogout }) => {
     { name: 'whatsapp', component: <WhatsappTab /> },
     { name: 'applications', component: <ApplicationsTab /> },
     { name: 'club', component: <ClubSukoon /> },
+    { name: 'referrals', component: <ReferralsTab /> },
   ];
 
   return (
