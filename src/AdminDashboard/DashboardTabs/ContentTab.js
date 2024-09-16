@@ -1,107 +1,165 @@
-import React from "react";
-import { fetchShorts } from "../../services/fetchData";
-import { Table, Tooltip, Button } from "antd";
-import LazyLoad from "../../components/LazyLoad/lazyload";
-import Loading from "../../components/Loading/loading";
-import Raxios from "../../services/axiosHelper";
+import Faxios from "../../services/raxiosHelper";
+import React, { useState } from "react";
+import { Button, Input, message, Form } from "antd";
 
 const ContentTab = () => {
-    const [shorts, setShorts] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
-    const [selectedVideo, setSelectedVideo] = React.useState(null);
+    const [loading, setLoading] = useState(false);
+    const [prompt, setPrompt] = useState("");
+    const [content, setContent] = useState({ tags: [] }); // Initialize content with tags array
+    const [photos, setPhotos] = useState([]);
+    const [query, setQuery] = useState("");
+    const [selectedPhoto, setSelectedPhoto] = useState(null);
 
-    React.useEffect(() => {
+    const handleApiRequest = async (apiCall, successMessage, errorMessage) => {
+        console.log(content, selectedPhoto, "content and photo");
         setLoading(true);
-        fetchShorts(setShorts);
-        setLoading(false);
-    }, []);
-
-    const handleViewClick = async (record) => {
-        setSelectedVideo(record);
-    };
-
-    const handleApproval = async (videoId, status) => {
         try {
-            const response = await Raxios.post(`/content/Video?videoId=${videoId}&status=${status}`);
-            if (response.status === 200) {
-                setShorts(prevShorts =>
-                    prevShorts.map(short =>
-                        short.videoId === videoId ? { ...short, approved: status } : short
-                    )
-                );
-            }
+            await apiCall();
+            if (successMessage) message.success(successMessage);
         } catch (error) {
-            console.log(error);
+            message.error(errorMessage);
+            console.error(error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const columns = [
-        {
-            title: "Title", dataIndex: "title", key: "title",
-            render: (text) => (
-                <Tooltip title={text}>
-                    <span>
-                        {text.length > 40 ? `${text.substring(0, 45)}...` : text}
-                    </span>
-                </Tooltip>
-            ),
+    const get_content = () => handleApiRequest(
+        async () => {
+            const response = await Faxios.post("/chat", { prompt });
+            const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+            setContent(data);
         },
-        { title: "Keyword", dataIndex: "keyword", key: "keyword" },
-        {
-            title: "Status", dataIndex: "approved", key: "approved",
-            render: (text) => (
-                <span>
-                    {text === undefined ? "Pending" : text ? "Approved" : "Rejected"}
-                </span>
-            ),
+        null,
+        "Error getting content"
+    );
+
+    const get_photos = () => handleApiRequest(
+        async () => {
+            const response = await Faxios.get("/photos", {
+                params: { query, page: 1, per_page: 6 }
+            });
+            setPhotos(response.data);
         },
-        {
-            title: "View", key: "details",
-            render: (record) => (
-                <Button type="primary" onClick={() => handleViewClick(record)}>View</Button>
-            ),
-        }
-    ];
+        null,
+        "Error getting pictures"
+    );
+
+    const send_content = () => handleApiRequest(
+        async () => {
+            const response = await Faxios.post("/content", { content, photo: selectedPhoto });
+            message.success(response.msg);
+        },
+        "Content sent successfully",
+        "Error sending content"
+    );
+
+    const handlePhotoSelection = (photo) => {
+        setSelectedPhoto(selectedPhoto === photo ? null : photo);
+    };
+
+    // For dynamic tags input, manipulating content.tags directly
+    const handleTagChange = (index, value) => {
+        const newTags = [...content.tags];
+        newTags[index] = value;
+        setContent({ ...content, tags: newTags });
+    };
+
+    const addTagInput = () => setContent({ ...content, tags: [...content.tags, ""] });
+
+    const removeTagInput = (index) => {
+        const newTags = content.tags.filter((_, i) => i !== index);
+        setContent({ ...content, tags: newTags });
+    };
+
+    const renderFormInput = (label, value, setValue, type = "text", rows = 1) => (
+        <Form.Item label={label}>
+            {type === "textarea" ? (
+                <Input.TextArea
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    rows={rows}
+                />
+            ) : (
+                <Input
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                />
+            )}
+        </Form.Item>
+    );
+
+    const renderButton = (onFinish, label) => (
+        <Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading} className="mt-5">
+                {label}
+            </Button>
+        </Form.Item>
+    );
 
     return (
-        <div>
-            <h1>Content Tab</h1>
-            {loading ?
-                <Loading /> :
-                <LazyLoad>
-                    <div className="grid grid-cols-2 gap-4">
-                        <Table className="w-full h-full" dataSource={shorts} columns={columns} rowKey={(record) => record.videoId} />
-                        <div className="flex flex-col justify-center border-l-2 border-lightBlack pl-2 w-full h-full">
-                            {selectedVideo ? (
-                                <div>
-                                    <iframe
-                                        width="100%"
-                                        height="400"
-                                        src={`https://d3q8r846m83fir.cloudfront.net/${selectedVideo.s3Key}.mp4`}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        title={selectedVideo.title}
-                                    />
-                                    <div className="flex w-full p-10 pt-5 justify-between items-center">
-                                        <Button
-                                            type="primary"
-                                            className="bg-green-500"
-                                            onClick={() => handleApproval(selectedVideo.videoId, true)}
-                                        >Approve</Button>
-                                        <Button
-                                            type="primary"
-                                            className="bg-red-500"
-                                            onClick={() => handleApproval(selectedVideo.videoId, false)}
-                                        >Reject</Button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <p>Select a video to view</p>
-                            )}
-                        </div>
+        <div className="min-h-screen p-5 w-full overflow-auto flex md:flex-row flex-col h-max">
+            <div className="md:w-1/2 mr-2">
+                <div className="grid grid-cols-2">
+                    {/* Generate Content Form */}
+                    <div className="p-5 pl-0 flex flex-col">
+                        <Form layout="vertical" onFinish={get_content}>
+                            {renderFormInput("Generate Content", prompt, setPrompt)}
+                            {renderButton(get_content, "Generate")}
+                        </Form>
                     </div>
-                </LazyLoad>
-            }
+
+                    {/* Search Photos Form */}
+                    <div className="p-5 flex flex-col">
+                        <Form layout="vertical" onFinish={get_photos}>
+                            {renderFormInput("Search Photos", query, setQuery)}
+                            {renderButton(get_photos, "Get Pictures")}
+                        </Form>
+                    </div>
+                </div>
+
+                {/* Content Editing Form */}
+                <Form layout="vertical" onFinish={send_content}>
+                    {renderFormInput("Content", content.response, (val) => setContent(prevContent => ({ ...prevContent, response: val })), "textarea", 6)}
+                    {renderFormInput("Category", content.category, (val) => setContent(prevContent => ({ ...prevContent, category: val })))}
+
+                    {/* Dynamic Tags Input */}
+                    <Form.Item label="Tags">
+                        {content.tags.map((tag, index) => (
+                            <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                                <Input
+                                    value={tag}
+                                    onChange={(e) => handleTagChange(index, e.target.value)}
+                                    style={{ marginRight: '8px' }}
+                                />
+                                <Button type="danger" onClick={() => removeTagInput(index)}>
+                                    Remove
+                                </Button>
+                            </div>
+                        ))}
+                        <Button type="dashed" onClick={addTagInput}>
+                            Add Tag
+                        </Button>
+                    </Form.Item>
+
+                    {renderButton(send_content, "Send Content")}
+                </Form>
+            </div>
+
+            {/* Photos Grid */}
+            <div className="flex md:mt-0 mt-5 md:w-1/2 pl-2 md:border-l-2 dark:md:border-lightBlack">
+                <div className="grid grid-cols-2 w-full">
+                    {photos.map((photo, index) => (
+                        <div
+                            key={index}
+                            className={`p-2 ${selectedPhoto === photo ? 'border-2 border-blue-500' : ''}`}
+                            onClick={() => handlePhotoSelection(photo)}
+                        >
+                            <img src={photo.url} alt={photo.alt_description} />
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };

@@ -7,6 +7,7 @@ import Faxios from '../services/raxiosHelper';
 import UsersTab from './DashboardTabs/UsersTab';
 import EventsTab from './DashboardTabs/EventsTab';
 import React, { useState, useEffect } from 'react';
+import ContentTab from './DashboardTabs/ContentTab';
 import ClubSukoon from './DashboardTabs/ClubSukoon';
 import SaarthisTab from './DashboardTabs/ExpertsTab';
 import WhatsappTab from './DashboardTabs/WhatsappTab';
@@ -105,6 +106,7 @@ const AdminDashboard = ({ onLogout }) => {
     { name: 'applications', component: <ApplicationsTab /> },
     { name: 'club', component: <ClubSukoon /> },
     { name: 'referrals', component: <ReferralsTab /> },
+    { name: 'content', component: <ContentTab /> }
   ];
 
   return (
