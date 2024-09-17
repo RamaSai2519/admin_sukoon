@@ -27,8 +27,7 @@ const ContentTab = () => {
     const get_content = () => handleApiRequest(
         async () => {
             const response = await Faxios.post("/chat", { prompt });
-            const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
-            setContent(data);
+            setContent(response.data);
         },
         null,
         "Error getting content"
@@ -47,7 +46,12 @@ const ContentTab = () => {
 
     const send_content = () => handleApiRequest(
         async () => {
-            const response = await Faxios.post("/content", { content, photo: selectedPhoto });
+            if (!content || !selectedPhoto) {
+                message.error("Please select a photo and generate content first");
+                return;
+            }
+            const photo = { slug: selectedPhoto.slug, description: selectedPhoto.alt_description, url: selectedPhoto.url }
+            const response = await Faxios.post("/content", { content, photo });
             message.success(response.msg);
         },
         "Content sent successfully",
