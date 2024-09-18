@@ -40,10 +40,12 @@ const refreshFaxiosAccessToken = async () => {
 Faxios.interceptors.response.use(
     (response) => {
         if ("output_details" in response.data) {
-            response.data = response.data.output_details;
-            response.status = response.data.output_status === 'SUCCESS' ? 200 : 400;
-            response.msg = response.data.output_message;
-            return response;
+            return {
+                data: response.data.output_details,
+                status: response.data.output_status === 'SUCCESS' ? 200 : 400,
+                msg: response.data.output_message,
+                originalResponse: response,
+            };
         }
         return response;
     },

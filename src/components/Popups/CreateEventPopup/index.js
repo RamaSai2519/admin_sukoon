@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
 import { Form, Input, Button, message, Select, DatePicker, Upload, InputNumber } from 'antd';
+import Raxios, { BASE_URL } from '../../../services/axiosHelper';
+import Faxios from '../../../services/raxiosHelper';
 import { UploadOutlined } from '@ant-design/icons';
-import Raxios, { BASE_URL, Paxios } from '../../../services/axiosHelper';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 
 const CreateEventPopup = ({ setVisible, data, editMode }) => {
@@ -15,14 +16,12 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
                 imageUrl: uploadedImageUrl
             });
             if (response.status === 200) {
-                const fResponse = await Paxios.post("/events/config", {
+                const fResponse = await Faxios.post("/upsert_event", {
                     ...otherValues,
                     imageUrl: uploadedImageUrl
                 });
-                if (fResponse.data.success) {
-                    message.success(
-                        `Event ${data ? 'updated' : 'created'} successfully`
-                    );
+                if (fResponse.status === 200) {
+                    message.success(fResponse.msg);
                     setVisible(false);
                 } else {
                     message.error('Error creating event');
@@ -140,6 +139,8 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
             rules: [{ required: true, message: 'Please select the guest speaker' }],
         },
         { label: "Meeting Link", name: "meetingLink", rules: [], component: <Input /> },
+        { label: "Meeting ID", name: "meeting_id", rules: [], component: <Input /> },
+        { label: "Meeting Passcode", name: "passcode", rules: [], component: <Input /> },
         {
             label: "Repeat", name: "repeat",
             rules: [{ required: true, message: 'Please select the repeat' }],
