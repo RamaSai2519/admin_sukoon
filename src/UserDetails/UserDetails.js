@@ -31,8 +31,15 @@ const UserDetails = () => {
       setNumberOfCalls(response.data.numberOfCalls);
       setSource(response.data.source);
       setContext(response.data.context);
-      setPersona(response.data['Customer Persona']);
       setNotifications(response.data.notifications);
+
+      if (typeof response.data['Customer Persona'] === 'object') {
+        const personaString = JSON.stringify(response.data['Customer Persona'], null, 2);
+        const personaWithoutQuotes = personaString.replace(/\"/g, ''); // Removes all inverted quotes
+        setPersona(personaWithoutQuotes);
+      } else {
+        setPersona(response.data['Customer Persona']);
+      }
     } catch (error) {
       console.error('Error fetching user details:', error);
     }

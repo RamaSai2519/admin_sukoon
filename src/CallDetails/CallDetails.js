@@ -55,12 +55,21 @@ const CallDetails = () => {
 
     const formatValue = (value) => {
         if (!value) return null;
-        return value.split('\n').map((line, index) => (
-            <React.Fragment key={index}>
-                {line}
-                <br />
-            </React.Fragment>
-        ));
+        if (typeof value === 'object') {
+            value = JSON.stringify(value, null, 2);
+            value = value.replace(/\"/g, '');
+        }
+        try {
+            return value.split('\n').map((line, index) => (
+                <React.Fragment key={index}>
+                    {line.replace('**', '').replace('**', '')}
+                    <br />
+                </React.Fragment>
+            ));
+        } catch (error) {
+            console.error('Error formatting value:', error);
+            return value;
+        }
     };
 
     const toggleBreakup = () => {

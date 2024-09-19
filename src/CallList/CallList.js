@@ -75,9 +75,9 @@ const CallsTable = () => {
 
   let filteredCalls = calls.filter((call) => {
     return (
-      call.userName.toLowerCase().includes(filters.user.toLowerCase()) &&
-      call.expertName.toLowerCase().includes(filters.expert.toLowerCase()) &&
-      call.status.toLowerCase().includes(filters.status.toLowerCase())
+      call?.userName?.toLowerCase().includes(filters?.user?.toLowerCase()) &&
+      call?.expertName?.toLowerCase().includes(filters?.expert?.toLowerCase()) &&
+      call?.status?.toLowerCase().includes(filters?.status?.toLowerCase())
     );
   });
 
