@@ -16,7 +16,7 @@ import { ConfigProvider, theme } from 'antd';
 import './App.css';
 
 const App = () => {
-  const appVersion = '16.0.0';
+  const appVersion = '16.0.3';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
