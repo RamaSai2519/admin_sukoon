@@ -4,14 +4,16 @@ import { FaArrowLeft } from 'react-icons/fa';
 import React, { useState, useEffect } from 'react';
 import { useCategories } from '../services/useData';
 import Loading from '../components/Loading/loading';
-import { message, Select, Switch, Table } from 'antd';
+import { message, Select, Switch, Table, Input } from 'antd';
 import EditableTimeCell from '../components/EditableTimeCell';
 import Faxios from '../services/raxiosHelper';
 
 const { Option } = Select;
 
 const ExpertDetails = () => {
-  const { expertId } = useParams();
+  const { number } = useParams();
+  const expertId = localStorage.getItem('expertId');
+  
   const [expert, setExpert] = useState({
     name: '',
     phoneNumber: '',
@@ -26,15 +28,14 @@ const ExpertDetails = () => {
     total_score: '',
     calls_share: '',
   });
-  const [editMode, setEditMode] = useState(false);
   const { allCategories, fetchCategories } = useCategories();
   const [timings, setTimings] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchExpertDetails = async () => {
     try {
-      const response = await Raxios.get(`/expert/experts/${expertId}`);
-      const { __v, lastModifiedBy, ...expertData } = response.data;
+      const response = await Faxios.get(`/expert?phoneNumber=${number}`);
+      const { __v, lastModifiedBy, calls, ...expertData } = response.data;
       setExpert(expertData);
       setLoading(false);
     } catch (error) {
@@ -67,20 +68,26 @@ const ExpertDetails = () => {
     }
   }, [loading, timings]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setExpert({ ...expert, [name]: value });
+  const handleInputChange = (name, value) => {
+    const updatedExpert = { ...expert, [name]: value };
+    setExpert(updatedExpert);
+    handleUpdate(updatedExpert);
   };
 
   const handleUpdate = async (updatedFormData) => {
+    if (updatedFormData.phoneNumber.length !== 10) {
+      return
+    }
     try {
-      await Faxios.post('/expert', updatedFormData);
-      setExpert((prev) => ({ ...prev, ...updatedFormData }));
-      message.success('Expert details updated successfully!');
-      setEditMode(false);
+      const response = await Faxios.post('/expert', updatedFormData);
+      if (response.status !== 200) {
+        message.error(response.msg);
+      } else {
+        fetchExpertDetails();
+      }
     } catch (error) {
-      message.error('Error updating expert details:', error);
-      console.error('Error updating expert details:', error);
+      console.log("🚀 ~ handleUpdate ~ error:", error)
+      message.error(error.response?.data?.message || 'An error occurred');
     }
   };
 
@@ -153,7 +160,7 @@ const ExpertDetails = () => {
         <div className='h3-darkgrey'>
           <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
             <h1>Expert Details</h1>
-            <button className='back-button' onClick={() => window.history.back()}>
+            <button className='back-button' onClick={() => {window.history.back(); localStorage.removeItem('expertId')}}>
               <FaArrowLeft className="back-icon" />
             </button>
           </div>
@@ -161,7 +168,7 @@ const ExpertDetails = () => {
             <img src={expert.profile} alt="Expert Profile" className='max-h-52' />
           </div>
           <div className="grid grid-cols-2 p-5 overflow-auto">
-            {['name', 'phoneNumber', 'status', 'description', 'topics', 'languages'].map((field, idx) => (
+            {['name', 'phoneNumber', 'status', 'description', 'type', 'languages'].map((field, idx) => (
               field === 'status' ?
                 <div className='grid grid-cols-2'>
                   <StatusTile
@@ -190,44 +197,59 @@ const ExpertDetails = () => {
                   />
                 </div>
                 :
-                <div key={idx} className='grid-tile'>
-                  <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
-                  {editMode ? (
-                    <p><input type="text" name={field} value={expert[field]} onChange={handleInputChange} /></p>
-                  ) : (
-                    <h2>{expert[field]}</h2>
-                  )}
-                </div>
+                field === 'type' ?
+                  <div className='grid-tile'>
+                    <h3>Type</h3>
+                    <Select
+                      className='w-full'
+                      placeholder="Select Type"
+                      value={expert.type}
+                      onChange={(value) => handleUpdate({ ...expert, type: value })}
+                    >
+                      <Option value="expert">Expert</Option>
+                      <Option value="saarthi">Sarathi</Option>
+                    </Select>
+                  </div>
+                  : field === 'description' ?
+                    <div className='grid-tile'>
+                      <h3>Description</h3>
+                      <Input.TextArea
+                        rows={5}
+                        value={expert.description}
+                        onChange={(e) => handleInputChange('description', e.target.value)}
+                      />
+                    </div>
+                    :
+                    <div key={idx} className='grid-tile'>
+                      <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
+                      <input
+                        type="text"
+                        className='dark:bg-darkBlack dark:border-darkGray border p-0.5 pl-2 rounded-md'
+                        value={expert[field]}
+                        onChange={(e) => handleInputChange(field, e.target.value)}
+                      />
+                    </div>
             ))}
             <div className='grid-tile'>
               <h3>Categories</h3>
-              {editMode ? (
-                <Select
-                  mode="multiple"
-                  style={{ width: '100%' }}
-                  placeholder="Select Categories"
-                  value={expert.categories}
-                  onChange={(value) => setExpert((prev) => ({ ...prev, categories: value }))}
-                >
-                  {allCategories.map((category) => (
-                    <Option key={category._id} value={category}>
-                      {category.name}
-                    </Option>
-                  ))}
-                </Select>
-              ) : (
-                <h2>{expert.categories.join(', ') || 'No categories'}</h2>
-              )}
+              <Select
+                mode="multiple" className='w-full'
+                placeholder="Select Categories" value={expert.categories}
+                onChange={(value) => handleUpdate({ ...expert, categories: value })}
+              >
+                {allCategories.map((category) => (
+                  <Option key={category} value={category} />
+                ))}
+              </Select>
             </div>
             <div className='grid grid-cols-4'>
               {['score', 'repeat_score', 'calls_share', 'total_score'].map((field, idx) => (
                 <div key={idx} className='grid-tile'>
                   <h3>{field.split(/(?=[A-Z])/).join(' ')}</h3>
-                  {editMode ? (
-                    <p><input type="number" name={field} value={expert[field]} onChange={handleInputChange} /></p>
-                  ) : (
-                    <h2>{expert[field]}{field === 'calls_share' ? '%' : ''}</h2>
-                  )}
+                  <Input
+                    value={expert[field]}
+                    onChange={(e) => handleInputChange(field, parseFloat(e.target.value))}
+                  />
                 </div>
               ))}
             </div>
@@ -242,14 +264,6 @@ const ExpertDetails = () => {
               />
             </div>
             <div className='edit-button-container'>
-              {editMode ? (
-                <>
-                  <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
-                  <button className='update-button' onClick={() => handleUpdate(expert.status)}>Update Details</button>
-                </>
-              ) : (
-                <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
-              )}
               <button className='update-button' style={{ background: 'red' }} onClick={handleDelete}>Delete Expert</button>
             </div>
           </div>
