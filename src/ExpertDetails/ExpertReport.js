@@ -4,7 +4,6 @@ import { useParams, Link } from 'react-router-dom';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { FaArrowLeft } from 'react-icons/fa';
 import 'react-circular-progressbar/dist/styles.css';
-import './ExpertDetails.css';
 
 const EditableField = ({ label, value, onChange, type = "text" }) => (
   <div>
