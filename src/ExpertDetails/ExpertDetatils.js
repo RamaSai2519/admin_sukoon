@@ -78,7 +78,7 @@ const ExpertDetails = () => {
       if (response.status !== 200) {
         message.error(response.msg);
       } else {
-        setExpert(response.data);
+        fetchExpertDetails();
       }
     } catch (error) {
       console.log("🚀 ~ handleUpdate ~ error:", error)
@@ -224,7 +224,7 @@ const ExpertDetails = () => {
                 onChange={(value) => handleUpdate({ ...expert, categories: value })}
               >
                 {allCategories.map((category) => (
-                  <Option key={category._id} value={category} />
+                  <Option key={category} value={category} />
                 ))}
               </Select>
             </div>
