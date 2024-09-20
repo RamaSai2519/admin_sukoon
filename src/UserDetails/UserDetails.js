@@ -35,7 +35,7 @@ const UserDetails = () => {
 
       if (typeof response.data['Customer Persona'] === 'object') {
         const personaString = JSON.stringify(response.data['Customer Persona'], null, 2);
-        const personaWithoutQuotes = personaString.replace(/\"/g, ''); // Removes all inverted quotes
+        const personaWithoutQuotes = personaString.replace(/\"/g, '');
         setPersona(personaWithoutQuotes);
       } else {
         setPersona(response.data['Customer Persona']);
