@@ -74,7 +74,7 @@ const App = () => {
               <Route path="/admin/calls/:callId" element={<CallDetails />} />
               <Route path="/admin/users/:userId" element={<UserDetails />} />
               <Route path="/admin/events/:slug" element={<EventDetails />} />
-              <Route path="/admin/experts/:expertId" element={<ExpertDetails />} />
+              <Route path="/admin/experts/:number" element={<ExpertDetails />} />
               <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
               <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
               <Route path="/admin/userEngage" element={<UserEngagement />} />

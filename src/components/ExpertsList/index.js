@@ -94,10 +94,10 @@ const ExpertsList = () => {
             sorter: (a, b) => a.status.localeCompare(b.status),
         },
         {
-            title: 'Details',
-            key: 'details',
+            title: 'Details', key: 'details',
             render: (record) => (
-                <Link to={`/admin/experts/${record.key}`} className="view-details-link">
+                localStorage.setItem('expertId', record.key),
+                <Link to={{pathname: `/admin/experts/${record.phoneNumber}`}} className="view-details-link">
                     View
                 </Link>
             ),
@@ -107,6 +107,7 @@ const ExpertsList = () => {
     const dataSource = experts.map((expert) => ({
         key: expert._id,
         name: expert.name,
+        phoneNumber: expert.phoneNumber,
         timeSpent: expert.timeSpent + ' h',
         successfulCalls: calculateSuccessfulCalls(expert),
         failedCalls: calculateFailedCalls(expert),

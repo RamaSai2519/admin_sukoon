@@ -11,7 +11,9 @@ import Faxios from '../services/raxiosHelper';
 const { Option } = Select;
 
 const ExpertDetails = () => {
-  const { expertId } = useParams();
+  const { number } = useParams();
+  const expertId = localStorage.getItem('expertId');
+  
   const [expert, setExpert] = useState({
     name: '',
     phoneNumber: '',
@@ -32,8 +34,8 @@ const ExpertDetails = () => {
 
   const fetchExpertDetails = async () => {
     try {
-      const response = await Raxios.get(`/expert/experts/${expertId}`);
-      const { __v, lastModifiedBy, ...expertData } = response.data;
+      const response = await Faxios.get(`/expert?phoneNumber=${number}`);
+      const { __v, lastModifiedBy, calls, ...expertData } = response.data;
       setExpert(expertData);
       setLoading(false);
     } catch (error) {
@@ -158,7 +160,7 @@ const ExpertDetails = () => {
         <div className='h3-darkgrey'>
           <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
             <h1>Expert Details</h1>
-            <button className='back-button' onClick={() => window.history.back()}>
+            <button className='back-button' onClick={() => {window.history.back(); localStorage.removeItem('expertId')}}>
               <FaArrowLeft className="back-icon" />
             </button>
           </div>
