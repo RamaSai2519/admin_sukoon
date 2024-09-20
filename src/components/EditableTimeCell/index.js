@@ -3,7 +3,7 @@ import { Select, Form } from 'antd';
 
 const { Option } = Select;
 
-const timeOptions = Array.from({ length: 24 }, (_, i) => `${i < 10 ? '0' : ''}${i}:00`);
+const timeOptions = ['', ...Array.from({ length: 24 }, (_, i) => `${i < 10 ? '0' : ''}${i}:00`)];
 
 const EditableTimeCell = ({
     title,
@@ -25,8 +25,9 @@ const EditableTimeCell = ({
     const save = async () => {
         try {
             const values = await form.validateFields();
+            const value = values[dataIndex] === undefined ? '' : values[dataIndex];
             toggleEdit();
-            handleSave({ key: record.day, field: dataIndex, value: values[dataIndex] });
+            handleSave({ key: record.day, field: dataIndex, value });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }
@@ -40,12 +41,11 @@ const EditableTimeCell = ({
                 <Form.Item
                     style={{ margin: 0 }}
                     name={dataIndex}
-                    rules={[{ required: true, message: `${title} is required.` }]}
                 >
                     <Select onBlur={save} onChange={save}>
                         {timeOptions.map(time => (
                             <Option key={time} value={time}>
-                                {time}
+                                {time === '' ? 'None' : time}
                             </Option>
                         ))}
                     </Select>

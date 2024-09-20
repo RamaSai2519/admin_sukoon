@@ -73,6 +73,9 @@ const ExpertDetails = () => {
   };
 
   const handleUpdate = async (updatedFormData) => {
+    if (updatedFormData.phoneNumber.length !== 10) {
+      return
+    }
     try {
       const response = await Faxios.post('/expert', updatedFormData);
       if (response.status !== 200) {
@@ -202,19 +205,28 @@ const ExpertDetails = () => {
                       onChange={(value) => handleUpdate({ ...expert, type: value })}
                     >
                       <Option value="expert">Expert</Option>
-                      <Option value="sarathi">Sarathi</Option>
+                      <Option value="saarthi">Sarathi</Option>
                     </Select>
                   </div>
-                  :
-                  <div key={idx} className='grid-tile'>
-                    <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
-                    <input
-                      type="text"
-                      className='dark:bg-lightBlack'
-                      value={expert[field]}
-                      onChange={(e) => handleInputChange(field, e.target.value)}
-                    />
-                  </div>
+                  : field === 'description' ?
+                    <div className='grid-tile'>
+                      <h3>Description</h3>
+                      <Input.TextArea
+                        rows={5}
+                        value={expert.description}
+                        onChange={(e) => handleInputChange('description', e.target.value)}
+                      />
+                    </div>
+                    :
+                    <div key={idx} className='grid-tile'>
+                      <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
+                      <input
+                        type="text"
+                        className='dark:bg-darkBlack dark:border-darkGray border p-0.5 pl-2 rounded-md'
+                        value={expert[field]}
+                        onChange={(e) => handleInputChange(field, e.target.value)}
+                      />
+                    </div>
             ))}
             <div className='grid-tile'>
               <h3>Categories</h3>
@@ -234,7 +246,7 @@ const ExpertDetails = () => {
                   <h3>{field.split(/(?=[A-Z])/).join(' ')}</h3>
                   <Input
                     value={expert[field]}
-                    onChange={(e) => handleInputChange(field, e.target.value)}
+                    onChange={(e) => handleInputChange(field, parseFloat(e.target.value))}
                   />
                 </div>
               ))}
