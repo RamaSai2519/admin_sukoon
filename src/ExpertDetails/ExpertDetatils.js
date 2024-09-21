@@ -208,6 +208,7 @@ const ExpertDetails = () => {
                     >
                       <Option value="expert">Expert</Option>
                       <Option value="saarthi">Sarathi</Option>
+                      <Option value="internal">Internal</Option>
                     </Select>
                   </div>
                   : field === 'description' ?
