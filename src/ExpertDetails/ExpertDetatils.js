@@ -86,7 +86,6 @@ const ExpertDetails = () => {
         fetchExpertDetails();
       }
     } catch (error) {
-      console.log("🚀 ~ handleUpdate ~ error:", error)
       message.error(error.response?.data?.message || 'An error occurred');
     }
   };
@@ -208,6 +207,7 @@ const ExpertDetails = () => {
                     >
                       <Option value="expert">Expert</Option>
                       <Option value="saarthi">Sarathi</Option>
+                      <Option value="internal">Internal</Option>
                     </Select>
                   </div>
                   : field === 'description' ?

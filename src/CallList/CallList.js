@@ -1,190 +1,42 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import ScrollBottom from '../components/ScrollBottom';
-import './CallList.css';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
-import CallReceivedIcon from '@mui/icons-material/CallReceived';
-import CallMissedIcon from '@mui/icons-material/CallMissed';
-import { useCalls } from '../services/useData';
-import { red, pink, green, yellow } from '@mui/material/colors';
-import LazyLoad from '../components/LazyLoad/lazyload';
-import Loading from '../components/Loading/loading';
-import { formatTime } from '../Utils/formatHelper';
-import { downloadExcel } from '../Utils/exportHelper';
+import React, { useEffect, useRef, useState } from 'react';
+import { raxiosFetchData } from '../services/fetchData';
+import CallsTableComponent from '../components/CallsTable';
 
 const CallsTable = () => {
+  const searchInputRef = useRef(null);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { calls, fetchCalls } = useCalls();
-  const [filters, setFilters] = useState({
-    user: '',
-    expert: '',
-    status: '',
-  });
-  const [sortConfig, setSortConfig] = useState({
-    key: '',
-    direction: '',
-  });
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [currentPage, setCurrentPage] = useState(
+    localStorage.getItem('currentCallsPage') ? parseInt(localStorage.getItem('currentCallsPage')) : 1
+  );
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
 
-  const fetchData = async () => {
+  useEffect(() => {
     setLoading(true);
-    await fetchCalls();
+    raxiosFetchData(currentPage, pageSize, setData, setTotalItems, '/call', { dest: 'list' });
     setLoading(false);
-  };
+  }, [currentPage, pageSize]);
 
-  React.useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line
-  }, []);
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-  };
-
-  const handleSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-
-    if (key === 'ConversationScore') {
-      if (sortConfig.key === key) {
-        direction = sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
-      }
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const renderStatusIcon = (status) => {
-    switch (status) {
-      case 'failed':
-        return <CloseIcon sx={{ color: red[500] }} />;
-      case 'missed':
-        return <CallMissedIcon sx={{ color: pink[500] }} />;
-      case 'successful':
-        return <CheckIcon sx={{ color: green[500] }} />;
-      default:
-        return <CallReceivedIcon sx={{ color: yellow[500] }} />;
-    }
-  }
-
-  let filteredCalls = calls.filter((call) => {
-    return (
-      call?.userName?.toLowerCase().includes(filters?.user?.toLowerCase()) &&
-      call?.expertName?.toLowerCase().includes(filters?.expert?.toLowerCase()) &&
-      call?.status?.toLowerCase().includes(filters?.status?.toLowerCase())
-    );
-  });
-
-  if (sortConfig.key) {
-    filteredCalls.sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
-      }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
-    });
-  }
-
-  const renderSortArrow = (key) => {
-    if (sortConfig.key === key) {
-      return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
-    }
-    return null;
-  };
-
-  const handleExport = () => {
-    downloadExcel(calls, 'Calls.xlsx');
+  const handleTableChange = (current, pageSize) => {
+    setCurrentPage(current);
+    localStorage.setItem('currentCallsPage', current);
+    setPageSize(pageSize);
   };
 
   return (
-    <LazyLoad>
-      <div className="w-full overflow-auto">
-        <div className="dashboard-tile">
-          <div className='latest-wrapper'>
-            <table className="calls-table">
-              <thead>
-                <tr className="filter-row">
-                  <td>
-                    <input
-                      type="text"
-                      placeholder="Search User"
-                      name="user"
-                      value={filters.user}
-                      onChange={handleFilterChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      placeholder="Search Expert"
-                      name="expert"
-                      value={filters.expert}
-                      onChange={handleFilterChange}
-                    />
-                  </td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>
-                    <button className='popup-button' onClick={handleExport}>
-                      Export
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <th onClick={() => handleSort('userName')}>
-                    User {renderSortArrow('userName')}
-                  </th>
-                  <th onClick={() => handleSort('expertName')}>
-                    Expert {renderSortArrow('expertName')}
-                  </th>
-                  <th>Time</th>
-                  <th onClick={() => handleSort('duration')}>
-                    Duration {renderSortArrow('duration')}
-                  </th>
-                  <th style={{ textAlign: 'center' }} onClick={() => handleSort('status')}>
-                    Status {renderSortArrow('status')}
-                  </th>
-                  <th onClick={() => handleSort('ConversationScore')}>
-                    Score {renderSortArrow('ConversationScore')}
-                  </th>
-                  <th>Details</th>
-                </tr>
-              </thead>
-              {loading ?
-                <Loading /> :
-                <tbody>
-                  {filteredCalls.map((call) => (
-                    <tr key={call.callId} className='default-row'>
-                      <td>{renderStatusIcon(call.status)} {call.userName}</td>
-                      <td>{call.expertName}</td>
-                      <td>{formatTime(call.initiatedTime)}</td>
-                      <td>{call.duration} min</td>
-                      <td style={{ textAlign: 'center' }}>{call.status}</td>
-                      <td>{call.ConversationScore}</td>
-                      <td>
-                        <Link to={`/admin/calls/${call.callId}`} className="view-details-link">
-                          View
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>}
-            </table>
-            <ScrollBottom />
-          </div>
-        </div>
-      </div>
-    </LazyLoad>
+    <CallsTableComponent
+      data={data}
+      loading={loading}
+      searchText={searchText}
+      setSearchText={setSearchText}
+      searchedColumn={searchedColumn}
+      setSearchedColumn={setSearchedColumn}
+      searchInputRef={searchInputRef}
+      pagination={{ current: currentPage, pageSize, total: totalItems, onChange: handleTableChange }}
+    />
   );
 };
 
