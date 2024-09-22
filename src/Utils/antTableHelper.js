@@ -1,7 +1,12 @@
 import React from 'react';
-import { Input, Button, Space, message } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import Raxios from '../services/axiosHelper';
+import { SearchOutlined } from '@ant-design/icons';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { Input, Button, Space, message } from 'antd';
+import CallMissedIcon from '@mui/icons-material/CallMissed';
+import CallReceivedIcon from '@mui/icons-material/CallReceived';
+import { red, pink, green, yellow } from '@mui/material/colors';
 
 const getColumnSearchProps = (dataIndex, displayName, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -99,6 +104,18 @@ export const handleFilterDropdownVisibleChange = async (collection, field, key, 
     setFilters(prevFilters => ({ ...prevFilters, [key]: filterOptions }));
 };
 
+export const renderStatusIcon = (status) => {
+    switch (status) {
+        case 'failed':
+            return <CloseIcon sx={{ color: red[500] }} />;
+        case 'missed':
+            return <CallMissedIcon sx={{ color: pink[500] }} />;
+        case 'successful':
+            return <CheckIcon sx={{ color: green[500] }} />;
+        default:
+            return <CallReceivedIcon sx={{ color: yellow[500] }} />;
+    }
+};
 
 
 export default getColumnSearchProps;

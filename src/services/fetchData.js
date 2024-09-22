@@ -37,6 +37,28 @@ export const fetchPagedData = async (page, size, setData, setTotal, setLoading, 
     setLoading(false);
 };
 
+export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, optional) => {
+    try {
+        const response = await Faxios.get(endpoint, {
+            params: {
+                ...(size && { size }),
+                ...(page && { page }),
+                ...(optional && { ...optional })
+            }
+        });
+        if (response.status !== 200) {
+            message.error(response.msg);
+            return;
+        } else {
+            setData && setData(response.data.data);
+            setTotal && setTotal(response.data.total);
+            return response.data;
+        }
+    } catch (error) {
+        message.error(error.response?.data?.message || 'An error occurred');
+    }
+};
+
 export const fetchData = async (setData, setLoading, endpoint, optional) => {
     setLoading && setLoading(true);
     try {
@@ -90,10 +112,18 @@ export const fetchUsers = async (setUsers) => {
 
 export const fetchCalls = async (setCalls) => {
     try {
-        const response = await Raxios.get('/data/calls');
-        setCalls(response.data.reverse());
+        const response = await Faxios.get('/call', {
+            params: { dest: 'graph' }
+        });
+        setCalls(response.data.data);
+        if (response.status !== 200) {
+            message.error(response.msg);
+            return;
+        } else {
+            return response.data;
+        }
     } catch (error) {
-        message.error('Error fetching calls:', error);
+        message.error(error.response?.data?.message || 'An error occurred');
     }
 };
 

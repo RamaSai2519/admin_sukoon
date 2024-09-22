@@ -3,9 +3,7 @@ import PostsTable from "./PostsTable";
 
 const ReviewContent = () => {
     const [post, setPost] = useState({});
-    useEffect(() => {
-        console.log("🚀 ~ file: index.js ~ line 5 ~ ReviewContent ~ post", post)
-    }, [post])
+
     return (
         <div className="p-5 pl-0 w-full overflow-auto flex md:flex-row flex-col h-max">
             <div className="md:w-1/2 mr-2">
