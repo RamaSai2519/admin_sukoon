@@ -18,36 +18,45 @@ Faxios.interceptors.request.use(
     }
 );
 
+const logout_user = () => {
+    localStorage.clear();
+    window.location.href = '/';
+};
+
 const refreshFaxiosAccessToken = async () => {
     const refreshToken = localStorage.getItem('refresh_token');
     try {
-        const response = await axios.post(`${FINAL_URL}/admin_auth`,
+        let response = await axios.post(`${FINAL_URL}/admin_auth`,
             { action: 'refresh' }, {
             headers: {
                 Authorization: `Bearer ${refreshToken}`,
             },
         });
+        response = await format_response(response);
+        if (response.status !== 200) logout_user();
         const newAccessToken = response.data.output_details.access_token;
         localStorage.setItem('access_token', newAccessToken);
         return newAccessToken;
     } catch (error) {
-        console.error('Failed to refresh access token', error);
-        localStorage.clear();
-        window.location.href = '/';
+        logout_user();
     }
 };
 
+const format_response = async (response) => {
+    if ("output_details" in response.data) {
+        return {
+            data: response.data.output_details,
+            status: response.data.output_status === 'SUCCESS' ? 200 : 400,
+            msg: response.data.output_message,
+            originalResponse: response,
+        };
+    }
+    return response;
+}
+
 Faxios.interceptors.response.use(
     (response) => {
-        if ("output_details" in response.data) {
-            return {
-                data: response.data.output_details,
-                status: response.data.output_status === 'SUCCESS' ? 200 : 400,
-                msg: response.data.output_message,
-                originalResponse: response,
-            };
-        }
-        return response;
+        return format_response(response);
     },
     async (error) => {
         const originalRequest = error.config;
