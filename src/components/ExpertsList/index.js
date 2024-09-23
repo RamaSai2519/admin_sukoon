@@ -116,7 +116,7 @@ const ExpertsList = () => {
         score: expert?.score || 0,
         calls_share: (expert?.calls_share || 0) + '%',
         repeat_score: (expert?.repeat_score || 0) + '%',
-        total_score: expert?.total_score || 0,
+        total_score: (expert?.total_score || 0) + '%',
         status: expert.status,
     }));
 
