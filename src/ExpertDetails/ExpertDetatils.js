@@ -86,7 +86,6 @@ const ExpertDetails = () => {
         fetchExpertDetails();
       }
     } catch (error) {
-      console.log("🚀 ~ handleUpdate ~ error:", error)
       message.error(error.response?.data?.message || 'An error occurred');
     }
   };

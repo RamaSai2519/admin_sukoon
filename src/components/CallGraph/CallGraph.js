@@ -3,10 +3,14 @@ import Chart from 'chart.js/auto';
 import { useCalls } from '../../services/useData';
 
 const CallGraph = () => {
-  const { calls } = useCalls();
+  const { calls, fetchCalls } = useCalls();
   const [chart, setChart] = useState(null);
   const [timeframe, setTimeframe] = useState('year');
   const [type, setType] = useState('all');
+
+  useEffect(() => {
+    fetchCalls();
+  }, []);
 
   useEffect(() => {
     renderChart(calls);

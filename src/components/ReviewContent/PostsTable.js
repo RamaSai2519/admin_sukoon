@@ -1,6 +1,6 @@
+import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
-import Faxios from "../../services/raxiosHelper";
-import { Button, message, Table } from "antd";
+import { raxiosFetchData } from "../../services/fetchData";
 
 const PostsTable = ({ setPost }) => {
     const [posts, setPosts] = useState([]);
@@ -12,28 +12,15 @@ const PostsTable = ({ setPost }) => {
     });
 
     const fetchPosts = async () => {
-        setLoading(true);
-        try {
-            const response = await Faxios.get("/content", {
-                params: {
-                    page: pagination.current,
-                    size: pagination.pageSize,
-                },
-            });
-            if (response.status === 200) {
-                setPosts(response.data.data);
-                setPagination({
-                    ...pagination,
-                    total: response.data.total,
-                });
-            } else {
-                message.error(response.msg);
-            }
-        } catch (error) {
-            console.log("🚀 ~ fetchPosts ~ error:", error)
-            message.error(error.response?.data?.message || 'An error occurred');
-        }
-        setLoading(false);
+        await raxiosFetchData(
+            pagination.current,
+            pagination.pageSize,
+            setPosts,
+            setPagination,
+            pagination,
+            setLoading,
+            "/content"
+        );
     }
 
     useEffect(() => {
