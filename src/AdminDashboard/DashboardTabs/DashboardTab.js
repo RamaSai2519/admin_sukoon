@@ -76,7 +76,9 @@ const DashboardTab = () => {
             <DashboardTile title="Online Saarthis" style={{ "gridRow": "1 / span 2", "gridColumn": "5" }}>
               <OnlineSaarthisTable onlineSaarthis={stats.onlineSarathis} />
             </DashboardTile>
-            <DashboardTile title='Latest Calls' style={{ "gridColumn": "1 / 5" }}><LastFiveCallsTable /></DashboardTile>
+            <DashboardTile style={{ "gridColumn": "1 / 5" }}>
+              <LastFiveCallsTable />
+            </DashboardTile>
             <DashboardTile title={view} style={{ "gridColumn": "5 / span 1" }} >
               <InsightsTable view={view} handleToggle={handleToggle} />
               <div className='w-full flex items-center justify-end'>

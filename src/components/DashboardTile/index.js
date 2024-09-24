@@ -1,50 +1,22 @@
 import React, { useState } from 'react';
 
-const DashboardTile = ({ title, msg, children, style, onClick, pointer = "default" }) => {
+const DashboardTile = ({ title, msg, children, style, onClick, pointer = "default", customClass = "" }) => {
     const [showTooltip, setShowTooltip] = useState(false);
-
-    const tooltipStyle = {
-        visibility: showTooltip ? 'visible' : 'hidden',
-        width: '120px',
-        backgroundColor: 'black',
-        color: '#fff',
-        textAlign: 'center',
-        borderRadius: '6px',
-        padding: '5px',
-        position: 'absolute',
-        bottom: "15%",
-        right: 0,
-        zIndex: 1,
-        opacity: showTooltip ? 1 : 0,
-        transition: 'opacity 0.3s',
-    };
-
-    const arrowStyle = {
-        content: '""',
-        position: 'absolute',
-        top: '100%', /* Arrow at the bottom of the tooltip */
-        left: '50%',
-        marginLeft: '-5px',
-        borderWidth: '5px',
-        borderStyle: 'solid',
-        borderColor: 'black transparent transparent transparent',
-    };
 
     return (
         <div
-            className={`m-2 min-h-36 p-5 rounded-3xl min-w-fit cshadow justify-between dark:bg-lightBlack items-start flex flex-col cursor-${pointer}`}
-            style={{ ...style, position: 'relative' }}
+            className={`relative m-2 min-h-36 p-5 rounded-3xl min-w-fit cshadow justify-between dark:bg-lightBlack items-start flex flex-col cursor-${pointer} ${customClass}`}
+            style={style}
             onClick={onClick}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
         >
             {msg &&
-                <div style={tooltipStyle}>
+                <div className={`absolute right-0 bottom-[15%] z-10 w-[120px] text-white p-1.5 text-center rounded-lg bg-black transition-opacity duration-300 ${showTooltip ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                     {msg}
-                    <div style={arrowStyle}></div>
                 </div>
             }
-            <h3 className='text-2xl font-bold'>{title}</h3>
+            {title && <h3 className='text-2xl font-bold'>{title}</h3>}
             {children}
         </div>
     );
