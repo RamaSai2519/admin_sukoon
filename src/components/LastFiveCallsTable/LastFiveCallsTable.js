@@ -11,6 +11,7 @@ const LatestCallsTable = () => {
   const searchInputRef = useRef(null);
   const [data, setData] = useState([]);
   const { fetchInsights} = useInsights();
+  const [disable, setDisable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -20,24 +21,27 @@ const LatestCallsTable = () => {
 
   const fetchData = async () => {
     setLoading(true);
+    setDisable(true);
     await raxiosFetchData(
       null, null, setData, null, '/call', { dest: 'home', internal: internalView }
     );
-    fetchCalls(internalView);
-    fetchStats(internalView);
-    fetchInsights(internalView);
     setLoading(false);
+    await fetchCalls(internalView);
+    await fetchStats(internalView);
+    await fetchInsights(internalView);
+    setDisable(false);
   };
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, [internalView]);
 
   return (
     <LazyLoad>
       <div className='flex w-full items-center justify-between'>
         <h3 className='text-2xl font-bold'>Latest {internalView ? "Internal" : "User"} Calls</h3>
-        <InternalToggle internalView={internalView} setInternalView={setInternalView} />
+        <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
       </div>
       <CallsTableComponent
         data={data}
