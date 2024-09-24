@@ -57,6 +57,7 @@ const CallDetails = () => {
         if (!value) return null;
         if (typeof value === 'object') {
             value = JSON.stringify(value, null, 2);
+            // eslint-disable-next-line
             value = value.replace(/\"/g, '');
         }
         try {

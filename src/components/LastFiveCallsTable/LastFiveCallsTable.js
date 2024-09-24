@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { raxiosFetchData } from '../../services/fetchData';
-import { useCalls, useInsights, useStats } from '../../services/useData';
+import { useCalls, useExperts, useInsights, useStats } from '../../services/useData';
 import CallsTableComponent from '../CallsTable';
 import InternalToggle from '../InternalToggle';
 import LazyLoad from '../LazyLoad/lazyload';
 
 const LatestCallsTable = () => {
+  const { fetchExperts } = useExperts();
   const { fetchCalls } = useCalls();
   const { fetchStats } = useStats();
   const searchInputRef = useRef(null);
   const [data, setData] = useState([]);
-  const { fetchInsights} = useInsights();
+  const { fetchInsights } = useInsights();
+  const [disable, setDisable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -20,24 +22,28 @@ const LatestCallsTable = () => {
 
   const fetchData = async () => {
     setLoading(true);
+    setDisable(true);
     await raxiosFetchData(
       null, null, setData, null, '/call', { dest: 'home', internal: internalView }
     );
-    fetchCalls(internalView);
-    fetchStats(internalView);
-    fetchInsights(internalView);
     setLoading(false);
+    await fetchStats(internalView);
+    await fetchInsights(internalView);
+    await fetchCalls(internalView);
+    await fetchExperts(internalView);
+    setDisable(false);
   };
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, [internalView]);
 
   return (
     <LazyLoad>
       <div className='flex w-full items-center justify-between'>
         <h3 className='text-2xl font-bold'>Latest {internalView ? "Internal" : "User"} Calls</h3>
-        <InternalToggle internalView={internalView} setInternalView={setInternalView} />
+        <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
       </div>
       <CallsTableComponent
         data={data}
