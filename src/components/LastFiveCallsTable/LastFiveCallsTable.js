@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { raxiosFetchData } from '../../services/fetchData';
-import { useCalls, useInsights, useStats } from '../../services/useData';
+import { useCalls, useExperts, useInsights, useStats } from '../../services/useData';
 import CallsTableComponent from '../CallsTable';
 import InternalToggle from '../InternalToggle';
 import LazyLoad from '../LazyLoad/lazyload';
 
 const LatestCallsTable = () => {
+  const { fetchExperts } = useExperts();
   const { fetchCalls } = useCalls();
   const { fetchStats } = useStats();
   const searchInputRef = useRef(null);
   const [data, setData] = useState([]);
-  const { fetchInsights} = useInsights();
+  const { fetchInsights } = useInsights();
   const [disable, setDisable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -26,9 +27,10 @@ const LatestCallsTable = () => {
       null, null, setData, null, '/call', { dest: 'home', internal: internalView }
     );
     setLoading(false);
-    await fetchCalls(internalView);
     await fetchStats(internalView);
     await fetchInsights(internalView);
+    await fetchCalls(internalView);
+    await fetchExperts(internalView);
     setDisable(false);
   };
 
