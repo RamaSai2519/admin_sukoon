@@ -23,11 +23,11 @@ const LatestCallsTable = () => {
   const fetchData = async () => {
     setLoading(true);
     setDisable(true);
+    await fetchStats(internalView);
     await raxiosFetchData(
       null, null, setData, null, '/call', { dest: 'home', internal: internalView }
     );
     setLoading(false);
-    await fetchStats(internalView);
     await fetchInsights(internalView);
     await fetchCalls(internalView);
     await fetchExperts(internalView);

@@ -6,9 +6,9 @@ import LazyLoad from '../../components/LazyLoad/lazyload';
 import DashboardTile from '../../components/DashboardTile';
 import DayGraph from '../../components/DaysGraph/DaysGraph';
 import CallGraph from '../../components/CallGraph/CallGraph';
+import LatestCallsTable from '../../components/LatestCallsTable';
 import ExpertGraph from '../../components/ExpertGraph/ExpertGraph';
 import HourCallChart from '../../components/HourCallChart/HourCallChart';
-import LatestCallsTable from '../../components/LastFiveCallsTable/LastFiveCallsTable';
 import OnlineSaarthisTable from '../../components/OnlineSaarthisTable/OnlineSaarthisTable';
 
 const DashboardTab = () => {
