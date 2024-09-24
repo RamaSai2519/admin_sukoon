@@ -1,10 +1,11 @@
 import React from 'react';
+import { Table, Button } from 'antd';
+import Raxios from '../../services/axiosHelper';
 import { Link, useNavigate } from 'react-router-dom';
+import { convertToIST } from '../../Utils/formatHelper';
+import { downloadExcel } from '../../Utils/exportHelper';
 import { useExperts, useCalls } from '../../services/useData';
 import CreateCategoryPopup from '../Popups/CreateCategoryPopup';
-import Raxios from '../../services/axiosHelper';
-import { downloadExcel } from '../../Utils/exportHelper';
-import { Table, Button } from 'antd';
 
 const ExpertsList = () => {
     const { experts, fetchExperts } = useExperts();
@@ -40,7 +41,7 @@ const ExpertsList = () => {
 
         const totalCalls = expertCalls.length;
         const uniqueDaysSpoken = new Set(expertCalls.map(call => {
-            const callDate = new Date(call.initiatedTime);
+            const callDate = convertToIST(call.initiatedTime);
             return callDate.toISOString().split('T')[0];
         }));
         const avgCallsPerDay = totalCalls / uniqueDaysSpoken.size;

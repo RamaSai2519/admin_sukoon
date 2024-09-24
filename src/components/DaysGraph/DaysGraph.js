@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
+import React, { useEffect, useState } from 'react';
 import { useCalls } from '../../services/useData';
+import { convertToIST } from '../../Utils/formatHelper';
 
 const DaysGraph = () => {
     const { calls } = useCalls();
@@ -29,7 +30,7 @@ const DaysGraph = () => {
                 startDate.setFullYear(startDate.getFullYear() - 1);
                 break;
         }
-        return callData.filter(call => new Date(call.initiatedTime) > startDate);
+        return callData.filter(call => convertToIST(call.initiatedTime) > startDate);
     };
 
     const filterCallsByType = (filteredData) => {
@@ -61,7 +62,7 @@ const DaysGraph = () => {
         const dayLabels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const dayData = Array.from({ length: 7 }, (_, index) => {
             const callsOnDay = filteredDataByType.filter(call => {
-                const callDate = new Date(call.initiatedTime);
+                const callDate = convertToIST(call.initiatedTime);
                 return callDate.getDay() === index;
             });
             return callsOnDay.length;
