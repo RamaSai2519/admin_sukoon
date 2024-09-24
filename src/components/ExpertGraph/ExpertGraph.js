@@ -5,16 +5,11 @@ import { useCalls, useExperts } from '../../services/useData';
 
 const ExpertGraph = () => {
   const { calls } = useCalls();
-  const { experts, fetchExperts } = useExperts();
+  const { experts } = useExperts();
   const [chart, setChart] = useState(null);
   const [timeframe, setTimeframe] = useState('year');
   const [type, setType] = useState('all');
   const [representation, setRepresentation] = useState('absolute');
-
-  useEffect(() => {
-    fetchExperts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     renderChart(calls, experts);
