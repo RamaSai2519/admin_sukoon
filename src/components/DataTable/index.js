@@ -27,12 +27,7 @@ const DataTable = ({ data }) => (
 );
 
 const InsightsTable = ({ view }) => {
-    const { insights, fetchInsights } = useInsights();
-
-    React.useEffect(() => {
-        fetchInsights();
-        // eslint-disable-next-line
-    }, []);
+    const { insights } = useInsights();
 
     return (
         <div className='w-full'>

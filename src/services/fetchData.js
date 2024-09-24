@@ -83,18 +83,22 @@ export const fetchCategories = async (setCategories) => {
     }
 };
 
-export const fetchStats = async (setStats) => {
+export const fetchStats = async (setStats, internal = false) => {
     try {
-        const response = await Faxios.get('/dashboard_stats?item=stats');
+        const response = await Faxios.get('/dashboard_stats', {
+            params: { item: 'stats', internal }
+        });
         setStats(response.data);
     } catch (error) {
         message.error('Error fetching stats:', error);
     }
 };
 
-export const fetchInsights = async (setInsights) => {
+export const fetchInsights = async (setInsights, internal = false) => {
     try {
-        const response = await Faxios.get('/dashboard_stats?item=insights');
+        const response = await Faxios.get('/dashboard_stats', {
+            params: { item: 'insights', internal }
+        });
         setInsights(response.data);
     } catch (error) {
         message.error('Error fetching insights:', error);
@@ -110,10 +114,10 @@ export const fetchUsers = async (setUsers) => {
     }
 };
 
-export const fetchCalls = async (setCalls) => {
+export const fetchCalls = async (setCalls, internal = false) => {
     try {
         const response = await Faxios.get('/call', {
-            params: { dest: 'graph' }
+            params: { dest: 'graph', internal }
         });
         setCalls(response.data.data);
         if (response.status !== 200) {

@@ -1,4 +1,4 @@
-const convertToIST = (time) => {
+export const convertToIST = (time) => {
     const date = new Date(time);
     const offsetIST = 5 * 60 * 60 * 1000 + 30 * 60 * 1000;
     return new Date(date.getTime() + offsetIST);
@@ -20,10 +20,10 @@ export const formatTime = (time) => {
     return newTime;
 };
 
-export const formatDate = (time) => {
+export const formatDate = (time, year = true) => {
     const istDate = convertToIST(time);
     const newDate = istDate.toLocaleDateString('en-IN', {
-        year: 'numeric',
+        ...(year && { year: 'numeric' }),
         month: 'short',
         day: 'numeric',
     });

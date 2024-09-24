@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
+import React, { useEffect, useState } from 'react';
+import { convertToIST } from '../../Utils/formatHelper';
 import { useCalls, useExperts } from '../../services/useData';
 
 const ExpertGraph = () => {
@@ -36,7 +37,7 @@ const ExpertGraph = () => {
         startDate.setFullYear(startDate.getFullYear() - 1);
         break;
     }
-    return callData.filter(call => new Date(call.initiatedTime) > startDate);
+    return callData.filter(call => convertToIST(call.initiatedTime) > startDate);
   };
 
   const filterCallsByType = (filteredData) => {

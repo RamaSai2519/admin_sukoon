@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
+import React, { useEffect, useState } from 'react';
 import { useCalls } from '../../services/useData';
+import { convertToIST, formatDate } from '../../Utils/formatHelper';
 
 const CallGraph = () => {
-  const { calls, fetchCalls } = useCalls();
+  const { calls } = useCalls();
+  const [type, setType] = useState('all');
   const [chart, setChart] = useState(null);
   const [timeframe, setTimeframe] = useState('year');
-  const [type, setType] = useState('all');
-
-  useEffect(() => {
-    fetchCalls();
-  }, []);
 
   useEffect(() => {
     renderChart(calls);
@@ -33,7 +30,7 @@ const CallGraph = () => {
         startDate.setFullYear(startDate.getFullYear() - 1);
         break;
     }
-    return callData.filter(call => new Date(call.initiatedTime) > startDate);
+    return callData.filter(call => convertToIST(call.initiatedTime) > startDate);
   };
 
   const filterCallsByType = (filteredData) => {
@@ -50,11 +47,6 @@ const CallGraph = () => {
     }
   };
 
-  const formatDate = (date) => {
-    const options = { month: 'short', day: '2-digit' };
-    return new Intl.DateTimeFormat('en-US', options).format(date);
-  };
-
   const handleTimeframeChange = (event) => {
     setTimeframe(event.target.value);
   };
@@ -65,7 +57,7 @@ const CallGraph = () => {
 
   const processChartData = (callData) => {
     const aggregatedData = callData.reduce((acc, curr) => {
-      const date = formatDate(new Date(curr.initiatedTime));
+      const date = formatDate(curr.initiatedTime, false);
       acc[date] = (acc[date] || 0) + 1;
       return acc;
     }, {});
