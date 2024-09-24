@@ -34,7 +34,7 @@ const refreshFaxiosAccessToken = async () => {
         });
         response = await format_response(response);
         if (response.status !== 200) logout_user();
-        const newAccessToken = response.data.output_details.access_token;
+        const newAccessToken = response.data.access_token;
         localStorage.setItem('access_token', newAccessToken);
         return newAccessToken;
     } catch (error) {
@@ -43,15 +43,12 @@ const refreshFaxiosAccessToken = async () => {
 };
 
 const format_response = async (response) => {
-    if ("output_details" in response.data) {
-        return {
-            data: response.data.output_details,
-            status: response.data.output_status === 'SUCCESS' ? 200 : 400,
-            msg: response.data.output_message,
-            originalResponse: response,
-        };
-    }
-    return response;
+    return {
+        data: response?.data?.output_details || response.data,
+        status: response?.data?.output_status === 'SUCCESS' ? 200 : 400 || response.status,
+        msg: response?.data?.output_message || response?.data?.message || response?.data?.msg || response.statusText,
+        originalResponse: response,
+    };
 }
 
 Faxios.interceptors.response.use(
@@ -60,7 +57,7 @@ Faxios.interceptors.response.use(
     },
     async (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 500 && !originalRequest._retry) {
+        if (error.response.status === 500 || 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
                 const newAccessToken = await refreshFaxiosAccessToken();

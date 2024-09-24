@@ -1,28 +1,19 @@
-// DashboardTab.js
 import React from 'react';
-import OnlineSaarthisTable from '../../components/OnlineSaarthisTable/OnlineSaarthisTable';
-import CallGraph from '../../components/CallGraph/CallGraph';
-import HourCallChart from '../../components/HourCallChart/HourCallChart';
-import ExpertGraph from '../../components/ExpertGraph/ExpertGraph';
-import DayGraph from '../../components/DaysGraph/DaysGraph';
-import LastFiveCallsTable from '../../components/LastFiveCallsTable/LastFiveCallsTable';
-import { useStats } from '../../services/useData';
-import DashboardTile from '../../components/DashboardTile';
-import LazyLoad from '../../components/LazyLoad/lazyload';
-import InsightsTable from '../../components/DataTable';
 import { Button } from 'antd';
+import { useStats } from '../../services/useData';
+import InsightsTable from '../../components/DataTable';
+import LazyLoad from '../../components/LazyLoad/lazyload';
+import DashboardTile from '../../components/DashboardTile';
+import DayGraph from '../../components/DaysGraph/DaysGraph';
+import CallGraph from '../../components/CallGraph/CallGraph';
+import ExpertGraph from '../../components/ExpertGraph/ExpertGraph';
+import HourCallChart from '../../components/HourCallChart/HourCallChart';
+import LatestCallsTable from '../../components/LastFiveCallsTable/LastFiveCallsTable';
+import OnlineSaarthisTable from '../../components/OnlineSaarthisTable/OnlineSaarthisTable';
 
 const DashboardTab = () => {
-  const { stats, fetchStats } = useStats();
+  const { stats } = useStats();
   const [view, setView] = React.useState('Split By Duration');
-  const [loading, setLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    setLoading(true);
-    fetchStats();
-    setLoading(false);
-    // eslint-disable-next-line
-  }, []);
 
   const handleToggle = () => {
     if (view === 'Split By Duration') {
@@ -76,7 +67,9 @@ const DashboardTab = () => {
             <DashboardTile title="Online Saarthis" style={{ "gridRow": "1 / span 2", "gridColumn": "5" }}>
               <OnlineSaarthisTable onlineSaarthis={stats.onlineSarathis} />
             </DashboardTile>
-            <DashboardTile title='Latest Calls' style={{ "gridColumn": "1 / 5" }}><LastFiveCallsTable /></DashboardTile>
+            <DashboardTile style={{ "gridColumn": "1 / 5" }}>
+              <LatestCallsTable />
+            </DashboardTile>
             <DashboardTile title={view} style={{ "gridColumn": "5 / span 1" }} >
               <InsightsTable view={view} handleToggle={handleToggle} />
               <div className='w-full flex items-center justify-end'>
@@ -86,16 +79,14 @@ const DashboardTab = () => {
               </div>
             </DashboardTile>
           </div>
-          {!loading &&
-            <LazyLoad>
-              <div id='graphs-grid' className='grid md:grid-cols-2 w-full h-full'>
-                <DashboardTile title='Call Graph'><CallGraph /></DashboardTile>
-                <DashboardTile title='Expert Graph'><ExpertGraph /></DashboardTile>
-                <DashboardTile title='Hourly Call Chart'><HourCallChart /></DashboardTile>
-                <DashboardTile title='Day Graph'><DayGraph /></DashboardTile>
-              </div>
-            </LazyLoad>
-          }
+          <LazyLoad>
+            <div id='graphs-grid' className='grid md:grid-cols-2 w-full h-full'>
+              <DashboardTile title='Call Graph'><CallGraph /></DashboardTile>
+              <DashboardTile title='Expert Graph'><ExpertGraph /></DashboardTile>
+              <DashboardTile title='Hourly Call Chart'><HourCallChart /></DashboardTile>
+              <DashboardTile title='Day Graph'><DayGraph /></DashboardTile>
+            </div>
+          </LazyLoad>
         </div>
       </div>
     </LazyLoad >

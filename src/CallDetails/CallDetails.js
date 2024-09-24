@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { formatTime } from '../Utils/formatHelper';
 import { useParams } from 'react-router-dom';
-import ScrollBottom from '../components/ScrollBottom';
 import { FaArrowLeft } from 'react-icons/fa';
-import { Button } from 'antd';
 import Raxios from '../services/axiosHelper';
+import { Button } from 'antd';
 import './CallDetails.css';
 
 const CallDetails = () => {
@@ -147,7 +147,7 @@ const CallDetails = () => {
                     <p>{formatValue(call.Topics)}</p>
                 </div>
                 <div className="details-box">
-                    <p>Initiated Time: {call.initiatedTime}</p>
+                    <p>Initiated Time: {formatTime(call.initiatedTime)}</p>
                 </div>
                 <Button style={{ margin: '10px' }} type="primary" href={formattedRecordingURL}>
                     Download Recording
@@ -156,7 +156,6 @@ const CallDetails = () => {
                     Download Transcript
                 </Button>
             </div>
-            <ScrollBottom />
         </div>
     );
 }
