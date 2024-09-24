@@ -31,6 +31,7 @@ const CallsTable = () => {
 
   useEffect(() => {
     fetchCalls();
+    // eslint-disable-next-line
   }, [currentPage, pageSize, internalView]);
 
   const handleTableChange = (current, pageSize) => {
@@ -53,7 +54,7 @@ const CallsTable = () => {
       <div className='flex justify-between items-center w-full'>
         <h3 className='text-2xl font-bold'>{internalView ? "Internal" : "User"} Calls</h3>
         <div className='flex gap-5 items-center'>
-          <InternalToggle internalView={internalView} setInternalView={setInternalView} />
+          <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={loading} />
           <Button loading={buttonLoading} onClick={exportData}>Export</Button>
         </div>
       </div>

@@ -131,9 +131,11 @@ export const fetchCalls = async (setCalls, internal = false) => {
     }
 };
 
-export const fetchExperts = async (setExperts) => {
+export const fetchExperts = async (setExperts, internal) => {
     try {
-        const response = await Faxios.get('/expert');
+        const response = await Faxios.get('/expert', {
+            params: { internal }
+        });
         setExperts(response.data);
     } catch (error) {
         message.error('Error fetching experts:', error);

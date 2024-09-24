@@ -63,9 +63,9 @@ export const DataProvider = ({ children }) => {
 
     const contextValues = {
         users: { users, fetchUsers: () => fetchUsers(setUsers) },
-        experts: { experts, fetchExperts: () => fetchExperts(setExperts) },
         stats: { stats, fetchStats: (internal) => fetchStats(setStats, internal) },
         calls: { calls, fetchCalls: (internal) => fetchCalls(setCalls, internal) },
+        experts: { experts, fetchExperts: (internal) => fetchExperts(setExperts, internal) },
         allCategories: { allCategories, fetchCategories: () => fetchCategories(setCategories) },
         insights: { insights, fetchInsights: (internal) => fetchInsights(setInsights, internal) },
     };

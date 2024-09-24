@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import AdminLogin from './AdminLogin/AdminLogin';
 import AdminDashboard from './AdminDashboard/AdminDashboard';
-import UsersList from './UserList/UserList';
-import CallList from './CallList/CallList';
-import CallDetails from './CallDetails/CallDetails';
-import UserDetails from './UserDetails/UserDetails';
-import EventDetails from './EventDetails';
 import ExpertDetails from './ExpertDetails/ExpertDetatils';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import ExpertReport from './ExpertDetails/ExpertReport';
+import UserDetails from './UserDetails/UserDetails';
+import CallDetails from './CallDetails/CallDetails';
 import ApprovePage from './ApprovePage/ApprovePage';
+import AdminLogin from './AdminLogin/AdminLogin';
 import UserEngagement from './UserEngagement';
 import { ConfigProvider, theme } from 'antd';
+import UsersList from './UserList/UserList';
+import CallList from './CallList/CallList';
+import EventDetails from './EventDetails';
 import './App.css';
 
 const App = () => {
-  const appVersion = '16.0.3';
+  const appVersion = '17.0.0';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );

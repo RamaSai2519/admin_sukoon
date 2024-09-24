@@ -1,19 +1,18 @@
 import Raxios from '../services/axiosHelper';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
+import Faxios from '../services/raxiosHelper';
 import React, { useState, useEffect } from 'react';
 import { useCategories } from '../services/useData';
 import Loading from '../components/Loading/loading';
 import { message, Select, Switch, Table, Input } from 'antd';
 import EditableTimeCell from '../components/EditableTimeCell';
-import Faxios from '../services/raxiosHelper';
 
 const { Option } = Select;
 
 const ExpertDetails = () => {
   const { number } = useParams();
   const expertId = localStorage.getItem('expertId');
-  
   const [expert, setExpert] = useState({
     name: '',
     phoneNumber: '',
@@ -57,6 +56,8 @@ const ExpertDetails = () => {
     fetchCategories();
     fetchTimings();
     fetchExpertDetails();
+
+    // eslint-disable-next-line
   }, [expertId]);
 
   useEffect(() => {
@@ -91,14 +92,8 @@ const ExpertDetails = () => {
   };
 
   const handleDelete = async () => {
-    try {
-      await Raxios.delete(`/expert/experts/${expertId}`);
-      message.success('Expert deleted successfully!');
-      window.location.href = '/admin/experts';
-    } catch (error) {
-      console.error('Error deleting expert:', error);
-      message.error('Error deleting expert:', error);
-    }
+    await handleUpdate({ ...expert, isDeleted: true });
+    window.history.back();
   };
 
   const handleSave = async (row) => {
@@ -159,7 +154,7 @@ const ExpertDetails = () => {
         <div className='h3-darkgrey'>
           <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
             <h1>Expert Details</h1>
-            <button className='back-button' onClick={() => {window.history.back(); localStorage.removeItem('expertId')}}>
+            <button className='back-button' onClick={() => { window.history.back(); localStorage.removeItem('expertId') }}>
               <FaArrowLeft className="back-icon" />
             </button>
           </div>
