@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import Raxios from '../services/axiosHelper';
-import { Input, message, Switch, Table } from 'antd';
+import { DatePicker, Input, message, Switch, Table } from 'antd';
 import './UserDetails.css';
 import Faxios from '../services/raxiosHelper';
+import dayjs from 'dayjs';
 
 const UserDetails = () => {
   const { userId } = useParams();
@@ -31,7 +32,7 @@ const UserDetails = () => {
       setPhoneNumber(response.data.phoneNumber);
       setNumberOfCalls(response.data.numberOfCalls);
       setNotifications(response.data.notifications);
-      setBirthDate(new Date(response.data.birthDate).toISOString().split('T')[0]);
+      setBirthDate(dayjs(response.data.birthDate));
 
       if (typeof response.data['Customer Persona'] === 'object') {
         const personaString = JSON.stringify(response.data['Customer Persona'], null, 2);
@@ -164,9 +165,13 @@ const UserDetails = () => {
               <div className='grid-tile w-full h-fit'>
                 <h3>Birth Date</h3>
                 {editMode ? (
-                  <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+                  // <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+                  <DatePicker
+                    value={birthDate}
+                    onChange={(date) => setBirthDate(date ? dayjs(date) : '')}
+                  />
                 ) : (
-                  <h2 className='text-2xl'>{birthDate}</h2>
+                  <h2 className='text-2xl'>{birthDate.format('DD MMM YYYY')}</h2>
                 )}
               </div>
             </div>
