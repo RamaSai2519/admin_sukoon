@@ -9,6 +9,7 @@ import { formatTime } from "../../Utils/formatHelper";
 import { fetchData } from "../../services/fetchData";
 import Raxios from "../../services/axiosHelper";
 import InternalToggle from "../../components/InternalToggle";
+import Faxios from "../../services/raxiosHelper";
 
 const SchedulerTab = () => {
     // const [slots, setSlots] = useState([]);
@@ -89,18 +90,20 @@ const SchedulerTab = () => {
         setResponseLoading(false);
     };
 
-    const onFinish = async (values, endpoint) => {
+    const handleCallTrigger = async (values, endpoint, type_) => {
         setResponseLoading(true);
         try {
-            const response = await Raxios.post(endpoint, values);
-            if (response.data.success !== true) {
-                window.alert(response.data.error?.message || response.data.message);
+            const response = await Faxios.post(endpoint, {
+                user_id: values.user,
+                expert_id: values.expert, type_
+            });
+            if (response.status !== 200) {
+                message.error(response.msg);
             } else {
-                window.alert("Call connected successfully");
+                message.success(response.msg);
             }
         } catch (error) {
-            console.error("Error:", error);
-            window.alert(error);
+            message.error(error.response?.data?.message || 'An error occurred');
         }
         setResponseLoading(false);
     };
@@ -151,7 +154,7 @@ const SchedulerTab = () => {
                     <Form
                         name="connect-call"
                         className="grid grid-cols-2 gap-2 w-full border-b-2 dark:border-lightBlack pb-4"
-                        onFinish={(values) => onFinish(values, "/call/connect")}
+                        onFinish={(values) => handleCallTrigger(values, "/call", "call")}
                     >
                         <Form.Item
                             name="user"
