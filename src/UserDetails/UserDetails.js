@@ -171,7 +171,7 @@ const UserDetails = () => {
                     onChange={(date) => setBirthDate(date ? dayjs(date) : '')}
                   />
                 ) : (
-                  <h2 className='text-2xl'>{birthDate.format('DD MMM YYYY')}</h2>
+                  <h2 className='text-2xl'>{birthDate ? birthDate.format('DD MMM YYYY') : ''}</h2>
                 )}
               </div>
             </div>
