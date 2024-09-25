@@ -8,6 +8,7 @@ import Loading from "../../components/Loading/loading";
 import { formatTime } from "../../Utils/formatHelper";
 import { fetchData } from "../../services/fetchData";
 import Raxios from "../../services/axiosHelper";
+import InternalToggle from "../../components/InternalToggle";
 
 const SchedulerTab = () => {
     // const [slots, setSlots] = useState([]);
@@ -15,27 +16,35 @@ const SchedulerTab = () => {
     // const [fslot, setFSlot] = useState([]); // Final slot state
     // const [selectedSlot, setSelectedSlot] = useState(null); // Selected slot state
 
-    const [responseLoading, setResponseLoading] = useState(false);
-    const [schedules, setSchedules] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const { experts, fetchExperts } = useExperts();
+    const searchInputRef = useRef(null);
     const { users, fetchUsers } = useUsers();
+    const [loading, setLoading] = useState(false);
+    const [disable, setDisable] = useState(false);
+    const [schedules, setSchedules] = useState([]);
+    const { experts, fetchExperts } = useExperts();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const searchInputRef = useRef(null);
+    const [responseLoading, setResponseLoading] = useState(false);
+    const [internalView, setInternalView] = useState(
+        localStorage.getItem('internalView') === 'true' ? true : false
+    );
     const { Option } = Select;
 
     useEffect(() => {
         fetchData(setSchedules, setLoading, '/data/newSchedules');
     }, []);
 
+    const fetchUsersAndExperts = async () => {
+        setDisable(true);
+        await fetchUsers();
+        await fetchExperts(internalView);
+        setDisable(false);
+    };
+
     useEffect(() => {
-        setLoading(true);
-        fetchUsers();
-        fetchExperts();
-        setLoading(false);
+        fetchUsersAndExperts();
         // eslint-disable-next-line
-    }, []);
+    }, [internalView]);
 
     const createColumn = (title, dataIndex, key, sorter, render, defaultSortOrder) => {
         return {
@@ -135,7 +144,10 @@ const SchedulerTab = () => {
                     }
                 </div>
                 <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
-                    <h1 className="text-2xl font-bold mb-3">Connect a Call</h1>
+                    <div className="flex w-full justify-between">
+                        <h1 className="text-2xl font-bold mb-3">Connect a Call</h1>
+                        <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
+                    </div>
                     <Form
                         name="connect-call"
                         className="grid grid-cols-2 gap-2 w-full border-b-2 dark:border-lightBlack pb-4"
