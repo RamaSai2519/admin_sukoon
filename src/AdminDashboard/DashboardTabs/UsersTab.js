@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Histograms from '../../components/Histograms';
-import Popup from '../../components/Popups/Popup';
 import LeadsPopup from '../../components/Popups/LeadsPopup';
 import DashboardTile from '../../components/DashboardTile';
-import Loading from '../../components/Loading/loading';
 import { useUsers, useCalls } from '../../services/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import Raxios from '../../services/axiosHelper';
+import Loading from '../../components/Loading/loading';
+import { formatDate } from '../../Utils/formatHelper';
+import Histograms from '../../components/Histograms';
+import Popup from '../../components/Popups/Popup';
+import Faxios from '../../services/raxiosHelper';
 import { Link } from 'react-router-dom';
 
 const UsersTab = () => {
@@ -27,9 +28,13 @@ const UsersTab = () => {
 
   const fetchLeads = async () => {
     try {
-      const response = await Raxios.get('/user/leads');
+      const response = await Faxios.get('/leads', {
+        params: {
+          data: true,
+        },
+      });
       setLeads(response.data.data);
-      setTotalUsers(response.data.totalUsers);
+      setTotalUsers(response.data.non_leads);
     } catch (error) {
       console.error('Error fetching leads:', error);
     }
@@ -47,17 +52,20 @@ const UsersTab = () => {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    const currentDate = new Date().toLocaleDateString();
-    const currentDayTotalUsersCount = users.filter(user => new Date(user.createdDate).toLocaleDateString() === currentDate).length;
-    const currentDayPartialSignupsCount = leads.filter(lead => new Date(lead.createdDate).toLocaleDateString() === currentDate).length;
+  const calculateCurrentDayUsers = () => {
+    const utcTimeString = new Date().toUTCString();
+    const currentIstDate = formatDate(utcTimeString);
+    const currentDayTotalUsersCount = users.filter(user => formatDate(user.createdDate) === currentIstDate && user.profileCompleted === true).length;
+    const currentDayPartialSignupsCount = leads.filter(lead => formatDate(lead.createdDate) === currentIstDate && lead.profileCompleted === false).length;
     setCurrentDayPartialSignups(currentDayPartialSignupsCount);
     setCurrentDayTotalUsers(currentDayTotalUsersCount);
+  };
 
+  const calculateCallCounts = () => {
     const callCounts = {};
     calls.forEach(call => {
       const userId = call.user;
-      if (call.status === 'successful') {
+      if (call.status === 'successful' && call.failedReason === '') {
         callCounts[userId] = (callCounts[userId] || 0) + 1;
       }
     });
@@ -69,6 +77,11 @@ const UsersTab = () => {
     setOneCallUsers(oneCallUsersList);
     setTwoCallsUsers(twoCallsUsersList);
     setMoreThanTwoCallsUsers(moreThanTwoCallsUsersList);
+  };
+
+  useEffect(() => {
+    calculateCurrentDayUsers();
+    calculateCallCounts();
 
     if (popupContent.title) {
       fetchPopupUsers(popupContent.title);
