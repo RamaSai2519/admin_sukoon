@@ -72,7 +72,7 @@ const ExpertDetails = () => {
   const handleInputChange = (name, value) => {
     const updatedExpert = { ...expert, [name]: value };
     setExpert(updatedExpert);
-    handleUpdate(updatedExpert);
+    setTimeout(() => handleUpdate(updatedExpert), 1000);
   };
 
   const handleUpdate = async (updatedFormData) => {

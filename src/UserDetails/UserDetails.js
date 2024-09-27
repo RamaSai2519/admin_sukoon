@@ -3,38 +3,40 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import Raxios from '../services/axiosHelper';
-import { Input, message, Table } from 'antd';
+import { DatePicker, Input, message, Switch, Table } from 'antd';
 import './UserDetails.css';
+import Faxios from '../services/raxiosHelper';
+import dayjs from 'dayjs';
 
 const UserDetails = () => {
   const { userId } = useParams();
   const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [city, setCity] = useState('');
-  const [birthDate, setBirthDate] = useState('');
-  const [numberOfCalls, setNumberOfCalls] = useState('');
-  const [source, setSource] = useState('');
+  // const [source, setSource] = useState('');
   const [context, setContext] = useState([]);
   const [persona, setPersona] = useState('');
-  const [notifications, setNotifications] = useState([]);
+  const [birthDate, setBirthDate] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [numberOfCalls, setNumberOfCalls] = useState('');
+  const [notifications, setNotifications] = useState([]);
 
   const fetchData = async () => {
     try {
       const response = await Raxios.get(`/user/users/${userId}`);
       setName(response.data.name);
+      setCity(response.data.city);
+      setContext(response.data.context);
       setIsPremium(response.data.isPaidUser);
       setPhoneNumber(response.data.phoneNumber);
-      setCity(response.data.city);
-      setBirthDate(new Date(response.data.birthDate).toISOString().split('T')[0]);
       setNumberOfCalls(response.data.numberOfCalls);
-      setSource(response.data.source);
-      setContext(response.data.context);
       setNotifications(response.data.notifications);
+      setBirthDate(dayjs(response.data.birthDate));
 
       if (typeof response.data['Customer Persona'] === 'object') {
         const personaString = JSON.stringify(response.data['Customer Persona'], null, 2);
+        // eslint-disable-next-line
         const personaWithoutQuotes = personaString.replace(/\"/g, '');
         setPersona(personaWithoutQuotes);
       } else {
@@ -74,21 +76,21 @@ const UserDetails = () => {
       return;
     }
     try {
-      await Raxios.put(`/user/users/${userId}`, {
+      const response = await Faxios.post(`/user`, {
         name,
-        phoneNumber,
         city,
-        birthDate,
-        numberOfCalls,
-        source,
-        context,
+        // context,
+        ...(birthDate !== '' && { birthDate }),
+        phoneNumber,
+        numberOfCalls: parseInt(numberOfCalls),
       })
-      message.success('User details updated successfully.');
-      setEditMode(false);
-      fetchData();
+      if (response.status !== 200) {
+        message.error(response.msg);
+      } else {
+        message.success(response.msg);
+      }
     } catch (error) {
-      console.log('Error updating user details:', error);
-      message.error('Error updating user details:', error);
+      message.error(error.response?.data?.message || 'An error occurred');
     }
   };
 
@@ -137,14 +139,10 @@ const UserDetails = () => {
               </div>
               <div className='grid-tile w-full flex justify-between items-center'>
                 <span className='text-2xl'>Premium User</span>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={isPremium === true}
-                    onChange={() => handlePremium()}
-                  />
-                  <span className="slider round"></span>
-                </label>
+                <Switch
+                  checked={isPremium}
+                  onChange={handlePremium}
+                />
               </div>
             </div>
             <div className='grid-tile'>
@@ -167,9 +165,13 @@ const UserDetails = () => {
               <div className='grid-tile w-full h-fit'>
                 <h3>Birth Date</h3>
                 {editMode ? (
-                  <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+                  // <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+                  <DatePicker
+                    value={birthDate}
+                    onChange={(date) => setBirthDate(date ? dayjs(date) : '')}
+                  />
                 ) : (
-                  <h2 className='text-2xl'>{birthDate}</h2>
+                  <h2 className='text-2xl'>{birthDate ? birthDate.format('DD MMM YYYY') : ''}</h2>
                 )}
               </div>
             </div>
@@ -197,14 +199,6 @@ const UserDetails = () => {
                   />
                   : <h2 className='text-2xl'>{numberOfCalls}</h2>}
               </div>
-              {source && <div className='grid-tile'>
-                <h3>Source</h3>
-                {editMode ? (
-                  <input type="text" value={source} onChange={(e) => setSource(e.target.value)} />
-                ) : (
-                  <h2 className='text-2xl'>{source}</h2>
-                )}
-              </div>}
               {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
               {editMode ? (
                 <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>

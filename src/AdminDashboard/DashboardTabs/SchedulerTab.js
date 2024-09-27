@@ -8,6 +8,8 @@ import Loading from "../../components/Loading/loading";
 import { formatTime } from "../../Utils/formatHelper";
 import { fetchData } from "../../services/fetchData";
 import Raxios from "../../services/axiosHelper";
+import InternalToggle from "../../components/InternalToggle";
+import Faxios from "../../services/raxiosHelper";
 
 const SchedulerTab = () => {
     // const [slots, setSlots] = useState([]);
@@ -15,27 +17,35 @@ const SchedulerTab = () => {
     // const [fslot, setFSlot] = useState([]); // Final slot state
     // const [selectedSlot, setSelectedSlot] = useState(null); // Selected slot state
 
-    const [responseLoading, setResponseLoading] = useState(false);
-    const [schedules, setSchedules] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const { experts, fetchExperts } = useExperts();
+    const searchInputRef = useRef(null);
     const { users, fetchUsers } = useUsers();
+    const [loading, setLoading] = useState(false);
+    const [disable, setDisable] = useState(false);
+    const [schedules, setSchedules] = useState([]);
+    const { experts, fetchExperts } = useExperts();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const searchInputRef = useRef(null);
+    const [responseLoading, setResponseLoading] = useState(false);
+    const [internalView, setInternalView] = useState(
+        localStorage.getItem('internalView') === 'true' ? true : false
+    );
     const { Option } = Select;
 
     useEffect(() => {
         fetchData(setSchedules, setLoading, '/data/newSchedules');
     }, []);
 
+    const fetchUsersAndExperts = async () => {
+        setDisable(true);
+        await fetchUsers();
+        await fetchExperts(internalView);
+        setDisable(false);
+    };
+
     useEffect(() => {
-        setLoading(true);
-        fetchUsers();
-        fetchExperts();
-        setLoading(false);
+        fetchUsersAndExperts();
         // eslint-disable-next-line
-    }, []);
+    }, [internalView]);
 
     const createColumn = (title, dataIndex, key, sorter, render, defaultSortOrder) => {
         return {
@@ -80,18 +90,20 @@ const SchedulerTab = () => {
         setResponseLoading(false);
     };
 
-    const onFinish = async (values, endpoint) => {
+    const handleCallTrigger = async (values, endpoint, type_) => {
         setResponseLoading(true);
         try {
-            const response = await Raxios.post(endpoint, values);
-            if (response.data.success !== true) {
-                window.alert(response.data.error?.message || response.data.message);
+            const response = await Faxios.post(endpoint, {
+                user_id: values.user,
+                expert_id: values.expert, type_
+            });
+            if (response.status !== 200) {
+                message.error(response.msg);
             } else {
-                window.alert("Call connected successfully");
+                message.success(response.msg);
             }
         } catch (error) {
-            console.error("Error:", error);
-            window.alert(error);
+            message.error(error.response?.data?.message || 'An error occurred');
         }
         setResponseLoading(false);
     };
@@ -135,11 +147,14 @@ const SchedulerTab = () => {
                     }
                 </div>
                 <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
-                    <h1 className="text-2xl font-bold mb-3">Connect a Call</h1>
+                    <div className="flex w-full justify-between">
+                        <h1 className="text-2xl font-bold mb-3">Connect a Call</h1>
+                        <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
+                    </div>
                     <Form
                         name="connect-call"
                         className="grid grid-cols-2 gap-2 w-full border-b-2 dark:border-lightBlack pb-4"
-                        onFinish={(values) => onFinish(values, "/call/connect")}
+                        onFinish={(values) => handleCallTrigger(values, "/call", "call")}
                     >
                         <Form.Item
                             name="user"
