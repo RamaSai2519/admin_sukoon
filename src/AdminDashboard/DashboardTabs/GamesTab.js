@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Radio, Input, Cascader, Select, Button, message, Upload, Tooltip } from 'antd';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import Raxios, { BASE_URL } from '../../services/axiosHelper';
+import { BASE_URL } from '../../services/axiosHelper';
 import Loading from '../../components/Loading/loading';
 import { PlusOutlined } from '@ant-design/icons';
 import { beforeUpload } from '../../Utils/antSelectHelper';
 import Gamelinks from '../../components/Gamelinks';
+import Faxios from '../../services/raxiosHelper';
 
 const GamesTab = () => {
     const [game, setGame] = useState(localStorage.getItem('game') || 'games');
@@ -15,7 +16,7 @@ const GamesTab = () => {
     const [ready, setReady] = useState(false);
 
     useEffect(() => {
-        Raxios.get('/games/quizQuestions')
+        Faxios.get('/games/quizQuestions')
             .then((res) => {
                 setQuestions(res.data);
             })
@@ -30,7 +31,7 @@ const GamesTab = () => {
             imageUrl: uploadedImageUrl
         };
 
-        Raxios.post('/games/addQuestion', formData)
+        Faxios.post('/games/addQuestion', formData)
             .then((res) => {
                 window.location.reload();
             })
