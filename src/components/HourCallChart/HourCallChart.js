@@ -1,7 +1,7 @@
 import Chart from 'chart.js/auto';
 import React, { useEffect, useState } from 'react';
 import { useCalls } from '../../services/useData';
-import { convertToIST } from '../../Utils/formatHelper';
+import { strToDate } from '../../Utils/formatHelper';
 
 const HourCallChart = () => {
     const { calls } = useCalls();
@@ -30,7 +30,7 @@ const HourCallChart = () => {
                 startDate.setFullYear(startDate.getFullYear() - 1);
                 break;
         }
-        return callData.filter(call => convertToIST(call.initiatedTime) > startDate);
+        return callData.filter(call => strToDate(call.initiatedTime) > startDate);
     };
 
     const filterDataByType = (filteredData) => {
@@ -62,7 +62,7 @@ const HourCallChart = () => {
         const hourData = Array.from({ length: 14 }, (_, index) => {
             const hour = (index + 9) % 24;
             const callsWithinHour = filteredDataByType.filter(call => {
-                const callTime = convertToIST(call.initiatedTime);
+                const callTime = strToDate(call.initiatedTime);
                 const callHour = callTime.getHours();
                 return callHour === hour;
             });

@@ -1,7 +1,7 @@
 import Chart from 'chart.js/auto';
 import React, { useEffect, useState } from 'react';
 import { useCalls } from '../../services/useData';
-import { convertToIST, formatDate } from '../../Utils/formatHelper';
+import { strToDate, formatDate } from '../../Utils/formatHelper';
 
 const CallGraph = () => {
   const { calls } = useCalls();
@@ -30,7 +30,7 @@ const CallGraph = () => {
         startDate.setFullYear(startDate.getFullYear() - 1);
         break;
     }
-    return callData.filter(call => convertToIST(call.initiatedTime) > startDate);
+    return callData.filter(call => strToDate(call.initiatedTime) > startDate);
   };
 
   const filterCallsByType = (filteredData) => {

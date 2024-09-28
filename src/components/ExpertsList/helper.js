@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { convertToIST } from '../../Utils/formatHelper';
+import { formatDate } from '../../Utils/formatHelper';
 
 const durationStrToSeconds = (duration) => {
     const [hours, minutes, seconds] = duration.split(":").map(Number);
@@ -27,8 +27,7 @@ export const calculateCallStats = (expertCalls, expert) => {
         }
 
         stats.totalDuration += durationStrToSeconds(call.duration);
-        const callDate = convertToIST(call.initiatedTime);
-        stats.uniqueDaysSpoken.add(callDate.toISOString().split('T')[0]);
+        stats.uniqueDaysSpoken.add(formatDate(call.initiatedTime));
     });
 
     const avgCallsPerDay = stats.successful / expert.daysLoggedIn;
