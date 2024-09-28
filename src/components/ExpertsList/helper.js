@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { formatDate } from '../../Utils/formatHelper';
 
 const durationStrToSeconds = (duration) => {
+    if (!duration) return 0;
     const [hours, minutes, seconds] = duration.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
 };

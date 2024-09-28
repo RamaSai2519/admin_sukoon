@@ -16,7 +16,7 @@ import EventDetails from './EventDetails';
 import './App.css';
 
 const App = () => {
-  const appVersion = '17.0.3';
+  const appVersion = '17.0.5';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
