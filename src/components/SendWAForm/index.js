@@ -6,6 +6,7 @@ import Loading from '../Loading/loading';
 import Raxios from '../../services/axiosHelper';
 import { UploadOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
+import Faxios from '../../services/raxiosHelper';
 
 const SendWAForm = () => {
     const [templates, setTemplates] = useState([]);
@@ -87,10 +88,11 @@ const SendWAForm = () => {
         if (selectedType === "event" && !eventSlug) {
             return;
         }
-        const response = await Raxios.post('/wa/preview', {
+        const response = await Faxios.post('/wa_options', {
             usersType: selectedType,
             cities: selectedCities,
-            eventSlug,
+            eventId: eventSlug,
+            action: 'preview'
         });
         if (response.status !== 200) {
             message.error('Failed to fetch preview data');
@@ -172,13 +174,14 @@ const SendWAForm = () => {
             '<image_link>': uploadedImageUrl
         };
         setResponse(true);
-        const response = await Raxios.post('/wa/send', {
+        const response = await Faxios.post('/wa_options', {
             messageId: newMessageId,
             templateId: template._id,
             usersType: selectedType,
-            eventSlug,
+            eventId: eventSlug,
             cities: selectedCities,
             inputs: finalInputs,
+            action: 'send'
         });
         if (response.status !== 200) {
             message.error('Failed to send messages');
