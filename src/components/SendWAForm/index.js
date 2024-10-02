@@ -189,7 +189,7 @@ const SendWAForm = () => {
             // setFetchStatus(true);
         }
         setResponse(false);
-        // window.location.reload();
+        window.location.reload();
     };
 
     if (loading) return <Loading />;
