@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Select, Input, Upload, message } from 'antd';
 import { beforeUpload, generateOptions } from '../../Utils/antSelectHelper';
+import { Button, Card, Select, Input, Upload, message } from 'antd';
 import { fetchData } from '../../services/fetchData';
-import Loading from '../Loading/loading';
-import Raxios from '../../services/axiosHelper';
 import { UploadOutlined } from '@ant-design/icons';
-import { v4 as uuidv4 } from 'uuid';
 import Faxios from '../../services/raxiosHelper';
+import Loading from '../Loading/loading';
+import { v4 as uuidv4 } from 'uuid';
 
 const SendWAForm = () => {
     const [templates, setTemplates] = useState([]);
