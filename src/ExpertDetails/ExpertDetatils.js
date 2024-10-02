@@ -214,16 +214,21 @@ const ExpertDetails = () => {
                         onChange={(e) => handleInputChange('description', e.target.value)}
                       />
                     </div>
-                    :
-                    <div key={idx} className='grid-tile'>
-                      <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
-                      <input
-                        type="text"
-                        className='dark:bg-darkBlack dark:border-darkGray border p-0.5 pl-2 rounded-md'
-                        value={expert[field]}
-                        onChange={(e) => handleInputChange(field, e.target.value)}
-                      />
-                    </div>
+                    : field === "phoneNumber" ?
+                      <div key={idx} className='grid-tile'>
+                        <h3>Phone Number</h3>
+                        <span className='text-xl'>{expert.phoneNumber}</span>
+                      </div>
+                      :
+                      <div key={idx} className='grid-tile'>
+                        <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
+                        <input
+                          type="text"
+                          className='dark:bg-darkBlack dark:border-darkGray border p-0.5 pl-2 rounded-md'
+                          value={expert[field]}
+                          onChange={(e) => handleInputChange(field, e.target.value)}
+                        />
+                      </div>
             ))}
             <div className='grid-tile'>
               <h3>Categories</h3>

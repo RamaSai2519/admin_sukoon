@@ -22,8 +22,8 @@ const ExpertsList = () => {
     const fetchData = async () => {
         setLoading(true);
         await fetchExperts(internalView);
-        await fetchCalls(internalView);
         setLoading(false);
+        await fetchCalls(internalView);
     };
 
     // eslint-disable-next-line

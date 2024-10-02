@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Popconfirm } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Table, Button } from 'antd';
 import EditableCell from '../../EditableCell';
 import Raxios from '../../../services/axiosHelper';
 import { formatDate } from '../../../Utils/formatHelper';
@@ -43,17 +42,17 @@ const LeadsPopup = ({ onClose, leads }) => {
                                 Edit
                             </Button>
                         </Link>}
-                        <Popconfirm
+                        {/* <Popconfirm
                             title="Delete the record"
                             description="Are you sure to delete this record?"
-                            onConfirm={() => confirm(user)} onCancel={cancel}
+                            onConfirm={() => confirm(user)} onCancel={(e) => console.log(e)}
                             okText="Yes" cancelText="No"
                             icon={
                                 <QuestionCircleOutlined style={{ color: 'red' }} />
                             }
                         >
                             <Button>Delete</Button>
-                        </Popconfirm>
+                        </Popconfirm> */}
                     </div>
                 );
             }
@@ -80,22 +79,18 @@ const LeadsPopup = ({ onClose, leads }) => {
         }
     };
 
-    const confirm = (user) => {
-        Raxios.post(`/user/leads`, { user })
-            .then((response) => {
-                if (response.request.status === 200) {
-                    window.alert('Lead deleted successfully');
-                    window.location.reload();
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
-
-    const cancel = (e) => {
-        console.log(e);
-    };
+    // const confirm = (user) => {
+    //     Raxios.post(`/user/leads`, { user })
+    //         .then((response) => {
+    //             if (response.request.status === 200) {
+    //                 window.alert('Lead deleted successfully');
+    //                 window.location.reload();
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // };
 
     const components = {
         body: {

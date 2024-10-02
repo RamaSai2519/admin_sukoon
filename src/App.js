@@ -6,7 +6,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ExpertReport from './ExpertDetails/ExpertReport';
 import UserDetails from './UserDetails/UserDetails';
 import CallDetails from './CallDetails/CallDetails';
-import ApprovePage from './ApprovePage/ApprovePage';
 import AdminLogin from './AdminLogin/AdminLogin';
 import UserEngagement from './UserEngagement';
 import { ConfigProvider, theme } from 'antd';
@@ -16,7 +15,7 @@ import EventDetails from './EventDetails';
 import './App.css';
 
 const App = () => {
-  const appVersion = '17.0.2';
+  const appVersion = '17.1.0';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
@@ -76,14 +75,12 @@ const App = () => {
               <Route path="/admin/events/:slug" element={<EventDetails />} />
               <Route path="/admin/experts/:number" element={<ExpertDetails />} />
               <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
-              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
               <Route path="/admin/userEngage" element={<UserEngagement />} />
               <Route path="/*" element={<Navigate to="/admin/home" />} />
             </>
           ) : (
             <>
               <Route path="/*" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
-              <Route path="/approve/:scheduleId/:level" element={<ApprovePage />} />
             </>
           )}
         </Routes>

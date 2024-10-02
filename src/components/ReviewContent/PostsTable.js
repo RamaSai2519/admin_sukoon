@@ -11,16 +11,12 @@ const PostsTable = ({ setPost }) => {
         total: 0,
     });
 
+    const setTotal = (total) => {
+        setPagination({ ...pagination, total });
+    }
+
     const fetchPosts = async () => {
-        await raxiosFetchData(
-            pagination.current,
-            pagination.pageSize,
-            setPosts,
-            setPagination,
-            pagination,
-            setLoading,
-            "/content"
-        );
+        await raxiosFetchData(pagination.current, pagination.pageSize, setPosts, setTotal, "/content");
     }
 
     useEffect(() => {
