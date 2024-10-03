@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { beforeUpload, generateOptions } from '../../Utils/antSelectHelper';
-import { Button, Card, Select, Input, Upload, message } from 'antd';
+import { generateOptions } from '../../Utils/antSelectHelper';
+import { Button, Card, Select, Input, message } from 'antd';
 import { fetchData } from '../../services/fetchData';
-import { UploadOutlined } from '@ant-design/icons';
 import Faxios from '../../services/raxiosHelper';
 import Loading from '../Loading/loading';
 import { v4 as uuidv4 } from 'uuid';
+import S3Uploader from '../Upload';
 
 const SendWAForm = () => {
     const [templates, setTemplates] = useState([]);
@@ -143,15 +143,6 @@ const SendWAForm = () => {
         }));
     };
 
-    const handleUploadChange = (info) => {
-        if (info.file.status === 'done') {
-            setUploadedImageUrl(info.file.response.file_url);
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
-        }
-    };
-
     const handleSend = async () => {
         if (template.extra_args && template.extra_args.includes('registraion_link_slug') && !slug) {
             message.error('Please select a registration link slug');
@@ -169,8 +160,8 @@ const SendWAForm = () => {
         const newMessageId = uuidv4();
         const finalInputs = {
             ...inputs,
-            '<registraion_link_slug>': slug,
-            '<image_link>': uploadedImageUrl
+            ...template.extra_args.includes('image_link') && { '<image_link>': uploadedImageUrl },
+            ...template.extra_args.includes('registraion_link_slug') && { '<registraion_link_slug>': slug }
         };
         setResponse(true);
         const response = await Faxios.post('/wa_options', {
@@ -189,7 +180,7 @@ const SendWAForm = () => {
             // setFetchStatus(true);
         }
         setResponse(false);
-        window.location.reload();
+        // window.location.reload();
     };
 
     if (loading) return <Loading />;
@@ -282,16 +273,7 @@ const SendWAForm = () => {
                 ))}
                 <div className='flex items-center justify-center gap-2'>
                     {template && template.extra_args && template.extra_args.includes('image_link') && (
-                        <Upload
-                            name="file"
-                            // listType="picture-card"
-                            beforeUpload={beforeUpload}
-                            onChange={handleUploadChange}
-                            action="https://rama.sukoonunlimited.com/admin/service/upload"
-                            maxCount={1}
-                        >
-                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                        </Upload>
+                        <S3Uploader setFileUrl={setUploadedImageUrl} finalFileUrl={uploadedImageUrl} />
                     )}
                     {template && template.extra_args && template.extra_args.includes('registraion_link_slug') && (
                         <Select
