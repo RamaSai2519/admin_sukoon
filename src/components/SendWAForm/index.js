@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { beforeUpload, generateOptions } from '../../Utils/antSelectHelper';
-import { Button, Card, Select, Input, Upload, message } from 'antd';
+import { generateOptions } from '../../Utils/antSelectHelper';
+import { Button, Card, Select, Input, message } from 'antd';
 import { fetchData } from '../../services/fetchData';
-import { UploadOutlined } from '@ant-design/icons';
 import Faxios from '../../services/raxiosHelper';
 import Loading from '../Loading/loading';
 import { v4 as uuidv4 } from 'uuid';
+import S3Uploader from '../Upload';
 
 const SendWAForm = () => {
     const [templates, setTemplates] = useState([]);
@@ -282,16 +282,7 @@ const SendWAForm = () => {
                 ))}
                 <div className='flex items-center justify-center gap-2'>
                     {template && template.extra_args && template.extra_args.includes('image_link') && (
-                        <Upload
-                            name="file"
-                            // listType="picture-card"
-                            beforeUpload={beforeUpload}
-                            onChange={handleUploadChange}
-                            action="https://rama.sukoonunlimited.com/admin/service/upload"
-                            maxCount={1}
-                        >
-                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                        </Upload>
+                        <S3Uploader setFileUrl={setUploadedImageUrl} finalFileUrl={uploadedImageUrl} />
                     )}
                     {template && template.extra_args && template.extra_args.includes('registraion_link_slug') && (
                         <Select
