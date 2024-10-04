@@ -143,15 +143,6 @@ const SendWAForm = () => {
         }));
     };
 
-    const handleUploadChange = (info) => {
-        if (info.file.status === 'done') {
-            setUploadedImageUrl(info.file.response.file_url);
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
-        }
-    };
-
     const handleSend = async () => {
         if (template.extra_args && template.extra_args.includes('registraion_link_slug') && !slug) {
             message.error('Please select a registration link slug');
@@ -169,8 +160,8 @@ const SendWAForm = () => {
         const newMessageId = uuidv4();
         const finalInputs = {
             ...inputs,
-            '<registraion_link_slug>': slug,
-            '<image_link>': uploadedImageUrl
+            ...template.extra_args.includes('image_link') && { '<image_link>': uploadedImageUrl },
+            ...template.extra_args.includes('registraion_link_slug') && { '<registraion_link_slug>': slug }
         };
         setResponse(true);
         const response = await Faxios.post('/wa_options', {
@@ -189,7 +180,7 @@ const SendWAForm = () => {
             // setFetchStatus(true);
         }
         setResponse(false);
-        window.location.reload();
+        // window.location.reload();
     };
 
     if (loading) return <Loading />;
