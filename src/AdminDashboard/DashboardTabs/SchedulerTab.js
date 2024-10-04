@@ -127,7 +127,8 @@ const SchedulerTab = () => {
             } else {
                 await FaxiosPost('/schedules', {
                     ...values,
-                    type: "Admin"
+                    type: "Admin",
+                    action: 'create'
                 }, true);
                 window.location.reload();
             }
