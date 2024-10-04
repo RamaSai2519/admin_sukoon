@@ -193,7 +193,9 @@ const UserEngagement = () => {
                             {record.wa_opt_out ? 'Opt In' : 'Opt Out'}
                         </Button>
                         <Link to={`/admin/users/${record._id}`}>
-                            <Button>View</Button>
+                            <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
+                                View
+                            </Button>
                         </Link>
                     </div>
                 )

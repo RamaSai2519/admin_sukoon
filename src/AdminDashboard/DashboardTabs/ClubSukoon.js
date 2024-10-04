@@ -37,9 +37,9 @@ const ClubSukoon = () => {
         createColumn('Phone Number', 'phoneNumber', 'phoneNumber'),
         createColumn('Interest Shown At', 'createdAt', 'createdAt', (record) => formatTime(record)),
         {
-            title: 'Actions', dataIndex: "userId", key: 'actions', render: (record) =>
-                <Link to={`/admin/users/${record}`}>
-                    <Button>
+            title: 'Actions', key: 'actions', render: (record) =>
+                <Link to={`/admin/users/${record.key}`}>
+                    <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
                         View
                     </Button>
                 </Link>

@@ -41,17 +41,16 @@ const UsersList = () => {
     createColumn('Balance', 'numberOfCalls', 'numberOfCalls'),
     {
       title: 'Details',
-      dataIndex: '_id',
       key: 'details',
-      render: (id) =>
+      render: (record) =>
         <div className='flex gap-2'>
-          <Link to={`/admin/users/${id}`}>
-            <Button>
+          <Link to={`/admin/users/${record._id}`}>
+            <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
               View
             </Button>
           </Link>
-          <Link to={`/admin/users/${id}#notifications-table`}>
-            <Button>
+          <Link to={`/admin/users/${record._id}#notifications-table`}>
+            <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
               WA Texts
             </Button>
           </Link>

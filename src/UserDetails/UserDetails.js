@@ -7,12 +7,12 @@ import Faxios from '../services/raxiosHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import { DatePicker, Input, message, Switch, Table } from 'antd';
 import './UserDetails.css';
+import { raxiosFetchData } from '../services/fetchData';
 
 const UserDetails = () => {
   const { userId } = useParams();
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
-  const [context, setContext] = useState([]);
   const [persona, setPersona] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [editMode, setEditMode] = useState(false);
@@ -22,11 +22,11 @@ const UserDetails = () => {
   const [notifications, setNotifications] = useState([]);
 
   const fetchData = async () => {
+    const phoneNumber = localStorage.getItem('userNumber');
     try {
-      const response = await Raxios.get(`/user/users/${userId}`);
+      const data = raxiosFetchData(null, null, null, null, '/user', phoneNumber, setLoading);
       setName(response.data.name);
       setCity(response.data.city);
-      setContext(response.data.context);
       setIsPremium(response.data.isPaidUser);
       setPhoneNumber(response.data.phoneNumber);
       setNumberOfCalls(response.data.numberOfCalls);
@@ -78,7 +78,6 @@ const UserDetails = () => {
       const response = await Faxios.post(`/user`, {
         name,
         city,
-        // context,
         ...(birthDate !== '' && { birthDate }),
         phoneNumber,
         numberOfCalls: parseInt(numberOfCalls),
@@ -160,19 +159,6 @@ const UserDetails = () => {
                 )}
               </div>
             </div>
-            {context && (
-              <div className='grid-tile'>
-                <h3>Context</h3>
-                {editMode ? (
-                  <textarea
-                    className='h-4/5 w-full' value={context}
-                    onChange={(e) => setContext(e.target.value)}
-                  />
-                ) : (
-                  <h2 className='whitespace-pre-wrap'>{context}</h2>
-                )}
-              </div>
-            )}
             <div className='edit-button-container'>
               <div className='grid-tile'>
                 <h3>Number of Calls</h3>
