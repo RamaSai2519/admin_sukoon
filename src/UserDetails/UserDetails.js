@@ -24,22 +24,23 @@ const UserDetails = () => {
   const fetchData = async () => {
     const phoneNumber = localStorage.getItem('userNumber');
     try {
-      const data = raxiosFetchData(null, null, null, null, '/user', phoneNumber, setLoading);
-      setName(response.data.name);
-      setCity(response.data.city);
-      setIsPremium(response.data.isPaidUser);
-      setPhoneNumber(response.data.phoneNumber);
-      setNumberOfCalls(response.data.numberOfCalls);
-      setNotifications(response.data.notifications);
-      setBirthDate(dayjs(response.data.birthDate));
+      const data = await raxiosFetchData(null, null, null, null, '/user', { phoneNumber }, null);
+      console.log("🚀 ~ fetchData ~ data:", data)
+      setName(data.name);
+      setCity(data.city);
+      setIsPremium(data.isPaidUser);
+      setPhoneNumber(data.phoneNumber);
+      setNumberOfCalls(data.numberOfCalls);
+      setNotifications(data.notifications);
+      setBirthDate(dayjs(data.birthDate));
 
-      if (typeof response.data['Customer Persona'] === 'object') {
-        const personaString = JSON.stringify(response.data['Customer Persona'], null, 2);
+      if (typeof data['Customer Persona'] === 'object') {
+        const personaString = JSON.stringify(data['Customer Persona'], null, 2);
         // eslint-disable-next-line
         const personaWithoutQuotes = personaString.replace(/\"/g, '');
         setPersona(personaWithoutQuotes);
       } else {
-        setPersona(response.data['Customer Persona']);
+        setPersona(data['Customer Persona']);
       }
     } catch (error) {
       console.error('Error fetching user details:', error);
