@@ -1,9 +1,8 @@
 import React from 'react';
-import Raxios from '../services/axiosHelper';
 import { SearchOutlined } from '@ant-design/icons';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Input, Button, Space, message } from 'antd';
+import { Input, Button, Space } from 'antd';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import { red, pink, green, yellow } from '@mui/material/colors';
@@ -86,22 +85,6 @@ const handleReset = (clearFilters, confirm, setSearchText, setSearchedColumn) =>
     setSearchText('');
     setSearchedColumn('');
     confirm();
-};
-
-const getFilterOptions = async (collection, field) => {
-    try {
-        const response = await Raxios.post('/data/generateFilters', { collection, field });
-        return response.data;
-    } catch (error) {
-        console.error('Error in getFilterOptions', error);
-        message.error('Error in generating filter options');
-    }
-};
-
-export const handleFilterDropdownVisibleChange = async (collection, field, key, setFilters, filters) => {
-    if (filters[key]) return;
-    const filterOptions = await getFilterOptions(collection, field);
-    setFilters(prevFilters => ({ ...prevFilters, [key]: filterOptions }));
 };
 
 export const renderStatusIcon = (status) => {

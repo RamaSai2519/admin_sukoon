@@ -1,28 +1,28 @@
-import React, { useRef, useState } from "react";
-import { Table, Flex, Radio } from "antd";
-import LazyLoad from "../../components/LazyLoad/lazyload";
-import Loading from "../../components/Loading/loading";
+import React, { useEffect, useRef, useState } from "react";
+import { FaxiosPost } from "../../helpers/faxios";
+import { Table, Flex, Radio, message } from "antd";
 import { formatDate } from "../../Utils/formatHelper";
-import { fetchPagedData } from "../../services/fetchData";
-import getColumnSearchProps from "../../Utils/antTableHelper";
+import Loading from "../../components/Loading/loading";
 import EditableCell from "../../components/EditableCell";
-import Raxios from "../../services/axiosHelper";
+import LazyLoad from "../../components/LazyLoad/lazyload";
+import { raxiosFetchData } from "../../services/fetchData";
+import getColumnSearchProps from "../../Utils/antTableHelper";
 
 const ApplicationsTab = () => {
-    const [applications, setApplications] = React.useState([]);
-    const [currentPage, setCurrentPage] = React.useState(1);
-    const [pageSize, setPageSize] = React.useState(10);
-    const [total, setTotal] = React.useState(0);
-    const [loading, setLoading] = React.useState(false);
-    const [formType, setFormType] = React.useState(
+    const [applications, setApplications] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [formType, setFormType] = useState(
         localStorage.getItem('formType') === "event" ? "event" : "sarathi"
     );
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInputRef = useRef(null);
 
-    React.useEffect(() => {
-        fetchPagedData(currentPage, pageSize, setApplications, setTotal, setLoading, `/data/applications`, { formType });
+    useEffect(() => {
+        raxiosFetchData(currentPage, pageSize, setApplications, setTotal, '/applicant', { formType }, setLoading);
     }, [currentPage, pageSize, formType]);
 
     const createColumn = (title, dataIndex, key, render, width, editable) => {
@@ -56,23 +56,16 @@ const ApplicationsTab = () => {
         },
     };
 
-    const handleSave = async ({ key, field, value }) => {
-        try {
-            await Raxios.post('/user/leadRemarks', { key, field, value })
-                .then((response) => {
-                    if (response.request.status === 200) {
-                        let newApplications = [...applications];
-                        const index = newApplications.findIndex((item) => key === item._id);
-                        newApplications[index][field] = value;
-                        setApplications(newApplications);
-                        window.alert(response.data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        } catch (error) {
-            console.error('Error updating data:', error);
+    const handleSaveRemarks = async ({ key, field, value }) => {
+        const response = await FaxiosPost('/remarks', { key, value });
+        if (response.status !== 200) {
+            message.error(response.msg);
+        } else {
+            let newApplications = [...applications];
+            const index = newApplications.findIndex((item) => key === item._id);
+            newApplications[index][field] = value;
+            setApplications(newApplications);
+            message.success(response.msg);
         }
     };
 
@@ -85,7 +78,7 @@ const ApplicationsTab = () => {
                 editable: col.editable,
                 dataIndex: col.dataIndex,
                 title: col.title,
-                handleSave,
+                handleSave: handleSaveRemarks,
             })
         };
     });

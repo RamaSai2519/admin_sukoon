@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Table, Select, DatePicker } from 'antd';
+import { Button, Table, Select, DatePicker, message } from 'antd';
+import { raxiosFetchData } from '../services/fetchData';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import Raxios from '../services/axiosHelper';
-import Loading from '../components/Loading/loading';
 import EditableCell from '../components/EditableCell';
-import { fetchPagedData } from '../services/fetchData';
+import Loading from '../components/Loading/loading';
 import { formatDate } from '../Utils/formatHelper';
+import { FaxiosPost } from '../helpers/faxios';
+import { Link } from 'react-router-dom';
 import moment from 'moment/moment';
 
 const UserEngagement = () => {
@@ -19,7 +19,7 @@ const UserEngagement = () => {
     const [loading, setLoading] = React.useState(false);
 
     React.useEffect(() => {
-        fetchPagedData(currentPage, pageSize, setEngagementData, setTotalItems, setLoading, '/user/engagementData');
+        raxiosFetchData(currentPage, pageSize, setEngagementData, setTotalItems, '/user_engagement', null, setLoading);
     }, [currentPage, pageSize]);
 
     const data = engagementData.map((item) => ({
@@ -208,8 +208,10 @@ const UserEngagement = () => {
     };
 
     const handleSave = async ({ key, field, value }) => {
-        try {
-            await Raxios.post('/user/engagementData', { key, field, value });
+        const response = await FaxiosPost('/user_engagement', { key, field, value });
+        if (response.status !== 200) {
+            message.error(response.msg);
+        } else {
             const newData = [...engagementData];
             const index = newData.findIndex((item) => item._id === key);
             if (index > -1) {
@@ -217,9 +219,7 @@ const UserEngagement = () => {
                 newData.splice(index, 1, { ...item, [field]: value });
                 setEngagementData(newData);
             }
-        } catch (error) {
-            console.error('Error updating data:', error);
-        }
+        };
     };
 
     const handleUserStatusChange = async (value, record) => {

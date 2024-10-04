@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Button, Flex, Radio } from 'antd';
+import SendWAForm from '../../components/SendWAForm';
 import WaWhHistory from '../../components/WaWhHistory';
 import WaFeedbacks from '../../components/WaFeedbacks';
-import SendWAForm from '../../components/SendWAForm';
-import Raxios from '../../services/axiosHelper';
-import { Button, Flex, Radio } from 'antd';
-import { fetchPagedData } from '../../services/fetchData';
 import { downloadExcel } from '../../Utils/exportHelper';
+import { raxiosFetchData } from '../../services/fetchData';
 
 const WhatsappTab = () => {
     const [table, setTable] = useState(localStorage.getItem('waTable') === 'history' ? 'history' : 'feedback');
@@ -16,8 +15,9 @@ const WhatsappTab = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        const endpoint = table === 'feedback' ? '/wa/feedbacks' : '/wa/wahistory';
-        fetchPagedData(currentPage, pageSize, setData, setTotalItems, setLoading, endpoint);
+        const endpoint = '/wa_history';
+        const needType = table === 'history' ? 'webhook' : 'feedback';
+        raxiosFetchData(currentPage, pageSize, setData, setTotalItems, endpoint, { type: needType }, setLoading);
         // eslint-disable-next-line
     }, [currentPage, pageSize, table]);
 
@@ -29,12 +29,15 @@ const WhatsappTab = () => {
 
     const downloadData = async () => {
         const filename = table === 'feedback' ? 'Feedbacks' : 'History';
-        const endpoint = table === 'feedback' ? '/wa/feedbacks' : '/wa/wahistory';
+        const endpoint = '/wa_history';
 
         let allData = [];
         try {
-            const response = await Raxios.get(endpoint, { params: { size: 'all' } });
-            allData = response.data.data;
+            const feedbackResponse = await raxiosFetchData(null, null, null, null, endpoint, { type: 'feedback' });
+            const feedbacks = feedbackResponse.data.data;
+            const histroyResponse = await raxiosFetchData(null, null, null, null, endpoint, { type: 'webhook' });
+            const history = histroyResponse.data.data;
+            allData = [...feedbacks, ...history];
         } catch (error) {
             console.error("Error fetching all data:", error);
             return;

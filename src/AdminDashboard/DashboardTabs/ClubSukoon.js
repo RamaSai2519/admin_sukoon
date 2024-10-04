@@ -1,7 +1,7 @@
 import { Button, Table } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import getColumnSearchProps from '../../Utils/antTableHelper';
-import { fetchPagedData } from '../../services/fetchData';
+import { raxiosFetchData } from '../../services/fetchData';
 import Loading from '../../components/Loading/loading';
 import { formatTime } from '../../Utils/formatHelper';
 import { Link } from 'react-router-dom';
@@ -19,7 +19,7 @@ const ClubSukoon = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        fetchPagedData(currentPage, pageSize, setData, setTotalItems, setLoading, '/data/clubInterests');
+        raxiosFetchData(currentPage, pageSize, setData, setTotalItems, '/club', null, setLoading);
     }, [currentPage, pageSize]);
 
     const createColumn = (title, dataIndex, key, render) => {

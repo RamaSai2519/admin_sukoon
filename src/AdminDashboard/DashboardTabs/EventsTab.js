@@ -1,21 +1,20 @@
-import { Link } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FaxiosPost } from '../../helpers/faxios';
 import Loading from '../../components/Loading/loading';
-import { fetchPagedData } from '../../services/fetchData';
-import LazyLoad from '../../components/LazyLoad/lazyload';
-import { Table, Button, Flex, Radio, Checkbox } from 'antd';
-import { formatDate, formatTime } from '../../Utils/formatHelper';
-import CreateEventPopup from '../../components/Popups/CreateEventPopup';
-import getColumnSearchProps from '../../Utils/antTableHelper';
-import Raxios from '../../services/axiosHelper';
 import EditableCell from '../../components/EditableCell';
+import { raxiosFetchData } from '../../services/fetchData';
+import LazyLoad from '../../components/LazyLoad/lazyload';
+import getColumnSearchProps from '../../Utils/antTableHelper';
+import { formatDate, formatTime } from '../../Utils/formatHelper';
+import { Table, Button, Flex, Radio, message } from 'antd';
+import CreateEventPopup from '../../components/Popups/CreateEventPopup';
 
 const EventsTab = () => {
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [events, setEvents] = useState([]);
     const [eventUsers, setEventUsers] = useState([]);
-    const [filterOn, setFilterOn] = useState(false);
     const [totalEventUsers, setTotalEventUsers] = useState(0);
     const [usersPage, setUsersPage] = useState(
         localStorage.getItem('usersPage') ? parseInt(localStorage.getItem('usersPage')) : 1
@@ -40,13 +39,19 @@ const EventsTab = () => {
         setEventsPageSize(pageSize);
     };
 
-    useEffect(() => {
+    const fetchEvents = async () => {
         if (table === 'events') {
-            fetchPagedData(eventsPage, eventsPageSize, setEvents, setEventsTotal, setLoading, '/event/data');
+            raxiosFetchData(eventsPage, eventsPageSize, setEvents, setEventsTotal, '/list_events', null, setLoading);
         } else {
-            fetchPagedData(usersPage, usersPageSize, setEventUsers, setTotalEventUsers, setLoading, '/event/allUsers', { filter: filterOn });
+            raxiosFetchData(usersPage, usersPageSize, setEventUsers, setTotalEventUsers, '/list_event_users', null, setLoading);
         }
-    }, [eventsPage, eventsPageSize, usersPage, usersPageSize, table, filterOn]);
+    };
+
+    useEffect(() => {
+        fetchEvents();
+
+        // eslint-disable-next-line
+    }, [eventsPage, eventsPageSize, usersPage, usersPageSize, table]);
 
     const createColumn = (title, dataIndex, key, render, width, editable) => {
         return {
@@ -91,22 +96,15 @@ const EventsTab = () => {
     ];
 
     const handleSave = async ({ key, field, value }) => {
-        try {
-            await Raxios.post('/user/leadRemarks', { key, field, value })
-                .then((response) => {
-                    if (response.request.status === 200) {
-                        let newEventUsers = [...eventUsers];
-                        const index = newEventUsers.findIndex((item) => key === item._id);
-                        newEventUsers[index][field] = value;
-                        setEventUsers(newEventUsers);
-                        window.alert(response.data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        } catch (error) {
-            console.error('Error updating data:', error);
+        const response = await FaxiosPost('/remarks', { key, value });
+        if (response.status !== 200) {
+            message.error(response.msg);
+        } else {
+            let newEventUsers = [...eventUsers];
+            const index = newEventUsers.findIndex((item) => key === item._id);
+            newEventUsers[index][field] = value;
+            setEventUsers(newEventUsers);
+            message.success(response.msg);
         }
     };
 
@@ -150,16 +148,6 @@ const EventsTab = () => {
                                 <Radio.Button value="events">Events</Radio.Button>
                                 <Radio.Button value="users">All Users</Radio.Button>
                             </Radio.Group>
-                            {table === 'users' &&
-                                <div>
-                                    <Checkbox
-                                        checked={filterOn}
-                                        onChange={(e) => {
-                                            setFilterOn(e.target.checked);
-                                        }}
-                                    >Filter Out Complete Signups</Checkbox>
-                                </div>
-                            }
                         </Flex>
                         <Button onClick={() => setVisible(true)} type="primary">
                             Create Event

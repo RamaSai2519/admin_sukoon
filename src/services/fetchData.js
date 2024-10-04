@@ -2,42 +2,8 @@ import { message } from 'antd';
 import Raxios from './axiosHelper';
 import Faxios from './raxiosHelper';
 
-export const fetchFilteredData = async (page, size, setPage, setSize, setData, setTotal, setLoading, filter, collection, optional) => {
-    setLoading(true);
-    try {
-        const response = await Raxios.post('/data/filter', {
-            page, size, filter, collection,
-            ...(optional && { ...optional })
-        });
-        setSize(response.data.size);
-        setPage(response.data.page);
-        setData(response.data.data);
-        setTotal(response.data.total);
-    } catch (error) {
-        message.error('Error fetching data:', error);
-        window.alert('Error fetching data');
-    }
-    setLoading(false);
-};
-
-export const fetchPagedData = async (page, size, setData, setTotal, setLoading, endpoint, optional) => {
-    setLoading(true);
-    try {
-        const response = await Raxios.get(endpoint, {
-            params: {
-                page, size,
-                ...(optional && { ...optional })
-            }
-        });
-        setData(response.data.data);
-        setTotal(response.data.total);
-    } catch (error) {
-        message.error('Error fetching data:', error);
-    }
-    setLoading(false);
-};
-
-export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, optional) => {
+export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, optional, setLoading) => {
+    setLoading && setLoading(true);
     try {
         const response = await Faxios.get(endpoint, {
             params: {
@@ -52,10 +18,12 @@ export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, o
         } else {
             setData && setData(response.data.data);
             setTotal && setTotal(response.data.total);
+            setLoading && setLoading(false);
             return response.data;
         }
     } catch (error) {
         message.error(error.response?.data?.message || 'An error occurred');
+        setLoading && setLoading(false);
     }
 };
 
@@ -76,7 +44,7 @@ export const fetchData = async (setData, setLoading, endpoint, optional) => {
 
 export const fetchCategories = async (setCategories) => {
     try {
-        const response = await Raxios.get('/data/categories');
+        const response = await Faxios.post('/categories', { action: 'get' });
         setCategories(response.data);
     } catch (error) {
         message.error('Error fetching categories:', error);
@@ -142,18 +110,10 @@ export const fetchExperts = async (setExperts, internal) => {
     }
 };
 
-export const fetchShorts = async (setShorts) => {
-    try {
-        const response = await Raxios.get('/content/shorts');
-        setShorts(response.data);
-    } catch (error) {
-        message.error('Error fetching shorts:', error);
-    }
-};
 
 export const fetchEngagementData = async (page, size) => {
     try {
-        const response = await Raxios.get('/user/engagementData', {
+        const response = await Faxios.get('/user/engagementData', {
             params: { page, size }
         });
         return response.data;

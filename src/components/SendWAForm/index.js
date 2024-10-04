@@ -22,12 +22,6 @@ const SendWAForm = () => {
     const [usersCount, setUsersCount] = useState(0);
     const [eventSlug, setEventSlug] = useState('');
     const [response, setResponse] = useState(false);
-    // const [fetchStatus, setFetchStatus] = useState(false);
-    // const [proNum, setProNum] = useState({
-    //     count: 0,
-    //     status: 'pending',
-    // });
-    // const [messageId, setMessageId] = useState('');
 
     const fetchAllData = async () => {
         setLoading(true);
@@ -36,32 +30,6 @@ const SendWAForm = () => {
         await fetchData(setSlugs, setLoading, '/event/slugs');
         setLoading(false);
     };
-
-    // const fetchMessageStatus = async () => {
-    //     try {
-    //         const response = await Raxios.get('wa/proNum', {
-    //             params: {
-    //                 messageId,
-    //                 proNum: proNum.count,
-    //             },
-    //         });
-
-    //     } catch (error) {
-    //         message.error('Error fetching message status:', error);
-
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     if (fetchStatus && (proNum.status === "pending")) {
-    //         console.log(proNum, "proNum");
-    //         fetchMessageStatus()
-    //     } else if (fetchStatus && (proNum.status === "done")) {
-    //         message.success('Sent All Messages');
-    //         setFetchStatus(false);
-    //         setProNum(0);
-    //     }
-    // }, [proNum.count, fetchStatus]);
 
     useEffect(() => {
         fetchAllData();
@@ -104,6 +72,8 @@ const SendWAForm = () => {
         if (selectedType || selectedCities.length > 0) {
             fetchPreview();
         }
+
+        // eslint-disable-next-line
     }, [selectedCities, selectedType, eventSlug]);
 
     useEffect(() => {
@@ -303,7 +273,6 @@ const SendWAForm = () => {
                 >
                     Send Message
                 </Button>
-                {/* {fetchStatus && <Progress percent={(proNum / usersCount) * 100} />} */}
             </div>
             {template && <div className='flex flex-col'>
                 <Card className='w-full h-fit rounded-b-none'>

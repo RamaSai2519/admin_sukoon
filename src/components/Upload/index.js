@@ -59,7 +59,7 @@ const S3Uploader = ({ setFileUrl, finalFileUrl }) => {
                     {uploading ? 'Uploading...' : 'Click to Upload'}
                 </Button>
             </Upload>
-            <img src={finalFileUrl} alt="Uploaded file" className='w-full mt-2' />
+            {finalFileUrl && <img src={finalFileUrl} alt="Uploaded file" className='w-full mt-2' />}
         </div>
     );
 };
