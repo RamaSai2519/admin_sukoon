@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import Raxios from '../services/axiosHelper';
 import Faxios from '../services/raxiosHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import { DatePicker, Input, message, Switch, Table } from 'antd';
@@ -95,7 +94,10 @@ const UserDetails = () => {
 
   const handlePremium = async () => {
     try {
-      await Raxios.put(`/user/users/${userId}`, { isPaidUser: !isPremium });
+      await Faxios.post(`/user`, {
+        phoneNumber,
+        isPaidUser: !isPremium
+      });
       fetchData();
       message.success("User Premium Status Changed Successfully.");
     } catch (error) {

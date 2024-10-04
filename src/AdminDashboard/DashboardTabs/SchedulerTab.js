@@ -2,13 +2,13 @@ import { Select, DatePicker, Form, Button, Table, message } from "antd";
 import { useUsers, useExperts } from "../../services/useData";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import getColumnSearchProps from "../../Utils/antTableHelper";
+import InternalToggle from "../../components/InternalToggle";
 import React, { useEffect, useRef, useState } from "react";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
 import { formatTime } from "../../Utils/formatHelper";
-import { fetchData } from "../../services/fetchData";
-import Raxios from "../../services/axiosHelper";
-import InternalToggle from "../../components/InternalToggle";
+import { fetchData, raxiosFetchData } from "../../services/fetchData";
+import { FaxiosPost } from "../../helpers/faxios";
 import Faxios from "../../services/raxiosHelper";
 
 const SchedulerTab = () => {
@@ -32,7 +32,10 @@ const SchedulerTab = () => {
     const { Option } = Select;
 
     useEffect(() => {
-        fetchData(setSchedules, setLoading, '/data/newSchedules');
+        // fetchData(setSchedules, setLoading, '/data/newSchedules');
+        raxiosFetchData(null, null, setSchedules, null, '/schedules', {
+            action: 'get'
+        }, setLoading);
     }, []);
 
     const fetchUsersAndExperts = async () => {
@@ -81,8 +84,10 @@ const SchedulerTab = () => {
     const handleDelete = async (record) => {
         setResponseLoading(true);
         try {
-            await Raxios.delete(`/data/schedule/${record.id}`);
-            message.success("Schedule deleted successfully");
+            await FaxiosPost('/schedules', {
+                scheduleId: record.id,
+                action: 'delete'
+            }, true);
             window.location.reload();
         } catch (error) {
             console.error("Error deleting schedule:", error);
@@ -116,11 +121,10 @@ const SchedulerTab = () => {
             if (selectedDateTime <= now) {
                 window.alert("Selected time has already passed. Please select a future time.");
             } else {
-                await Raxios.post("/data/schedules", {
+                await FaxiosPost('/schedules', {
                     ...values,
                     type: "Admin"
-                });
-                window.alert("Call Scheduled successfully");
+                }, true);
                 window.location.reload();
             }
         } catch (error) {
