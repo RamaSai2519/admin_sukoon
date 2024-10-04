@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useUsers } from '../services/useData';
-import { formatDate } from '../Utils/formatHelper';
-import { fetchEngagementData } from '../services/fetchData';
-import LazyLoad from '../components/LazyLoad/lazyload';
-import { Table, Button, Flex, Radio } from 'antd';
 import UserEngagement from '../UserEngagement';
+import { Table, Button, Flex, Radio } from 'antd';
+import { formatDate } from '../Utils/formatHelper';
 import Loading from '../components/Loading/loading';
 import { downloadExcel } from '../Utils/exportHelper';
+import LazyLoad from '../components/LazyLoad/lazyload';
+import { raxiosFetchData } from '../services/fetchData';
 import getColumnSearchProps from '../Utils/antTableHelper';
 
 const UsersList = () => {
@@ -72,9 +72,7 @@ const UsersList = () => {
   };
 
   const downloadEngagementExcel = async () => {
-    setFetchLoading(true);
-    const data = await fetchEngagementData(1, 10000);
-    setFetchLoading(false);
+    const data = await raxiosFetchData(null, null, null, null, '/user_engagement', null, setFetchLoading);
 
     const dataToWrite = data.data.map((user) => ({
       'POC': user.poc || '',

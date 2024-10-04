@@ -1,12 +1,12 @@
-import { Button } from 'antd';
 import React, { useEffect, useState } from 'react';
-import LazyLoad from '../components/LazyLoad/lazyload';
-import Raxios from '../services/axiosHelper';
+import { Button } from 'antd';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import CreateEventPopup from '../components/Popups/CreateEventPopup';
 import { downloadExcel } from '../Utils/exportHelper';
+import LazyLoad from '../components/LazyLoad/lazyload';
+import { raxiosFetchData } from '../services/fetchData';
 import EventUsersTable from '../components/EventUsersTable';
+import CreateEventPopup from '../components/Popups/CreateEventPopup';
 
 const EventDetails = () => {
     const { slug } = useParams();
@@ -15,26 +15,11 @@ const EventDetails = () => {
     const [data, setData] = useState({});
 
     const fetchEventDetails = async () => {
-        try {
-            const response = await Raxios.get(`/event/handle?slug=${slug}`);
-            setData(response.data);
-        } catch (error) {
-            console.error('Error fetching event details:', error);
-        }
+        await raxiosFetchData(null, null, setData, null, '/list_events', { slug });
     };
 
     const fetchUsers = async () => {
-        try {
-            const response = await Raxios.get(`/event/users?slug=${slug}`);
-            if (Array.isArray(response.data)) {
-                setUsers(response.data);
-            } else {
-                console.error('Error: Users data is not an array:', response.data);
-                setUsers([]);
-            }
-        } catch (error) {
-            console.error('Error fetching users:', error);
-        }
+        await raxiosFetchData(null, null, setUsers, null, '/list_event_users', { slug });
     };
 
     useEffect(() => {

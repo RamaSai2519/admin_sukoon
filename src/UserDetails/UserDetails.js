@@ -1,18 +1,17 @@
-import LazyLoad from '../components/LazyLoad/lazyload';
 import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import Raxios from '../services/axiosHelper';
+import Faxios from '../services/raxiosHelper';
+import LazyLoad from '../components/LazyLoad/lazyload';
 import { DatePicker, Input, message, Switch, Table } from 'antd';
 import './UserDetails.css';
-import Faxios from '../services/raxiosHelper';
-import dayjs from 'dayjs';
 
 const UserDetails = () => {
   const { userId } = useParams();
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
-  // const [source, setSource] = useState('');
   const [context, setContext] = useState([]);
   const [persona, setPersona] = useState('');
   const [birthDate, setBirthDate] = useState('');
@@ -104,19 +103,6 @@ const UserDetails = () => {
     }
   };
 
-
-  const handleDelete = () => {
-    Raxios.delete(`/user/users/${userId}`)
-      .then(() => {
-        window.alert('User deleted successfully.');
-        window.location.href = '/admin/users';
-      })
-      .catch(error => {
-        console.error('Error deleting user:', error);
-        window.alert('Error deleting user:', error);
-      });
-  };
-
   return (
     <LazyLoad>
       <div className='details-container h-screen overflow-auto'>
@@ -165,7 +151,6 @@ const UserDetails = () => {
               <div className='grid-tile w-full h-fit'>
                 <h3>Birth Date</h3>
                 {editMode ? (
-                  // <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
                   <DatePicker
                     value={birthDate}
                     onChange={(date) => setBirthDate(date ? dayjs(date) : '')}
@@ -205,7 +190,6 @@ const UserDetails = () => {
               ) : (
                 <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
               )}
-              <button className='update-button' style={{ backgroundColor: "red" }} onClick={handleDelete}>Delete User</button>
             </div>
           </div>
           <div className='grid md:grid-cols-2 md:gap-4'>
