@@ -95,7 +95,10 @@ const UserDetails = () => {
 
   const handlePremium = async () => {
     try {
-      await Raxios.put(`/user/users/${userId}`, { isPaidUser: !isPremium });
+      await Faxios.post(`/user`, {
+        phoneNumber,
+        isPaidUser: !isPremium
+      });
       fetchData();
       message.success("User Premium Status Changed Successfully.");
     } catch (error) {
