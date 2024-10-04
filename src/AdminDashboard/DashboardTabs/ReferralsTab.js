@@ -16,10 +16,12 @@ const ReferralsTab = () => {
         { title: "Name", dataIndex: "name", key: "name", },
         { title: "Phone", dataIndex: "phoneNumber", key: "phoneNumber", },
         {
-            title: "Action", dataIndex: "_id", key: "_id",
-            render: (id) => (
-                <Link to={`/admin/users/${id}`}>
-                    <Button>View</Button>
+            title: "Action", key: "action",
+            render: (record) => (
+                <Link to={`/admin/users/${record.key}`}>
+                    <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
+                        View
+                    </Button>
                 </Link>
             )
         },
@@ -29,10 +31,12 @@ const ReferralsTab = () => {
         { title: "Name", dataIndex: "user_name", key: "user_name" },
         { title: "Counts", dataIndex: "count", key: "count" },
         {
-            title: "Action", dataIndex: "_id", key: "_id",
-            render: (id) => (
-                <Link to={`/admin/users/${id}`}>
-                    <Button>View</Button>
+            title: "Action", key: "action",
+            render: (record) => (
+                <Link to={`/admin/users/${record.key}`}>
+                    <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
+                        View
+                    </Button>
                 </Link>
             )
         },

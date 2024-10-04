@@ -36,7 +36,7 @@ const LeadsPopup = ({ onClose, leads }) => {
             title: 'Actions', key: 'actions',
             render: (user) => {
                 return (<>{user.leadSource === "Website" && <Link to={`/admin/users/${user._id}`}>
-                    <Button className='w-full'>
+                    <Button className='w-full' onClick={() => localStorage.setItem('userNumber', user.phoneNumber)}>
                         Edit
                     </Button>
                 </Link>}</>);

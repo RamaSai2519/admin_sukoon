@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { generateOptions } from '../../Utils/antSelectHelper';
 import { Button, Card, Select, Input, message } from 'antd';
-import { fetchData } from '../../services/fetchData';
+import { raxiosFetchData } from '../../services/fetchData';
 import Faxios from '../../services/raxiosHelper';
 import Loading from '../Loading/loading';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,11 +24,12 @@ const SendWAForm = () => {
     const [response, setResponse] = useState(false);
 
     const fetchAllData = async () => {
-        setLoading(true);
-        await fetchData(setCities, setLoading, '/data/userCities');
-        await fetchData(setTemplates, setLoading, '/wa/templates');
-        await fetchData(setSlugs, setLoading, '/event/slugs');
-        setLoading(false);
+        const data = await raxiosFetchData(null, null, null, null, '/wa_options', { type: 'form' }, setLoading);
+        if (data) {
+            setSlugs(data.slugs);
+            setCities(data.cities);
+            setTemplates(data.templates);
+        }
     };
 
     useEffect(() => {
@@ -227,7 +228,9 @@ const SendWAForm = () => {
                     onClear={() => setSelectedCities([])}
                     disabled={selectedType}
                 >
-                    {generateOptions(cities, 'city')}
+                    {cities.map((city, index) => (
+                        <Select.Option key={index} value={city}>{city}</Select.Option>
+                    ))}
                 </Select>
 
                 {template && Object.keys(inputs).map((placeholder, index) => (
