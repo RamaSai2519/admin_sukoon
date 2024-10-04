@@ -3,11 +3,10 @@ import { useUsers, useExperts } from "../../services/useData";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import getColumnSearchProps from "../../Utils/antTableHelper";
 import InternalToggle from "../../components/InternalToggle";
-import React, { act, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
 import { formatTime } from "../../Utils/formatHelper";
-import { fetchData, raxiosFetchData } from "../../services/fetchData";
 import { FaxiosPost } from "../../helpers/faxios";
 import Faxios from "../../services/raxiosHelper";
 
@@ -34,7 +33,7 @@ const SchedulerTab = () => {
     const fetchSchedules = async () => {
         setLoading(true);
         const response = await FaxiosPost('/schedules', { action: 'get' });
-        setSchedules(response.data);
+        setSchedules(response.data.data);
         setLoading(false);
     }
 
@@ -137,8 +136,6 @@ const SchedulerTab = () => {
         }
         setResponseLoading(false);
     };
-
-    if (loading) return <Loading />;
 
     return (
         <LazyLoad>
