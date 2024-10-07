@@ -87,7 +87,7 @@ const WhatsappTab = () => {
                             <Radio.Button value='feedback'>Feedback</Radio.Button>
                         </Radio.Group>
                     </Flex>
-                    <Button onClick={downloadData}>Export</Button>
+                    {/* <Button onClick={downloadData}>Export</Button> */}
                 </div>
                 {table === 'history' ? (
                     <WaWhHistory

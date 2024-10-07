@@ -16,7 +16,6 @@ const StatsContext = createContext();
 const UsersContext = createContext();
 const CallsContext = createContext();
 
-// Export hooks to use contexts
 export const useCategories = () => useContext(CategoriesContext);
 export const useInsights = () => useContext(InsightsContext);
 export const useExperts = () => useContext(ExpertsContext);

@@ -66,7 +66,7 @@ const EventDetails = () => {
                     <div className='w-full'>
                         <div className='flex justify-between'>
                             <h1>Registered Users</h1>
-                            <Button onClick={handleExport}>Download Excel</Button>
+                            {/* <Button onClick={handleExport}>Download Excel</Button> */}
                         </div>
                         <EventUsersTable users={users} />
                     </div> :

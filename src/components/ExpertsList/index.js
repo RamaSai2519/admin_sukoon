@@ -79,7 +79,7 @@ const ExpertsList = () => {
                 <h3 className='text-2xl font-bold'>{internalView ? "Internals" : "Experts & Sarathis"}</h3>
                 <div className='flex gap-2 items-center'>
                     <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={loading} />
-                    <Button loading={buttonLoading} onClick={exportToExcel}>Export Excel Sheet</Button>
+                    {/* <Button loading={buttonLoading} onClick={exportToExcel}>Export Excel Sheet</Button> */}
                     <Button onClick={() => setVisible(true)} type="primary">
                         Create Category
                     </Button>

@@ -113,9 +113,9 @@ const UsersList = () => {
             <Radio.Button value="engagement">Registered Users + Leads</Radio.Button>
           </Radio.Group>
         </Flex>
-        <Button loading={fetchLoading} onClick={handleExport}>
+        {table === 'engagement' && <Button loading={fetchLoading} onClick={handleExport}>
           Export
-        </Button>
+        </Button>}
       </div>
       {table === 'engagement' ? <UserEngagement setExportFileUrl={setEngFileURL} /> :
         loading ? <Loading /> :
