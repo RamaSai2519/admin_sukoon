@@ -2,14 +2,13 @@ import { Select, DatePicker, Form, Button, Table, message } from "antd";
 import { useUsers, useExperts } from "../../services/useData";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import getColumnSearchProps from "../../Utils/antTableHelper";
+import InternalToggle from "../../components/InternalToggle";
 import React, { useEffect, useRef, useState } from "react";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
 import { formatTime } from "../../Utils/formatHelper";
-import { fetchData } from "../../services/fetchData";
+import { RaxiosPost } from "../../services/fetchData";
 import Raxios from "../../services/axiosHelper";
-import InternalToggle from "../../components/InternalToggle";
-import Faxios from "../../services/raxiosHelper";
 
 const SchedulerTab = () => {
     // const [slots, setSlots] = useState([]);
@@ -31,8 +30,16 @@ const SchedulerTab = () => {
     );
     const { Option } = Select;
 
+    const fetchSchedules = async () => {
+        setLoading(true);
+        const response = await RaxiosPost('/schedules', { action: 'get' });
+        setSchedules(response.data.data);
+        setLoading(false);
+    }
+
     useEffect(() => {
-        fetchData(setSchedules, setLoading, '/data/newSchedules');
+        fetchSchedules();
+
     }, []);
 
     const fetchUsersAndExperts = async () => {
@@ -81,8 +88,10 @@ const SchedulerTab = () => {
     const handleDelete = async (record) => {
         setResponseLoading(true);
         try {
-            await Raxios.delete(`/data/schedule/${record.id}`);
-            message.success("Schedule deleted successfully");
+            await RaxiosPost('/schedules', {
+                scheduleId: record.id,
+                action: 'delete'
+            }, true);
             window.location.reload();
         } catch (error) {
             console.error("Error deleting schedule:", error);
@@ -93,7 +102,7 @@ const SchedulerTab = () => {
     const handleCallTrigger = async (values, endpoint, type_) => {
         setResponseLoading(true);
         try {
-            const response = await Faxios.post(endpoint, {
+            const response = await Raxios.post(endpoint, {
                 user_id: values.user,
                 expert_id: values.expert, type_
             });
@@ -116,11 +125,11 @@ const SchedulerTab = () => {
             if (selectedDateTime <= now) {
                 window.alert("Selected time has already passed. Please select a future time.");
             } else {
-                await Raxios.post("/data/schedules", {
+                await RaxiosPost('/schedules', {
                     ...values,
-                    type: "Admin"
-                });
-                window.alert("Call Scheduled successfully");
+                    type: "Admin",
+                    action: 'create'
+                }, true);
                 window.location.reload();
             }
         } catch (error) {
@@ -128,8 +137,6 @@ const SchedulerTab = () => {
         }
         setResponseLoading(false);
     };
-
-    if (loading) return <Loading />;
 
     return (
         <LazyLoad>

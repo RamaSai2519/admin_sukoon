@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Faxios from "../../services/raxiosHelper";
+import Raxios from "../../services/axiosHelper";
 import { Button, Input, message, Form } from "antd";
 
 const CreateContent = () => {
@@ -25,7 +25,7 @@ const CreateContent = () => {
 
     const get_content = () => handleApiRequest(
         async () => {
-            const response = await Faxios.post("/chat", { prompt });
+            const response = await Raxios.post("/chat", { prompt });
             setContent(response.data);
         },
         null,
@@ -34,7 +34,7 @@ const CreateContent = () => {
 
     const get_photos = () => handleApiRequest(
         async () => {
-            const response = await Faxios.get("/photos", {
+            const response = await Raxios.get("/photos", {
                 params: { query, page: 1, per_page: 6 }
             });
             setPhotos(response.data);
@@ -50,7 +50,7 @@ const CreateContent = () => {
                 return;
             }
             const photo = { slug: selectedPhoto.slug, description: selectedPhoto.alt_description, url: selectedPhoto.url }
-            const response = await Faxios.post("/content", { content, photo });
+            const response = await Raxios.post("/content", { content, photo });
             message.success(response.msg);
         },
         "Content sent successfully",

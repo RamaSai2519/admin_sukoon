@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import Faxios from '../services/raxiosHelper';
+import Raxios from '../services/axiosHelper';
 import './AdminLogin.css';
 
 const AdminLogin = ({ setIsLoggedIn }) => {
@@ -13,7 +13,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
         setLoading(true);
         const { phoneNumber, password } = values;
         try {
-            const response = await Faxios.post('/admin_auth', {
+            const response = await Raxios.post('/admin_auth', {
                 phoneNumber, password, action: 'login'
             });
             if (response.data.message === 'Authorized Admin') {
@@ -45,7 +45,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
             return;
         }
         try {
-            const response = await Faxios.post('/auth/register', {
+            const response = await Raxios.post('/auth/register', {
                 name, phoneNumber, password, action: 'register'
             });
             if (response.status !== 200) {

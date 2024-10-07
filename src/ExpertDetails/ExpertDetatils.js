@@ -1,10 +1,11 @@
-import Raxios from '../services/axiosHelper';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import Faxios from '../services/raxiosHelper';
+import Raxios from '../services/axiosHelper';
+import { RaxiosPost } from '../services/fetchData';
 import React, { useState, useEffect } from 'react';
 import { useCategories } from '../services/useData';
 import Loading from '../components/Loading/loading';
+import { raxiosFetchData } from '../services/fetchData';
 import { message, Select, Switch, Table, Input } from 'antd';
 import EditableTimeCell from '../components/EditableTimeCell';
 
@@ -33,7 +34,7 @@ const ExpertDetails = () => {
 
   const fetchExpertDetails = async () => {
     try {
-      const response = await Faxios.get(`/expert?phoneNumber=${number}`);
+      const response = await Raxios.get(`/expert?phoneNumber=${number}`);
       const { __v, lastModifiedBy, calls, ...expertData } = response.data;
       setExpert(expertData);
       setLoading(false);
@@ -43,12 +44,8 @@ const ExpertDetails = () => {
   };
 
   const fetchTimings = async () => {
-    try {
-      const response = await Raxios.get(`/data/timings?expert=${expertId}`);
-      setTimings(response.data);
-    } catch (error) {
-      console.error('Error fetching expert timings:', error);
-    }
+    const timings = await raxiosFetchData(null, null, null, null, '/timings', { expert: expertId });
+    setTimings(timings);
   };
 
   useEffect(() => {
@@ -80,7 +77,7 @@ const ExpertDetails = () => {
       return
     }
     try {
-      const response = await Faxios.post('/expert', updatedFormData);
+      const response = await Raxios.post('/expert', updatedFormData);
       if (response.status !== 200) {
         message.error(response.msg);
       } else {
@@ -97,14 +94,8 @@ const ExpertDetails = () => {
   };
 
   const handleSave = async (row) => {
-    try {
-      await Raxios.post(`/data/timings`, { expertId, row });
-      message.success('Timings updated successfully!');
-      window.location.reload();
-    } catch (error) {
-      console.error('Error updating timings:', error);
-      window.alert('Error updating timings:', error);
-    }
+    await RaxiosPost('/timings', { expertId, row }, true);
+    fetchTimings();
   };
 
   const columns = [

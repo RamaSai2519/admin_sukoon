@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Faxios from "../../services/raxiosHelper";
+import Raxios from "../../services/axiosHelper";
 import ReferralChart from "../../components/ReferralsGraph";
 import { Button, Select, Table } from "antd";
 import { Link } from "react-router-dom";
-import { data } from "autoprefixer";
 
 
 const ReferralsTab = () => {
@@ -16,10 +15,12 @@ const ReferralsTab = () => {
         { title: "Name", dataIndex: "name", key: "name", },
         { title: "Phone", dataIndex: "phoneNumber", key: "phoneNumber", },
         {
-            title: "Action", dataIndex: "_id", key: "_id",
-            render: (id) => (
-                <Link to={`/admin/users/${id}`}>
-                    <Button>View</Button>
+            title: "Action", key: "action",
+            render: (record) => (
+                <Link to={`/admin/users/${record.key}`}>
+                    <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
+                        View
+                    </Button>
                 </Link>
             )
         },
@@ -29,10 +30,12 @@ const ReferralsTab = () => {
         { title: "Name", dataIndex: "user_name", key: "user_name" },
         { title: "Counts", dataIndex: "count", key: "count" },
         {
-            title: "Action", dataIndex: "_id", key: "_id",
-            render: (id) => (
-                <Link to={`/admin/users/${id}`}>
-                    <Button>View</Button>
+            title: "Action", key: "action",
+            render: (record) => (
+                <Link to={`/admin/users/${record.key}`}>
+                    <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
+                        View
+                    </Button>
                 </Link>
             )
         },
@@ -40,7 +43,7 @@ const ReferralsTab = () => {
 
     const getReferralData = async (refCode) => {
         try {
-            const response = await Faxios.post("/user_referrals", { refCode });
+            const response = await Raxios.post("/user_referrals", { refCode });
             setReferralData(response.data);
         } catch (error) {
             console.error(error);
@@ -49,7 +52,7 @@ const ReferralsTab = () => {
 
     const fetchReferralsList = async () => {
         try {
-            const res = await Faxios.get("/user_referrals");
+            const res = await Raxios.get("/user_referrals");
             const communityReferralData = res.data.communityReferrals.reduce((acc, item) => {
                 acc[item._id] = item.count;
                 return acc;

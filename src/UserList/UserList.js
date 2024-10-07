@@ -1,31 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useUsers } from '../services/useData';
-import { formatDate } from '../Utils/formatHelper';
-import { fetchEngagementData } from '../services/fetchData';
-import LazyLoad from '../components/LazyLoad/lazyload';
-import { Table, Button, Flex, Radio } from 'antd';
 import UserEngagement from '../UserEngagement';
+import { Table, Button, Flex, Radio } from 'antd';
+import { formatDate } from '../Utils/formatHelper';
 import Loading from '../components/Loading/loading';
 import { downloadExcel } from '../Utils/exportHelper';
+import LazyLoad from '../components/LazyLoad/lazyload';
 import getColumnSearchProps from '../Utils/antTableHelper';
 
 const UsersList = () => {
+  const searchInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [table, setTable] = useState(
     localStorage.getItem('table') === 'engagement' ? 'engagement' : 'users'
   );
   const { users, fetchUsers } = useUsers();
-  const [fetchLoading, setFetchLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [engFileUrl, setEngFileURL] = useState('');
+  const [fetchLoading, setFetchLoading] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInputRef = useRef(null);
 
   const createColumn = (title, dataIndex, key, render) => {
     return {
-      title,
-      dataIndex,
-      key,
+      title, dataIndex, key,
       ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
       ...(render && { render }),
     };
@@ -41,17 +39,16 @@ const UsersList = () => {
     createColumn('Balance', 'numberOfCalls', 'numberOfCalls'),
     {
       title: 'Details',
-      dataIndex: '_id',
       key: 'details',
-      render: (id) =>
+      render: (record) =>
         <div className='flex gap-2'>
-          <Link to={`/admin/users/${id}`}>
-            <Button>
+          <Link to={`/admin/users/${record._id}`}>
+            <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
               View
             </Button>
           </Link>
-          <Link to={`/admin/users/${id}#notifications-table`}>
-            <Button>
+          <Link to={`/admin/users/${record._id}#notifications-table`}>
+            <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
               WA Texts
             </Button>
           </Link>
@@ -73,30 +70,8 @@ const UsersList = () => {
 
   const downloadEngagementExcel = async () => {
     setFetchLoading(true);
-    const data = await fetchEngagementData(1, 10000);
+    window.open(engFileUrl);
     setFetchLoading(false);
-
-    const dataToWrite = data.data.map((user) => ({
-      'POC': user.poc || '',
-      'Name': user.name || '',
-      'DOJ': formatDate(user.createdDate) || '',
-      'SL Days': user.slDays || 0,
-      'Call Status': user.callStatus || '',
-      'User Status': user.userStatus || '',
-      'Contact': user.phoneNumber || '',
-      'City': user.city || '',
-      'DOB': formatDate(user.birthDate) || '',
-      'Gender': user.gender || '',
-      'Last Call Date': formatDate(user.lastCallDate) || '',
-      'Call Age': user.callAge || 0,
-      'Calls': user.callsDone || 0,
-      'Saarthi': user.expert || '',
-      'Remarks': user.remarks || '',
-      'Source': user.source || '',
-      'Ref Source': user.refSource || '',
-    }));
-
-    await downloadExcel(dataToWrite, 'UserEngagement.xlsx');
   };
 
   const fetchdata = async () => {
@@ -104,6 +79,11 @@ const UsersList = () => {
     await fetchUsers();
     setLoading(false);
   };
+
+  useEffect(() => {
+    console.log("🚀 ~ useEffect ~ engFileUrl:", engFileUrl)
+
+  }, [engFileUrl]);
 
   useEffect(() => {
     fetchdata();
@@ -137,7 +117,7 @@ const UsersList = () => {
           Export
         </Button>
       </div>
-      {table === 'engagement' ? <UserEngagement /> :
+      {table === 'engagement' ? <UserEngagement setExportFileUrl={setEngFileURL} /> :
         loading ? <Loading /> :
           <LazyLoad>
             <Table

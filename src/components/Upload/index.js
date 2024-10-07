@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
-import Faxios from '../../services/raxiosHelper';
+import Raxios from '../../services/axiosHelper';
 import { Upload, message, Button } from 'antd';
 import axios from 'axios';
 
@@ -9,7 +9,7 @@ const S3Uploader = ({ setFileUrl, finalFileUrl }) => {
 
     const getPresignedUrl = async (file) => {
         try {
-            const response = await Faxios.post('/upload', {
+            const response = await Raxios.post('/upload', {
                 file_name: file.name,
                 file_type: file.type,
             });
@@ -59,7 +59,7 @@ const S3Uploader = ({ setFileUrl, finalFileUrl }) => {
                     {uploading ? 'Uploading...' : 'Click to Upload'}
                 </Button>
             </Upload>
-            <img src={finalFileUrl} alt="Uploaded file" className='w-full mt-2' />
+            {finalFileUrl && <img src={finalFileUrl} alt="Uploaded file" className='w-full mt-2' />}
         </div>
     );
 };

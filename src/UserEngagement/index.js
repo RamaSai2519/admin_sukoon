@@ -1,25 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Table, Select, DatePicker } from 'antd';
+import { Button, Table, Select, DatePicker, message } from 'antd';
+import { raxiosFetchData } from '../services/fetchData';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import Raxios from '../services/axiosHelper';
-import Loading from '../components/Loading/loading';
 import EditableCell from '../components/EditableCell';
-import { fetchPagedData } from '../services/fetchData';
+import Loading from '../components/Loading/loading';
 import { formatDate } from '../Utils/formatHelper';
+import { RaxiosPost } from '../services/fetchData';
+import { Link } from 'react-router-dom';
 import moment from 'moment/moment';
 
-const UserEngagement = () => {
+const UserEngagement = ({ setExportFileUrl }) => {
     const [engagementData, setEngagementData] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(
         localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1
     );
     const [pageSize, setPageSize] = React.useState(10);
-    const [totalItems, setTotalItems] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
+    const [totalItems, setTotalItems] = React.useState(0);
+
+    const fetchData = async () => {
+        const data = await raxiosFetchData(currentPage, pageSize, setEngagementData, setTotalItems, '/user_engagement', null, setLoading);
+        setExportFileUrl(data.fileUrl);
+    };
 
     React.useEffect(() => {
-        fetchPagedData(currentPage, pageSize, setEngagementData, setTotalItems, setLoading, '/user/engagementData');
+        fetchData();
     }, [currentPage, pageSize]);
 
     const data = engagementData.map((item) => ({
@@ -193,7 +198,9 @@ const UserEngagement = () => {
                             {record.wa_opt_out ? 'Opt In' : 'Opt Out'}
                         </Button>
                         <Link to={`/admin/users/${record._id}`}>
-                            <Button>View</Button>
+                            <Button onClick={() => localStorage.setItem('userNumber', record.phoneNumber)}>
+                                View
+                            </Button>
                         </Link>
                     </div>
                 )
@@ -208,8 +215,10 @@ const UserEngagement = () => {
     };
 
     const handleSave = async ({ key, field, value }) => {
-        try {
-            await Raxios.post('/user/engagementData', { key, field, value });
+        const response = await RaxiosPost('/user_engagement', { key, field, value });
+        if (response.status !== 200) {
+            message.error(response.msg);
+        } else {
             const newData = [...engagementData];
             const index = newData.findIndex((item) => item._id === key);
             if (index > -1) {
@@ -217,9 +226,7 @@ const UserEngagement = () => {
                 newData.splice(index, 1, { ...item, [field]: value });
                 setEngagementData(newData);
             }
-        } catch (error) {
-            console.error('Error updating data:', error);
-        }
+        };
     };
 
     const handleUserStatusChange = async (value, record) => {

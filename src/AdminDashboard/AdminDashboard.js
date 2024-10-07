@@ -3,7 +3,7 @@ import { ConfigProvider, theme } from 'antd';
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from './firebaseConfig';
 import CallsTable from '../CallList/CallList';
-import Faxios from '../services/raxiosHelper';
+import Raxios from '../services/axiosHelper';
 import UsersTab from './DashboardTabs/UsersTab';
 import EventsTab from './DashboardTabs/EventsTab';
 import React, { useState, useEffect } from 'react';
@@ -88,7 +88,7 @@ const AdminDashboard = ({ onLogout }) => {
 
   const sendFCMTokenToServer = async (token) => {
     try {
-      await Faxios.post('/save_fcm_token', { token });
+      await Raxios.post('/save_fcm_token', { token });
     } catch (error) {
       console.error('Failed to send FCM token to server:', error);
     }

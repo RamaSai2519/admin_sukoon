@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Loading from '../../components/Loading/loading';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import { fetchPagedData } from '../../services/fetchData';
+import { raxiosFetchData } from '../../services/fetchData';
 import { formatTime } from '../../Utils/formatHelper';
 import { Table } from 'antd';
 
@@ -21,7 +21,7 @@ const NotificationsTab = () => {
     };
 
     useEffect(() => {
-        fetchPagedData(errorLogsPage, errorLogsPageSize, setErrorLogs, setErrorLogsTotal, setLoading, '/data/errorlogs');
+        raxiosFetchData(errorLogsPage, errorLogsPageSize, setErrorLogs, setErrorLogsTotal, '/logs', null, setLoading);
     }, [errorLogsPage, errorLogsPageSize]);
 
     const columns = [

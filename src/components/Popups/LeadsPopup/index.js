@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button } from 'antd';
+import { Table, Button, message } from 'antd';
 import EditableCell from '../../EditableCell';
-import Raxios from '../../../services/axiosHelper';
+import { RaxiosPost } from '../../../services/fetchData';
 import { formatDate } from '../../../Utils/formatHelper';
 import getColumnSearchProps from '../../../Utils/antTableHelper';
 
@@ -35,62 +35,27 @@ const LeadsPopup = ({ onClose, leads }) => {
         {
             title: 'Actions', key: 'actions',
             render: (user) => {
-                return (
-                    <div className='flex gap-2 justify-end items-center'>
-                        {user.leadSource === "Website" && <Link to={`/admin/users/${user._id}`}>
-                            <Button className='w-full'>
-                                Edit
-                            </Button>
-                        </Link>}
-                        {/* <Popconfirm
-                            title="Delete the record"
-                            description="Are you sure to delete this record?"
-                            onConfirm={() => confirm(user)} onCancel={(e) => console.log(e)}
-                            okText="Yes" cancelText="No"
-                            icon={
-                                <QuestionCircleOutlined style={{ color: 'red' }} />
-                            }
-                        >
-                            <Button>Delete</Button>
-                        </Popconfirm> */}
-                    </div>
-                );
+                return (<>{user.leadSource === "Website" && <Link to={`/admin/users/${user._id}`}>
+                    <Button className='w-full' onClick={() => localStorage.setItem('userNumber', user.phoneNumber)}>
+                        Edit
+                    </Button>
+                </Link>}</>);
             }
         },
     ];
 
     const handleSave = async ({ key, field, value }) => {
-        try {
-            await Raxios.post('/user/leadRemarks', { key, field, value })
-                .then((response) => {
-                    if (response.request.status === 200) {
-                        let updatedLeads = [...data];
-                        const index = updatedLeads.findIndex((item) => key === item._id);
-                        updatedLeads[index][field] = value;
-                        setData(updatedLeads);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    window.alert('Error updating data');
-                });
-        } catch (error) {
-            console.error('Error updating data:', error);
+        const response = await RaxiosPost('/remarks', { key, value });
+        if (response.status !== 200) {
+            message.error(response.msg);
+        } else {
+            let updatedLeads = [...data];
+            const index = updatedLeads.findIndex((item) => key === item._id);
+            updatedLeads[index][field] = value;
+            setData(updatedLeads);
         }
-    };
 
-    // const confirm = (user) => {
-    //     Raxios.post(`/user/leads`, { user })
-    //         .then((response) => {
-    //             if (response.request.status === 200) {
-    //                 window.alert('Lead deleted successfully');
-    //                 window.location.reload();
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // };
+    };
 
     const components = {
         body: {

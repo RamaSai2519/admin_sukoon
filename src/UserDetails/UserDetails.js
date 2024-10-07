@@ -1,19 +1,17 @@
-import LazyLoad from '../components/LazyLoad/lazyload';
 import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import Raxios from '../services/axiosHelper';
+import LazyLoad from '../components/LazyLoad/lazyload';
 import { DatePicker, Input, message, Switch, Table } from 'antd';
 import './UserDetails.css';
-import Faxios from '../services/raxiosHelper';
-import dayjs from 'dayjs';
+import { raxiosFetchData } from '../services/fetchData';
 
 const UserDetails = () => {
   const { userId } = useParams();
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
-  // const [source, setSource] = useState('');
-  const [context, setContext] = useState([]);
   const [persona, setPersona] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [editMode, setEditMode] = useState(false);
@@ -23,24 +21,25 @@ const UserDetails = () => {
   const [notifications, setNotifications] = useState([]);
 
   const fetchData = async () => {
+    const phoneNumber = localStorage.getItem('userNumber');
     try {
-      const response = await Raxios.get(`/user/users/${userId}`);
-      setName(response.data.name);
-      setCity(response.data.city);
-      setContext(response.data.context);
-      setIsPremium(response.data.isPaidUser);
-      setPhoneNumber(response.data.phoneNumber);
-      setNumberOfCalls(response.data.numberOfCalls);
-      setNotifications(response.data.notifications);
-      setBirthDate(dayjs(response.data.birthDate));
+      const data = await raxiosFetchData(null, null, null, null, '/user', { phoneNumber }, null);
+      console.log("🚀 ~ fetchData ~ data:", data)
+      setName(data.name);
+      setCity(data.city);
+      setIsPremium(data.isPaidUser);
+      setPhoneNumber(data.phoneNumber);
+      setNumberOfCalls(data.numberOfCalls);
+      setNotifications(data.notifications);
+      setBirthDate(dayjs(data.birthDate));
 
-      if (typeof response.data['Customer Persona'] === 'object') {
-        const personaString = JSON.stringify(response.data['Customer Persona'], null, 2);
+      if (typeof data['Customer Persona'] === 'object') {
+        const personaString = JSON.stringify(data['Customer Persona'], null, 2);
         // eslint-disable-next-line
         const personaWithoutQuotes = personaString.replace(/\"/g, '');
         setPersona(personaWithoutQuotes);
       } else {
-        setPersona(response.data['Customer Persona']);
+        setPersona(data['Customer Persona']);
       }
     } catch (error) {
       console.error('Error fetching user details:', error);
@@ -76,10 +75,9 @@ const UserDetails = () => {
       return;
     }
     try {
-      const response = await Faxios.post(`/user`, {
+      const response = await Raxios.post(`/user`, {
         name,
         city,
-        // context,
         ...(birthDate !== '' && { birthDate }),
         phoneNumber,
         numberOfCalls: parseInt(numberOfCalls),
@@ -96,25 +94,15 @@ const UserDetails = () => {
 
   const handlePremium = async () => {
     try {
-      await Raxios.put(`/user/users/${userId}`, { isPaidUser: !isPremium });
+      await Raxios.post(`/user`, {
+        phoneNumber,
+        isPaidUser: !isPremium
+      });
       fetchData();
       message.success("User Premium Status Changed Successfully.");
     } catch (error) {
       message.error('Error updating user details:', error);
     }
-  };
-
-
-  const handleDelete = () => {
-    Raxios.delete(`/user/users/${userId}`)
-      .then(() => {
-        window.alert('User deleted successfully.');
-        window.location.href = '/admin/users';
-      })
-      .catch(error => {
-        console.error('Error deleting user:', error);
-        window.alert('Error deleting user:', error);
-      });
   };
 
   return (
@@ -165,7 +153,6 @@ const UserDetails = () => {
               <div className='grid-tile w-full h-fit'>
                 <h3>Birth Date</h3>
                 {editMode ? (
-                  // <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
                   <DatePicker
                     value={birthDate}
                     onChange={(date) => setBirthDate(date ? dayjs(date) : '')}
@@ -175,19 +162,6 @@ const UserDetails = () => {
                 )}
               </div>
             </div>
-            {context && (
-              <div className='grid-tile'>
-                <h3>Context</h3>
-                {editMode ? (
-                  <textarea
-                    className='h-4/5 w-full' value={context}
-                    onChange={(e) => setContext(e.target.value)}
-                  />
-                ) : (
-                  <h2 className='whitespace-pre-wrap'>{context}</h2>
-                )}
-              </div>
-            )}
             <div className='edit-button-container'>
               <div className='grid-tile'>
                 <h3>Number of Calls</h3>
@@ -205,7 +179,6 @@ const UserDetails = () => {
               ) : (
                 <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
               )}
-              <button className='update-button' style={{ backgroundColor: "red" }} onClick={handleDelete}>Delete User</button>
             </div>
           </div>
           <div className='grid md:grid-cols-2 md:gap-4'>

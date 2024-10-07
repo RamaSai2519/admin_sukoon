@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Raxios from '../../../services/axiosHelper';
+import { RaxiosPost } from '../../../services/fetchData';
 import { Button } from 'antd';
 
 const CreateCategoryPopup = ({ visible, setVisible }) => {
@@ -12,16 +12,7 @@ const CreateCategoryPopup = ({ visible, setVisible }) => {
     }, [visible]);
 
     const handleCreate = async () => {
-        try {
-            await Raxios.post('/data/categories', {
-                name,
-            });
-            window.alert('Category created successfully.');
-            setVisible(false);
-        } catch (error) {
-            console.error('Error creating Category:', error);
-            window.alert('Error creating Category, Category already exists.');
-        }
+        await RaxiosPost('/categories', { name, action: 'post' }, true);
         setVisible(false);
     };
 

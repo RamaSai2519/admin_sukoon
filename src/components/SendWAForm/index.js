@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { generateOptions } from '../../Utils/antSelectHelper';
 import { Button, Card, Select, Input, message } from 'antd';
-import { fetchData } from '../../services/fetchData';
-import Faxios from '../../services/raxiosHelper';
+import { raxiosFetchData } from '../../services/fetchData';
+import Raxios from '../../services/axiosHelper';
 import Loading from '../Loading/loading';
 import { v4 as uuidv4 } from 'uuid';
 import S3Uploader from '../Upload';
@@ -22,46 +22,15 @@ const SendWAForm = () => {
     const [usersCount, setUsersCount] = useState(0);
     const [eventSlug, setEventSlug] = useState('');
     const [response, setResponse] = useState(false);
-    // const [fetchStatus, setFetchStatus] = useState(false);
-    // const [proNum, setProNum] = useState({
-    //     count: 0,
-    //     status: 'pending',
-    // });
-    // const [messageId, setMessageId] = useState('');
 
     const fetchAllData = async () => {
-        setLoading(true);
-        await fetchData(setCities, setLoading, '/data/userCities');
-        await fetchData(setTemplates, setLoading, '/wa/templates');
-        await fetchData(setSlugs, setLoading, '/event/slugs');
-        setLoading(false);
+        const data = await raxiosFetchData(null, null, null, null, '/wa_options', { type: 'form' }, setLoading);
+        if (data) {
+            setSlugs(data.slugs);
+            setCities(data.cities);
+            setTemplates(data.templates);
+        }
     };
-
-    // const fetchMessageStatus = async () => {
-    //     try {
-    //         const response = await Raxios.get('wa/proNum', {
-    //             params: {
-    //                 messageId,
-    //                 proNum: proNum.count,
-    //             },
-    //         });
-
-    //     } catch (error) {
-    //         message.error('Error fetching message status:', error);
-
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     if (fetchStatus && (proNum.status === "pending")) {
-    //         console.log(proNum, "proNum");
-    //         fetchMessageStatus()
-    //     } else if (fetchStatus && (proNum.status === "done")) {
-    //         message.success('Sent All Messages');
-    //         setFetchStatus(false);
-    //         setProNum(0);
-    //     }
-    // }, [proNum.count, fetchStatus]);
 
     useEffect(() => {
         fetchAllData();
@@ -87,7 +56,7 @@ const SendWAForm = () => {
         if (selectedType === "event" && !eventSlug) {
             return;
         }
-        const response = await Faxios.post('/wa_options', {
+        const response = await Raxios.post('/wa_options', {
             usersType: selectedType,
             cities: selectedCities,
             eventId: eventSlug,
@@ -104,6 +73,8 @@ const SendWAForm = () => {
         if (selectedType || selectedCities.length > 0) {
             fetchPreview();
         }
+
+        // eslint-disable-next-line
     }, [selectedCities, selectedType, eventSlug]);
 
     useEffect(() => {
@@ -164,7 +135,7 @@ const SendWAForm = () => {
             ...template.extra_args.includes('registraion_link_slug') && { '<registraion_link_slug>': slug }
         };
         setResponse(true);
-        const response = await Faxios.post('/wa_options', {
+        const response = await Raxios.post('/wa_options', {
             messageId: newMessageId,
             templateId: template._id,
             usersType: selectedType,
@@ -257,7 +228,9 @@ const SendWAForm = () => {
                     onClear={() => setSelectedCities([])}
                     disabled={selectedType}
                 >
-                    {generateOptions(cities, 'city')}
+                    {cities.map((city, index) => (
+                        <Select.Option key={index} value={city}>{city}</Select.Option>
+                    ))}
                 </Select>
 
                 {template && Object.keys(inputs).map((placeholder, index) => (
@@ -303,7 +276,6 @@ const SendWAForm = () => {
                 >
                     Send Message
                 </Button>
-                {/* {fetchStatus && <Progress percent={(proNum / usersCount) * 100} />} */}
             </div>
             {template && <div className='flex flex-col'>
                 <Card className='w-full h-fit rounded-b-none'>
