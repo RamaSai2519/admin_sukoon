@@ -7,8 +7,8 @@ import React, { useEffect, useRef, useState } from "react";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import Loading from "../../components/Loading/loading";
 import { formatTime } from "../../Utils/formatHelper";
-import { FaxiosPost } from "../../helpers/faxios";
-import Faxios from "../../services/raxiosHelper";
+import { RaxiosPost } from "../../services/fetchData";
+import Raxios from "../../services/axiosHelper";
 
 const SchedulerTab = () => {
     // const [slots, setSlots] = useState([]);
@@ -32,7 +32,7 @@ const SchedulerTab = () => {
 
     const fetchSchedules = async () => {
         setLoading(true);
-        const response = await FaxiosPost('/schedules', { action: 'get' });
+        const response = await RaxiosPost('/schedules', { action: 'get' });
         setSchedules(response.data.data);
         setLoading(false);
     }
@@ -88,7 +88,7 @@ const SchedulerTab = () => {
     const handleDelete = async (record) => {
         setResponseLoading(true);
         try {
-            await FaxiosPost('/schedules', {
+            await RaxiosPost('/schedules', {
                 scheduleId: record.id,
                 action: 'delete'
             }, true);
@@ -102,7 +102,7 @@ const SchedulerTab = () => {
     const handleCallTrigger = async (values, endpoint, type_) => {
         setResponseLoading(true);
         try {
-            const response = await Faxios.post(endpoint, {
+            const response = await Raxios.post(endpoint, {
                 user_id: values.user,
                 expert_id: values.expert, type_
             });
@@ -125,7 +125,7 @@ const SchedulerTab = () => {
             if (selectedDateTime <= now) {
                 window.alert("Selected time has already passed. Please select a future time.");
             } else {
-                await FaxiosPost('/schedules', {
+                await RaxiosPost('/schedules', {
                     ...values,
                     type: "Admin",
                     action: 'create'

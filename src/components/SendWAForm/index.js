@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { generateOptions } from '../../Utils/antSelectHelper';
 import { Button, Card, Select, Input, message } from 'antd';
 import { raxiosFetchData } from '../../services/fetchData';
-import Faxios from '../../services/raxiosHelper';
+import Raxios from '../../services/axiosHelper';
 import Loading from '../Loading/loading';
 import { v4 as uuidv4 } from 'uuid';
 import S3Uploader from '../Upload';
@@ -56,7 +56,7 @@ const SendWAForm = () => {
         if (selectedType === "event" && !eventSlug) {
             return;
         }
-        const response = await Faxios.post('/wa_options', {
+        const response = await Raxios.post('/wa_options', {
             usersType: selectedType,
             cities: selectedCities,
             eventId: eventSlug,
@@ -135,7 +135,7 @@ const SendWAForm = () => {
             ...template.extra_args.includes('registraion_link_slug') && { '<registraion_link_slug>': slug }
         };
         setResponse(true);
-        const response = await Faxios.post('/wa_options', {
+        const response = await Raxios.post('/wa_options', {
             messageId: newMessageId,
             templateId: template._id,
             usersType: selectedType,

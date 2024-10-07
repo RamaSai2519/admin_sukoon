@@ -7,7 +7,7 @@ import Loading from '../../components/Loading/loading';
 import { formatDate } from '../../Utils/formatHelper';
 import Histograms from '../../components/Histograms';
 import Popup from '../../components/Popups/Popup';
-import Faxios from '../../services/raxiosHelper';
+import Raxios from '../../services/axiosHelper';
 import { Link } from 'react-router-dom';
 
 const UsersTab = () => {
@@ -28,7 +28,7 @@ const UsersTab = () => {
 
   const fetchLeads = async () => {
     try {
-      const response = await Faxios.get('/leads', {
+      const response = await Raxios.get('/leads', {
         params: {
           data: true,
         },

@@ -1,17 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
 
-// export const BASE_URL = 'http://localhost:8000/admin';
-export const BASE_URL = 'https://rama.sukoonunlimited.com/admin';
+export const FINAL_URL = 'https://ij8f1oonya.execute-api.ap-south-1.amazonaws.com/dev/actions';
+// export const FINAL_URL = "http://localhost:8080/actions";
 
-export const MAIN_PROD_URL = 'https://prod-backend.sukoonunlimited.com/api';
-
-const Raxios = axios.create({
-  baseURL: BASE_URL
-});
-
-export const Paxios = axios.create({
-  baseURL: MAIN_PROD_URL
-});
+export const Raxios = axios.create({ baseURL: FINAL_URL });
 
 Raxios.interceptors.request.use(
   (config) => {
@@ -26,35 +18,52 @@ Raxios.interceptors.request.use(
   }
 );
 
-const refreshAccessToken = async () => {
+const logout_user = () => {
+  localStorage.clear();
+  window.location.href = '/';
+};
+
+const refreshFaxiosAccessToken = async () => {
   const refreshToken = localStorage.getItem('refresh_token');
   try {
-    const response = await axios.post(`${BASE_URL}/auth/refresh`, null, {
+    let response = await axios.post(`${FINAL_URL}/admin_auth`,
+      { action: 'refresh' }, {
       headers: {
         Authorization: `Bearer ${refreshToken}`,
       },
     });
+    response = await format_response(response);
+    if (response.status !== 200) logout_user();
     const newAccessToken = response.data.access_token;
     localStorage.setItem('access_token', newAccessToken);
     return newAccessToken;
   } catch (error) {
-    console.error('Failed to refresh access token', error);
-    localStorage.clear();
-    window.location.href = '/';
+    logout_user();
   }
 };
 
-// Interceptor to handle 401 errors
+const format_response = async (response) => {
+  if ("output_details" in response.data) {
+    return {
+      data: response.data.output_details,
+      status: response.data.output_status === 'SUCCESS' ? 200 : 400,
+      msg: response.data.output_message,
+      originalResponse: response,
+    };
+  }
+  return response;
+}
+
 Raxios.interceptors.response.use(
   (response) => {
-    return response;
+    return format_response(response);
   },
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if ((error.response.status === 500 || 401) && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const newAccessToken = await refreshAccessToken();
+        const newAccessToken = await refreshFaxiosAccessToken();
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return Raxios(originalRequest);
       } catch (refreshError) {

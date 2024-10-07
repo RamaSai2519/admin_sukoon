@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import Faxios from '../services/raxiosHelper';
+import Raxios from '../services/axiosHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import { DatePicker, Input, message, Switch, Table } from 'antd';
 import './UserDetails.css';
@@ -75,7 +75,7 @@ const UserDetails = () => {
       return;
     }
     try {
-      const response = await Faxios.post(`/user`, {
+      const response = await Raxios.post(`/user`, {
         name,
         city,
         ...(birthDate !== '' && { birthDate }),
@@ -94,7 +94,7 @@ const UserDetails = () => {
 
   const handlePremium = async () => {
     try {
-      await Faxios.post(`/user`, {
+      await Raxios.post(`/user`, {
         phoneNumber,
         isPaidUser: !isPremium
       });

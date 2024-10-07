@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Button, message } from 'antd';
 import EditableCell from '../../EditableCell';
-import { FaxiosPost } from '../../../helpers/faxios';
+import { RaxiosPost } from '../../../services/fetchData';
 import { formatDate } from '../../../Utils/formatHelper';
 import getColumnSearchProps from '../../../Utils/antTableHelper';
 
@@ -45,7 +45,7 @@ const LeadsPopup = ({ onClose, leads }) => {
     ];
 
     const handleSave = async ({ key, field, value }) => {
-        const response = await FaxiosPost('/remarks', { key, value });
+        const response = await RaxiosPost('/remarks', { key, value });
         if (response.status !== 200) {
             message.error(response.msg);
         } else {

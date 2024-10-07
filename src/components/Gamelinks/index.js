@@ -1,6 +1,6 @@
 // import { Button, message, Select, Table } from 'antd';
 // import React, { useEffect, useRef, useState } from 'react';
-// import Raxios, { Paxios } from '../../services/axiosHelper';
+// import Faxios from '../../services/axiosHelper';
 // import getColumnSearchProps from '../../Utils/antTableHelper';
 // import { formatTime } from '../../Utils/formatHelper';
 // import { useLocation } from 'react-router-dom';
@@ -22,8 +22,8 @@
 //         setLoading(true);
 //         try {
 //             const response = selectedExpert
-//                 ? await Paxios.get(`/expert/getGamesByExpert?expertId=${selectedExpert}`)
-//                 : await Paxios.get("/expert/getAllLinks");
+//                 ? await Faxios.get(`/expert/getGamesByExpert?expertId=${selectedExpert}`)
+//                 : await Faxios.get("/expert/getAllLinks");
 //             setAllData(response.data);
 //         } catch (error) {
 //             if (error.response.status === 404) {
@@ -40,7 +40,7 @@
 //     const fetchExpertOptions = async () => {
 //         setLoading(true);
 //         try {
-//             const response = await Raxios.get("/expert/getExpertNames");
+//             const response = await Faxios.get("/expert/getExpertNames");
 //             setExpertNames(response.data);
 //         } catch (error) {
 //             console.error('Error fetching experts:', error);

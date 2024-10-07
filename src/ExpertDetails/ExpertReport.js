@@ -1,5 +1,5 @@
 // import React, { useState, useEffect } from 'react';
-// import Raxios from '../services/axiosHelper';
+// import Faxios from '../services/axiosHelper';
 // import { useParams, Link } from 'react-router-dom';
 // import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 // import { FaArrowLeft } from 'react-icons/fa';
@@ -62,7 +62,7 @@
 //   const [editMode, setEditMode] = useState(false);
 
 //   useEffect(() => {
-//     Raxios.get(`/expert/experts/${expertId}`)
+//     Faxios.get(`/expert/experts/${expertId}`)
 //       .then(response => {
 //         const data = response.data;
 //         setExpert(data);
@@ -85,7 +85,7 @@
 //   }, [expertId]);
 
 //   const handleUpdate = () => {
-//     Raxios.put(`/expert/experts/${expertId}`, {
+//     Faxios.put(`/expert/experts/${expertId}`, {
 //       name,
 //       score,
 //       flow,

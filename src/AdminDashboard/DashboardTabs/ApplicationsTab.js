@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaxiosPost } from "../../helpers/faxios";
+import { RaxiosPost } from "../../services/fetchData";
 import { Table, Flex, Radio, message } from "antd";
 import { formatDate } from "../../Utils/formatHelper";
 import Loading from "../../components/Loading/loading";
@@ -57,7 +57,7 @@ const ApplicationsTab = () => {
     };
 
     const handleSaveRemarks = async ({ key, field, value }) => {
-        const response = await FaxiosPost('/remarks', { key, value });
+        const response = await RaxiosPost('/remarks', { key, value });
         if (response.status !== 200) {
             message.error(response.msg);
         } else {

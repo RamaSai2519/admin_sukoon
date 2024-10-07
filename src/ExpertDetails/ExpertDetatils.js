@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import Faxios from '../services/raxiosHelper';
-import { FaxiosPost } from '../helpers/faxios';
+import Raxios from '../services/axiosHelper';
+import { RaxiosPost } from '../services/fetchData';
 import React, { useState, useEffect } from 'react';
 import { useCategories } from '../services/useData';
 import Loading from '../components/Loading/loading';
@@ -34,7 +34,7 @@ const ExpertDetails = () => {
 
   const fetchExpertDetails = async () => {
     try {
-      const response = await Faxios.get(`/expert?phoneNumber=${number}`);
+      const response = await Raxios.get(`/expert?phoneNumber=${number}`);
       const { __v, lastModifiedBy, calls, ...expertData } = response.data;
       setExpert(expertData);
       setLoading(false);
@@ -77,7 +77,7 @@ const ExpertDetails = () => {
       return
     }
     try {
-      const response = await Faxios.post('/expert', updatedFormData);
+      const response = await Raxios.post('/expert', updatedFormData);
       if (response.status !== 200) {
         message.error(response.msg);
       } else {
@@ -94,7 +94,7 @@ const ExpertDetails = () => {
   };
 
   const handleSave = async (row) => {
-    await FaxiosPost('/timings', { expertId, row }, true);
+    await RaxiosPost('/timings', { expertId, row }, true);
     fetchTimings();
   };
 

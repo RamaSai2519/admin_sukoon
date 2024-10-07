@@ -1,7 +1,7 @@
 import { Table, Button, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import InternalToggle from '../InternalToggle';
-import { FaxiosPost } from '../../helpers/faxios';
+import { RaxiosPost } from '../../services/fetchData';
 import React, { useEffect, useState } from 'react';
 import { calculateCallStats, columns } from './helper';
 import { downloadExcel } from '../../Utils/exportHelper';
@@ -66,7 +66,7 @@ const ExpertsList = () => {
     const createExpert = async () => {
         const expertNumber = window.prompt("Enter the phone number of the new expert:");
         if (expertNumber) {
-            const response = await FaxiosPost('/expert', { phoneNumber: expertNumber });
+            const response = await RaxiosPost('/expert', { phoneNumber: expertNumber });
             if (response.status !== 200) {
                 message.error(response.msg);
             } else navigate(`/admin/experts/${expertNumber}`);

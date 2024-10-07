@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaxiosPost } from '../../helpers/faxios';
+import { RaxiosPost } from '../../services/fetchData';
 import Loading from '../../components/Loading/loading';
 import EditableCell from '../../components/EditableCell';
 import { raxiosFetchData } from '../../services/fetchData';
@@ -96,7 +96,7 @@ const EventsTab = () => {
     ];
 
     const handleSave = async ({ key, field, value }) => {
-        const response = await FaxiosPost('/remarks', { key, value });
+        const response = await RaxiosPost('/remarks', { key, value });
         if (response.status !== 200) {
             message.error(response.msg);
         } else {

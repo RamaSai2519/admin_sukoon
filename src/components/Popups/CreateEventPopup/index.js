@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import S3Uploader from '../../Upload';
-import { FaxiosPost } from '../../../helpers/faxios';
+import { RaxiosPost } from '../../../services/fetchData';
 import { Form, Input, Button, message, Select, DatePicker, InputNumber } from 'antd';
 
 const CreateEventPopup = ({ setVisible, data, editMode }) => {
@@ -9,7 +9,8 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
 
     const handleCreate = async (values) => {
         const { image, ...otherValues } = values;
-        const response = await FaxiosPost('/upsert_event', {
+        if (!uploadedImageUrl) { message.error('Please upload an image'); return; }
+        const response = await RaxiosPost('/upsert_event', {
             ...otherValues,
             imageUrl: uploadedImageUrl
         });
@@ -130,12 +131,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
                     <Select.Option value={false}>No</Select.Option>
                 </Select>
         },
-        {
-            label: "Image",
-            name: "image",
-            rules: [{ required: true, message: 'Please upload the image' }],
-            component: <S3Uploader setFileUrl={setUploadedImageUrl} finalFileUrl={uploadedImageUrl} />
-        }
+        { label: "Image", name: "image", component: <S3Uploader setFileUrl={setUploadedImageUrl} finalFileUrl={uploadedImageUrl} /> }
     ];
 
     return (

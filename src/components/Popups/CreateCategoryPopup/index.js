@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaxiosPost } from '../../../helpers/faxios';
+import { RaxiosPost } from '../../../services/fetchData';
 import { Button } from 'antd';
 
 const CreateCategoryPopup = ({ visible, setVisible }) => {
@@ -12,7 +12,7 @@ const CreateCategoryPopup = ({ visible, setVisible }) => {
     }, [visible]);
 
     const handleCreate = async () => {
-        await FaxiosPost('/categories', { name, action: 'post' }, true);
+        await RaxiosPost('/categories', { name, action: 'post' }, true);
         setVisible(false);
     };
 

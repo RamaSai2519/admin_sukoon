@@ -5,21 +5,26 @@ import LazyLoad from '../components/LazyLoad/lazyload';
 import EditableCell from '../components/EditableCell';
 import Loading from '../components/Loading/loading';
 import { formatDate } from '../Utils/formatHelper';
-import { FaxiosPost } from '../helpers/faxios';
+import { RaxiosPost } from '../services/fetchData';
 import { Link } from 'react-router-dom';
 import moment from 'moment/moment';
 
-const UserEngagement = () => {
+const UserEngagement = ({ setExportFileUrl }) => {
     const [engagementData, setEngagementData] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(
         localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1
     );
     const [pageSize, setPageSize] = React.useState(10);
-    const [totalItems, setTotalItems] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
+    const [totalItems, setTotalItems] = React.useState(0);
+
+    const fetchData = async () => {
+        const data = await raxiosFetchData(currentPage, pageSize, setEngagementData, setTotalItems, '/user_engagement', null, setLoading);
+        setExportFileUrl(data.fileUrl);
+    };
 
     React.useEffect(() => {
-        raxiosFetchData(currentPage, pageSize, setEngagementData, setTotalItems, '/user_engagement', null, setLoading);
+        fetchData();
     }, [currentPage, pageSize]);
 
     const data = engagementData.map((item) => ({
@@ -210,7 +215,7 @@ const UserEngagement = () => {
     };
 
     const handleSave = async ({ key, field, value }) => {
-        const response = await FaxiosPost('/user_engagement', { key, field, value });
+        const response = await RaxiosPost('/user_engagement', { key, field, value });
         if (response.status !== 200) {
             message.error(response.msg);
         } else {
