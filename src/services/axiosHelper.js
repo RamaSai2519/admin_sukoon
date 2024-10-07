@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const FINAL_URL = 'https://ij8f1oonya.execute-api.ap-south-1.amazonaws.com/dev/actions';
+export const FINAL_URL = 'https://6x4j0qxbmk.execute-api.ap-south-1.amazonaws.com/main/actions';
 // export const FINAL_URL = "http://localhost:8080/actions";
 
 export const Raxios = axios.create({ baseURL: FINAL_URL });
