@@ -28,6 +28,7 @@ const SchedulesTable = ({ schedules, loading }) => {
             (a, b) => new Date(a.datetime) - new Date(b.datetime),
             (record) => formatTime(record), "descend"),
         createColumn("Status", "status", "status"),
+        createColumn('Initated By', 'initiatedBy', 'initiatedBy'),
         createColumn('Source', 'source', 'source'),
         {
             title: "Action", key: "action",
