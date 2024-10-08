@@ -44,6 +44,7 @@ const CallsTableComponent = ({
         createColumn('Time', 'initiatedTime', 'initiatedTime', (date) => formatTime(date)),
         createColumn('Duration', 'duration', 'duration'),
         createColumn('Status', 'status', 'status'),
+        createColumn('Reason', 'failedReason', 'failedReason'),
         createColumn('Source', 'source', 'source'),
         createColumn('Score', 'conversationScore', 'score'),
         {

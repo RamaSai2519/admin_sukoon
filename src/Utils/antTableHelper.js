@@ -1,9 +1,10 @@
 import React from 'react';
-import { SearchOutlined } from '@ant-design/icons';
+import { Input, Button, Space } from 'antd';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Input, Button, Space } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import CallMissedIcon from '@mui/icons-material/CallMissed';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import { red, pink, green, yellow } from '@mui/material/colors';
 
@@ -95,6 +96,8 @@ export const renderStatusIcon = (status) => {
             return <CallMissedIcon sx={{ color: pink[500] }} />;
         case 'successful':
             return <CheckIcon sx={{ color: green[500] }} />;
+        case 'inadequate':
+            return <ErrorOutlineIcon sx={{ color: yellow[900] }} />;
         default:
             return <CallReceivedIcon sx={{ color: yellow[500] }} />;
     }

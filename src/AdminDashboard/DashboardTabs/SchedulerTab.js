@@ -52,17 +52,42 @@ const SchedulerTab = () => {
         setLoading(false);
     };
 
+    const checkExpertAvailability = (expertId, selectedDateTime, schedules) => {
+        const selectedTime = new Date(selectedDateTime).getTime();
+        const timeWindow = 15 * 60 * 1000;
+        const isConflict = schedules.some(schedule => {
+            const scheduleMeta = JSON.parse(schedule.requestMeta);
+            if (scheduleMeta?.expertId || '' === expertId && !schedule.isDeleted) {
+                const scheduleTime = new Date(schedule.scheduledJobTime).getTime();
+                return Math.abs(scheduleTime - selectedTime) <= timeWindow;
+            }
+            return false;
+        });
+        return isConflict;
+    };
+
     const onScheduleFinish = async (values) => {
         setLoading(true);
         const selectedDateTime = values.datetime;
+        const expertId = values.expert;
+
         if (selectedDateTime <= new Date()) {
             message.error("Selected time has already passed. Please select a future time.");
+        } else if (checkExpertAvailability(expertId, selectedDateTime, schedules)) {
+            message.error("The expert already has a schedule within 15 minutes of the selected time.");
         } else {
-            const formattedDate = new Date(values.datetime).toISOString().split('.')[0] + "Z";
+            const formattedDate = new Date(selectedDateTime).toISOString().split('.')[0] + "Z";
             const initiatedBy = localStorage.getItem('adminName');
-            const meta = JSON.stringify({ expertId: values.expert, userId: values.user, initiatedBy });
+            const meta = JSON.stringify({ expertId, userId: values.user, initiatedBy });
+
             await RaxiosPost('/create_scheduled_job',
-                { job_type: 'CALL', job_time: formattedDate, status: 'PENDING', request_meta: meta, user_requested: values.user_requested === "Yes" },
+                {
+                    job_type: 'CALL',
+                    status: 'PENDING',
+                    request_meta: meta,
+                    job_time: formattedDate,
+                    user_requested: values.user_requested === "Yes"
+                },
                 true
             );
             fetchSchedules();
@@ -134,7 +159,6 @@ const SchedulerTab = () => {
         userFormField,
         expertFormField,
         { name: "datetime", type: "datetime", rules: requiredRule("Please select a date and time"), },
-        { name: "duration", type: "select", placeholder: "Select Duration", options: ["30", "60"], rules: requiredRule("Please select a duration") },
         userRequestedFormField, actionField("Schedule Call")
     ];
 

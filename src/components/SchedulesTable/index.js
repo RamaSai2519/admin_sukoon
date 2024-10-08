@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { formatTime } from "../../Utils/formatHelper";
 import { RaxiosPost } from "../../services/fetchData";
 import getColumnSearchProps from "../../Utils/antTableHelper";
