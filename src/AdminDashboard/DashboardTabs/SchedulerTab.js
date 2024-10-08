@@ -59,7 +59,8 @@ const SchedulerTab = () => {
             message.error("Selected time has already passed. Please select a future time.");
         } else {
             const formattedDate = new Date(values.datetime).toISOString().split('.')[0] + "Z";
-            const meta = JSON.stringify({ expertId: values.expert, userId: values.user });
+            const initiatedBy = localStorage.getItem('adminName');
+            const meta = JSON.stringify({ expertId: values.expert, userId: values.user, initiatedBy });
             await RaxiosPost('/create_scheduled_job',
                 { job_type: 'CALL', job_time: formattedDate, status: 'PENDING', request_meta: meta, user_requested: values.user_requested === "Yes" },
                 true
