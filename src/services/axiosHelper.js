@@ -8,9 +8,7 @@ export const Raxios = axios.create({ baseURL: FINAL_URL });
 Raxios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => {
@@ -28,9 +26,7 @@ const refreshFaxiosAccessToken = async () => {
   try {
     let response = await axios.post(`${FINAL_URL}/admin_auth`,
       { action: 'refresh' }, {
-      headers: {
-        Authorization: `Bearer ${refreshToken}`,
-      },
+        headers: { Authorization: `Bearer ${refreshToken}` }
     });
     response = await format_response(response);
     if (response.status !== 200) logout_user();
