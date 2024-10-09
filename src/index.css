@@ -4,6 +4,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html .dark {
+  background-color: #141414;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }

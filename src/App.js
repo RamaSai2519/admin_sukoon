@@ -40,9 +40,11 @@ const App = () => {
     if (darkMode) {
       localStorage.setItem('darkMode', 'true');
       document.body.classList.add('dark');
+      document.documentElement.classList.add('dark');
     } else {
       localStorage.setItem('darkMode', 'false');
       document.body.classList.remove('dark');
+      document.documentElement.classList.remove('dark');
     }
   }, [darkMode]);
 
