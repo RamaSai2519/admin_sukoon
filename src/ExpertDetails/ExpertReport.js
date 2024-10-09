@@ -139,7 +139,7 @@
 
 //           <div className="report-grid-container">
 //             <div className="report-grid-item">
-//               <h2>Score Breakup</h2>
+//               <h2>scoreBreakup</h2>
 //               <div className='report-grid-2'>
 //                 <ScoreGridTile editMode={editMode} label="Opening Greeting" value={openingGreeting} onChange={setOpeningGreeting} maxValue={5} />
 //                 <ScoreGridTile editMode={editMode} label="Flow Score" value={flow} onChange={setFlow} maxValue={10} />
@@ -147,7 +147,7 @@
 //                 <ScoreGridTile editMode={editMode} label="Time Split Score" value={timeSplit} onChange={setTimeSplit} maxValue={15} />
 //                 <ScoreGridTile editMode={editMode} label="User Sentiment Score" value={userSentiment} onChange={setUserSentiment} maxValue={20} />
 //                 <ScoreGridTile editMode={editMode} label="Time Spent Score" value={timeSpent} onChange={setTimeSpent} maxValue={15} />
-//                 <ScoreGridTile editMode={editMode} label="User Callback Probability" value={probability} onChange={setProbability} maxValue={20} />
+//                 <ScoreGridTile editMode={editMode} label="userCallback Probability" value={probability} onChange={setProbability} maxValue={20} />
 //                 <ScoreGridTile editMode={editMode} label="Closing Greeting" value={closingGreeting} onChange={setClosingGreeting} maxValue={5} />
 //               </div>
 //               <div className='divider'></div>

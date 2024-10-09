@@ -33,13 +33,13 @@ const UserDetails = () => {
       setNotifications(data.notifications);
       setBirthDate(dayjs(data.birthDate));
 
-      if (typeof data['Customer Persona'] === 'object') {
-        const personaString = JSON.stringify(data['Customer Persona'], null, 2);
+      if (typeof data.customerPersona === 'object') {
+        const personaString = JSON.stringify(data.customerPersona, null, 2);
         // eslint-disable-next-line
         const personaWithoutQuotes = personaString.replace(/\"/g, '');
         setPersona(personaWithoutQuotes);
       } else {
-        setPersona(data['Customer Persona']);
+        setPersona(data.customerPersona);
       }
     } catch (error) {
       console.error('Error fetching user details:', error);

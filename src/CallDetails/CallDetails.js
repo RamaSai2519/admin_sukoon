@@ -73,13 +73,13 @@ const CallDetails = () => {
                     <h1>{call.conversationScore}</h1>
                 </div>}
                 <div className="small-tiles">
-                    {call["Score Breakup"]  && <div className="details-box">
+                    {call.scoreBreakup && <div className="details-box">
                         <button onClick={toggleBreakup} className='popup-button'>Score Breakup</button>
                         {showBreakup && (
                             <div className="popup">
                                 <div className="popup-content">
                                     <span className="close" onClick={toggleBreakup}>&times;</span>
-                                    <p>{formatValue(call["Score Breakup"])}</p>
+                                    <p>{formatValue(call.scoreBreakup)}</p>
                                 </div>
                             </div>
                         )}
@@ -92,13 +92,13 @@ const CallDetails = () => {
                     <h2>Summary</h2>
                     <p>{formatValue(call.Summary)}</p>
                 </div>}
-                {call["Saarthi Feedback"] && <div className="details-box">
+                {call.sarathiFeedback && <div className="details-box">
                     <h2>Saarthi Feedback</h2>
-                    <p>{formatValue(call["Saarthi Feedback"])}</p>
+                    <p>{formatValue(call.sarathiFeedback)}</p>
                 </div>}
-                {call["User Callback"] && <div className="details-box">
+                {call.userCallback && <div className="details-box">
                     <h2>User Callback</h2>
-                    <p>{formatValue(call["User Callback"])}</p>
+                    <p>{formatValue(call.userCallback)}</p>
                 </div>}
                 {call.Topics && <div className="details-box">
                     <h2>Topics</h2>
