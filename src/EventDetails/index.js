@@ -15,7 +15,8 @@ const EventDetails = () => {
     const [data, setData] = useState({});
 
     const fetchEventDetails = async () => {
-        await raxiosFetchData(null, null, setData, null, '/list_events', { slug });
+        const response = await raxiosFetchData(null, null, null, null, '/list_events', { slug });
+        setData(response.data[0]);
     };
 
     const fetchUsers = async () => {
