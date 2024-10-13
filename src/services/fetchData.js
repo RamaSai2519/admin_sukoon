@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import Raxios from './axiosHelper';
 
-export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, optional, setLoading, notify) => {
+export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, optional, setLoading, notify = false) => {
     setLoading && setLoading(true);
     try {
         const response = await Raxios.get(endpoint, {

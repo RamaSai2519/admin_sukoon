@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RaxiosPost } from "../../services/fetchData";
+import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import InternalToggle from "../../components/InternalToggle";
 import SchedulesTable from "../../components/SchedulesTable";
@@ -20,10 +20,7 @@ const SchedulerTab = () => {
     const { Option } = Select;
 
     const fetchSchedules = async () => {
-        setRLoading(true);
-        const response = await RaxiosPost('/schedules', { action: 'get' });
-        setSchedules(response.data.data);
-        setRLoading(false);
+        raxiosFetchData(null, null, setSchedules, null, '/schedules', null, setRLoading);
     };
 
     useEffect(() => {
@@ -57,7 +54,7 @@ const SchedulerTab = () => {
         const timeWindow = 15 * 60 * 1000;
         const isConflict = schedules.some(schedule => {
             const scheduleMeta = JSON.parse(schedule.requestMeta);
-            if (scheduleMeta?.expertId || '' === expertId && !schedule.isDeleted) {
+            if ((scheduleMeta?.expertId || '') === expertId && !schedule.isDeleted) {
                 const scheduleTime = new Date(schedule.scheduledJobTime).getTime();
                 return Math.abs(scheduleTime - selectedTime) <= timeWindow;
             }
@@ -83,7 +80,7 @@ const SchedulerTab = () => {
             await RaxiosPost('/create_scheduled_job',
                 {
                     job_type: 'CALL',
-                    status: 'PENDING',
+                    status: 'WAPENDING',
                     request_meta: meta,
                     job_time: formattedDate,
                     user_requested: values.user_requested === "Yes"
