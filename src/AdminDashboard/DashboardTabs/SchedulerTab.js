@@ -76,11 +76,16 @@ const SchedulerTab = () => {
             const formattedDate = new Date(selectedDateTime).toISOString().split('.')[0] + "Z";
             const initiatedBy = localStorage.getItem('adminName');
             const meta = JSON.stringify({ expertId, userId: values.user, initiatedBy });
+            let status = 'WAPENDING';
+            if (new Date(selectedDateTime).getTime() - new Date().getTime() < 30 * 60 * 1000) {
+                status = 'PENDING';
+                message.warning('No notification will be sent as the call is scheduled within 30 minutes.', 20);
+            }
 
             await RaxiosPost('/create_scheduled_job',
                 {
                     job_type: 'CALL',
-                    status: 'WAPENDING',
+                    status: status,
                     request_meta: meta,
                     job_time: formattedDate,
                     user_requested: values.user_requested === "Yes"
