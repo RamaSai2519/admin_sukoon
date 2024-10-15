@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useUsers } from '../services/useData';
 import UserEngagement from '../UserEngagement';
-import { Table, Button, Flex, Radio } from 'antd';
+import { Table, Button, Flex, Radio, message } from 'antd';
 import { formatDate } from '../Utils/formatHelper';
 import Loading from '../components/Loading/loading';
 import { downloadExcel } from '../Utils/exportHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import getColumnSearchProps from '../Utils/antTableHelper';
+import { RaxiosPost } from '../services/fetchData';
 
 const UsersList = () => {
+  const navigate = useNavigate();
   const searchInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [table, setTable] = useState(
@@ -98,6 +100,16 @@ const UsersList = () => {
     }
   };
 
+  const createUser = async () => {
+    const userNumber = window.prompt("Enter the phone number of the new user:");
+    if (userNumber) {
+      const response = await RaxiosPost('/user', { phoneNumber: userNumber });
+      if (response.status !== 200) {
+        message.error(response.msg);
+      } else navigate(`/admin/users/${response.data._id}`);
+    }
+  };
+
   return (
     <div className="min-h-screen p-5 w-full overflow-auto">
       <div className="flex w-full justify-between items-center gap-2">
@@ -113,9 +125,14 @@ const UsersList = () => {
             <Radio.Button value="engagement">Registered Users + Leads</Radio.Button>
           </Radio.Group>
         </Flex>
-        {table === 'engagement' && <Button loading={fetchLoading} onClick={handleExport}>
-          Export
-        </Button>}
+        <div className='flex gap-3'>
+          <Button onClick={createUser}>
+            Create User
+          </Button>
+          {table === 'engagement' && <Button loading={fetchLoading} onClick={handleExport}>
+            Export
+          </Button>}
+        </div>
       </div>
       {table === 'engagement' ? <UserEngagement setExportFileUrl={setEngFileURL} /> :
         loading ? <Loading /> :

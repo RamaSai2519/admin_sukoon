@@ -21,9 +21,8 @@ const UserDetails = () => {
   const [notifications, setNotifications] = useState([]);
 
   const fetchData = async () => {
-    const phoneNumber = localStorage.getItem('userNumber');
     try {
-      const data = await raxiosFetchData(null, null, null, null, '/user', { phoneNumber }, null);
+      const data = await raxiosFetchData(null, null, null, null, '/user', { user_id: userId }, null);
       console.log("🚀 ~ fetchData ~ data:", data)
       setName(data.name);
       setCity(data.city);
