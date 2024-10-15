@@ -106,7 +106,10 @@ const UsersList = () => {
       const response = await RaxiosPost('/user', { phoneNumber: userNumber });
       if (response.status !== 200) {
         message.error(response.msg);
-      } else navigate(`/admin/users/${response.data._id}`);
+      } else {
+        localStorage.setItem('userNumber', userNumber);
+        navigate(`/admin/users/${response.data._id}`);
+      }
     }
   };
 
