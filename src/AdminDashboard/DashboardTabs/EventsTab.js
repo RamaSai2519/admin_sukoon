@@ -90,6 +90,8 @@ const EventsTab = () => {
         createColumn('Contact', 'phoneNumber', 'phoneNumber'),
         createColumn('Email', 'email', 'email'),
         createColumn('City', 'city', 'city'),
+        createColumn('Source', 'source', 'source'),
+        createColumn('Event Name', 'eventName', 'eventName'),
         createColumn('Remarks', 'remarks', 'remarks', null, '', true),
         createColumn('Created At', 'createdAt', 'createdAt', (time) => formatTime(time)),
         createColumn('Updated At', 'updatedAt', 'updatedAt', (time) => formatTime(time))
