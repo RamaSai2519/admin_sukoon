@@ -22,8 +22,14 @@ const UserDetails = () => {
 
   const fetchData = async () => {
     const phoneNumber = localStorage.getItem('userNumber');
+    let payload = {};
+    if (userId) {
+      payload = { user_id: userId };
+    } else {
+      payload = { phoneNumber };
+    }
     try {
-      const data = await raxiosFetchData(null, null, null, null, '/user', { phoneNumber }, null);
+      const data = await raxiosFetchData(null, null, null, null, '/user', payload, null);
       console.log("🚀 ~ fetchData ~ data:", data)
       setName(data.name);
       setCity(data.city);
