@@ -154,7 +154,7 @@ const SchedulerTab = () => {
         rules: requiredRule("Please select an expert")
     };
 
-    const userRequestedFormField = { name: "user_requested", type: "select", placeholder: "Select User Requested", options: ["Yes", "No"], rules: requiredRule("Please select if user requested or not") };
+    const userRequestedFormField = { name: "user_requested", type: "select", placeholder: "Is this User Requested?", options: ["Yes", "No"], rules: requiredRule("Please select if user requested or not") };
 
     const callFormFields = [userFormField, expertFormField, userRequestedFormField, actionField("Connect Now")];
     const scheduleFormFields = [
