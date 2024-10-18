@@ -30,7 +30,6 @@ const UserDetails = () => {
     }
     try {
       const data = await raxiosFetchData(null, null, null, null, '/user', payload, null);
-      console.log("🚀 ~ fetchData ~ data:", data)
       setName(data.name);
       setCity(data.city);
       setIsPremium(data.isPaidUser);
