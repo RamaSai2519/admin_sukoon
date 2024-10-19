@@ -17,7 +17,6 @@ import SchedulerTab from './DashboardTabs/SchedulerTab';
 import ReferralsTab from './DashboardTabs/ReferralsTab';
 import ThemeToggle from '../components/ThemeToggle/toggle';
 import { getMessaging, getToken } from 'firebase/messaging';
-import NotificationsTab from './DashboardTabs/Notifications';
 import ApplicationsTab from './DashboardTabs/ApplicationsTab';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -166,7 +165,6 @@ const AdminDashboard = ({ onLogout }) => {
                 <Route key={name} path={name} element={component} />
               ))}
               <Route path="/" element={<Navigate to="/admin/home/dashboard" />} />
-              <Route path="notifications" element={<NotificationsTab />} />
             </Routes>
           </div>
         </div>

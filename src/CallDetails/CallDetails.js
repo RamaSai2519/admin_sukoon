@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { raxiosFetchData } from '../services/fetchData';
+import { LogsTable, TopicsTable } from './LogsTable';
 import Loading from '../components/Loading/loading';
 import { formatTime } from '../Utils/formatHelper';
+import { Maxios } from '../services/axiosHelper';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import './CallDetails.css';
 
 const CallDetails = () => {
     const { callId } = useParams();
     const [call, setCall] = useState(null);
+    const [logs, setLogs] = useState(null);
+    const [showLogs, setShowLogs] = useState(false);
+    const [logsLoading, setLogsLoading] = useState(false);
     const [showBreakup, setShowBreakup] = useState(false);
 
     const fetchCall = async () => {
@@ -49,6 +54,16 @@ const CallDetails = () => {
 
     const toggleBreakup = () => {
         setShowBreakup(!showBreakup);
+    };
+
+    const fetchLogs = async () => {
+        await raxiosFetchData(null, null, setLogs, null, `/logs`, { callId }, setLogsLoading);
+        if (logs) setShowLogs(true);
+    }
+
+    const reProcessCall = async () => {
+        Maxios.post('/process', { callId });
+        message.success('Call reprocessing initiated');
     };
 
     return (
@@ -102,15 +117,28 @@ const CallDetails = () => {
                 </div>}
                 {call.Topics && <div className="details-box">
                     <h2>Topics</h2>
-                    <p>{formatValue(call.Topics)}</p>
+                    <TopicsTable data={Array.isArray(call.Topics) ? call.Topics : [call.Topics]} />
                 </div>}
                 <div className="details-box">
                     <p>Initiated Time: {formatTime(call.initiatedTime)}</p>
                 </div>
-                {formattedRecordingURL && <Button style={{ margin: '10px' }} type="primary" href={formattedRecordingURL}>
+                {showLogs ?
+                    <div className="details-box w-screen">
+                        <h3>Logs</h3>
+                        <LogsTable data={logs} />
+                    </div> :
+                    <Button className='p-3' type="primary" onClick={fetchLogs} loading={logsLoading}>
+                        Show Logs
+                    </Button>
+                }
+
+                <Button className='p-3' type="primary" onClick={reProcessCall}>
+                    Reprocess Call
+                </Button>
+                {formattedRecordingURL && <Button className='p-3' type="primary" href={formattedRecordingURL}>
                     Download Recording
                 </Button>}
-                {call.transcript_url && <Button style={{ margin: '10px' }} type="primary" href={call.transcript_url} target="_blank" rel="noopener noreferrer">
+                {call.transcript_url && <Button className='p-3' type="primary" href={call.transcript_url} target="_blank" rel="noopener noreferrer">
                     Download Transcript
                 </Button>}
             </div>
