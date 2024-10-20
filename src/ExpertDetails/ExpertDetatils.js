@@ -26,17 +26,26 @@ const ExpertDetails = () => {
     score: '',
     repeat_score: '',
     total_score: '',
-    calls_share: '',
+    calls_share: ''
   });
   const { allCategories, fetchCategories } = useCategories();
-  const [timings, setTimings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [persona, setPersona] = useState('');
+  const [timings, setTimings] = useState([]);
 
   const fetchExpertDetails = async () => {
     try {
       const response = await Raxios.get(`/expert?phoneNumber=${number}`);
-      const { __v, lastModifiedBy, calls, ...expertData } = response.data;
+      const { __v, lastModifiedBy, calls, persona, ...expertData } = response.data;
       setExpert(expertData);
+      if (typeof persona === 'object') {
+        const personaString = JSON.stringify(persona, null, 2);
+        // eslint-disable-next-line
+        const personaWithoutQuotes = personaString.replace(/\"/g, '');
+        setPersona(personaWithoutQuotes);
+      } else {
+        setPersona(persona);
+      }
       setLoading(false);
     } catch (error) {
       console.error('Error fetching expert details:', error);
@@ -254,6 +263,12 @@ const ExpertDetails = () => {
                 rowKey={(record) => record._id}
               />
             </div>
+            {persona &&
+              <div className='grid-tile'>
+                <h3>Customer Persona</h3>
+                <p className='text-xl whitespace-pre-wrap'>{persona}</p>
+              </div>
+            }
             <div className='edit-button-container'>
               <button className='update-button' style={{ background: 'red' }} onClick={handleDelete}>Delete Expert</button>
             </div>

@@ -189,9 +189,7 @@ const UserDetails = () => {
           <div className='grid md:grid-cols-2 md:gap-4'>
             <div className='grid-tile'>
               <h3>Customer Persona</h3>
-              {persona && (
-                <h2 className='text-2xl whitespace-pre-wrap'>{persona}</h2>
-              )}
+              {persona && <p className='text-xl whitespace-pre-wrap'>{persona}</p>}
             </div>
             <div id="notifications-table" className='grid-tile'>
               <h3>Notifications</h3>

@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import { formatDate } from '../../Utils/formatHelper';
+import { Button } from 'antd';
 
 const durationStrToSeconds = (duration) => {
     if (!duration) return 0;
@@ -117,9 +117,7 @@ export const columns = [
         render: (record) => {
             localStorage.setItem('expertId', record.key);
             return (
-                <Link to={{ pathname: `/admin/experts/${record.phoneNumber}` }} className="view-details-link">
-                    View
-                </Link>
+                <Button onClick={() => window.location.href = `/admin/experts/${record.phoneNumber}`}>View</Button>
             );
         },
     },
