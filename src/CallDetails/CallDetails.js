@@ -6,7 +6,7 @@ import { formatTime } from '../Utils/formatHelper';
 import { Maxios } from '../services/axiosHelper';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import { Button, message } from 'antd';
+import { Button, message, Popconfirm } from 'antd';
 import './CallDetails.css';
 
 const CallDetails = () => {
@@ -61,10 +61,10 @@ const CallDetails = () => {
         if (logs) setShowLogs(true);
     }
 
-    const reProcessCall = async () => {
+    const reProcessCallHandler = () => {
         Maxios.post('/process', { callId });
         message.success('Call reprocessing initiated');
-    };
+    }
 
     return (
         <div className="whole-container min-h-screen">
@@ -132,9 +132,17 @@ const CallDetails = () => {
                     </Button>
                 }
 
-                <Button className='p-3' type="primary" onClick={reProcessCall}>
-                    Reprocess Call
-                </Button>
+                <Popconfirm
+                    title="Are you sure? This will cost us credits."
+                    onConfirm={reProcessCallHandler}
+                    okText="Yes"
+                    cancelText="No"
+                    onCancel={() => message.info('Reprocess cancelled')}
+                >
+                    <Button className='p-3' type="primary">
+                        Reprocess Call
+                    </Button>
+                </Popconfirm>
                 {formattedRecordingURL && <Button className='p-3' type="primary" href={formattedRecordingURL}>
                     Download Recording
                 </Button>}
