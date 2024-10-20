@@ -37,6 +37,8 @@ const CallGraph = () => {
     switch (type) {
       case 'successful':
         return filteredData.filter(call => call.status === 'successful');
+      case 'inadequate':
+        return filteredData.filter(call => call.status === 'inadequate');
       case 'failed':
         return filteredData.filter(call => call.status === 'failed');
       case 'missed':
@@ -129,6 +131,7 @@ const CallGraph = () => {
                 <option value="successful">Successful</option>
                 <option value="failed">Failed</option>
                 <option value="missed">Missed</option>
+                <option value="inadequate">Inadequate</option>
               </select>
             </label>
           </div>

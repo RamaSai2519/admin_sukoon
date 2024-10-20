@@ -37,6 +37,8 @@ const HourCallChart = () => {
         switch (type) {
             case 'successful':
                 return filteredData.filter(call => call.status === 'successful');
+            case 'inadequate':
+                return filteredData.filter(call => call.status === 'inadequate');
             case 'failed':
                 return filteredData.filter(call => call.status === 'failed');
             case 'missed':
@@ -138,6 +140,7 @@ const HourCallChart = () => {
                             <select value={type} onChange={handleTypeChange}>
                                 <option value="all">All Calls</option>
                                 <option value="successful">Successful</option>
+                                <option value="inadequate">Inadequate</option>
                                 <option value="failed">Failed</option>
                                 <option value="missed">Missed</option>
                             </select>
