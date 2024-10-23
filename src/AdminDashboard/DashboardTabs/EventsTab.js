@@ -68,7 +68,6 @@ const EventsTab = () => {
     const columns = [
         createColumn('Title', 'mainTitle', 'mainTitle'),
         createColumn('Subtitle', 'subTitle', 'subTitle'),
-        createColumn('Expert', 'expert', 'expert'),
         createColumn('Hosted By', 'hostedBy', 'hostedBy'),
         createColumn('Date', 'validUpto', 'validUpto', (date) => date ? formatDate(date) : '', '125px'),
         createColumn('Author', 'name', 'name'),
