@@ -34,14 +34,12 @@ const LeadsPopup = ({ onClose, leads }) => {
         createColumn('Remarks', 'remarks', 'remarks', null, true),
         {
             title: 'Actions', key: 'actions',
-            render: (user) => {
-                return (<>{user.leadSource === "Website" && <Link to={`/admin/users/${user._id}`}>
-                    <Button className='w-full' onClick={() => localStorage.setItem('userNumber', user.phoneNumber)}>
-                        Edit
-                    </Button>
-                </Link>}</>);
-            }
-        },
+            render: (user) => <Link to={`/admin/users/${user._id}`}>
+                <Button className='w-full' onClick={() => localStorage.setItem('userNumber', user.phoneNumber)}>
+                    Edit
+                </Button>
+            </Link>
+        }
     ];
 
     const handleSave = async ({ key, field, value }) => {
