@@ -164,7 +164,7 @@ const ExpertDetails = () => {
               {/* <img src={expert.profile} alt="Expert Profile" className='max-h-52' /> */}
               <S3Uploader setFileUrl={(url) => handleUpdate({ ...expert, profile: url })} finalFileUrl={expert.profile} />
             </div>
-            {['status', 'name', 'phoneNumber', , 'type', 'languages'].map((field, idx) => (
+            {['status', 'name', 'phoneNumber', 'type', 'languages'].map((field, idx) => (
               field === 'status' ?
                 <div className='grid grid-cols-2'>
                   <StatusTile
