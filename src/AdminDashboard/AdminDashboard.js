@@ -13,7 +13,7 @@ import SaarthisTab from './DashboardTabs/ExpertsTab';
 import WhatsappTab from './DashboardTabs/WhatsappTab';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import DashboardTab from './DashboardTabs/DashboardTab';
-import SchedulerTab from './DashboardTabs/SchedulerTab';
+import ConnectTab from './DashboardTabs/ConnectTab';
 import ReferralsTab from './DashboardTabs/ReferralsTab';
 import ThemeToggle from '../components/ThemeToggle/toggle';
 import { getMessaging, getToken } from 'firebase/messaging';
@@ -100,7 +100,7 @@ const AdminDashboard = ({ onLogout }) => {
     { name: 'experts list', component: <SaarthisTab /> },
     { name: 'calls list', component: <CallsTable /> },
     { name: 'events', component: <EventsTab /> },
-    { name: 'scheduler', component: <SchedulerTab /> },
+    { name: 'Connect', component: <ConnectTab /> },
     { name: 'whatsapp', component: <WhatsappTab /> },
     { name: 'applications', component: <ApplicationsTab /> },
     { name: 'club', component: <ClubSukoon /> },

@@ -7,7 +7,7 @@ import { useUsers, useExperts } from "../../services/useData";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import { Select, DatePicker, Form, Button, message } from "antd";
 
-const SchedulerTab = () => {
+const ConnectTab = () => {
     const { users, fetchUsers } = useUsers();
     const { experts, fetchExperts } = useExperts();
     const [schedules, setSchedules] = useState([]);
@@ -183,4 +183,4 @@ const SchedulerTab = () => {
     );
 };
 
-export default SchedulerTab;
+export default ConnectTab;
