@@ -2,10 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import CallsTableComponent from '../components/CallsTable';
 import InternalToggle from '../components/InternalToggle';
 import { raxiosFetchData } from '../services/fetchData';
-import { downloadExcel } from '../Utils/exportHelper';
-import { Button } from 'antd';
+import { useFilters } from '../services/useData';
+import { useLocation } from 'react-router-dom';
 
 const CallsTable = () => {
+  const location = useLocation();
+  const { filters = {} } = useFilters();
+  const filter = filters[location.pathname] || {};
+
   const searchInputRef = useRef(null);
   const [data, setData] = useState([]);
   const [pageSize, setPageSize] = useState(10);
@@ -13,7 +17,6 @@ const CallsTable = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const [buttonLoading, setButtonLoading] = useState(false);
   const [internalView, setInternalView] = useState(
     localStorage.getItem('internalView') === 'true' ? true : false
   );
@@ -23,30 +26,21 @@ const CallsTable = () => {
 
   const fetchCalls = async () => {
     setLoading(true);
-    await raxiosFetchData(
-      currentPage, pageSize, setData, setTotalItems, '/call', { dest: 'list', internal: internalView }
+    const response = await raxiosFetchData(
+      currentPage, pageSize, setData, setTotalItems, '/call', { dest: 'list', internal: internalView, ...filter }
     );
     setLoading(false);
+    return response.data;
   }
 
   useEffect(() => {
     fetchCalls();
-    // eslint-disable-next-line
-  }, [currentPage, pageSize, internalView]);
+  }, [currentPage, pageSize, internalView, JSON.stringify(filter)]);
 
   const handleTableChange = (current, pageSize) => {
     setCurrentPage(current);
     localStorage.setItem('currentCallsPage', current);
     setPageSize(pageSize);
-  };
-
-  const exportData = async () => {
-    setButtonLoading(true);
-    const fileName = 'calls.xlsx';
-    let callsData = await raxiosFetchData(1, totalItems, null, null, '/call', { dest: 'list', internal: internalView });
-    callsData = callsData.data;
-    await downloadExcel(callsData, fileName);
-    setButtonLoading(false);
   };
 
   return (
@@ -55,7 +49,6 @@ const CallsTable = () => {
         <h3 className='text-2xl font-bold'>{internalView ? "Internal" : "User"} Calls</h3>
         <div className='flex gap-5 items-center'>
           <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={loading} />
-          {/* <Button loading={buttonLoading} onClick={exportData}>Export</Button> */}
         </div>
       </div>
       <CallsTableComponent
@@ -67,6 +60,7 @@ const CallsTable = () => {
         setSearchedColumn={setSearchedColumn}
         searchInputRef={searchInputRef}
         pagination={{ current: currentPage, pageSize, total: totalItems, onChange: handleTableChange }}
+        pathname={location.pathname}
       />
     </div>
   );

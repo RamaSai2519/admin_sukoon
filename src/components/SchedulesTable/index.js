@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { formatTime } from "../../Utils/formatHelper";
 import { RaxiosPost } from "../../services/fetchData";
-import getColumnSearchProps from "../../Utils/antTableHelper";
+import GetColumnSearchProps from "../../Utils/antTableHelper";
 import Loading from "../Loading/loading";
 import { Button, Table } from "antd";
 
@@ -15,7 +15,7 @@ const SchedulesTable = ({ schedules, loading }) => {
         title,
         dataIndex,
         key,
-        ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+        ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
         ...(sorter && { sorter }),
         ...(render && { render }),
         ...(defaultSortOrder && { defaultSortOrder })

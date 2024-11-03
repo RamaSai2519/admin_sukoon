@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import getColumnSearchProps from '../../Utils/antTableHelper';
+import GetColumnSearchProps from '../../Utils/antTableHelper';
 import { Table } from 'antd';
 import { formatTime } from '../../Utils/formatHelper';
 
@@ -13,7 +13,7 @@ const EventUsersTable = ({ users }) => {
             title,
             dataIndex,
             key,
-            ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
             ...(render && { render }),
             ...(width && { width }),
         };

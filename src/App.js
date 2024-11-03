@@ -3,7 +3,6 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import AdminDashboard from './AdminDashboard/AdminDashboard';
 import ExpertDetails from './ExpertDetails/ExpertDetatils';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import ExpertReport from './ExpertDetails/ExpertReport';
 import UserDetails from './UserDetails/UserDetails';
 import CallDetails from './CallDetails/CallDetails';
 import AdminLogin from './AdminLogin/AdminLogin';
@@ -76,7 +75,6 @@ const App = () => {
               <Route path="/admin/users/:userId" element={<UserDetails />} />
               <Route path="/admin/events/:slug" element={<EventDetails />} />
               <Route path="/admin/experts/:number" element={<ExpertDetails />} />
-              <Route path="/admin/experts/:expertId/report" element={<ExpertReport />} />
               <Route path="/admin/userEngage" element={<UserEngagement />} />
               <Route path="/*" element={<Navigate to="/admin/home" />} />
             </>
