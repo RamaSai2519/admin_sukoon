@@ -36,17 +36,19 @@ const DashboardTab = () => {
             </DashboardTile>
             <DashboardTile title="Successful Calls">
               <h1>{stats.successful_calls}</h1>
-              <div className='flex flex-row justify-between w-full'>
-                <h4>Today: {stats.today_successful_calls}</h4>
-              </div>
+              <h4>Today: {stats.today_successful_calls}</h4>
             </DashboardTile>
-            <DashboardTile title="Failed Calls">
-              <h1>{stats.failed_calls}</h1>
-              <h4>Today: {stats.today_failed_calls}</h4>
+            <DashboardTile title="Inadequate Calls">
+              <h1>{stats.inadequate_calls}</h1>
+              <h4>Today: {stats.today_inadequate_calls}</h4>
             </DashboardTile>
             <DashboardTile title="Missed Calls">
               <h1>{stats.missed_calls}</h1>
               <h4>Today: {stats.today_missed_calls}</h4>
+            </DashboardTile>
+            <DashboardTile title="Failed Calls">
+              <h1>{stats.failed_calls}</h1>
+              <h4>Today: {stats.today_failed_calls}</h4>
             </DashboardTile>
             <DashboardTile title="Avg. Duration">
               <h1>{stats.average_call_duration}</h1>
@@ -55,10 +57,6 @@ const DashboardTab = () => {
             <DashboardTile title="Total Duration">
               <h1>{stats.total_duration}</h1>
               <p className='text-right w-full'>successful calls</p>
-            </DashboardTile>
-            <DashboardTile msg={"Number of successful scheduled calls with more than 1 minute duration"} title="Scheduled Calls">
-              <h1>{stats.scheduled_calls_percentage}%</h1>
-              <p className='text-right w-full'>&gt;1m</p>
             </DashboardTile>
             <DashboardTile title="Avg. Score">
               <h1>{stats.avg_conversation_score}</h1>

@@ -6,7 +6,7 @@ import Loading from "../../components/Loading/loading";
 import EditableCell from "../../components/EditableCell";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import { raxiosFetchData } from "../../services/fetchData";
-import getColumnSearchProps from "../../Utils/antTableHelper";
+import GetColumnSearchProps from "../../Utils/antTableHelper";
 
 const ApplicationsTab = () => {
     const [applications, setApplications] = useState([]);
@@ -30,7 +30,7 @@ const ApplicationsTab = () => {
             title,
             dataIndex,
             key,
-            ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
             ...(render && { render }),
             ...(width && { width }),
             ...(editable && { editable }),

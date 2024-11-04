@@ -7,7 +7,7 @@ import { formatDate } from '../Utils/formatHelper';
 import Loading from '../components/Loading/loading';
 import { downloadExcel } from '../Utils/exportHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import getColumnSearchProps from '../Utils/antTableHelper';
+import GetColumnSearchProps from '../Utils/antTableHelper';
 import { RaxiosPost } from '../services/fetchData';
 
 const UsersList = () => {
@@ -26,7 +26,7 @@ const UsersList = () => {
   const createColumn = (title, dataIndex, key, render) => {
     return {
       title, dataIndex, key,
-      ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+      ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
       ...(render && { render }),
     };
   };

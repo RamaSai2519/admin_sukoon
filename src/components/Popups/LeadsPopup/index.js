@@ -4,7 +4,7 @@ import { Table, Button, message } from 'antd';
 import EditableCell from '../../EditableCell';
 import { RaxiosPost } from '../../../services/fetchData';
 import { formatDate } from '../../../Utils/formatHelper';
-import getColumnSearchProps from '../../../Utils/antTableHelper';
+import GetColumnSearchProps from '../../../Utils/antTableHelper';
 
 const LeadsPopup = ({ onClose, leads }) => {
     const [searchText, setSearchText] = useState('');
@@ -17,7 +17,7 @@ const LeadsPopup = ({ onClose, leads }) => {
             title,
             dataIndex,
             key,
-            ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
             ...(editable && { editable }),
             ...(render && { render }),
         };

@@ -5,7 +5,7 @@ import Loading from '../../components/Loading/loading';
 import EditableCell from '../../components/EditableCell';
 import { raxiosFetchData } from '../../services/fetchData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
-import getColumnSearchProps from '../../Utils/antTableHelper';
+import GetColumnSearchProps from '../../Utils/antTableHelper';
 import { formatDate, formatTime } from '../../Utils/formatHelper';
 import { Table, Button, Flex, Radio, message } from 'antd';
 import CreateEventPopup from '../../components/Popups/CreateEventPopup';
@@ -58,7 +58,7 @@ const EventsTab = () => {
             title,
             dataIndex,
             key,
-            ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
             ...(render && { render }),
             ...(width && { width }),
             ...(editable && { editable }),

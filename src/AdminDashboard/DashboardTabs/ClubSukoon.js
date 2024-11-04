@@ -1,6 +1,6 @@
 import { Button, Table } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import getColumnSearchProps from '../../Utils/antTableHelper';
+import GetColumnSearchProps from '../../Utils/antTableHelper';
 import { raxiosFetchData } from '../../services/fetchData';
 import Loading from '../../components/Loading/loading';
 import { formatTime } from '../../Utils/formatHelper';
@@ -27,7 +27,7 @@ const ClubSukoon = () => {
             title,
             dataIndex,
             key,
-            ...getColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
             ...(render && { render }),
         };
     };

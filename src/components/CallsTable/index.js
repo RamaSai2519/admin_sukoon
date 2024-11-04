@@ -2,7 +2,7 @@ import { Button, Table } from 'antd';
 import { Link } from 'react-router-dom';
 import LazyLoad from '../LazyLoad/lazyload';
 import { formatTime } from '../../Utils/formatHelper';
-import getColumnSearchProps, { renderStatusIcon } from '../../Utils/antTableHelper';
+import GetColumnSearchProps, { renderStatusIcon } from '../../Utils/antTableHelper';
 
 const CallsTableComponent = ({
     data,
@@ -13,22 +13,25 @@ const CallsTableComponent = ({
     setSearchedColumn,
     searchInputRef,
     pagination,
-    size
+    size,
+    pathname = null,
 }) => {
 
-    const createColumn = (title, dataIndex, key, render) => {
+    const createColumn = (title, dataIndex, key, render, filter = true) => {
         return {
             title,
             dataIndex,
             key,
-            ...getColumnSearchProps(
+            ...GetColumnSearchProps(
                 dataIndex,
                 title,
                 searchText,
                 setSearchText,
                 searchedColumn,
                 setSearchedColumn,
-                searchInputRef
+                searchInputRef,
+                pathname,
+                filter
             ),
             ...(render && { render }),
         };
@@ -41,7 +44,7 @@ const CallsTableComponent = ({
             </span>
         )),
         createColumn('Expert', 'expert', 'expert'),
-        createColumn('Time', 'initiatedTime', 'initiatedTime', (date) => formatTime(date)),
+        createColumn('Time', 'initiatedTime', 'initiatedTime', (date) => formatTime(date), false),
         createColumn('Duration', 'duration', 'duration'),
         createColumn('Status', 'status', 'status'),
         createColumn('Reason', 'failedReason', 'failedReason'),
