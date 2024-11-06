@@ -1,16 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useFilters } from '../../services/useData';
+import { Link, useLocation } from 'react-router-dom';
 import { RaxiosPost } from '../../services/fetchData';
 import Loading from '../../components/Loading/loading';
 import EditableCell from '../../components/EditableCell';
-import { raxiosFetchData } from '../../services/fetchData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
+import { Table, Button, Flex, Radio, message } from 'antd';
+import { raxiosFetchData } from '../../services/fetchData';
 import GetColumnSearchProps from '../../Utils/antTableHelper';
 import { formatDate, formatTime } from '../../Utils/formatHelper';
-import { Table, Button, Flex, Radio, message } from 'antd';
 import CreateEventPopup from '../../components/Popups/CreateEventPopup';
 
 const EventsTab = () => {
+    const location = useLocation();
+    const { filters = {} } = useFilters();
+    const filter = filters[location.pathname] || {};
+
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [events, setEvents] = useState([]);
@@ -41,9 +46,9 @@ const EventsTab = () => {
 
     const fetchEvents = async () => {
         if (table === 'events') {
-            raxiosFetchData(eventsPage, eventsPageSize, setEvents, setEventsTotal, '/list_events', null, setLoading);
+            raxiosFetchData(eventsPage, eventsPageSize, setEvents, setEventsTotal, '/list_events', filter, setLoading);
         } else {
-            raxiosFetchData(usersPage, usersPageSize, setEventUsers, setTotalEventUsers, '/list_event_users', null, setLoading);
+            raxiosFetchData(usersPage, usersPageSize, setEventUsers, setTotalEventUsers, '/list_event_users', filter, setLoading);
         }
     };
 
@@ -51,14 +56,14 @@ const EventsTab = () => {
         fetchEvents();
 
         // eslint-disable-next-line
-    }, [eventsPage, eventsPageSize, usersPage, usersPageSize, table]);
+    }, [eventsPage, eventsPageSize, usersPage, usersPageSize, table, JSON.stringify(filter)]);
 
-    const createColumn = (title, dataIndex, key, render, width, editable) => {
+    const createColumn = (title, dataIndex, key, render, width, editable, filter = true) => {
         return {
             title,
             dataIndex,
             key,
-            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, location.pathname, filter),
             ...(render && { render }),
             ...(width && { width }),
             ...(editable && { editable }),
@@ -69,16 +74,16 @@ const EventsTab = () => {
         createColumn('Title', 'mainTitle', 'mainTitle'),
         createColumn('Subtitle', 'subTitle', 'subTitle'),
         createColumn('Hosted By', 'hostedBy', 'hostedBy'),
-        createColumn('Date', 'validUpto', 'validUpto', (date) => date ? formatDate(date) : '', '125px'),
+        createColumn('Date', 'validUpto', 'validUpto', (date) => date ? formatDate(date) : '', '125px', null, false),
         createColumn('Author', 'name', 'name'),
         createColumn('Slug', 'slug', 'slug'),
-        createColumn('Created At', 'createdAt', 'createdAt', (time) => formatTime(time), '125px'),
-        createColumn('Updated At', 'updatedAt', 'updatedAt', (time) => formatTime(time), '125px'),
+        createColumn('Created At', 'createdAt', 'createdAt', (time) => formatTime(time), '125px', null, false),
+        createColumn('Updated At', 'updatedAt', 'updatedAt', (time) => formatTime(time), '125px', null, false),
         {
             title: 'Details', key: 'details',
             render: (_, record) => (
                 <Link to={{ pathname: `/admin/events/${record.slug}` }} className="view-details-link">
-                    View
+                    <Button>View</Button>
                 </Link>
             )
         },
@@ -92,8 +97,8 @@ const EventsTab = () => {
         createColumn('Source', 'source', 'source'),
         createColumn('Event Name', 'eventName', 'eventName'),
         createColumn('Remarks', 'remarks', 'remarks', null, '', true),
-        createColumn('Created At', 'createdAt', 'createdAt', (time) => formatTime(time)),
-        createColumn('Updated At', 'updatedAt', 'updatedAt', (time) => formatTime(time))
+        createColumn('Created At', 'createdAt', 'createdAt', (time) => formatTime(time), '', null, false),
+        createColumn('Updated At', 'updatedAt', 'updatedAt', (time) => formatTime(time), '', null, false),
     ];
 
     const handleSave = async ({ key, field, value }) => {
