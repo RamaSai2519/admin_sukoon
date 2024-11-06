@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import AdminDashboard from './AdminDashboard/AdminDashboard';
 import ExpertDetails from './ExpertDetails/ExpertDetatils';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import GenerateImage from './components/GenerateImage';
 import UserDetails from './UserDetails/UserDetails';
 import CallDetails from './CallDetails/CallDetails';
 import AdminLogin from './AdminLogin/AdminLogin';
@@ -80,7 +81,8 @@ const App = () => {
             </>
           ) : (
             <>
-              <Route path="/*" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
+              <Route path="/genImage" element={<GenerateImage />} />
+              <Route path="/admin/*" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
             </>
           )}
         </Routes>

@@ -42,7 +42,7 @@ const GenerateImage = () => {
     }
 
     if (!auth) return (
-        <div className="flex items-center justify-center gap-5 pt-2">
+        <div className="flex max-h-screen items-center justify-center gap-5 pt-2">
             <Input.Password
                 placeholder="Enter password"
                 className="w-96"
@@ -60,7 +60,7 @@ const GenerateImage = () => {
     )
 
     return (
-        <div className="flex items-center justify-center gap-5 pt-2">
+        <div className="flex max-h-screen items-center justify-center gap-5 pt-2">
             <Input.TextArea
                 placeholder="Enter text to generate image"
                 className="w-96"
