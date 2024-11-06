@@ -2,12 +2,11 @@ import { Flex, Radio } from "antd";
 import React, { useState } from "react";
 import ReviewContent from "../../components/ReviewContent";
 import CreateContent from "../../components/CreateContent";
+import GenerateImage from "../../components/GenerateImage";
 
 
 const ContentTab = () => {
-    const [screen, setScreen] = useState(
-        localStorage.getItem("screen") === "create" ? "create" : "review"
-    );
+    const [screen, setScreen] = useState(localStorage.getItem("screen") || "gen");
 
     const changeScreen = (screen) => {
         setScreen(screen);
@@ -22,12 +21,13 @@ const ContentTab = () => {
                         value={screen}
                         onChange={(e) => changeScreen(e.target.value)}
                     >
+                        <Radio.Button value="gen">Generate Image</Radio.Button>
                         <Radio.Button value="create">Create Content</Radio.Button>
                         <Radio.Button value="review">Review Content</Radio.Button>
                     </Radio.Group>
                 </Flex>
             </div>
-            {screen === "create" ? <CreateContent /> : <ReviewContent />}
+            {screen === "create" ? <CreateContent /> : screen === "review" ? <ReviewContent /> : <GenerateImage />}
         </div>
     )
 };
