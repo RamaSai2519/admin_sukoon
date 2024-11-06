@@ -12,7 +12,7 @@ export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, o
             }
         });
         if (response.status !== 200) {
-            message.error(response.msg);
+            message.error(response.msg + '. Please refresh the page!', 10);
             return;
         } else {
             setData && setData(response.data.data);

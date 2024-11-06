@@ -23,10 +23,10 @@ const UsersList = () => {
   const [fetchLoading, setFetchLoading] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState('');
 
-  const createColumn = (title, dataIndex, key, render) => {
+  const createColumn = (title, dataIndex, key, render, filter = true) => {
     return {
       title, dataIndex, key,
-      ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+      ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, null, filter),
       ...(render && { render }),
     };
   };

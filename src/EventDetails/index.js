@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
-import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import { downloadExcel } from '../Utils/exportHelper';
+import { useFilters } from '../services/useData';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import { raxiosFetchData } from '../services/fetchData';
+import { useLocation, useParams } from 'react-router-dom';
 import EventUsersTable from '../components/EventUsersTable';
 import CreateEventPopup from '../components/Popups/CreateEventPopup';
 
 const EventDetails = () => {
+    const location = useLocation();
+    const { filters = {} } = useFilters();
+    const filter = filters[location.pathname] || {};
+
     const { slug } = useParams();
+    const [data, setData] = useState({});
     const [users, setUsers] = useState([]);
     const [editMode, setEditMode] = useState(false);
-    const [data, setData] = useState({});
 
     const fetchEventDetails = async () => {
         const response = await raxiosFetchData(null, null, null, null, '/list_events', { slug });
@@ -20,18 +24,14 @@ const EventDetails = () => {
     };
 
     const fetchUsers = async () => {
-        await raxiosFetchData(null, null, setUsers, null, '/list_event_users', { slug });
+        await raxiosFetchData(null, null, setUsers, null, '/list_event_users', { slug, ...filter });
     };
 
     useEffect(() => {
         fetchEventDetails();
         fetchUsers();
         // eslint-disable-next-line
-    }, [slug, editMode]);
-
-    const handleExport = async () => {
-        downloadExcel(users, 'Event Users.xlsx');
-    };
+    }, [slug, editMode, JSON.stringify(filter)]);
 
     const toggleEditMode = () => {
         setEditMode(!editMode);
@@ -69,7 +69,7 @@ const EventDetails = () => {
                             <h1>Registered Users</h1>
                             {/* <Button onClick={handleExport}>Download Excel</Button> */}
                         </div>
-                        <EventUsersTable users={users} />
+                        <EventUsersTable users={users} pathname={location.pathname} />
                     </div> :
                     <CreateEventPopup setVisible={setEditMode} data={data} editMode={editMode} />
                 }
