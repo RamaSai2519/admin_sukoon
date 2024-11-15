@@ -82,7 +82,7 @@ const App = () => {
           ) : (
             <>
               <Route path="/genImage" element={<GenerateImage />} />
-              <Route path="/admin/*" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
+              <Route path="/*" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
             </>
           )}
         </Routes>
