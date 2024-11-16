@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'antd';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useFilters } from '../services/useData';
+import { Button, message, Popconfirm } from 'antd';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import { raxiosFetchData } from '../services/fetchData';
+import { raxiosFetchData, RaxiosPost } from '../services/fetchData';
 import { useLocation, useParams } from 'react-router-dom';
 import EventUsersTable from '../components/EventUsersTable';
 import CreateEventPopup from '../components/Popups/CreateEventPopup';
@@ -37,6 +37,16 @@ const EventDetails = () => {
         setEditMode(!editMode);
     };
 
+    const DeleteEvent = async () => {
+        const response = await RaxiosPost('/upsert_event', { slug, isDeleted: true });
+        if (response.status === 200) {
+            message.success(response.msg);
+            window.history.back();
+        } else {
+            message.error(response.msg);
+        }
+    }
+
     return (
         <LazyLoad>
             <div className="flex flex-col px-5 min-h-screen max-w-screen-2xl mx-auto">
@@ -58,8 +68,16 @@ const EventDetails = () => {
                             <h3>Name:</h3>
                             <h2 className='text-xl'>{data?.name}</h2>
                         </div>
-                        <div className='w-full'>
+                        <div className='flex justify-center items-center w-full gap-2'>
                             <Button className='w-fit' onClick={toggleEditMode}>{editMode ? 'Cancel' : 'Edit Event Details'}</Button>
+                            <Popconfirm
+                                title="Are you sure you want to delete this event?"
+                                onConfirm={DeleteEvent}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <Button className='w-fit' danger>Delete Event</Button>
+                            </Popconfirm>
                         </div>
                     </div>
                 </div>
