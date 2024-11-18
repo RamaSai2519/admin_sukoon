@@ -1,31 +1,38 @@
-import React from 'react';
-import { Button, Table, Select, DatePicker, message } from 'antd';
-import { raxiosFetchData } from '../services/fetchData';
-import LazyLoad from '../components/LazyLoad/lazyload';
-import EditableCell from '../components/EditableCell';
-import Loading from '../components/Loading/loading';
+import React, { useEffect, useRef, useState } from 'react';
+import moment from 'moment/moment';
+import { useFilters } from '../services/useData';
 import { formatDate } from '../Utils/formatHelper';
 import { RaxiosPost } from '../services/fetchData';
-import { Link } from 'react-router-dom';
-import moment from 'moment/moment';
+import Loading from '../components/Loading/loading';
+import { Link, useLocation } from 'react-router-dom';
+import EditableCell from '../components/EditableCell';
+import LazyLoad from '../components/LazyLoad/lazyload';
+import { raxiosFetchData } from '../services/fetchData';
+import GetColumnSearchProps from '../Utils/antTableHelper';
+import { Button, Table, Select, DatePicker, message } from 'antd';
 
 const UserEngagement = ({ setExportFileUrl }) => {
-    const [engagementData, setEngagementData] = React.useState([]);
-    const [currentPage, setCurrentPage] = React.useState(
+    const location = useLocation();
+    const { filters = {} } = useFilters();
+    const filter = filters[location.pathname] || {};
+
+    const [engagementData, setEngagementData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(
         localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1
     );
-    const [pageSize, setPageSize] = React.useState(10);
-    const [loading, setLoading] = React.useState(false);
-    const [totalItems, setTotalItems] = React.useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [loading, setLoading] = useState(false);
+    const [totalItems, setTotalItems] = useState(0);
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInputRef = useRef(null);
 
     const fetchData = async () => {
-        const data = await raxiosFetchData(currentPage, pageSize, setEngagementData, setTotalItems, '/user_engagement', null, setLoading);
+        const data = await raxiosFetchData(currentPage, pageSize, setEngagementData, setTotalItems, '/user_engagement', filter, setLoading);
         setExportFileUrl(data.fileUrl);
     };
 
-    React.useEffect(() => {
-        fetchData();
-    }, [currentPage, pageSize]);
+    useEffect(() => { fetchData() }, [currentPage, pageSize, JSON.stringify(filter)]);
 
     const data = engagementData.map((item) => ({
         _id: item._id,
@@ -37,7 +44,7 @@ const UserEngagement = ({ setExportFileUrl }) => {
         userStatus: item.userStatus || '',
         phoneNumber: item.phoneNumber || '',
         city: item.city || '',
-        dateOfBirth: item.birthDate || '',
+        birthDate: item.birthDate || '',
         gender: item.gender || '',
         expert: item.expert || '',
         lastCallDate: item.lastCallDate || '',
@@ -59,129 +66,50 @@ const UserEngagement = ({ setExportFileUrl }) => {
         { value: 'Not interested in Calls', label: 'Not interested in Calls' },
     ];
 
-    const generateFilters = (data, key) => {
-        return data.reduce((acc, curr) => {
-            if (curr[key] && !acc.find((item) => item.text === curr[key])) {
-                acc.push({ text: curr[key], value: curr[key] });
-            }
-            return acc;
-        }, []).map((item) => ({ text: item.text, value: item.value }));
+    const createColumn = (title, dataIndex, key, width, fixed, editable, render, filter = false) => {
+        return {
+            title,
+            dataIndex,
+            key,
+            ...fixed && { fixed },
+            ...(width && { width }),
+            ...(render && { render }),
+            ...(editable && { editable }),
+            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, location.pathname, filter),
+        };
     };
 
-
     const columns = [
-        {
-            title: "Type", dataIndex: "type", key: "type", width: 100,
-            filters: generateFilters(data, 'type'),
-            onFilter: (value, record) => record.type.includes(value)
-        },
-        {
-            title: "Name", dataIndex: "name", key: "name", width: 150, fixed: 'left',
-            filters: generateFilters(data, 'name'),
-            filterSearch: true,
-            onFilter: (value, record) => record.name.includes(value)
-        },
-        {
-            title: "DOJ", dataIndex: "createdDate", key: "createdDate", width: 110,
-            filters: generateFilters(data, 'createdDate'),
-            onFilter: (value, record) => record.createdDate.includes(value),
-            render: (record) => formatDate(record)
-        },
-        {
-            title: "SL Days", dataIndex: "slDays", key: "slDays", width: 90,
-            filters: generateFilters(data, 'slDays'),
-            onFilter: (value, record) => record.slDays === value
-        },
-        {
-            title: "Call Status", dataIndex: "callStatus", key: "callStatus", width: 110,
-            filters: generateFilters(data, 'callStatus'),
-            onFilter: (value, record) => record.callStatus.includes(value)
-        },
-        {
-            title: "User Status", dataIndex: "userStatus", key: "userStatus", width: 200,
-            render: (text, record) => (
-                <Select
-                    className='w-full'
-                    value={text}
-                    onChange={(value) => handleUserStatusChange(value, record)}
-                    options={userStatusOptions}
-                />
-            ),
-            filters: generateFilters(data, 'userStatus'),
-            onFilter: (value, record) => record.userStatus.includes(value)
-        },
-        {
-            title: "Contact", dataIndex: "phoneNumber", key: "phoneNumber", width: 120,
-            filters: generateFilters(data, 'phoneNumber'),
-            onFilter: (value, record) => record.phoneNumber.includes(value),
-            filterSearch: true
-        },
-        {
-            title: "City", dataIndex: "city", key: "city", width: 110,
-            filters: generateFilters(data, 'city'),
-            onFilter: (value, record) => record.city.includes(value)
-        },
-        {
-            title: "DOB", dataIndex: "dateOfBirth", key: "dateOfBirth", width: 110,
-            filters: generateFilters(data, 'dateOfBirth'),
-            onFilter: (value, record) => record.dateOfBirth.includes(value),
-            render: (record) => formatDate(record)
-        },
-        {
-            title: "Gender", dataIndex: "gender", key: "gender", width: 90, editable: true,
-            filters: generateFilters(data, 'gender'),
-            onFilter: (value, record) => record.gender.includes(value)
-        },
-        {
-            title: "Last Call Date", dataIndex: "lastCallDate", key: "lastCallDate", width: 135,
-            filters: generateFilters(data, 'lastCallDate'),
-            onFilter: (value, record) => record.lastCallDate.includes(value),
-            render: (record) => formatDate(record)
-        },
-        {
-            title: "Call Age", dataIndex: "callAge", key: "callAge", width: 90,
-            filters: generateFilters(data, 'callAge'),
-            onFilter: (value, record) => record.callAge === value
-        },
-        {
-            title: "Calls", dataIndex: "callsDone", key: "callsDone", width: 70,
-            filters: generateFilters(data, 'callsDone'),
-            onFilter: (value, record) => record.callsDone === value
-        },
-        {
-            title: "Last Reached",
-            dataIndex: "lastReached",
-            key: "lastReached",
-            width: 200,
-            filters: generateFilters(data, 'lastReached'),
-            onFilter: (value, record) => record.lastReached.includes(value),
-            render: (text, record) => (
-                <DatePicker
-                    value={text ? moment(text) : null}
-                    onChange={(date) => handleLastReachedChange(date, record)}
-                />
-            )
-        },
-        {
-            title: "Remarks", dataIndex: "remarks", key: "remarks", width: 250, editable: true,
-            filters: generateFilters(data, 'remarks'),
-            onFilter: (value, record) => record.remarks.includes(value)
-        },
-        {
-            title: "Source", dataIndex: "source", key: "source", width: 150, editable: true,
-            filters: generateFilters(data, 'source'),
-            onFilter: (value, record) => record.source.includes(value)
-        },
-        {
-            title: "Ref Source", dataIndex: "refSource", key: "refSource", width: 150, editable: true,
-            filters: generateFilters(data, 'refSource'),
-            onFilter: (value, record) => record.refSource.includes(value)
-        },
-        {
-            title: "Sarathi", dataIndex: "expert", key: "saarthi", width: 150, editable: true,
-            filters: generateFilters(data, 'expert'),
-            onFilter: (value, record) => record.expert.includes(value)
-        },
+        createColumn('Type', 'type', 'type', 100),
+        createColumn('Name', 'name', 'name', 150, 'left', true, null, true),
+        createColumn('DOJ', 'createdDate', 'createdDate', 110, null, null, (record) => formatDate(record)),
+        createColumn('SL Days', 'slDays', 'slDays', 90),
+        createColumn('Call Status', 'callStatus', 'callStatus', 110),
+        createColumn('User Status', 'userStatus', 'userStatus', 200, null, null, (text, record) => (
+            <Select
+                className='w-full'
+                value={text}
+                onChange={(value) => handleUserStatusChange(value, record)}
+                options={userStatusOptions}
+            />
+        )),
+        createColumn('Contact', 'phoneNumber', 'phoneNumber', 120, null, null, null, true),
+        createColumn('City', 'city', 'city', 150, null, true, null, true),
+        createColumn('DOB', 'birthDate', 'birthDate', 130, null, null, (record) => formatDate(record)),
+        createColumn('Gender', 'gender', 'gender', 120, null, true, null, true),
+        createColumn('Last Call Date', 'lastCallDate', 'lastCallDate', 135, null, null, (record) => formatDate(record)),
+        createColumn('Call Age', 'callAge', 'callAge', 90),
+        createColumn('Calls', 'callsDone', 'callsDone', 70),
+        createColumn('Last Reached', 'lastReached', 'lastReached', 200, null, null, (text, record) => (
+            <DatePicker
+                value={text ? moment(text) : null}
+                onChange={(date) => handleLastReachedChange(date, record)}
+            />
+        )),
+        createColumn('Remarks', 'remarks', 'remarks', 250, null, true),
+        createColumn('Source', 'source', 'source', 150, null, true),
+        createColumn('Ref Source', 'refSource', 'refSource', 150, null, true, null, true),
+        createColumn('Sarathi', 'expert', 'expert', 150, null, true),
         {
             title: 'Actions',
             key: 'actions',
@@ -245,9 +173,8 @@ const UserEngagement = ({ setExportFileUrl }) => {
     };
 
     const mergedColumns = columns.map((col) => {
-        if (!col.editable) {
-            return col;
-        }
+        if (!col.editable) return col;
+
         return {
             ...col,
             onCell: (record) => ({

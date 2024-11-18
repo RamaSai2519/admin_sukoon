@@ -96,7 +96,7 @@ const GetColumnSearchProps = (dataIndex, displayName, searchText, setSearchText,
                         .split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i'))
                         .map((fragment, i) =>
                             fragment.toLowerCase() === searchText ? (
-                                <span key={i} style={{ backgroundColor: '#ffc069' }}>
+                                <span key={i} style={{ backgroundColor: 'blue' }}>
                                     {fragment}
                                 </span>
                             ) : (
