@@ -1,22 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
+import './UserDetails.css';
 import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import Raxios from '../services/axiosHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import { DatePicker, Input, message, Switch, Table } from 'antd';
-import './UserDetails.css';
 import { raxiosFetchData } from '../services/fetchData';
+import { DatePicker, Input, message, Switch, Table } from 'antd';
+
+const InputField = ({ label, value, onChange, editMode, type = "text" }) => (
+  <div className='grid-tile w-full h-fit'>
+    <h3>{label}</h3>
+    {editMode ? (
+      <Input type={type} value={value} onChange={onChange} />
+    ) : (
+      <h2 className='text-2xl'>{value}</h2>
+    )}
+  </div>
+);
+
+const SwitchField = ({ label, checked, onChange }) => (
+  <div className='w-full flex justify-between items-center'>
+    <span className='text-2xl'>{label}</span>
+    <Switch checked={checked} onChange={onChange} />
+  </div>
+);
 
 const UserDetails = () => {
   const { userId } = useParams();
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
   const [persona, setPersona] = useState('');
+  const [isBusy, setIsBusy] = useState(false);
   const [birthDate, setBirthDate] = useState('');
   const [editMode, setEditMode] = useState(false);
-  const [isPremium, setIsPremium] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isPaidUser, setIsPaidUser] = useState(false);
   const [numberOfCalls, setNumberOfCalls] = useState('');
   const [notifications, setNotifications] = useState([]);
 
@@ -32,7 +51,8 @@ const UserDetails = () => {
       const data = await raxiosFetchData(null, null, null, null, '/user', payload, null);
       setName(data.name);
       setCity(data.city);
-      setIsPremium(data.isPaidUser);
+      setIsBusy(data.isBusy);
+      setIsPaidUser(data.isPaidUser);
       setPhoneNumber(data.phoneNumber);
       setNumberOfCalls(data.numberOfCalls);
       setNotifications(data.notifications);
@@ -50,7 +70,6 @@ const UserDetails = () => {
       console.error('Error fetching user details:', error);
     }
   };
-
 
   useEffect(() => {
     fetchData();
@@ -74,19 +93,17 @@ const UserDetails = () => {
     { title: "Type", dataIndex: "type", key: "type", }
   ];
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (updatedFields) => {
+    const { phoneNumber, numberOfCalls } = updatedFields;
     if (numberOfCalls > 3) {
       message.error('Number of calls cannot be greater than 3.');
       return;
     }
     try {
       const response = await Raxios.post(`/user`, {
-        name,
-        city,
-        ...(birthDate !== '' && { birthDate }),
-        phoneNumber,
-        numberOfCalls: parseInt(numberOfCalls),
-      })
+        ...updatedFields,
+        ...numberOfCalls && { numberOfCalls: parseInt(numberOfCalls) },
+      });
       if (response.status !== 200) {
         message.error(response.msg);
       } else {
@@ -97,17 +114,14 @@ const UserDetails = () => {
     }
   };
 
-  const handlePremium = async () => {
-    try {
-      await Raxios.post(`/user`, {
-        phoneNumber,
-        isPaidUser: !isPremium
-      });
-      fetchData();
-      message.success("User Premium Status Changed Successfully.");
-    } catch (error) {
-      message.error('Error updating user details:', error);
+  const handleSwitchChange = (field, value) => {
+    const updatedFields = { phoneNumber, [field]: value };
+    if (field === 'isPaidUser') {
+      setIsPaidUser(value);
+    } else if (field === 'isBusy') {
+      setIsBusy(value);
     }
+    handleUpdate(updatedFields);
   };
 
   return (
@@ -122,39 +136,15 @@ const UserDetails = () => {
           </div>
           <div id='details-content' className='grid md:grid-cols-2 md:gap-4'>
             <div className='flex gap-2 w-full'>
-              <div className='grid-tile w-full'>
-                <h3>Name</h3>
-                {editMode ? (
-                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-                ) : (
-                  <h2 className='text-2xl'>{name}</h2>
-                )}
-              </div>
-              <div className='grid-tile w-full flex justify-between items-center'>
-                <span className='text-2xl'>Premium User</span>
-                <Switch
-                  checked={isPremium}
-                  onChange={handlePremium}
-                />
+              <InputField label="Name" value={name} onChange={(e) => setName(e.target.value)} editMode={editMode} />
+              <div className='grid-tile w-full flex flex-col justify-between items-center'>
+                <SwitchField label="Premium User" checked={isPaidUser} onChange={(checked) => handleSwitchChange('isPaidUser', checked)} />
+                <SwitchField label="Busy" checked={isBusy} onChange={(checked) => handleSwitchChange('isBusy', checked)} />
               </div>
             </div>
-            <div className='grid-tile'>
-              <h3>Phone Number</h3>
-              {editMode ? (
-                <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-              ) : (
-                <h2 className='text-2xl'>{phoneNumber}</h2>
-              )}
-            </div>
+            <InputField label="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} editMode={editMode} />
             <div className='flex w-full h-full'>
-              <div className='grid-tile w-full h-fit'>
-                <h3>City</h3>
-                {editMode ? (
-                  <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
-                ) : (
-                  <h2 className='text-2xl'>{city}</h2>
-                )}
-              </div>
+              <InputField label="City" value={city} onChange={(e) => setCity(e.target.value)} editMode={editMode} />
               <div className='grid-tile w-full h-fit'>
                 <h3>Birth Date</h3>
                 {editMode ? (
@@ -168,17 +158,8 @@ const UserDetails = () => {
               </div>
             </div>
             <div className='edit-button-container'>
-              <div className='grid-tile'>
-                <h3>Number of Calls</h3>
-                {editMode ?
-                  <Input
-                    type="number"
-                    value={numberOfCalls}
-                    onChange={(e) => setNumberOfCalls(e.target.value)}
-                  />
-                  : <h2 className='text-2xl'>{numberOfCalls}</h2>}
-              </div>
-              {editMode && <button className='update-button' onClick={handleUpdate}>Update Details</button>}
+              <InputField label="Number of Calls" value={numberOfCalls} onChange={(e) => setNumberOfCalls(e.target.value)} editMode={editMode} type="number" />
+              {editMode && <button className='update-button' onClick={() => handleUpdate({ phoneNumber, name, city, isBusy, isPaidUser, birthDate, numberOfCalls })}>Update Details</button>}
               {editMode ? (
                 <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
               ) : (
@@ -187,7 +168,7 @@ const UserDetails = () => {
             </div>
           </div>
           <div className='grid md:grid-cols-2 md:gap-4'>
-            <div className='grid-tile'>
+            <div className='grid-tile h-fit'>
               <h3>Customer Persona</h3>
               {persona && <p className='text-xl whitespace-pre-wrap'>{persona}</p>}
             </div>

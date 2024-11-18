@@ -66,6 +66,10 @@ const CallDetails = () => {
         message.success('Call reprocessing initiated');
     }
 
+    const viewUserDetails = () => {
+        window.location.href = `/admin/users/${call.user_id}`;
+    }
+
     return (
         <div className="whole-container min-h-screen">
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '20px' }}>
@@ -75,7 +79,7 @@ const CallDetails = () => {
                 </button>
             </div>
             <div className="details-container">
-                <div className="details-box">
+                <div className="details-box cursor-pointer" onClick={viewUserDetails}>
                     <h3>User</h3>
                     <h1>{call.user}</h1>
                 </div>

@@ -87,7 +87,7 @@ const SendWAForm = () => {
                 if (placeholder === '<user_name>') {
                     initialInputs['<user_name>'] = admin.name || 'Mr. X';
                 } else if (placeholder === '<phone_number>') {
-                    initialInputs['<phone_number>'] = '+91-8035752993';
+                    initialInputs['<phone_number>'] = '+91-8660610840';
                 } else if (placeholder === '<whatsapp_community_link>') {
                     initialInputs['<whatsapp_community_link>'] = 'https://chat.whatsapp.com/Gvl7RE4Zu0i2C1tJIKSeYW'
                 }
