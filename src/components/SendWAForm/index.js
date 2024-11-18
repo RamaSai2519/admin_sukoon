@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { generateOptions } from '../../Utils/antSelectHelper';
 import { Button, Card, Select, Input, message } from 'antd';
 import { raxiosFetchData } from '../../services/fetchData';
+import { useAdmin } from '../../services/useData';
 import Raxios from '../../services/axiosHelper';
 import Loading from '../Loading/loading';
 import { v4 as uuidv4 } from 'uuid';
 import S3Uploader from '../Upload';
 
 const SendWAForm = () => {
+    const { admin } = useAdmin();
     const [templates, setTemplates] = useState([]);
     const [template, setTemplate] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -83,7 +85,7 @@ const SendWAForm = () => {
             const placeholders = template.message.match(/<\w+>/g) || [];
             placeholders.forEach((placeholder) => {
                 if (placeholder === '<user_name>') {
-                    initialInputs['<user_name>'] = localStorage.getItem('adminName') || 'Mr. X';
+                    initialInputs['<user_name>'] = admin.name || 'Mr. X';
                 } else if (placeholder === '<phone_number>') {
                     initialInputs['<phone_number>'] = '+91-8035752993';
                 } else if (placeholder === '<whatsapp_community_link>') {

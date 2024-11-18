@@ -3,11 +3,12 @@ import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import InternalToggle from "../../components/InternalToggle";
 import SchedulesTable from "../../components/SchedulesTable";
-import { useUsers, useExperts } from "../../services/useData";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import { Select, DatePicker, Form, Button, message } from "antd";
+import { useUsers, useExperts, useAdmin } from "../../services/useData";
 
 const ConnectTab = () => {
+    const { admin } = useAdmin();
     const { users, fetchUsers } = useUsers();
     const { experts, fetchExperts } = useExperts();
     const [schedules, setSchedules] = useState([]);
@@ -74,7 +75,7 @@ const ConnectTab = () => {
             message.error("The expert already has a schedule within 15 minutes of the selected time.");
         } else {
             const formattedDate = new Date(selectedDateTime).toISOString().split('.')[0] + "Z";
-            const initiatedBy = localStorage.getItem('adminName');
+            const initiatedBy = admin.name;
             const meta = JSON.stringify({ expertId, userId: values.user, initiatedBy });
             let status = 'WAPENDING';
             if (new Date(selectedDateTime).getTime() - new Date().getTime() < 30 * 60 * 1000) {

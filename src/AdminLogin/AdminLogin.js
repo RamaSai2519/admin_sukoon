@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useAdmin } from '../services/useData';
 import Raxios from '../services/axiosHelper';
 import './AdminLogin.css';
 
 const AdminLogin = ({ setIsLoggedIn }) => {
     const navigate = useNavigate();
+    const { setAdmin } = useAdmin();
     const [loading, setLoading] = useState(false);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
 
@@ -23,7 +25,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
             const { access_token, refresh_token, user } = response.data;
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token);
-            localStorage.setItem('adminName', user.name);
+            setAdmin(user);
             setIsLoggedIn(true);
             localStorage.setItem('isLoggedIn', 'true');
             navigate('/admin/dashboard');
@@ -60,7 +62,6 @@ const AdminLogin = ({ setIsLoggedIn }) => {
     };
 
     return (
-
         <div className='h-screen flex justify-center items-center'>
             <div className="dark:bg-lightBlack flex flex-col justify-center p-10 rounded-3xl">
                 <h1 className='text-3xl m-5 mt-0'>Login to access dashboard</h1>

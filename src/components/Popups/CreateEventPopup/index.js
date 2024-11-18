@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import S3Uploader from '../../Upload';
+import { useAdmin } from '../../../services/useData';
 import { RaxiosPost } from '../../../services/fetchData';
 import { Form, Input, Button, message, Select, DatePicker, InputNumber } from 'antd';
 
 const CreateEventPopup = ({ setVisible, data, editMode }) => {
+    const { admin } = useAdmin();
     const [uploadedImageUrl, setUploadedImageUrl] = useState(data?.imageUrl || '');
 
     const handleCreate = async (values) => {
@@ -23,7 +25,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
     };
 
     const initialValues = {
-        name: localStorage.getItem("adminName"),
+        name: admin.name,
         mainTitle: data?.mainTitle,
         subTitle: data?.subTitle,
         hostedBy: data?.hostedBy,

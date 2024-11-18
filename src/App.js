@@ -15,7 +15,7 @@ import EventDetails from './EventDetails';
 import './App.css';
 
 const App = () => {
-  const appVersion = '18.0.2';
+  const appVersion = '20.0.0';
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
@@ -23,9 +23,7 @@ const App = () => {
     const localStorageDarkMode = localStorage.getItem('darkMode');
     if (localStorageDarkMode !== null) {
       return JSON.parse(localStorageDarkMode);
-    } else {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
+    } else { return true }
   });
 
   const handleLogout = () => {
@@ -50,12 +48,7 @@ const App = () => {
 
   useEffect(() => {
     const storedVersion = localStorage.getItem('appVersion');
-    if (storedVersion !== appVersion) {
-      localStorage.clear();
-      sessionStorage.clear();
-      localStorage.setItem('appVersion', appVersion);
-      window.location.reload();
-    }
+    if (storedVersion !== appVersion) handleLogout();
   }, []);
 
   return (

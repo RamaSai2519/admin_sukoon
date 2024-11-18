@@ -14,8 +14,8 @@ root.render(
       <title>Sukoon Admin</title>
       <meta name="description" content="Discover engaging narratives, diverse languages, and the essence of heartfelt conversations in senior living on the sukoon.love. Embrace the wisdom of elders and nurture authentic connections through our enriching content." />
     </Helmet>
-      <DataProvider>
-        <App />
-      </DataProvider>
+    <DataProvider>
+      <App />
+    </DataProvider>
   </Router>
 );

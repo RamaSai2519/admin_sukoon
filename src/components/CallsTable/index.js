@@ -1,6 +1,7 @@
 import { Button, Table } from 'antd';
 import { Link } from 'react-router-dom';
 import LazyLoad from '../LazyLoad/lazyload';
+import { useAdmin } from '../../services/useData';
 import { formatTime } from '../../Utils/formatHelper';
 import GetColumnSearchProps, { renderStatusIcon } from '../../Utils/antTableHelper';
 
@@ -16,6 +17,7 @@ const CallsTableComponent = ({
     size,
     pathname = null,
 }) => {
+    const { admin } = useAdmin();
 
     const createColumn = (title, dataIndex, key, render, filter = true) => {
         return {
@@ -50,7 +52,7 @@ const CallsTableComponent = ({
         createColumn('Reason', 'failedReason', 'failedReason'),
         createColumn('Source', 'source', 'source'),
         createColumn('Score', 'conversationScore', 'score'),
-        {
+        ...(admin.access_level !== 'basic' ? [{
             title: 'Details',
             key: 'details',
             render: (record) => (
@@ -58,7 +60,7 @@ const CallsTableComponent = ({
                     <Button>View</Button>
                 </Link>
             ),
-        },
+        }] : []),
     ];
 
     return (

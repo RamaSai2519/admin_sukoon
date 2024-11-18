@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import CryptoJS from 'crypto-js';
 import {
     fetchCategories,
     fetchStats,
@@ -24,6 +25,24 @@ export const useStats = () => useContext(StatsContext);
 export const useUsers = () => useContext(UsersContext);
 export const useCalls = () => useContext(CallsContext);
 
+const SECRET_KEY = 'sukoon';
+
+export const useAdmin = () => {
+    const getAdmin = () => {
+        const encryptedAdmin = localStorage.getItem('admin');
+        if (!encryptedAdmin) return {};
+        const bytes = CryptoJS.AES.decrypt(encryptedAdmin, SECRET_KEY);
+        return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    };
+
+    const setAdmin = (admin) => {
+        const encryptedAdmin = CryptoJS.AES.encrypt(JSON.stringify(admin), SECRET_KEY).toString();
+        localStorage.setItem('admin', encryptedAdmin);
+    };
+
+    return { admin: getAdmin(), setAdmin };
+};
+
 export const DataProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [calls, setCalls] = useState([]);
@@ -32,7 +51,6 @@ export const DataProvider = ({ children }) => {
     const [insights, setInsights] = useState({});
     const [allCategories, setCategories] = useState([]);
     const [stats, setStats] = useState({ onlineSarathis: [] });
-
 
     const contextValues = {
         filters: { filters, setFilters },
