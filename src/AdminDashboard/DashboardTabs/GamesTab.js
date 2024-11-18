@@ -14,7 +14,7 @@ const GamesTab = () => {
     const [ready, setReady] = useState(false);
 
     useEffect(() => {
-        Raxios.get('/games/quizQuestions')
+        Raxios.get('/actions/games/quizQuestions')
             .then((res) => {
                 setQuestions(res.data);
             })
@@ -29,7 +29,7 @@ const GamesTab = () => {
             imageUrl: uploadedImageUrl
         };
 
-        Raxios.post('/games/addQuestion', formData)
+        Raxios.post('/actions/games/addQuestion', formData)
             .then((res) => {
                 window.location.reload();
             })

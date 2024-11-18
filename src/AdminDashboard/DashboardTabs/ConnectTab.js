@@ -21,7 +21,7 @@ const ConnectTab = () => {
     const { Option } = Select;
 
     const fetchSchedules = async () => {
-        raxiosFetchData(null, null, setSchedules, null, '/schedules', null, setRLoading);
+        raxiosFetchData(null, null, setSchedules, null, '/actions/schedules', null, setRLoading);
     };
 
     useEffect(() => {
@@ -42,7 +42,7 @@ const ConnectTab = () => {
 
     const handleCallTrigger = async (values) => {
         setLoading(true);
-        await RaxiosPost('/call', {
+        await RaxiosPost('/actions/call', {
             user_id: values.user,
             expert_id: values.expert,
             user_requested: values.user_requested === "Yes"
@@ -83,7 +83,7 @@ const ConnectTab = () => {
                 message.warning('No notification will be sent as the call is scheduled within 30 minutes.', 20);
             }
 
-            await RaxiosPost('/create_scheduled_job',
+            await RaxiosPost('/actions/create_scheduled_job',
                 {
                     job_type: 'CALL',
                     status: status,

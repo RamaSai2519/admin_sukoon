@@ -87,7 +87,7 @@ const AdminDashboard = ({ onLogout }) => {
 
   const sendFCMTokenToServer = async (token) => {
     try {
-      await Raxios.post('/save_fcm_token', { token });
+      await Raxios.post('/actions/save_fcm_token', { token });
     } catch (error) {
       console.error('Failed to send FCM token to server:', error);
     }
@@ -139,11 +139,6 @@ const AdminDashboard = ({ onLogout }) => {
                     ))}
                   </div>
                   <div className='grid grid-rows-2'>
-                    <Link to="/admin/home/notifications" className={`cshadow p-2 px-4 my-1 rounded-3xl font-bold text-lg hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack 
-                      ${location.pathname.endsWith('notifications') ? 'scale-110' : ''
-                      }`}>
-                      Notifications
-                    </Link>
                     <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
                     <div
                       className="cshadow p-2 px-4 my-2 rounded-3xl font-bold text-lg hover:scale-110 transition-all cursor-pointer dark:bg-lightBlack"

@@ -9,6 +9,7 @@ import { downloadExcel } from '../Utils/exportHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import GetColumnSearchProps from '../Utils/antTableHelper';
 import { RaxiosPost } from '../services/fetchData';
+import BulkUploadPopup from '../components/Popups/BulkUploadPopup';
 
 const UsersList = () => {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ const UsersList = () => {
   const [engFileUrl, setEngFileURL] = useState('');
   const [fetchLoading, setFetchLoading] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState('');
+
+  const [bulkVisible, setBulkVisible] = useState(false);
 
   const createColumn = (title, dataIndex, key, render, filter = true) => {
     return {
@@ -103,7 +106,7 @@ const UsersList = () => {
   const createUser = async () => {
     const userNumber = window.prompt("Enter the phone number of the new user:");
     if (userNumber) {
-      const response = await RaxiosPost('/user', { phoneNumber: userNumber });
+      const response = await RaxiosPost('/actions/user', { phoneNumber: userNumber });
       if (response.status !== 200) {
         message.error(response.msg);
       } else {
@@ -132,6 +135,9 @@ const UsersList = () => {
           <Button onClick={createUser}>
             Create User
           </Button>
+          <Button onClick={() => setBulkVisible(true)}>
+            Bulk Upload
+          </Button>
           {table === 'engagement' && <Button loading={fetchLoading} onClick={handleExport}>
             Export
           </Button>}
@@ -147,6 +153,7 @@ const UsersList = () => {
               rowKey={(record) => record._id}
             />
           </LazyLoad>}
+      <BulkUploadPopup visible={bulkVisible} setVisible={setBulkVisible} />
     </div>
   );
 };

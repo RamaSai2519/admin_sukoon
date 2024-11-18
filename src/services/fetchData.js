@@ -27,7 +27,8 @@ export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, o
     }
 };
 
-export const RaxiosPost = async (url, data, isNotify = false) => {
+export const RaxiosPost = async (url, data, isNotify = false, setLoading = null) => {
+    setLoading && setLoading(true);
     try {
         const response = await Raxios.post(url, data);
         if (isNotify) {
@@ -37,15 +38,17 @@ export const RaxiosPost = async (url, data, isNotify = false) => {
                 message.error(response.msg);
             }
         }
+        setLoading && setLoading(false);
         return response;
     } catch (error) {
         message.error(error.response?.data?.message || 'An error occurred');
+        setLoading && setLoading(false);
     }
 };
 
 export const fetchCategories = async (setCategories) => {
     try {
-        const response = await Raxios.post('/categories', { action: 'get' });
+        const response = await Raxios.post('/actions/categories', { action: 'get' });
         setCategories(response.data);
     } catch (error) {
         message.error('Error fetching categories:', error);
@@ -54,7 +57,7 @@ export const fetchCategories = async (setCategories) => {
 
 export const fetchStats = async (setStats, internal = false) => {
     try {
-        const response = await Raxios.get('/dashboard_stats', {
+        const response = await Raxios.get('/actions/dashboard_stats', {
             params: { item: 'stats', internal }
         });
         setStats(response.data);
@@ -65,7 +68,7 @@ export const fetchStats = async (setStats, internal = false) => {
 
 export const fetchInsights = async (setInsights, internal = false) => {
     try {
-        const response = await Raxios.get('/dashboard_stats', {
+        const response = await Raxios.get('/actions/dashboard_stats', {
             params: { item: 'insights', internal }
         });
         setInsights(response.data);
@@ -76,7 +79,7 @@ export const fetchInsights = async (setInsights, internal = false) => {
 
 export const fetchUsers = async (setUsers) => {
     try {
-        const response = await Raxios.get('/user');
+        const response = await Raxios.get('/actions/user');
         setUsers(response.data);
     } catch (error) {
         message.error('Error fetching users:', error);
@@ -85,7 +88,7 @@ export const fetchUsers = async (setUsers) => {
 
 export const fetchCalls = async (setCalls, internal = false) => {
     try {
-        const response = await Raxios.get('/call', {
+        const response = await Raxios.get('/actions/call', {
             params: { dest: 'graph', internal }
         });
         setCalls(response.data.data);
@@ -102,7 +105,7 @@ export const fetchCalls = async (setCalls, internal = false) => {
 
 export const fetchExperts = async (setExperts, internal) => {
     try {
-        const response = await Raxios.get('/expert', {
+        const response = await Raxios.get('/actions/expert', {
             params: { internal }
         });
         setExperts(response.data);
@@ -114,7 +117,7 @@ export const fetchExperts = async (setExperts, internal) => {
 
 export const fetchEngagementData = async (page, size) => {
     try {
-        const response = await Raxios.get('/user/engagementData', {
+        const response = await Raxios.get('/actions/user/engagementData', {
             params: { page, size }
         });
         return response.data;

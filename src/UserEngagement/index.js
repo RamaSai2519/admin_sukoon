@@ -28,7 +28,7 @@ const UserEngagement = ({ setExportFileUrl }) => {
     const searchInputRef = useRef(null);
 
     const fetchData = async () => {
-        const data = await raxiosFetchData(currentPage, pageSize, setEngagementData, setTotalItems, '/user_engagement', filter, setLoading);
+        const data = await raxiosFetchData(currentPage, pageSize, setEngagementData, setTotalItems, '/actions/user_engagement', filter, setLoading);
         setExportFileUrl(data.fileUrl);
     };
 
@@ -143,7 +143,7 @@ const UserEngagement = ({ setExportFileUrl }) => {
     };
 
     const handleSave = async ({ key, field, value }) => {
-        const response = await RaxiosPost('/user_engagement', { key, field, value });
+        const response = await RaxiosPost('/actions/user_engagement', { key, field, value });
         if (response.status !== 200) {
             message.error(response.msg);
         } else {

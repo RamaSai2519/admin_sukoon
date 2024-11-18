@@ -12,7 +12,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
     const handleCreate = async (values) => {
         const { image, ...otherValues } = values;
         if (!uploadedImageUrl) { message.error('Please upload an image'); return; }
-        const response = await RaxiosPost('/upsert_event', {
+        const response = await RaxiosPost('/actions/upsert_event', {
             ...otherValues,
             imageUrl: uploadedImageUrl
         });

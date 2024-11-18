@@ -19,12 +19,12 @@ const EventDetails = () => {
     const [editMode, setEditMode] = useState(false);
 
     const fetchEventDetails = async () => {
-        const response = await raxiosFetchData(null, null, null, null, '/list_events', { slug });
+        const response = await raxiosFetchData(null, null, null, null, '/actions/list_events', { slug });
         setData(response.data[0]);
     };
 
     const fetchUsers = async () => {
-        await raxiosFetchData(null, null, setUsers, null, '/list_event_users', { slug, ...filter });
+        await raxiosFetchData(null, null, setUsers, null, '/actions/list_event_users', { slug, ...filter });
     };
 
     useEffect(() => {
@@ -38,7 +38,7 @@ const EventDetails = () => {
     };
 
     const DeleteEvent = async () => {
-        const response = await RaxiosPost('/upsert_event', { slug, isDeleted: true });
+        const response = await RaxiosPost('/actions/upsert_event', { slug, isDeleted: true });
         if (response.status === 200) {
             message.success(response.msg);
             window.history.back();

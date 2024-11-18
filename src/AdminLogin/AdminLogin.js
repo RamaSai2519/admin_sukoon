@@ -15,7 +15,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
         setLoading(true);
         const { phoneNumber, password } = values;
         try {
-            const response = await Raxios.post('/admin_auth', {
+            const response = await Raxios.post('/actions/admin_auth', {
                 phoneNumber, password, action: 'login'
             });
             if (response.data.message === 'Authorized Admin') {
@@ -47,7 +47,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
             return;
         }
         try {
-            const response = await Raxios.post('/auth/register', {
+            const response = await Raxios.post('/actions/auth/register', {
                 name, phoneNumber, password, action: 'register'
             });
             if (response.status !== 200) {

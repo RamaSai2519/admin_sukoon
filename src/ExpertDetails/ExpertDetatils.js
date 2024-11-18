@@ -36,7 +36,7 @@ const ExpertDetails = () => {
 
   const fetchExpertDetails = async () => {
     try {
-      const response = await Raxios.get(`/expert?phoneNumber=${number}`);
+      const response = await Raxios.get(`/actions/expert?phoneNumber=${number}`);
       const { __v, lastModifiedBy, calls, persona, ...expertData } = response.data;
       setExpert(expertData);
       if (typeof persona === 'object') {
@@ -54,7 +54,7 @@ const ExpertDetails = () => {
   };
 
   const fetchTimings = async () => {
-    const timings = await raxiosFetchData(null, null, null, null, '/timings', { expert: expertId });
+    const timings = await raxiosFetchData(null, null, null, null, '/actions/timings', { expert: expertId });
     setTimings(timings);
   };
 
@@ -87,7 +87,7 @@ const ExpertDetails = () => {
       return
     }
     try {
-      const response = await Raxios.post('/expert', updatedFormData);
+      const response = await Raxios.post('/actions/expert', updatedFormData);
       if (response.status !== 200) {
         message.error(response.msg);
       } else {
@@ -104,7 +104,7 @@ const ExpertDetails = () => {
   };
 
   const handleSave = async (row) => {
-    await RaxiosPost('/timings', { expertId, row }, true);
+    await RaxiosPost('/actions/timings', { expertId, row }, true);
     fetchTimings();
   };
 

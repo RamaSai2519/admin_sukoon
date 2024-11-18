@@ -12,7 +12,7 @@ const CreateCategoryPopup = ({ visible, setVisible }) => {
     }, [visible]);
 
     const handleCreate = async () => {
-        await RaxiosPost('/categories', { name, action: 'post' }, true);
+        await RaxiosPost('/actions/categories', { name, action: 'post' }, true);
         setVisible(false);
     };
 

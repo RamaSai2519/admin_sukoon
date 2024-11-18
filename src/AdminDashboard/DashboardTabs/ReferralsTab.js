@@ -43,7 +43,7 @@ const ReferralsTab = () => {
 
     const getReferralData = async (refCode) => {
         try {
-            const response = await Raxios.post("/user_referrals", { refCode });
+            const response = await Raxios.post("/actions/user_referrals", { refCode });
             setReferralData(response.data);
         } catch (error) {
             console.error(error);
@@ -52,7 +52,7 @@ const ReferralsTab = () => {
 
     const fetchReferralsList = async () => {
         try {
-            const res = await Raxios.get("/user_referrals");
+            const res = await Raxios.get("/actions/user_referrals");
             const communityReferralData = res.data.communityReferrals.reduce((acc, item) => {
                 acc[item._id] = item.count;
                 return acc;

@@ -27,7 +27,7 @@ const CallsTable = () => {
   const fetchCalls = async () => {
     setLoading(true);
     const response = await raxiosFetchData(
-      currentPage, pageSize, setData, setTotalItems, '/call', { dest: 'list', internal: internalView, ...filter }
+      currentPage, pageSize, setData, setTotalItems, '/actions/call', { dest: 'list', internal: internalView, ...filter }
     );
     setLoading(false);
     return response.data;

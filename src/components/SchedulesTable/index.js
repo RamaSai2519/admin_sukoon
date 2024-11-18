@@ -46,7 +46,7 @@ const SchedulesTable = ({ schedules, loading }) => {
 
     const handleDelete = async (record) => {
         setResponseLoading(true);
-        await RaxiosPost('/update_scheduled_job', {
+        await RaxiosPost('/actions/update_scheduled_job', {
             scheduled_job_id: record.id,
             action: 'DELETE'
         }, true);

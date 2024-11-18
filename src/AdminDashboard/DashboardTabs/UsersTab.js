@@ -28,7 +28,7 @@ const UsersTab = () => {
 
   const fetchLeads = async () => {
     try {
-      const response = await Raxios.get('/leads', {
+      const response = await Raxios.get('/actions/leads', {
         params: {
           data: true,
         },

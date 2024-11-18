@@ -25,7 +25,7 @@ const LatestCallsTable = () => {
     setDisable(true);
     await fetchStats(internalView);
     await raxiosFetchData(
-      null, null, setData, null, '/call', { dest: 'home', internal: internalView }
+      null, null, setData, null, '/actions/call', { dest: 'home', internal: internalView }
     );
     setLoading(false);
     await fetchInsights(internalView);

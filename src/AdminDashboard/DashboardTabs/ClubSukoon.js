@@ -19,7 +19,7 @@ const ClubSukoon = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        raxiosFetchData(currentPage, pageSize, setData, setTotalItems, '/club', null, setLoading);
+        raxiosFetchData(currentPage, pageSize, setData, setTotalItems, '/actions/club', null, setLoading);
     }, [currentPage, pageSize]);
 
     const createColumn = (title, dataIndex, key, render) => {

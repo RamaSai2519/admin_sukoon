@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const FINAL_URL = 'https://6x4j0qxbmk.execute-api.ap-south-1.amazonaws.com/main/actions';
+export const FINAL_URL = 'https://6x4j0qxbmk.execute-api.ap-south-1.amazonaws.com/main';
 // export const FINAL_URL = "http://localhost:8080/actions";
 export const MARK_URL = "https://mark.sukoonunlimited.com";
 

@@ -18,7 +18,7 @@ const CallDetails = () => {
     const [showBreakup, setShowBreakup] = useState(false);
 
     const fetchCall = async () => {
-        await raxiosFetchData(null, null, setCall, null, `/call`, {
+        await raxiosFetchData(null, null, setCall, null, `/actions/call`, {
             callId, dest: 'search'
         });
     };
@@ -57,7 +57,7 @@ const CallDetails = () => {
     };
 
     const fetchLogs = async () => {
-        await raxiosFetchData(null, null, setLogs, null, `/logs`, { callId }, setLogsLoading);
+        await raxiosFetchData(null, null, setLogs, null, `/actions/logs`, { callId }, setLogsLoading);
         if (logs) setShowLogs(true);
     }
 

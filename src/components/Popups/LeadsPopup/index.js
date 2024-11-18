@@ -43,7 +43,7 @@ const LeadsPopup = ({ onClose, leads }) => {
     ];
 
     const handleSave = async ({ key, field, value }) => {
-        const response = await RaxiosPost('/remarks', { key, value });
+        const response = await RaxiosPost('/actions/remarks', { key, value });
         if (response.status !== 200) {
             message.error(response.msg);
         } else {

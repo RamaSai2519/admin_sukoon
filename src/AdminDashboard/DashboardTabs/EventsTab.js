@@ -46,9 +46,9 @@ const EventsTab = () => {
 
     const fetchEvents = async () => {
         if (table === 'events') {
-            raxiosFetchData(eventsPage, eventsPageSize, setEvents, setEventsTotal, '/list_events', filter, setLoading);
+            raxiosFetchData(eventsPage, eventsPageSize, setEvents, setEventsTotal, '/actions/list_events', filter, setLoading);
         } else {
-            raxiosFetchData(usersPage, usersPageSize, setEventUsers, setTotalEventUsers, '/list_event_users', filter, setLoading);
+            raxiosFetchData(usersPage, usersPageSize, setEventUsers, setTotalEventUsers, '/actions/list_event_users', filter, setLoading);
         }
     };
 
@@ -102,7 +102,7 @@ const EventsTab = () => {
     ];
 
     const handleSave = async ({ key, field, value }) => {
-        const response = await RaxiosPost('/remarks', { key, value });
+        const response = await RaxiosPost('/actions/remarks', { key, value });
         if (response.status !== 200) {
             message.error(response.msg);
         } else {

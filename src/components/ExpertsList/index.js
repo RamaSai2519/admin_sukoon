@@ -66,7 +66,7 @@ const ExpertsList = () => {
     const createExpert = async () => {
         const expertNumber = window.prompt("Enter the phone number of the new expert:");
         if (expertNumber) {
-            const response = await RaxiosPost('/expert', { phoneNumber: expertNumber });
+            const response = await RaxiosPost('/actions/expert', { phoneNumber: expertNumber });
             if (response.status !== 200) {
                 message.error(response.msg);
             } else navigate(`/admin/experts/${expertNumber}`);

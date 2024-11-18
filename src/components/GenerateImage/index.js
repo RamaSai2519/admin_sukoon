@@ -10,7 +10,7 @@ const GenerateImage = () => {
     const [loading, setLoading] = React.useState(false);
 
     const generateImage = async () => {
-        const response = await raxiosFetchData(null, null, null, null, '/dall_image', { prompt }, setLoading, true);
+        const response = await raxiosFetchData(null, null, null, null, '/actions/dall_image', { prompt }, setLoading, true);
         if (!response.url) return;
         setImage(response.url);
     }

@@ -15,7 +15,7 @@ const WhatsappTab = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        const endpoint = '/wa_history';
+        const endpoint = '/actions/wa_history';
         const needType = table === 'history' ? 'webhook' : 'feedback';
         raxiosFetchData(currentPage, pageSize, setData, setTotalItems, endpoint, { type: needType }, setLoading);
         // eslint-disable-next-line

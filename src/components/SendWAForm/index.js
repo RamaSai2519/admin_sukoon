@@ -26,7 +26,7 @@ const SendWAForm = () => {
     const [response, setResponse] = useState(false);
 
     const fetchAllData = async () => {
-        const data = await raxiosFetchData(null, null, null, null, '/wa_options', { type: 'form' }, setLoading);
+        const data = await raxiosFetchData(null, null, null, null, '/actions/wa_options', { type: 'form' }, setLoading);
         if (data) {
             setSlugs(data.slugs);
             setCities(data.cities);
@@ -58,7 +58,7 @@ const SendWAForm = () => {
         if (selectedType === "event" && !eventSlug) {
             return;
         }
-        const response = await Raxios.post('/wa_options', {
+        const response = await Raxios.post('/actions/wa_options', {
             usersType: selectedType,
             cities: selectedCities,
             eventId: eventSlug,
@@ -137,7 +137,7 @@ const SendWAForm = () => {
             ...template.extra_args.includes('registraion_link_slug') && { '<registraion_link_slug>': slug }
         };
         setResponse(true);
-        const response = await Raxios.post('/wa_options', {
+        const response = await Raxios.post('/actions/wa_options', {
             messageId: newMessageId,
             templateId: template._id,
             usersType: selectedType,

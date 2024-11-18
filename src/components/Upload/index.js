@@ -9,7 +9,7 @@ const S3Uploader = ({ setFileUrl, finalFileUrl }) => {
 
     const getPresignedUrl = async (file) => {
         try {
-            const response = await Raxios.post('/upload', {
+            const response = await Raxios.post('/actions/upload', {
                 file_name: file.name,
                 file_type: file.type,
             });
@@ -56,10 +56,10 @@ const S3Uploader = ({ setFileUrl, finalFileUrl }) => {
                 showUploadList={false}
             >
                 <Button icon={<UploadOutlined />} loading={uploading}>
-                    {uploading ? 'Uploading...' : 'Upload Image'}
+                    {uploading ? 'Uploading...' : 'Upload File'}
                 </Button>
             </Upload>
-            {finalFileUrl && <img src={finalFileUrl} alt="Uploaded file" className='w-full mt-2 max-h-52' />}
+            {finalFileUrl && <img src={finalFileUrl} alt="File Uploaded" className='w-full mt-2 max-h-52' />}
         </div>
     );
 };

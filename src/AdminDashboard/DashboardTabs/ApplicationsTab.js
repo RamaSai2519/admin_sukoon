@@ -22,7 +22,7 @@ const ApplicationsTab = () => {
     const searchInputRef = useRef(null);
 
     useEffect(() => {
-        raxiosFetchData(currentPage, pageSize, setApplications, setTotal, '/applicant', { formType }, setLoading);
+        raxiosFetchData(currentPage, pageSize, setApplications, setTotal, '/actions/applicant', { formType }, setLoading);
     }, [currentPage, pageSize, formType]);
 
     const createColumn = (title, dataIndex, key, render, width, editable) => {
@@ -57,7 +57,7 @@ const ApplicationsTab = () => {
     };
 
     const handleSaveRemarks = async ({ key, field, value }) => {
-        const response = await RaxiosPost('/remarks', { key, value });
+        const response = await RaxiosPost('/actions/remarks', { key, value });
         if (response.status !== 200) {
             message.error(response.msg);
         } else {

@@ -48,7 +48,7 @@ const UserDetails = () => {
       payload = { phoneNumber };
     }
     try {
-      const data = await raxiosFetchData(null, null, null, null, '/user', payload, null);
+      const data = await raxiosFetchData(null, null, null, null, '/actions/user', payload, null);
       setName(data.name);
       setCity(data.city);
       setIsBusy(data.isBusy);
@@ -100,7 +100,7 @@ const UserDetails = () => {
       return;
     }
     try {
-      const response = await Raxios.post(`/user`, {
+      const response = await Raxios.post(`/actions/user`, {
         ...updatedFields,
         ...numberOfCalls && { numberOfCalls: parseInt(numberOfCalls) },
       });

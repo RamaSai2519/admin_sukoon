@@ -16,7 +16,7 @@ const PostsTable = ({ setPost }) => {
     }
 
     const fetchPosts = async () => {
-        await raxiosFetchData(pagination.current, pagination.pageSize, setPosts, setTotal, "/content");
+        await raxiosFetchData(pagination.current, pagination.pageSize, setPosts, setTotal, "/actions/content");
     }
 
     useEffect(() => {
