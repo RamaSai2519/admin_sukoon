@@ -10,7 +10,7 @@ const BulkUploadPopup = ({ visible, setVisible }) => {
 
     const handleSubmit = async () => {
         try {
-            await RaxiosPost('pandas/bulk_users', { file_url: fileUrl }, true, setLoading);
+            await RaxiosPost('/pandas/bulk_users', { file_url: fileUrl }, true, setLoading);
             setVisible(false);
         } catch (error) {
             console.log(error);
