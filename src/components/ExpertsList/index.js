@@ -6,15 +6,17 @@ import React, { useEffect, useState } from 'react';
 import { calculateCallStats, columns } from './helper';
 import { downloadExcel } from '../../Utils/exportHelper';
 import { useExperts, useCalls } from '../../services/useData';
-import CreateCategoryPopup from '../Popups/CreateCategoryPopup';
+import SingleInputPopup from '../Popups/SingleInputPopup';
 
 const ExpertsList = () => {
     const navigate = useNavigate();
     const { calls, fetchCalls } = useCalls();
     const [loading, setLoading] = useState(false);
-    const [visible, setVisible] = useState(false);
+    const [categoryVisible, setCategoryVisible] = useState(false);
+    const [expertVisible, setExpertVisible] = useState(false);
     const { experts, fetchExperts } = useExperts();
     const [buttonLoading, setButtonLoading] = useState(false);
+
     const [internalView, setInternalView] = useState(
         localStorage.getItem('internalView') === 'true' ? true : false
     );
@@ -63,14 +65,17 @@ const ExpertsList = () => {
         setButtonLoading(false);
     };
 
-    const createExpert = async () => {
-        const expertNumber = window.prompt("Enter the phone number of the new expert:");
-        if (expertNumber) {
-            const response = await RaxiosPost('/actions/expert', { phoneNumber: expertNumber });
-            if (response.status !== 200) {
-                message.error(response.msg);
-            } else navigate(`/admin/experts/${expertNumber}`);
-        }
+    const handleCreateCategory = async (name) => {
+        await RaxiosPost('/actions/categories', { name, action: 'post' }, true);
+        setCategoryVisible(false);
+    };
+
+    const handleCreateExpert = async (phoneNumber) => {
+        const response = await RaxiosPost('/actions/expert', { phoneNumber });
+        if (response.status !== 200) {
+            message.error(response.msg);
+        } else navigate(`/admin/experts/${phoneNumber}`);
+        setExpertVisible(false);
     };
 
     return (
@@ -80,10 +85,10 @@ const ExpertsList = () => {
                 <div className='flex gap-2 items-center'>
                     <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={loading} />
                     {/* <Button loading={buttonLoading} onClick={exportToExcel}>Export Excel Sheet</Button> */}
-                    <Button onClick={() => setVisible(true)} type="primary">
+                    <Button onClick={() => setCategoryVisible(true)} type="primary">
                         Create Category
                     </Button>
-                    <Button onClick={createExpert} type="primary">
+                    <Button onClick={() => setExpertVisible(true)} type="primary">
                         Create Expert
                     </Button>
                 </div>
@@ -96,7 +101,24 @@ const ExpertsList = () => {
                     x: 'calc(100vw + 600px)'
                 }}
             />
-            {visible && <CreateCategoryPopup visible={visible} setVisible={setVisible} />}
+            {categoryVisible && (
+                <SingleInputPopup
+                    visible={categoryVisible}
+                    setVisible={setCategoryVisible}
+                    placeholder="Enter Category"
+                    handleCreate={handleCreateCategory}
+                    title="Create Category"
+                />
+            )}
+            {expertVisible && (
+                <SingleInputPopup
+                    visible={expertVisible}
+                    setVisible={setExpertVisible}
+                    placeholder="Enter Expert Phone Number"
+                    handleCreate={handleCreateExpert}
+                    title="Create Expert"
+                />
+            )}
         </div>
     );
 };
