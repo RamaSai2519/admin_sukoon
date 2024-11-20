@@ -169,7 +169,8 @@ const ConnectTab = () => {
         <LazyLoad>
             <div className="flex items-center justify-center gap-4 h-full">
                 {/* <SchedulesTable schedules={schedules} loading={rLoading} /> */}
-                <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
+                {/* <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center"> */}
+                <div className="flex flex-col h-full pl-2 justify-center">
                     <div className="flex w-full justify-between">
                         <h1 className="text-2xl font-bold mb-3">Connect a Call</h1>
                         <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
