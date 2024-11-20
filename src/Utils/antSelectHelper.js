@@ -3,11 +3,14 @@ import { message, Select, Upload } from 'antd';
 
 const { Option } = Select;
 
-export const generateOptions = (data, key) => data.map(item => (
-    <Option key={item._id} value={item._id}>
-        {item[key] || item["phoneNumber"] || "Unknown"}
-    </Option>
-));
+export const generateOptions = (data, key) => data.map(item => {
+    const userName = item[key] ? `${item[key]} (${item["phoneNumber"]})` : item["phoneNumber"];
+    return (
+        <Option key={item._id} value={item._id}>
+            {userName}
+        </Option>
+    )
+});
 
 export const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';

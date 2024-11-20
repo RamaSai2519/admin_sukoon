@@ -102,7 +102,7 @@ const ConnectTab = () => {
         return (
             <Form
                 name="call-schedule-form"
-                className="grid grid-cols-2 gap-2 mt-3"
+                className="flex flex-col gap-2 mt-3"
                 onFinish={onFinish}
             >
                 {fields.filter(field => !field.actionText).map((field, index) => (
