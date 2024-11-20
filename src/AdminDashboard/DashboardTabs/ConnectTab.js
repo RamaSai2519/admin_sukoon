@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import InternalToggle from "../../components/InternalToggle";
-import SchedulesTable from "../../components/SchedulesTable";
+// import SchedulesTable from "../../components/SchedulesTable";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import { Select, DatePicker, Form, Button, message } from "antd";
 import { useUsers, useExperts, useAdmin } from "../../services/useData";
@@ -168,7 +168,7 @@ const ConnectTab = () => {
     return (
         <LazyLoad>
             <div className="flex items-center justify-center gap-4 h-full">
-                <SchedulesTable schedules={schedules} loading={rLoading} />
+                {/* <SchedulesTable schedules={schedules} loading={rLoading} /> */}
                 <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
                     <div className="flex w-full justify-between">
                         <h1 className="text-2xl font-bold mb-3">Connect a Call</h1>
