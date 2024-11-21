@@ -11,14 +11,13 @@ const SchedulesTable = ({ schedules, loading }) => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [responseLoading, setResponseLoading] = useState(false);
 
-    const createColumn = (title, dataIndex, key, sorter, render, defaultSortOrder) => ({
+    const createColumn = (title, dataIndex, key, sorter, render) => ({
         title,
         dataIndex,
         key,
-        ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
+        ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, null, true),
         ...(sorter && { sorter }),
-        ...(render && { render }),
-        ...(defaultSortOrder && { defaultSortOrder })
+        ...(render && { render })
     });
 
     const columns = [
@@ -26,7 +25,7 @@ const SchedulesTable = ({ schedules, loading }) => {
         createColumn("Expert", "expert", "expert"),
         createColumn("Date & Time", "datetime", "datetime",
             (a, b) => new Date(a.datetime) - new Date(b.datetime),
-            (record) => formatTime(record), "descend"),
+            (record) => formatTime(record)),
         createColumn("Status", "status", "status"),
         createColumn('Initated By', 'initiatedBy', 'initiatedBy'),
         createColumn('Source', 'source', 'source'),
@@ -55,7 +54,7 @@ const SchedulesTable = ({ schedules, loading }) => {
     };
 
     return (
-        <div className="w-3/4">
+        <div className="w-4/5">
             {loading ? <Loading /> : (
                 <div className="flex flex-col gap-2">
                     <Table
