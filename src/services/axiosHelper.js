@@ -26,9 +26,9 @@ const logout_user = () => {
 const refreshFaxiosAccessToken = async () => {
   const refreshToken = localStorage.getItem('refresh_token');
   try {
-    let response = await axios.post(`${FINAL_URL}/admin_auth`,
+    let response = await axios.post(`${FINAL_URL}/actions/admin_auth`,
       { action: 'refresh' }, {
-        headers: { Authorization: `Bearer ${refreshToken}` }
+      headers: { Authorization: `Bearer ${refreshToken}` }
     });
     response = await format_response(response);
     if (response.status !== 200) logout_user();

@@ -18,15 +18,16 @@ const ConnectTab = () => {
     const [internalView, setInternalView] = useState(
         localStorage.getItem('internalView') === 'true' ? true : false
     );
+    const [isDeleted, setIsDeleted] = useState(false);
     const { Option } = Select;
 
     const fetchSchedules = async () => {
-        raxiosFetchData(null, null, setSchedules, null, '/actions/schedules', null, setRLoading);
+        raxiosFetchData(null, null, setSchedules, null, '/actions/schedules', { isDeleted }, setRLoading);
     };
 
     useEffect(() => {
         fetchSchedules();
-    }, []);
+    }, [isDeleted]);
 
     const fetchUsersAndExperts = async () => {
         setDisable(true);
@@ -168,7 +169,7 @@ const ConnectTab = () => {
     return (
         <LazyLoad>
             <div className="flex items-center justify-center gap-4 h-full">
-                <SchedulesTable schedules={schedules} loading={rLoading} />
+                <SchedulesTable schedules={schedules} loading={rLoading} setIsDeleted={setIsDeleted} isDeleted={isDeleted} />
                 <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
                     <div className="flex w-full justify-between items-center gap-5">
                         <h1 className="text-2xl font-bold">Connect a Call</h1>

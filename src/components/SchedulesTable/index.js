@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
+import Loading from "../Loading/loading";
+import { Button, Checkbox, Table } from "antd";
 import { formatTime } from "../../Utils/formatHelper";
 import { RaxiosPost } from "../../services/fetchData";
 import GetColumnSearchProps from "../../Utils/antTableHelper";
-import Loading from "../Loading/loading";
-import { Button, Table } from "antd";
 
-const SchedulesTable = ({ schedules, loading }) => {
+const SchedulesTable = ({ schedules, loading, setIsDeleted, isDeleted }) => {
     const searchInputRef = useRef(null);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -57,6 +57,11 @@ const SchedulesTable = ({ schedules, loading }) => {
         <div className="w-4/5">
             {loading ? <Loading /> : (
                 <div className="flex flex-col gap-2">
+                    <div className="flex w-full justify-end">
+                        <Checkbox 
+                        checked={isDeleted}
+                        onChange={(e) => setIsDeleted(e.target.checked)}>Show Deleted</Checkbox>
+                    </div>
                     <Table
                         scroll={{ x: 768 }}
                         rowKey={(record) => record._id}
