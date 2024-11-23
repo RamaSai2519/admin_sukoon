@@ -27,6 +27,8 @@ const ConnectTab = () => {
 
     useEffect(() => {
         fetchSchedules();
+
+        // eslint-disable-next-line
     }, [isDeleted]);
 
     const fetchUsersAndExperts = async () => {
@@ -79,12 +81,10 @@ const ConnectTab = () => {
             const initiatedBy = admin.name;
             const meta = JSON.stringify({ expertId, userId: values.user, initiatedBy });
             let status = 'WAPENDING';
-            if (new Date(selectedDateTime).getTime() - new Date().getTime() < 30 * 60 * 1000) {
-                status = 'PENDING';
-                message.warning('No notification will be sent as the call is scheduled within 30 minutes.', 20);
-            }
+            const tooLateSchedule = new Date(selectedDateTime).getTime() - new Date().getTime() < 30 * 60 * 1000;
+            if (tooLateSchedule) status = 'PENDING';
 
-            await RaxiosPost('/actions/create_scheduled_job',
+            const response = await RaxiosPost('/actions/create_scheduled_job',
                 {
                     job_type: 'CALL',
                     status: status,
@@ -94,7 +94,10 @@ const ConnectTab = () => {
                 },
                 true
             );
-            fetchSchedules();
+            if (response.status === 200) {
+                if (tooLateSchedule) message.warning('No notification will be sent as the call is scheduled within 30 minutes.', 20);
+                fetchSchedules();
+            }
         }
         setLoading(false);
     };
