@@ -25,11 +25,14 @@ const UserEngagement = ({ setExportFileUrl }) => {
     const [totalItems, setTotalItems] = useState(0);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+    const [userStatusOptions, setUserStatusOptions] = useState([]);
     const searchInputRef = useRef(null);
 
     const fetchData = async () => {
         const data = await raxiosFetchData(currentPage, pageSize, setEngagementData, setTotalItems, '/actions/user_engagement', filter, setLoading);
         setExportFileUrl(data.fileUrl);
+
+        await raxiosFetchData(null, null, setUserStatusOptions, null, '/actions/user_status_options', null, setLoading);
     };
 
     useEffect(() => { fetchData() }, [currentPage, pageSize, JSON.stringify(filter)]);
@@ -56,15 +59,6 @@ const UserEngagement = ({ setExportFileUrl }) => {
         lastReached: item.lastReached,
         refSource: item.refSource || '',
     }));
-
-    const userStatusOptions = [
-        { value: 'Engaged User', label: 'Engaged User' },
-        { value: 'Family & Friends', label: 'Family & Friends' },
-        { value: 'Invalid/ Test user', label: 'Invalid/ Test user' },
-        { value: 'Not reachable user', label: 'Not reachable user' },
-        { value: 'Not interested user', label: 'Not interested user' },
-        { value: 'Not interested in Calls', label: 'Not interested in Calls' },
-    ];
 
     const createColumn = (title, dataIndex, key, width, fixed, editable, render, filter = false) => {
         return {
