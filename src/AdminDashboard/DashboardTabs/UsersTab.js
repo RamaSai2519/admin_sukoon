@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import LeadsPopup from '../../components/Popups/LeadsPopup';
 import DashboardTile from '../../components/DashboardTile';
-import { useUsers, useCalls } from '../../services/useData';
+import { useUsers, useCalls } from '../../contexts/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import Loading from '../../components/Loading/loading';
 import { formatDate } from '../../Utils/formatHelper';

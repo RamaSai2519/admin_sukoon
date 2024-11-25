@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStats } from '../../services/useData';
+import { useStats } from '../../contexts/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import DashboardTile from '../../components/DashboardTile';
 import DayGraph from '../../components/DaysGraph/DaysGraph';

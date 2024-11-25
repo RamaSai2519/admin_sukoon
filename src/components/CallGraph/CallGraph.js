@@ -1,6 +1,6 @@
 import Chart from 'chart.js/auto';
 import React, { useEffect, useState } from 'react';
-import { useCalls } from '../../services/useData';
+import { useCalls } from '../../contexts/useData';
 import { strToDate, formatDate } from '../../Utils/formatHelper';
 
 const CallGraph = () => {

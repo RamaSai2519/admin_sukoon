@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useAdmin } from '../services/useData';
+import { useAdmin } from '../contexts/useData';
 import Raxios from '../services/axiosHelper';
 import './AdminLogin.css';
 

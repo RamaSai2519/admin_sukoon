@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, Button, Space } from 'antd';
-import { useFilters } from '../services/useData';
+import { useFilters } from '../contexts/useData';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { SearchOutlined } from '@ant-design/icons';

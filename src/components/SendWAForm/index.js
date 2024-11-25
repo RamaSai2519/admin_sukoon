@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { generateOptions } from '../../Utils/antSelectHelper';
 import { Button, Card, Select, Input, message } from 'antd';
 import { raxiosFetchData } from '../../services/fetchData';
-import { useAdmin } from '../../services/useData';
+import { useAdmin } from '../../contexts/useData';
 import Raxios from '../../services/axiosHelper';
 import Loading from '../Loading/loading';
 import { v4 as uuidv4 } from 'uuid';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, Table } from 'antd';
-import { useInsights } from '../../services/useData';
+import { useInsights } from '../../contexts/useData';
 
 const columns = [
     {

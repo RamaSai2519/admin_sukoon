@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import CallsTableComponent from '../components/CallsTable';
 import InternalToggle from '../components/InternalToggle';
 import { raxiosFetchData } from '../services/fetchData';
-import { useFilters } from '../services/useData';
+import { useFilters } from '../contexts/useData';
 import { useLocation } from 'react-router-dom';
 
 const CallsTable = () => {

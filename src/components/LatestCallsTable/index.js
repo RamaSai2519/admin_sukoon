@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useCalls, useExperts, useInsights, useStats } from '../../services/useData';
+import { useCalls, useExperts, useInsights, useStats } from '../../contexts/useData';
 import { raxiosFetchData } from '../../services/fetchData';
 import InsightsTable from '../../components/DataTable';
 import CallsTableComponent from '../CallsTable';

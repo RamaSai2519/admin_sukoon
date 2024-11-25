@@ -4,6 +4,7 @@ import AdminDashboard from './AdminDashboard/AdminDashboard';
 import ExpertDetails from './ExpertDetails/ExpertDetatils';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import GenerateImage from './components/GenerateImage';
+import { useDarkMode } from './contexts/useDarkMode';
 import UserDetails from './UserDetails/UserDetails';
 import CallDetails from './CallDetails/CallDetails';
 import AdminLogin from './AdminLogin/AdminLogin';
@@ -15,16 +16,11 @@ import EventDetails from './EventDetails';
 import './App.css';
 
 const App = () => {
-  const appVersion = '20.0.1';
+  const appVersion = '20.1.0';
+  const { darkMode } = useDarkMode();
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
-  const darkMode = useState(() => {
-    const localStorageDarkMode = localStorage.getItem('darkMode');
-    if (localStorageDarkMode !== null) {
-      return JSON.parse(localStorageDarkMode);
-    } else { return true }
-  });
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -35,28 +31,12 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (darkMode) {
-      localStorage.setItem('darkMode', 'true');
-      document.body.classList.add('dark');
-      document.documentElement.classList.add('dark');
-    } else {
-      localStorage.setItem('darkMode', 'false');
-      document.body.classList.remove('dark');
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
-
-  useEffect(() => {
     const storedVersion = localStorage.getItem('appVersion');
     if (storedVersion !== appVersion) handleLogout();
   }, []);
 
   return (
-    <ConfigProvider theme={
-      {
-        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-      }
-    }>
+    <ConfigProvider theme={{ algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
       <div className='dark:text-white min-w-screen min-h-screen overflow-clip dark:bg-darkBlack'>
         <Routes>
           {isLoggedIn ? (

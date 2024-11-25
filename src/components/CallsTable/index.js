@@ -1,7 +1,7 @@
 import { Button, Table } from 'antd';
 import { Link } from 'react-router-dom';
 import LazyLoad from '../LazyLoad/lazyload';
-import { useAdmin } from '../../services/useData';
+import { useAdmin } from '../../contexts/useData';
 import { formatTime } from '../../Utils/formatHelper';
 import GetColumnSearchProps, { renderStatusIcon } from '../../Utils/antTableHelper';
 

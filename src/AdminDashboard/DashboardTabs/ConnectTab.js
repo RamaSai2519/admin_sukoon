@@ -5,7 +5,7 @@ import InternalToggle from "../../components/InternalToggle";
 import SchedulesTable from "../../components/SchedulesTable";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import { Select, DatePicker, Form, Button, message } from "antd";
-import { useUsers, useExperts, useAdmin } from "../../services/useData";
+import { useUsers, useExperts, useAdmin } from "../../contexts/useData";
 
 const ConnectTab = () => {
     const { admin } = useAdmin();

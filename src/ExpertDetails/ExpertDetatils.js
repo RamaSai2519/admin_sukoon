@@ -4,7 +4,7 @@ import Raxios from '../services/axiosHelper';
 import S3Uploader from '../components/Upload';
 import { RaxiosPost } from '../services/fetchData';
 import React, { useState, useEffect } from 'react';
-import { useCategories } from '../services/useData';
+import { useCategories } from '../contexts/useData';
 import Loading from '../components/Loading/loading';
 import { raxiosFetchData } from '../services/fetchData';
 import { message, Select, Switch, Table, Input } from 'antd';

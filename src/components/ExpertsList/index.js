@@ -5,7 +5,7 @@ import { RaxiosPost } from '../../services/fetchData';
 import React, { useEffect, useState } from 'react';
 import { calculateCallStats, columns } from './helper';
 import { downloadExcel } from '../../Utils/exportHelper';
-import { useExperts, useCalls } from '../../services/useData';
+import { useExperts, useCalls } from '../../contexts/useData';
 import SingleInputPopup from '../Popups/SingleInputPopup';
 
 const ExpertsList = () => {

@@ -7,7 +7,7 @@ import {
     fetchUsers,
     fetchCalls,
     fetchExperts,
-} from './fetchData';
+} from '../services/fetchData';
 
 const CategoriesContext = createContext();
 const InsightsContext = createContext();

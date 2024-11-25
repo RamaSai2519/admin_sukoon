@@ -1,9 +1,17 @@
 import React from 'react';
-import './toggle.css'
+import { useDarkMode } from '../../contexts/useDarkMode';
+import './toggle.css';
 
-const ThemeToggle = ({ darkMode, toggleDarkMode }) => {
+const ThemeToggle = () => {
+    const { darkMode, setDarkMode } = useDarkMode();
+
+    const toggleDarkMode = () => {
+        setDarkMode(!darkMode);
+        localStorage.setItem('darkMode', !darkMode);
+    };
+
     return (
-        <div className='h-10'>
+        <div className='h-full'>
             <div className='flex items-center p-2 px-1 my-2'>
                 <input type="checkbox" className="absolute ml-2" id="dn" checked={darkMode} onChange={toggleDarkMode} />
                 <label htmlFor="dn" className="toggle" onClick={toggleDarkMode}>
