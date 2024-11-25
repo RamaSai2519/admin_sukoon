@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { raxiosFetchData } from '../../services/fetchData';
 import { useCalls, useExperts, useInsights, useStats } from '../../services/useData';
+import { raxiosFetchData } from '../../services/fetchData';
+import InsightsTable from '../../components/DataTable';
 import CallsTableComponent from '../CallsTable';
 import InternalToggle from '../InternalToggle';
 import LazyLoad from '../LazyLoad/lazyload';
+import { Button } from 'antd';
 
 const LatestCallsTable = () => {
   const { fetchExperts } = useExperts();
@@ -12,6 +14,7 @@ const LatestCallsTable = () => {
   const searchInputRef = useRef(null);
   const [data, setData] = useState([]);
   const { fetchInsights } = useInsights();
+  const [visible, setVisible] = useState(false);
   const [disable, setDisable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -43,7 +46,10 @@ const LatestCallsTable = () => {
     <LazyLoad>
       <div className='flex w-full items-center justify-between'>
         <h3 className='text-2xl font-bold'>Latest {internalView ? "Internal" : "User"} Calls</h3>
-        <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
+        <div className='flex items-center justify-center gap-5'>
+          <Button onClick={() => setVisible(true)}>View Insights</Button>
+          <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
+        </div>
       </div>
       <CallsTableComponent
         data={data}
@@ -56,6 +62,7 @@ const LatestCallsTable = () => {
         searchInputRef={searchInputRef}
         setSearchedColumn={setSearchedColumn}
       />
+      {visible && <InsightsTable visible={visible} setVisible={setVisible} />}
     </LazyLoad>
   );
 };

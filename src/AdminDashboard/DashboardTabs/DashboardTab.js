@@ -1,7 +1,5 @@
 import React from 'react';
-import { Button } from 'antd';
 import { useStats } from '../../services/useData';
-import InsightsTable from '../../components/DataTable';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import DashboardTile from '../../components/DashboardTile';
 import DayGraph from '../../components/DaysGraph/DaysGraph';
@@ -13,17 +11,6 @@ import OnlineSaarthisTable from '../../components/OnlineSaarthisTable/OnlineSaar
 
 const DashboardTab = () => {
   const { stats } = useStats();
-  const [view, setView] = React.useState('Split By Duration');
-
-  const handleToggle = () => {
-    if (view === 'Split By Duration') {
-      setView('Average Call Durations');
-    } else if (view === 'Average Call Durations') {
-      setView('Split Of Calls');
-    } else {
-      setView('Split By Duration');
-    }
-  };
 
   return (
     <LazyLoad>
@@ -65,18 +52,8 @@ const DashboardTab = () => {
             <DashboardTile title="Online Saarthis" style={{ "gridRow": "1 / span 2", "gridColumn": "5" }}>
               <OnlineSaarthisTable onlineSaarthis={stats.onlineSarathis} />
             </DashboardTile>
-            <DashboardTile style={{ "gridColumn": "1 / 5" }}>
-              <LatestCallsTable />
-            </DashboardTile>
-            <DashboardTile title={view} style={{ "gridColumn": "5 / span 1" }} >
-              <InsightsTable view={view} handleToggle={handleToggle} />
-              <div className='w-full flex items-center justify-end'>
-                <Button className='mt-1' onClick={handleToggle}>
-                  Next
-                </Button>
-              </div>
-            </DashboardTile>
           </div>
+          <DashboardTile><LatestCallsTable /></DashboardTile>
           <LazyLoad>
             <div id='graphs-grid' className='grid md:grid-cols-2 w-full h-full'>
               <DashboardTile title='Call Graph'><CallGraph /></DashboardTile>
