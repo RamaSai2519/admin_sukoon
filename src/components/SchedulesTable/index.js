@@ -64,7 +64,7 @@ const SchedulesTable = ({ schedules, loading, setIsDeleted, isDeleted }) => {
                     </div>
                     <Table
                         scroll={{ x: 768 }}
-                        rowKey={(record) => record._id}
+                        rowKey={(record) => record.id}
                         dataSource={schedules}
                         columns={columns}
                     />

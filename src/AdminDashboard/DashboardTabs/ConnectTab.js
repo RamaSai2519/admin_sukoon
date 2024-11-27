@@ -1,35 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
+import PostCallForm from "../../components/PostCallForm";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import InternalToggle from "../../components/InternalToggle";
 import SchedulesTable from "../../components/SchedulesTable";
 import { generateOptions } from "../../Utils/antSelectHelper";
 import { Select, DatePicker, Form, Button, message } from "antd";
+import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 import { useUsers, useExperts, useAdmin } from "../../contexts/useData";
 
 const ConnectTab = () => {
     const { admin } = useAdmin();
     const { users, fetchUsers } = useUsers();
-    const { experts, fetchExperts } = useExperts();
-    const [schedules, setSchedules] = useState([]);
-    const [rLoading, setRLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [disable, setDisable] = useState(false);
+    const { experts, fetchExperts } = useExperts();
+    const [schedules, setSchedules] = useState([]);
+    const [showForm, setShowForm] = useState(false);
+    const [rLoading, setRLoading] = useState(false);
+    const [isDeleted, setIsDeleted] = useState(false);
     const [internalView, setInternalView] = useState(
         localStorage.getItem('internalView') === 'true' ? true : false
     );
-    const [isDeleted, setIsDeleted] = useState(false);
     const { Option } = Select;
 
     const fetchSchedules = async () => {
         raxiosFetchData(null, null, setSchedules, null, '/actions/schedules', { isDeleted }, setRLoading);
     };
-
-    useEffect(() => {
-        fetchSchedules();
-
-        // eslint-disable-next-line
-    }, [isDeleted]);
 
     const fetchUsersAndExperts = async () => {
         setDisable(true);
@@ -38,18 +35,21 @@ const ConnectTab = () => {
         setDisable(false);
     };
 
-    useEffect(() => {
-        fetchUsersAndExperts();
-        // eslint-disable-next-line
-    }, [internalView]);
+    useEffect(() => { fetchSchedules(); }, [isDeleted]);
+    useEffect(() => { fetchUsersAndExperts(); }, [internalView]);
 
     const handleCallTrigger = async (values) => {
         setLoading(true);
-        await RaxiosPost('/actions/call', {
+        const response = await RaxiosPost('/actions/call', {
             user_id: values.user,
             expert_id: values.expert,
             user_requested: values.user_requested === "Yes"
         }, true);
+        if (response.status === 200) {
+            const formData = { user_id: values.user, call_id: response.data.call_id };
+            localStorage.setItem('formData', JSON.stringify(formData));
+            setShowForm(true);
+        }
         setLoading(false);
     };
 
@@ -75,7 +75,7 @@ const ConnectTab = () => {
         if (selectedDateTime <= new Date()) {
             message.error("Selected time has already passed. Please select a future time.");
         } else if (checkExpertAvailability(expertId, selectedDateTime, schedules)) {
-            message.error("The expert already has a schedule within 15 minutes of the selected time.");
+            message.error("The expert already has a schedule within 15 minutes of the selected t ime.");
         } else {
             const formattedDate = new Date(selectedDateTime).toISOString().split('.')[0] + "Z";
             const initiatedBy = admin.name;
@@ -172,7 +172,10 @@ const ConnectTab = () => {
     return (
         <LazyLoad>
             <div className="flex items-center justify-center gap-4 h-full">
-                <SchedulesTable schedules={schedules} loading={rLoading} setIsDeleted={setIsDeleted} isDeleted={isDeleted} />
+                {showForm
+                    ? <PostCallForm setShowForm={setShowForm} />
+                    : <SchedulesTable schedules={schedules} loading={rLoading} setIsDeleted={setIsDeleted} isDeleted={isDeleted} />
+                }
                 <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
                     <div className="flex w-full justify-between items-center gap-5">
                         <h1 className="text-2xl font-bold">Connect a Call</h1>
