@@ -62,7 +62,7 @@ const CallDetails = () => {
     }
 
     const reProcessCallHandler = () => {
-        Maxios.post('/process', { callId });
+        Maxios.post('/flask/process', { callId });
         message.success('Call reprocessing initiated');
     }
 
