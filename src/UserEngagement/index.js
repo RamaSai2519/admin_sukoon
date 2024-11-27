@@ -35,6 +35,7 @@ const UserEngagement = ({ setExportFileUrl }) => {
         await raxiosFetchData(null, null, setUserStatusOptions, null, '/actions/user_status_options', null, setLoading);
     };
 
+    // eslint-disable-next-line
     useEffect(() => { fetchData() }, [currentPage, pageSize, JSON.stringify(filter)]);
 
     const data = engagementData.map((item) => ({
