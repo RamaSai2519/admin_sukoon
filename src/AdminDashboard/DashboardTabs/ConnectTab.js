@@ -16,7 +16,7 @@ const ConnectTab = () => {
     const [disable, setDisable] = useState(false);
     const { experts, fetchExperts } = useExperts();
     const [schedules, setSchedules] = useState([]);
-    const [showForm, setShowForm] = useState(true);
+    const [showForm, setShowForm] = useState(false);
     const [rLoading, setRLoading] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false);
     const [internalView, setInternalView] = useState(
