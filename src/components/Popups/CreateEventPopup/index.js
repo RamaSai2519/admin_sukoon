@@ -109,6 +109,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
         { label: "Meeting Link", name: "meetingLink", rules: [], component: <Input /> },
         { label: "Meeting ID", name: "meeting_id", rules: [], component: <Input /> },
         { label: "Meeting Passcode", name: "passcode", rules: [], component: <Input /> },
+        { label: "Event Price", name: "eventPrice", rules: [], component: <InputNumber className='w-full' /> },
         {
             label: "Repeat", name: "repeat",
             rules: [{ required: true, message: 'Please select the repeat' }],
