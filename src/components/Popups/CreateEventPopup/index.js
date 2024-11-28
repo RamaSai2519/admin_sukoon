@@ -101,7 +101,7 @@ const CreateEventPopup = ({ setVisible, data, editMode }) => {
             )
         },
         { label: "Max Visitors Allowed", name: "maxVisitorsAllowed", rules: [], component: <InputNumber className='w-full' /> },
-        { label: "Prize Money", name: "prizeMoney", rules: [], component: <InputNumber className='w-full' /> },
+        { label: "Prize Money", name: "prizeMoney", rules: [], component: <InputNumber accept='' className='w-full' /> },
         {
             label: "Guest Speaker", name: "guestSpeaker", component: <Input />,
             rules: [{ required: true, message: 'Please select the guest speaker' }],
