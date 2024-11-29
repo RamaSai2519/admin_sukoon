@@ -24,7 +24,7 @@ const EventUsersTable = ({ users, pathname }) => {
         createColumn('Contact', 'phoneNumber', 'phoneNumber'),
         createColumn('Email', 'email', 'email'),
         createColumn('City', 'city', 'city'),
-        createColumn('User Paid', 'isUserPaid', 'isUserPaid', (isUserPaid) => isUserPaid ? 'Yes' : 'No'),
+        createColumn('User Paid', 'isUserPaid', 'isUserPaid', (isUserPaid) => isUserPaid ? 'Yes' : 'No', null, false),
         createColumn('Created At', 'createdAt', 'createdAt', (time) => formatTime(time), '', false),
         createColumn('Updated At', 'updatedAt', 'updatedAt', (time) => formatTime(time), '', false),
     ];
