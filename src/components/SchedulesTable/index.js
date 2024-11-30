@@ -27,7 +27,7 @@ const SchedulesTable = ({ schedules, loading, setIsDeleted, isDeleted }) => {
             (a, b) => new Date(a.datetime) - new Date(b.datetime),
             (record) => formatTime(record)),
         createColumn("Status", "status", "status"),
-        createColumn('Initated By', 'initiatedBy', 'initiatedBy'),
+        createColumn('Scheduled By', 'initiatedBy', 'initiatedBy'),
         createColumn('Source', 'source', 'source'),
         {
             title: "Action", key: "action",
@@ -58,9 +58,12 @@ const SchedulesTable = ({ schedules, loading, setIsDeleted, isDeleted }) => {
             {loading ? <Loading /> : (
                 <div className="flex flex-col gap-2">
                     <div className="flex w-full justify-end">
-                        <Checkbox 
-                        checked={isDeleted}
-                        onChange={(e) => setIsDeleted(e.target.checked)}>Show Deleted</Checkbox>
+                        <Checkbox
+                            checked={isDeleted}
+                            onChange={(e) => setIsDeleted(e.target.checked)}
+                        >
+                            Show Deleted
+                        </Checkbox>
                     </div>
                     <Table
                         scroll={{ x: 768 }}

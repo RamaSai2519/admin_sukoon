@@ -1,6 +1,6 @@
 import React from 'react';
 import './loading.css';
-import { ReactComponent as Logo } from './logo.svg'; 
+import { ReactComponent as Logo } from './logo.svg';
 
 const Loading = () => {
     return (
@@ -75,7 +75,6 @@ const Loading = () => {
                 </div>
                 <div className="truckTires">
                     <svg
-                        // xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 30 30"
                         className="tiresvg"
@@ -91,7 +90,6 @@ const Loading = () => {
                         <circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle>
                     </svg>
                     <svg
-                        // xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 30 30"
                         className="tiresvg"
@@ -110,10 +108,7 @@ const Loading = () => {
                 <div className="road"></div>
 
                 <svg
-                    // xml:space="preserve"
                     viewBox="0 0 453.459 453.459"
-                    // xmlns:xlink="http://www.w3.org/1999/xlink"
-                    // xmlns="http://www.w3.org/2000/svg"
                     id="Capa_1"
                     version="1.1"
                     fill="#000000"
