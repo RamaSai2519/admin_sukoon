@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import UserList from '../UserList/UserList';
 import { initializeApp } from 'firebase/app';
 import Raxios from '../services/axiosHelper';
@@ -5,7 +6,7 @@ import firebaseConfig from './firebaseConfig';
 import CallsTable from '../CallList/CallList';
 import UsersTab from './DashboardTabs/UsersTab';
 import EventsTab from './DashboardTabs/EventsTab';
-import React, { useState, useEffect } from 'react';
+import OffersTab from './DashboardTabs/OffersTab';
 import ConnectTab from './DashboardTabs/ConnectTab';
 import ContentTab from './DashboardTabs/ContentTab';
 import ClubSukoon from './DashboardTabs/ClubSukoon';
@@ -75,6 +76,7 @@ const AdminDashboard = ({ onLogout }) => {
     { name: 'whatsapp', component: <WhatsappTab /> },
     { name: 'applications', component: <ApplicationsTab /> },
     { name: 'club', component: <ClubSukoon /> },
+    { name: 'offers', component: <OffersTab /> },
     { name: 'referrals', component: <ReferralsTab /> },
     { name: 'content', component: <ContentTab /> }
   ];
