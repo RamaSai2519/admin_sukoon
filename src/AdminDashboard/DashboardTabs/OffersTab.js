@@ -46,7 +46,7 @@ const OffersTab = () => {
     const columns = [
         createColumn('Title', 'title', 'title'),
         createColumn('Coupon Code', 'couponCode', 'couponCode'),
-        createColumn('Offer Type', 'offerType', 'offerType'),
+        createColumn('Offer Type', 'offer_type', 'offer_type'),
         createColumn('Expiry', 'validTill', 'validTill', (date) => date ? formatDate(date) : '', null, false),
         {
             title: 'Actions',
