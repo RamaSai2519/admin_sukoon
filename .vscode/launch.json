@@ -4,7 +4,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch React App",
+            "name": "Admin Sukoon",
             "runtimeExecutable": "npm",
             "runtimeArgs": [
                 "start"
