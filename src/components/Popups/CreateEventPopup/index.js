@@ -142,8 +142,9 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
             {(fields, { add, remove }) => (
                 <>
                     {fields.map(({ key, name, fieldKey, ...restField }) => (
-                        <div key={key} className="flex items-center gap-2">
+                        <div key={key} className="flex items-center gap-2 mb-2">
                             <Form.Item
+                                className='mb-0'
                                 {...restField}
                                 name={[name, 'icon']}
                                 fieldKey={[fieldKey, 'icon']}
@@ -157,14 +158,15 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
                                 } />
                             </Form.Item>
                             <Form.Item
+                                className='mb-0'
                                 {...restField}
                                 name={[name, 'text']}
                                 fieldKey={[fieldKey, 'text']}
                                 rules={[{ required: true, message: 'Missing text' }]}
                             >
-                                <Input placeholder="Text" />
+                                <Input className='h-[43.5px]' placeholder="Text" />
                             </Form.Item>
-                            <MinusCircleOutlined onClick={() => remove(name)} />
+                            <MinusCircleOutlined className='text-red-600' onClick={() => remove(name)} />
                         </div>
                     ))}
                     <Form.Item>
@@ -209,7 +211,7 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
                         {formItems.map((item) => RenderFormItem({ item }))}
                     </div>
                     <div className='flex justify-between'>
-                        {RenderFormItem({ item: highlightsFormItem })}
+                        {contribute && RenderFormItem({ item: highlightsFormItem })}
                         {RenderFormItem({ item: imageFormItem })}
                         {RenderFormItem({ item: submitFormItem })}
                     </div>

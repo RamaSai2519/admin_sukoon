@@ -52,18 +52,29 @@ const EventDetails = ({ contribute }) => {
                     <Card className="mb-8">
                         <CardContent className="p-6">
                             <div className="space-y-6">
-                                <div>
+                                {!contribute && <div>
                                     <h3 className="text-sm font-medium text-muted-foreground mb-1">Main Title:</h3>
                                     <p className="text-xl">{data?.mainTitle}</p>
-                                </div>
-                                <div>
+                                </div>}
+                                {!contribute && <div>
                                     <h3 className="text-sm font-medium text-muted-foreground mb-1">Sub Title:</h3>
                                     <p className="text-xl">{data?.subTitle}</p>
+                                </div>}
+                                <div className='flex gap-10 items-center'>
+                                    <div>
+                                        <h3 className="text-sm font-medium text-muted-foreground mb-1">Name:</h3>
+                                        <p className="text-xl">{data?.name}</p>
+                                    </div>
+                                    {contribute && <div>
+                                        <h3 className="text-sm font-medium text-muted-foreground mb-1">Company:</h3>
+                                        <p className="text-xl">{data?.company}</p>
+                                    </div>
+                                    }
                                 </div>
-                                <div>
-                                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Name:</h3>
-                                    <p className="text-xl">{data?.name}</p>
-                                </div>
+                                {contribute && <div>
+                                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Description:</h3>
+                                    <p className="text-xl">{data?.description}</p>
+                                </div>}
                                 <div className="flex gap-3 pt-4">
                                     <Button
                                         onClick={toggleEditMode}
