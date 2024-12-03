@@ -13,10 +13,9 @@ import { ConfigProvider, theme } from 'antd';
 import UsersList from './UserList/UserList';
 import CallList from './CallList/CallList';
 import EventDetails from './EventDetails';
-import './App.css';
 
 const App = () => {
-  const appVersion = '20.1.0';
+  const appVersion = '5.6.7';
   const { darkMode } = useDarkMode();
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
@@ -41,16 +40,16 @@ const App = () => {
         <Routes>
           {isLoggedIn ? (
             <>
-              <Route path="/" element={<Navigate to="/admin/home" />} />
-              <Route path="/admin/home/*" element={<AdminDashboard onLogout={handleLogout} />} />
+              <Route path="*" element={<Navigate to="/admin/home" />} />
               <Route path="/admin/calls" element={<CallList />} />
               <Route path="/admin/users" element={<UsersList />} />
               <Route path="/admin/calls/:callId" element={<CallDetails />} />
               <Route path="/admin/users/:userId" element={<UserDetails />} />
+              <Route path="/admin/userEngage" element={<UserEngagement />} />
               <Route path="/admin/events/:slug" element={<EventDetails />} />
               <Route path="/admin/experts/:number" element={<ExpertDetails />} />
-              <Route path="/admin/userEngage" element={<UserEngagement />} />
-              <Route path="/*" element={<Navigate to="/admin/home" />} />
+              <Route path="/admin/home/*" element={<AdminDashboard onLogout={handleLogout} />} />
+              <Route path="/admin/contribute/:slug" element={<EventDetails contribute={true} />} />
             </>
           ) : (
             <>

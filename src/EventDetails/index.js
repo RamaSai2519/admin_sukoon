@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { FaArrowLeft } from 'react-icons/fa';
+import { Button } from 'antd';
 import { useFilters } from '../contexts/useData';
-import { Button, message, Popconfirm } from 'antd';
 import LazyLoad from '../components/LazyLoad/lazyload';
-import { raxiosFetchData, RaxiosPost } from '../services/fetchData';
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
+import { Card, CardContent } from "../components/ui/card";
 import { useLocation, useParams } from 'react-router-dom';
 import EventUsersTable from '../components/EventUsersTable';
+import { raxiosFetchData, RaxiosPost } from '../services/fetchData';
 import CreateEventPopup from '../components/Popups/CreateEventPopup';
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../components/ui/alertDialog";
 
-const EventDetails = () => {
+const EventDetails = ({ contribute }) => {
     const location = useLocation();
     const { filters = {} } = useFilters();
     const filter = filters[location.pathname] || {};
@@ -17,83 +19,111 @@ const EventDetails = () => {
     const [data, setData] = useState({});
     const [users, setUsers] = useState([]);
     const [editMode, setEditMode] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const contribute_dict = contribute ? { events_type: 'contribute' } : {};
 
     const fetchEventDetails = async () => {
-        const response = await raxiosFetchData(null, null, null, null, '/actions/list_events', { slug });
+        const response = await raxiosFetchData(null, null, null, null, '/actions/list_events', { slug, ...contribute_dict });
         setData(response.data[0]);
     };
 
-    const fetchUsers = async () => {
-        await raxiosFetchData(null, null, setUsers, null, '/actions/list_event_users', { slug, ...filter });
-    };
+    const fetchUsers = async () => await raxiosFetchData(null, null, setUsers, null, '/actions/list_event_users', { slug, ...filter, ...contribute_dict });
 
-    useEffect(() => {
-        fetchEventDetails();
-        fetchUsers();
-        // eslint-disable-next-line
-    }, [slug, editMode, JSON.stringify(filter)]);
+    // eslint-disable-next-line
+    useEffect(() => { fetchEventDetails(); fetchUsers(); }, [slug, editMode, JSON.stringify(filter)]);
 
-    const toggleEditMode = () => {
-        setEditMode(!editMode);
-    };
-
+    const toggleEditMode = () => setEditMode(!editMode);
     const DeleteEvent = async () => {
         const response = await RaxiosPost('/actions/upsert_event', { slug, isDeleted: true });
-        if (response.status === 200) {
-            message.success(response.msg);
-            window.history.back();
-        } else {
-            message.error(response.msg);
-        }
+        if (response.status === 200) window.history.back();
     }
 
     return (
         <LazyLoad>
-            <div className="flex flex-col px-5 min-h-screen max-w-screen-2xl mx-auto">
-                <div id='details-header' className='flex flex-row items-center justify-between'>
-                    <h1>Event Details</h1>
-                    <button className='back-button' onClick={() => window.history.back()}>
-                        <FaArrowLeft className="back-icon" />
-                    </button>
-                </div>
-                <div className='flex w-full items-center justify-stretch '>
-                    <div id='details-content' className='flex flex-col items-center'>
-                        <div className='grid-tile text-lg w-full'>
-                            <h3>Main Title:</h3>
-                            <h2 className='text-xl'>{data?.mainTitle}</h2>
-                            <br />
-                            <h3>Sub Title:</h3>
-                            <h2 className='text-xl'>{data?.subTitle}</h2>
-                            <br />
-                            <h3>Name:</h3>
-                            <h2 className='text-xl'>{data?.name}</h2>
-                        </div>
-                        <div className='flex justify-center items-center w-full gap-2'>
-                            <Button className='w-fit' onClick={toggleEditMode}>{editMode ? 'Cancel' : 'Edit Event Details'}</Button>
-                            <Popconfirm
-                                title="Are you sure you want to delete this event?"
-                                onConfirm={DeleteEvent}
-                                okText="Yes"
-                                cancelText="No"
-                            >
-                                <Button className='w-fit' danger>Delete Event</Button>
-                            </Popconfirm>
-                        </div>
+            <div className="min-h-screen bg-background">
+                <div className="max-w-[1400px] mx-auto p-6">
+                    <div className="flex items-center justify-between mb-8">
+                        <h1 className="text-2xl font-semibold">Event Details</h1>
+                        <Button onClick={() => window.history.back()}>
+                            <ArrowLeft className="h-5 w-5" />
+                        </Button>
                     </div>
-                </div>
-                {!editMode ?
-                    <div className='w-full'>
-                        <div className='flex justify-between'>
-                            <h1>Registered Users</h1>
-                            {/* <Button onClick={handleExport}>Download Excel</Button> */}
+
+                    <Card className="mb-8">
+                        <CardContent className="p-6">
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Main Title:</h3>
+                                    <p className="text-xl">{data?.mainTitle}</p>
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Sub Title:</h3>
+                                    <p className="text-xl">{data?.subTitle}</p>
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Name:</h3>
+                                    <p className="text-xl">{data?.name}</p>
+                                </div>
+                                <div className="flex gap-3 pt-4">
+                                    <Button
+                                        onClick={toggleEditMode}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Pencil className="h-4 w-4" />
+                                        Edit Event Details
+                                    </Button>
+                                    <Button
+                                        danger
+                                        onClick={() => setShowDeleteDialog(true)}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                        Delete Event
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {!editMode ? (
+                        <div>
+                            <h2 className="text-xl font-semibold mb-4">Registered Users</h2>
+                            <div className="rounded-lg">
+                                <EventUsersTable
+                                    users={users}
+                                    pathname={location.pathname}
+                                    contribute={contribute}
+                                />
+                            </div>
                         </div>
-                        <EventUsersTable users={users} pathname={location.pathname} />
-                    </div> :
-                    <CreateEventPopup setVisible={setEditMode} data={data} editMode={editMode} />
-                }
+                    ) : (
+                        <CreateEventPopup
+                            setVisible={setEditMode}
+                            data={data}
+                            editMode={editMode}
+                            contribute={contribute}
+                        />
+                    )}
+
+                    <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                        <AlertDialogContent className="dark:bg-lightBlack dark:text-white bg-white">
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the event.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <Button onClick={() => setShowDeleteDialog(false)}>Cancel</Button>
+                                <Button onClick={DeleteEvent} danger type='primary' autoFocus>Delete</Button>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
             </div>
         </LazyLoad>
     );
 }
 
 export default EventDetails;
+

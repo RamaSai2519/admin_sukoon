@@ -50,6 +50,7 @@ const menuItems = [
     icon: <Calendar className="h-4 w-4" />,
     items: [
       { href: 'events', component: <EventsTab /> },
+      { href: 'contribute', component: <EventsTab contribute={true} /> }
     ],
   },
   {
@@ -103,7 +104,7 @@ const AdminDashboard = ({ onLogout }) => {
         ) : (
           <div
             className={cn(
-              "fixed z-50 left-0 top-0 flex flex-row w-screen backdrop-blur-md transition-all duration-300",
+              "fixed z-50 left-0 top-0 flex flex-row w-screen backdrop-blur-md transition-all duration-500",
               showMenu ? "slide-in" : "slide-out"
             )}
             onClick={onMenuToggle}
@@ -152,6 +153,7 @@ const AdminDashboard = ({ onLogout }) => {
                                     "rounded-lg px-3 py-2 text-md flex items-center font-medium hover:bg-zinc-100 dark:hover:bg-lightBlack",
                                     isCurrentPath(item.href) && "bg-zinc-100 dark:bg-lightBlack text-primary"
                                   )}
+                                  onClick={onMenuToggle}
                                 >
                                   {item.href.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                                 </Link>
@@ -166,6 +168,7 @@ const AdminDashboard = ({ onLogout }) => {
                             "flex items-center gap-3 rounded-lg px-3 py-2 text-md font-medium hover:bg-zinc-100 dark:hover:bg-lightBlack",
                             isCurrentPath(group.href) && "bg-zinc-100 dark:bg-lightBlack text-primary"
                           )}
+                          onClick={onMenuToggle}
                         >
                           {group.icon}
                           <span>{group.href.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</span>

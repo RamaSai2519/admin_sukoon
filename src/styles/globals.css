@@ -2,6 +2,32 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html .dark {
+background-color: #141414;
+}
+
+::-webkit-scrollbar {
+width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: #f1f1f1;
+}
+
+::-webkit-scrollbar-track {
+background: #555;
+}
+
 .toggle-dark-mode {
   position: fixed;
   top: 10px;
@@ -396,5 +422,5 @@ body {
 }
 
 .slide-out {
-  animation: slide-out 0.5s ease-out forwards;
+  animation: slide-out 0.5s ease-in forwards;
 }

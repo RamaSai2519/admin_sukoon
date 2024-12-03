@@ -27,7 +27,7 @@ const ThemeToggle = () => {
       variant="outline"
       size="icon"
       onClick={toggleDarkMode}
-      className="relative w-[74px] h-8 ml-3 rounded-full transition-colors duration-300 ease-in-out bg-gradient-to-r from-yellow-400 to-orange-500 dark:from-indigo-500 dark:to-purple-600"
+      className="relative w-[74px] h-8 ml-3 rounded-full transition-colors duration-300 ease-in-out bg-gradient-to-r from-yellow-400 to-orange-500 dark:from-purple-500 dark:to-indigo-600"
     >
       <div
         className={`absolute flex items-center justify-center w-8 h-full rounded-full transition-transform duration-300 ease-in-out ${
