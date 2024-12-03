@@ -136,41 +136,46 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
         </Select>, []),
         createFormItem('Start Date', 'startDate', <DatePicker className="w-full" format="YYYY-MM-DD" />, []),
         createFormItem('Valid Upto', 'validUpto', <DatePicker className="w-full" format="YYYY-MM-DD" />, []),
-        createFormItem('Highlights', 'highlights', (
-            <Form.List name="highlights">
-                {(fields, { add, remove }) => (
-                    <>
-                        {fields.map(({ key, name, fieldKey, ...restField }) => (
-                            <div key={key} className="flex items-center gap-2">
-                                <Form.Item
-                                    {...restField}
-                                    name={[name, 'icon']}
-                                    fieldKey={[fieldKey, 'icon']}
-                                    rules={[{ required: true, message: 'Missing icon' }]}
-                                >
-                                    <Input placeholder="Icon URL" />
-                                </Form.Item>
-                                <Form.Item
-                                    {...restField}
-                                    name={[name, 'text']}
-                                    fieldKey={[fieldKey, 'text']}
-                                    rules={[{ required: true, message: 'Missing text' }]}
-                                >
-                                    <Input placeholder="Text" />
-                                </Form.Item>
-                                <MinusCircleOutlined onClick={() => remove(name)} />
-                            </div>
-                        ))}
-                        <Form.Item>
-                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                Add Highlight
-                            </Button>
-                        </Form.Item>
-                    </>
-                )}
-            </Form.List>
-        ), []),
     ];
+    const highlightsFormItem = createFormItem('Highlights', 'highlights', (
+        <Form.List name="highlights">
+            {(fields, { add, remove }) => (
+                <>
+                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                        <div key={key} className="flex items-center gap-2">
+                            <Form.Item
+                                {...restField}
+                                name={[name, 'icon']}
+                                fieldKey={[fieldKey, 'icon']}
+                                rules={[{ required: true, message: 'Missing icon URL' }]}
+                            >
+                                <Input placeholder="Icon URL" suffix={
+                                    <S3Uploader show={false}
+                                        setFileUrl={(url) => form.setFieldValue(['highlights', name, 'icon'], url)}
+                                        finalFileUrl={form.getFieldValue(['highlights', name, 'icon'])}
+                                    />
+                                } />
+                            </Form.Item>
+                            <Form.Item
+                                {...restField}
+                                name={[name, 'text']}
+                                fieldKey={[fieldKey, 'text']}
+                                rules={[{ required: true, message: 'Missing text' }]}
+                            >
+                                <Input placeholder="Text" />
+                            </Form.Item>
+                            <MinusCircleOutlined onClick={() => remove(name)} />
+                        </div>
+                    ))}
+                    <Form.Item>
+                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                            Add Highlight
+                        </Button>
+                    </Form.Item>
+                </>
+            )}
+        </Form.List>
+    ), []);
 
     const imageFormItem = createFormItem('Image', 'image', <S3Uploader setFileUrl={setUploadedImageUrl} finalFileUrl={uploadedImageUrl} />, []);
 
@@ -198,15 +203,16 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
                     onFinish={handleCreate}
                     layout="vertical"
                     form={form}
-                    className="w-full grid md:grid-cols-4 gap-4 justify-center"
+                    className="w-full "
                 >
-                    {formItems.map((item) => RenderFormItem({ item }))}
-                    {RenderFormItem({ item: imageFormItem })}
-                    <Form.Item style={{ gridColumn: '4' }}>
-                        <div className="flex justify-end items-end">
-                            {RenderFormItem({ item: submitFormItem })}
-                        </div>
-                    </Form.Item>
+                    <div className='grid md:grid-cols-4 gap-4 justify-center'>
+                        {formItems.map((item) => RenderFormItem({ item }))}
+                    </div>
+                    <div className='flex justify-between'>
+                        {RenderFormItem({ item: highlightsFormItem })}
+                        {RenderFormItem({ item: imageFormItem })}
+                        {RenderFormItem({ item: submitFormItem })}
+                    </div>
                 </Form>
             </div>
         </div>
