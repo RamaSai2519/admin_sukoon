@@ -91,10 +91,10 @@ const EventsTab = ({ contribute }) => {
     const userColumns = [
         createColumn('Name', 'name', 'name'),
         createColumn('Contact', 'phoneNumber', 'phoneNumber'),
-        createColumn('Email', 'email', 'email'),
+        ...(!contribute ? [createColumn('Email', 'email', 'email')] : []),
         createColumn('City', 'city', 'city'),
-        createColumn('Source', 'source', 'source'),
-        createColumn('Event Name', 'eventName', 'eventName'),
+        ...(!contribute ? [createColumn('Source', 'source', 'source')] : []),
+        ...(!contribute ? [createColumn('Event Name', 'eventName', 'eventName')] : []),
         createColumn('Remarks', 'remarks', 'remarks', null, '', true),
         createColumn('Created At', 'createdAt', 'createdAt', (time) => formatTime(time), '', null, false),
         createColumn('Updated At', 'updatedAt', 'updatedAt', (time) => formatTime(time), '', null, false),

@@ -104,7 +104,7 @@ const AdminDashboard = ({ onLogout }) => {
         ) : (
           <div
             className={cn(
-              "fixed z-50 left-0 top-0 flex flex-row w-screen backdrop-blur-md transition-all duration-500",
+              "fixed z-50 left-0 top-0 flex flex-row w-screen backdrop-blur-md transition-transform duration-500",
               showMenu ? "slide-in" : "slide-out"
             )}
             onClick={onMenuToggle}
