@@ -5,9 +5,9 @@ import LazyLoad from "../../components/LazyLoad/lazyload";
 import InternalToggle from "../../components/InternalToggle";
 import SchedulesTable from "../../components/SchedulesTable";
 import { generateOptions } from "../../Utils/antSelectHelper";
-import { Select, DatePicker, Form, Button, message } from "antd";
 import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 import { useUsers, useExperts, useAdmin } from "../../contexts/useData";
+import { Select, DatePicker, Form, Button, message, Switch, TimePicker } from "antd";
 
 const ConnectTab = () => {
     const { admin } = useAdmin();
@@ -19,6 +19,7 @@ const ConnectTab = () => {
     const [showForm, setShowForm] = useState(false);
     const [rLoading, setRLoading] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false);
+    const [showReForm, setShowReForm] = useState(false);
     const [internalView, setInternalView] = useState(
         localStorage.getItem('internalView') === 'true' ? true : false
     );
@@ -102,6 +103,19 @@ const ConnectTab = () => {
         setLoading(false);
     };
 
+    const onReScheduleFinish = async (values) => {
+        const { days, expert, job_expiry, frequency, job_time, user, user_requested } = values;
+        const response = await RaxiosPost('/actions/upsert_reschedules', {
+            expert_id: expert, user_id: user, job_expiry,
+            days: days.map(day => day.toLowerCase()),
+            frequency: frequency.toLowerCase(),
+            job_time: job_time.format('HH:mm'),
+            user_requested: user_requested === "Yes",
+            job_type: 'CALL'
+        }, true);
+        if (response.status === 200) setShowReForm(false);
+    };
+
     const CallScheduleForm = ({ onFinish, loading, fields }) => {
         return (
             <Form
@@ -113,7 +127,7 @@ const ConnectTab = () => {
                     <Form.Item
                         key={index}
                         name={field.name}
-                        rules={field.rules}
+                        {...field.rules && { rules: field.rules }}
                     >
                         {field.type === "select" ? (
                             <Select
@@ -134,11 +148,23 @@ const ConnectTab = () => {
                                 className="w-full"
                                 format="YYYY-MM-DD HH:mm"
                                 showTime
+                                placeholder={field.placeholder}
                             />
+                        ) : field.type === "days" ? (
+                            <Select
+                                className="w-full" mode="multiple"
+                                placeholder={field.placeholder}
+                            >
+                                {field.options?.map((option, index) => (
+                                    <Option key={index} value={option}>{option}</Option>
+                                ))}
+                            </Select>
+                        ) : field.type === "time" ? (
+                            <TimePicker className="w-full" placeholder={field.placeholder} />
                         ) : null}
                     </Form.Item>
                 ))}
-                <Button loading={loading} htmlType="submit" className="w-full col-span-2">
+                <Button loading={loading} type="primary" htmlType="submit" className="w-full col-span-2" disabled={showReForm}>
                     {fields.find(field => field.actionText)?.actionText}
                 </Button>
             </Form>
@@ -158,6 +184,13 @@ const ConnectTab = () => {
         showSearch: true, options: experts, optionKey: "name", generateOption: true,
         rules: requiredRule("Please select an expert")
     };
+    const daysField = {
+        name: "days", type: "days", placeholder: "Select Days",
+        options: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], rules: requiredRule("Please select days")
+    };
+    const timeField = { name: "job_time", type: "time", placeholder: "Select Time", rules: requiredRule("Please select a time") };
+    const expiryField = { name: "job_expiry", type: "datetime", placeholder: "Select Expiry Date" };
+    const frequencyField = { name: "frequency", type: "select", placeholder: "Select Frequency", options: ["Weekly", "Monthly", "BiWeekly"], rules: requiredRule("Please select a frequency") };
 
     const userRequestedFormField = { name: "user_requested", type: "select", placeholder: "Is this User Requested?", options: ["Yes", "No"], rules: requiredRule("Please select if user requested or not") };
 
@@ -168,6 +201,7 @@ const ConnectTab = () => {
         { name: "datetime", type: "datetime", rules: requiredRule("Please select a date and time"), },
         userRequestedFormField, actionField("Schedule Call")
     ];
+    const reFormFields = [userFormField, expertFormField, timeField, daysField, expiryField, frequencyField, userRequestedFormField, actionField("Schedule Call")];
 
     return (
         <LazyLoad>
@@ -176,15 +210,30 @@ const ConnectTab = () => {
                     ? <PostCallForm setShowForm={setShowForm} />
                     : <SchedulesTable schedules={schedules} loading={rLoading} setIsDeleted={setIsDeleted} isDeleted={isDeleted} />
                 }
-                <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-2 justify-center">
-                    <div className="flex w-full justify-between items-center gap-5">
-                        <h1 className="text-2xl font-bold">Connect a Call</h1>
-                        <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
-                    </div>
-                    <CallScheduleForm onFinish={handleCallTrigger} loading={loading} fields={callFormFields} />
+                <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-10 justify-center">
+                    {!showReForm && <div className="flex items-center justify-end gap-2">
+                        <Switch className="w-fit mb-3" unCheckedChildren="Schedule a Repeat Call" checked={showReForm} onChange={() => setShowReForm(true)} />
+                    </div>}
+                    {!showReForm ?
+                        <>
+                            <div className="flex w-full justify-between items-center gap-5">
+                                <h1 className="text-xl font-bold">Connect Call</h1>
+                                <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
+                            </div>
+                            <CallScheduleForm onFinish={handleCallTrigger} loading={loading} fields={callFormFields} />
 
-                    <h1 className="text-2xl font-bold mt-4">Schedule a Call</h1>
-                    <CallScheduleForm onFinish={onScheduleFinish} loading={loading} fields={scheduleFormFields} />
+                            <h1 className="text-xl font-bold mt-4">Schedule Call</h1>
+                            <CallScheduleForm onFinish={onScheduleFinish} loading={loading} fields={scheduleFormFields} />
+                        </> :
+                        <>
+                            <h1 className="text-xl font-bold">Schedule Repeat Call</h1>
+                            <CallScheduleForm onFinish={onReScheduleFinish} loading={loading} fields={reFormFields} />
+                            <div className="flex w-full justify-between items-center mt-4">
+                                <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
+                                <Button danger onClick={() => setShowReForm(false)}>Cancel</Button>
+                            </div>
+                        </>
+                    }
                 </div>
             </div>
         </LazyLoad>

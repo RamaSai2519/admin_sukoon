@@ -7,7 +7,12 @@ const InternalToggle = ({ internalView, setInternalView, disable }) => {
         localStorage.setItem('internalView', !internalView);
     };
 
-    return <Switch disabled={disable} unCheckedChildren="Users Data" checkedChildren="Internal Data" checked={internalView} onChange={handleViewChange} />;
+    return <Switch
+        disabled={disable}
+        unCheckedChildren="Users Data"
+        checkedChildren="Internal Data"
+        checked={internalView} onChange={handleViewChange}
+    />;
 };
 
 export default InternalToggle;
