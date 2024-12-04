@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import S3Uploader from '../../Upload';
 import { useAdmin } from '../../../contexts/useData';
@@ -9,61 +9,52 @@ import { Form, Input, Button, message, Select, DatePicker, InputNumber } from 'a
 const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
     const { admin } = useAdmin();
     const [form] = Form.useForm();
-    const [uploadedImageUrl, setUploadedImageUrl] = useState(data?.image || data?.imageUrl || '');
+    const [image, setImage] = useState(data?.image || data?.imageUrl || null);
 
-    useEffect(() => {
-        form.setFieldsValue(
-            contribute
-                ? {
-                    slug: data?.slug,
-                    name: data?.name,
-                    image: data?.image,
-                    email: data?.email,
-                    company: data?.company,
-                    website: data?.website,
-                    stipend: data?.stipend,
-                    isPaid: data?.isPaid,
-                    highlights: data?.highlights,
-                    isDeleted: data?.isDeleted,
-                    phoneNumber: data?.phoneNumber,
-                    description: data?.description,
-                    locationType: data?.locationType,
-                    validUpto: data?.validUpto ? dayjs(data?.validUpto) : undefined,
-                    startDate: data?.startDate ? dayjs(data?.startDate) : undefined,
-                }
-                : {
-                    name: admin.name,
-                    mainTitle: data?.mainTitle,
-                    subTitle: data?.subTitle,
-                    hostedBy: data?.hostedBy,
-                    slug: data?.slug,
-                    startEventDate: data?.startEventDate ? dayjs(data?.startEventDate) : undefined,
-                    validUpto: data?.validUpto ? dayjs(data?.validUpto) : undefined,
-                    eventType: data?.eventType,
-                    description: data?.description,
-                    category: data?.category,
-                    maxVisitorsAllowed: data?.maxVisitorsAllowed,
-                    prizeMoney: data?.prizeMoney,
-                    guestSpeaker: data?.guestSpeaker,
-                    meetingLink: data?.meetingLink,
-                    repeat: data?.repeat,
-                    registrationAllowedTill: data?.registrationAllowedTill ? dayjs(data?.registrationAllowedTill) : undefined,
-                    imageUrl: data?.imageUrl,
-                    isPremiumUserOnly: data?.isPremiumUserOnly,
-                }
-        );
-        setUploadedImageUrl(data?.image || data?.imageUrl || '');
-    }, [data, admin, form, contribute]);
+    const initialData = (
+        contribute
+            ? {
+                slug: data?.slug,
+                name: data?.name,
+                image: data?.image,
+                email: data?.email,
+                company: data?.company,
+                website: data?.website,
+                stipend: data?.stipend,
+                isPaid: data?.isPaid,
+                highlights: data?.highlights,
+                isDeleted: data?.isDeleted,
+                phoneNumber: data?.phoneNumber,
+                description: data?.description,
+                locationType: data?.locationType,
+                validUpto: data?.validUpto ? dayjs(data?.validUpto) : undefined,
+                startDate: data?.startDate ? dayjs(data?.startDate) : undefined,
+            }
+            : {
+                name: admin.name,
+                mainTitle: data?.mainTitle,
+                subTitle: data?.subTitle,
+                hostedBy: data?.hostedBy,
+                slug: data?.slug,
+                startEventDate: data?.startEventDate ? dayjs(data?.startEventDate) : undefined,
+                validUpto: data?.validUpto ? dayjs(data?.validUpto) : undefined,
+                eventType: data?.eventType,
+                description: data?.description,
+                category: data?.category,
+                maxVisitorsAllowed: data?.maxVisitorsAllowed,
+                prizeMoney: data?.prizeMoney,
+                guestSpeaker: data?.guestSpeaker,
+                meetingLink: data?.meetingLink,
+                repeat: data?.repeat,
+                registrationAllowedTill: data?.registrationAllowedTill ? dayjs(data?.registrationAllowedTill) : undefined,
+                imageUrl: data?.imageUrl,
+                isPremiumUserOnly: data?.isPremiumUserOnly,
+            }
+    );
 
     const handleCreate = async (values) => {
-        const { image, ...otherValues } = values;
-        if (!uploadedImageUrl) { message.error('Please upload an image'); return; }
         const endpoint = `/actions/${contribute ? 'upsert_contribute' : 'upsert_event'}`;
-        const response = await RaxiosPost(endpoint, {
-            ...otherValues,
-            // imageUrl: uploadedImageUrl
-            ...(!contribute ? { imageUrl: uploadedImageUrl } : { image: uploadedImageUrl })
-        });
+        const response = await RaxiosPost(endpoint, values);
         if (response.status === 200) {
             message.success(response.msg);
             setVisible(false);
@@ -179,7 +170,21 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
         </Form.List>
     ), []);
 
-    const imageFormItem = createFormItem('Image', 'image', <S3Uploader setFileUrl={setUploadedImageUrl} finalFileUrl={uploadedImageUrl} />, []);
+    const changeImage = (url) => {
+        form.setFieldsValue({ [`${contribute ? 'image' : 'imageUrl'}`]: url });
+        setImage(url);
+    };
+
+    const imageFormItem = createFormItem('Image', `${contribute ? 'image' : 'imageUrl'}`,
+        <Form.Item>
+            <S3Uploader
+                show={true}
+                setFileUrl={changeImage}
+                finalFileUrl={image}
+            />
+        </Form.Item>
+        , []
+    );
 
     const submitFormItem = createFormItem('', 'submit', <Button type="primary" htmlType="submit">{data ? 'Update' : 'Create'}</Button>, []);
 
@@ -205,6 +210,7 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
                     onFinish={handleCreate}
                     layout="vertical"
                     form={form}
+                    initialValues={initialData}
                     className="w-full "
                 >
                     <div className='grid md:grid-cols-4 gap-4 justify-center'>

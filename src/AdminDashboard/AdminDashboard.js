@@ -62,11 +62,7 @@ const menuItems = [
       { href: 'referrals', component: <ReferralsTab /> },
     ],
   },
-  {
-    href: 'content',
-    icon: <FileCode className="h-4 w-4" />,
-    component: <ContentTab />
-  },
+  { href: 'content', icon: <FileCode className="h-4 w-4" />, component: <ContentTab /> },
 ]
 
 const AdminDashboard = ({ onLogout }) => {
