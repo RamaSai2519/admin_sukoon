@@ -104,11 +104,17 @@ const ConnectTab = () => {
     };
 
     const onReScheduleFinish = async (values) => {
-        const JobTime = values.time.format('HH:mm');
-        const days = values.days.map(day => day.toLowerCase());
-        const frequency = values.frequency.toLowerCase();
-        console.log("🚀 ~ onReScheduleFinish ~ values:", values, "days:", days);
-    }
+        const { days, expert, job_expiry, frequency, job_time, user, user_requested } = values;
+        const response = await RaxiosPost('/actions/upsert_reschedules', {
+            expert_id: expert, user_id: user, job_expiry,
+            days: days.map(day => day.toLowerCase()),
+            frequency: frequency.toLowerCase(),
+            job_time: job_time.format('HH:mm'),
+            user_requested: user_requested === "Yes",
+            job_type: 'CALL'
+        }, true);
+        if (response.status === 200) setShowReForm(false);
+    };
 
     const CallScheduleForm = ({ onFinish, loading, fields }) => {
         return (
@@ -158,7 +164,7 @@ const ConnectTab = () => {
                         ) : null}
                     </Form.Item>
                 ))}
-                <Button loading={loading} type="primary" htmlType="submit" className="w-full col-span-2">
+                <Button loading={loading} type="primary" htmlType="submit" className="w-full col-span-2" disabled={showReForm}>
                     {fields.find(field => field.actionText)?.actionText}
                 </Button>
             </Form>
@@ -182,8 +188,8 @@ const ConnectTab = () => {
         name: "days", type: "days", placeholder: "Select Days",
         options: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], rules: requiredRule("Please select days")
     };
-    const timeField = { name: "time", type: "time", placeholder: "Select Time", rules: requiredRule("Please select a time") };
-    const expiryField = { name: "expiring", type: "datetime", placeholder: "Select Expiry Date" };
+    const timeField = { name: "job_time", type: "time", placeholder: "Select Time", rules: requiredRule("Please select a time") };
+    const expiryField = { name: "job_expiry", type: "datetime", placeholder: "Select Expiry Date" };
     const frequencyField = { name: "frequency", type: "select", placeholder: "Select Frequency", options: ["Weekly", "Monthly", "BiWeekly"], rules: requiredRule("Please select a frequency") };
 
     const userRequestedFormField = { name: "user_requested", type: "select", placeholder: "Is this User Requested?", options: ["Yes", "No"], rules: requiredRule("Please select if user requested or not") };
