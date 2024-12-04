@@ -11,7 +11,7 @@ import GetColumnSearchProps from '../../Utils/antTableHelper';
 import { formatDate, formatTime } from '../../Utils/formatHelper';
 import CreateEventPopup from '../../components/Popups/CreateEventPopup';
 
-const EventsTab = () => {
+const EventsTab = ({ contribute }) => {
     const location = useLocation();
     const { filters = {} } = useFilters();
     const filter = filters[location.pathname] || {};
@@ -45,28 +45,27 @@ const EventsTab = () => {
     };
 
     const fetchEvents = async () => {
+        const optional = filter;
+        if (contribute) optional['events_type'] = 'contribute';
         if (table === 'events') {
-            raxiosFetchData(eventsPage, eventsPageSize, setEvents, setEventsTotal, '/actions/list_events', filter, setLoading);
+            raxiosFetchData(eventsPage, eventsPageSize, setEvents, setEventsTotal, '/actions/list_events', optional, setLoading);
         } else {
-            raxiosFetchData(usersPage, usersPageSize, setEventUsers, setTotalEventUsers, '/actions/list_event_users', filter, setLoading);
+            raxiosFetchData(usersPage, usersPageSize, setEventUsers, setTotalEventUsers, '/actions/list_event_users', optional, setLoading);
         }
     };
 
-    useEffect(() => {
-        fetchEvents();
-
-        // eslint-disable-next-line
-    }, [eventsPage, eventsPageSize, usersPage, usersPageSize, table, JSON.stringify(filter)]);
+    // eslint-disable-next-line
+    useEffect(() => { fetchEvents() }, [eventsPage, eventsPageSize, usersPage, usersPageSize, table, JSON.stringify(filter), contribute]);
 
     const createColumn = (title, dataIndex, key, render, width, editable, filter = true) => {
         return {
+            key,
             title,
             dataIndex,
-            key,
-            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, location.pathname, filter),
-            ...(render && { render }),
             ...(width && { width }),
+            ...(render && { render }),
             ...(editable && { editable }),
+            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, location.pathname, filter),
         };
     };
 
@@ -92,13 +91,33 @@ const EventsTab = () => {
     const userColumns = [
         createColumn('Name', 'name', 'name'),
         createColumn('Contact', 'phoneNumber', 'phoneNumber'),
-        createColumn('Email', 'email', 'email'),
+        ...(!contribute ? [createColumn('Email', 'email', 'email')] : []),
         createColumn('City', 'city', 'city'),
-        createColumn('Source', 'source', 'source'),
-        createColumn('Event Name', 'eventName', 'eventName'),
+        ...(!contribute ? [createColumn('Source', 'source', 'source')] : []),
+        ...(!contribute ? [createColumn('Event Name', 'eventName', 'eventName')] : []),
         createColumn('Remarks', 'remarks', 'remarks', null, '', true),
         createColumn('Created At', 'createdAt', 'createdAt', (time) => formatTime(time), '', null, false),
         createColumn('Updated At', 'updatedAt', 'updatedAt', (time) => formatTime(time), '', null, false),
+    ];
+
+    const contributeColumns = [
+        createColumn('Name', 'name', 'name'),
+        createColumn('Slug', 'slug', 'slug'),
+        createColumn('Contact', 'phoneNumber', 'phoneNumber'),
+        createColumn('Email', 'email', 'email'),
+        createColumn('Company', 'company', 'company'),
+        createColumn('Website', 'website', 'website'),
+        createColumn('Paid', 'isPaid', 'isPaid', (isPaid) => isPaid ? 'Paid' : 'Free', '', null, false),
+        createColumn('Valid Upto', 'validUpto', 'validUpto', (time) => formatDate(time), '', null, false),
+        createColumn('Start Date', 'startDate', 'startDate', (time) => formatDate(time), '', null, false),
+        {
+            title: 'Details', key: 'details',
+            render: (_, record) => (
+                <Link to={{ pathname: `/admin/contribute/${record.slug}` }}>
+                    <Button>View</Button>
+                </Link>
+            )
+        },
     ];
 
     const handleSave = async ({ key, field, value }) => {
@@ -163,11 +182,11 @@ const EventsTab = () => {
                 }
                 <div className='w-full'>
                     {visible ?
-                        <CreateEventPopup setVisible={setVisible} />
+                        <CreateEventPopup setVisible={setVisible} contribute={contribute} />
                         : table === 'events' ?
                             <Table
                                 dataSource={events}
-                                columns={columns}
+                                columns={contribute ? contributeColumns : columns}
                                 rowKey={(record) => record.slug}
                                 pagination={
                                     {
