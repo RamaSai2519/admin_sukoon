@@ -4,7 +4,7 @@ import Raxios from '../../services/axiosHelper';
 import { Upload, message, Button } from 'antd';
 import axios from 'axios';
 
-const S3Uploader = ({ setFileUrl, finalFileUrl, show = true }) => {
+const S3Uploader = ({ setFileUrl, finalFileUrl, show = true, disabled = false }) => {
     const [uploading, setUploading] = useState(false);
 
     const getPresignedUrl = async (file) => {
@@ -39,10 +39,11 @@ const S3Uploader = ({ setFileUrl, finalFileUrl, show = true }) => {
     return (
         <div>
             <Upload
+                disabled={disabled}
                 customRequest={handleUpload}
                 showUploadList={false}
             >
-                <Button icon={<UploadOutlined />} loading={uploading}>
+                <Button disabled={disabled} icon={<UploadOutlined />} loading={uploading}>
                     {show && (uploading ? 'Uploading...' : 'Upload File')}
                 </Button>
             </Upload>

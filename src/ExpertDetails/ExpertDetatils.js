@@ -7,8 +7,9 @@ import React, { useState, useEffect } from 'react';
 import { useCategories } from '../contexts/useData';
 import Loading from '../components/Loading/loading';
 import { raxiosFetchData } from '../services/fetchData';
-import { message, Select, Switch, Table, Input } from 'antd';
 import EditableTimeCell from '../components/EditableTimeCell';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { message, Select, Switch, Table, Input, Form, Button } from 'antd';
 
 const { Option } = Select;
 
@@ -34,16 +35,17 @@ const ExpertDetails = () => {
   const [persona, setPersona] = useState('');
   const [timings, setTimings] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [form] = Form.useForm();
 
   const fetchExpertDetails = async () => {
     try {
       const response = await Raxios.get(`/actions/expert?phoneNumber=${number}`);
       const { __v, lastModifiedBy, calls, persona, ...expertData } = response.data;
       setExpert(expertData);
+      form.setFieldsValue(expertData);
       if (typeof persona === 'object') {
         const personaString = JSON.stringify(persona, null, 2);
-        // eslint-disable-next-line
-        const personaWithoutQuotes = personaString.replace(/\"/g, '');
+        const personaWithoutQuotes = personaString.replace(/"/g, '');
         setPersona(personaWithoutQuotes);
       } else {
         setPersona(persona);
@@ -77,12 +79,8 @@ const ExpertDetails = () => {
     }
   }, [loading, timings]);
 
-  const handleInputChange = (name, value) => {
-    const updatedExpert = { ...expert, [name]: value };
-    setExpert(updatedExpert);
-  };
-
   const handleUpdate = async (updatedFormData) => {
+    console.log("🚀 ~ handleUpdate ~ updatedFormData:", updatedFormData)
     if (updatedFormData.phoneNumber.length !== 10) {
       return;
     }
@@ -161,132 +159,184 @@ const ExpertDetails = () => {
               <FaArrowLeft className="back-icon" />
             </button>
           </div>
-          <div className="grid grid-cols-2 p-5 overflow-auto">
-            <div className="grid-tile-2">
-              {/* <img src={expert.profile} alt="Expert Profile" className='max-h-52' /> */}
-              <S3Uploader setFileUrl={(url) => handleUpdate({ ...expert, profile: url })} finalFileUrl={expert.profile} />
-            </div>
-            {['status', 'name', 'phoneNumber', 'type', 'languages'].map((field, idx) => (
-              field === 'status' ?
-                <div className='grid grid-cols-2'>
-                  <StatusTile
-                    title="Status"
-                    value={expert.status === 'online' ? 'Online' : 'Offline'}
-                    switchValue={expert.status === 'online'}
-                    onChange={() => handleUpdate({ ...expert, status: expert.status === 'offline' ? 'online' : 'offline' })}
-                  />
-                  <StatusTile
-                    title="Busy"
-                    value={expert.isBusy ? 'Busy' : 'Available'}
-                    switchValue={expert.isBusy}
-                    onChange={() => handleUpdate({ ...expert, isBusy: !expert.isBusy })}
-                  />
-                  <StatusTile
-                    title="active"
-                    value={expert.active ? 'Active' : 'Inactive'}
-                    switchValue={expert.active}
-                    onChange={() => handleUpdate({ ...expert, active: !expert.active })}
-                  />
-                  <StatusTile
-                    title="Profile"
-                    value={expert.profileCompleted ? 'Profile Completed' : 'Profile Incomplete'}
-                    switchValue={expert.profileCompleted}
-                    onChange={() => handleUpdate({ ...expert, profileCompleted: !expert.profileCompleted })}
-                  />
+          <div className="">
+            <Form form={form} className='grid grid-cols-2 p-5 overflow-auto' layout="vertical" onFinish={handleUpdate}>
+              <div className='flex justify-between w-full h-full'>
+                <div className="grid-tile-2">
+                  <S3Uploader setFileUrl={(url) => handleUpdate({ ...expert, profile: url })} finalFileUrl={expert.profile} />
                 </div>
-                :
-                field === 'type' ?
-                  <div className='grid-tile'>
-                    <h3>Type</h3>
-                    <Select
-                      disabled={!editMode}
-                      className='w-full mt-2'
-                      placeholder="Select Type"
-                      value={expert.type}
-                      onChange={(value) => handleUpdate({ ...expert, type: value })}
-                    >
-                      <Option value="expert">Expert</Option>
-                      <Option value="saarthi">Sarathi</Option>
-                      <Option value="internal">Internal</Option>
-                    </Select>
+                <div className='grid-tile'>
+                  <Form.List name="highlights">
+                    {(fields, { add, remove }) => (
+                      <>
+                        {fields.map(({ key, name, fieldKey, ...restField }) => (
+                          <div key={key} className="flex items-center gap-2 mb-2">
+                            <Form.Item
+                              className='mb-0'
+                              {...restField}
+                              name={[name, 'icon']}
+                              fieldKey={[fieldKey, 'icon']}
+                              rules={[{ required: true, message: 'Missing icon URL' }]}
+                            >
+                              <Input disabled={!editMode} placeholder="Icon URL" suffix={
+                                <S3Uploader
+                                  disabled={!editMode}
+                                  show={false}
+                                  setFileUrl={(url) => form.setFieldValue(['highlights', name, 'icon'], url)}
+                                  finalFileUrl={form.getFieldValue(['highlights', name, 'icon'])}
+                                />
+                              } />
+                            </Form.Item>
+                            <Form.Item
+                              className='mb-0'
+                              {...restField}
+                              name={[name, 'text']}
+                              fieldKey={[fieldKey, 'text']}
+                              rules={[{ required: true, message: 'Missing text' }]}
+                            >
+                              <Input disabled={!editMode} className='h-[43.5px]' placeholder="Text" />
+                            </Form.Item>
+                            {editMode && <MinusCircleOutlined className='text-red-600' onClick={() => remove(name)} />}
+                          </div>
+                        ))}
+                        <Form.Item>
+                          <Button type="dashed" disabled={!editMode} onClick={() => add()} block icon={<PlusOutlined />}>
+                            Add Highlight
+                          </Button>
+                        </Form.Item>
+                      </>
+                    )}
+                  </Form.List>
+                </div>
+              </div>
+              {['status', 'name', 'phoneNumber', 'type', 'languages'].map((field, idx) => (
+                field === 'status' ?
+                  <div className='grid grid-cols-2'>
+                    <StatusTile
+                      title="Status"
+                      value={expert.status === 'online' ? 'Online' : 'Offline'}
+                      switchValue={expert.status === 'online'}
+                      onChange={() => handleUpdate({ ...expert, status: expert.status === 'offline' ? 'online' : 'offline' })}
+                    />
+                    <StatusTile
+                      title="Busy"
+                      value={expert.isBusy ? 'Busy' : 'Available'}
+                      switchValue={expert.isBusy}
+                      onChange={() => handleUpdate({ ...expert, isBusy: !expert.isBusy })}
+                    />
+                    <StatusTile
+                      title="active"
+                      value={expert.active ? 'Active' : 'Inactive'}
+                      switchValue={expert.active}
+                      onChange={() => handleUpdate({ ...expert, active: !expert.active })}
+                    />
+                    <StatusTile
+                      title="Profile"
+                      value={expert.profileCompleted ? 'Profile Completed' : 'Profile Incomplete'}
+                      switchValue={expert.profileCompleted}
+                      onChange={() => handleUpdate({ ...expert, profileCompleted: !expert.profileCompleted })}
+                    />
                   </div>
-                  : field === "phoneNumber" ?
-                    <div key={idx} className='grid-tile'>
-                      <h3>Phone Number</h3>
-                      <span className='text-xl'>{expert.phoneNumber}</span>
+                  :
+                  field === 'type' ?
+                    <div className='grid-tile'>
+                      <h3>Type</h3>
+                      <Form.Item name="type">
+                        <Select
+                          disabled={!editMode}
+                          className='w-full mt-2'
+                          placeholder="Select Type"
+                          onChange={(value) => handleUpdate({ ...expert, type: value })}
+                        >
+                          <Option value="expert">Expert</Option>
+                          <Option value="saarthi">Sarathi</Option>
+                          <Option value="internal">Internal</Option>
+                        </Select>
+                      </Form.Item>
                     </div>
-                    :
-                    <div key={idx} className='grid-tile'>
-                      <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
+                    : field === "phoneNumber" ?
+                      <Form.Item key={idx} className='grid-tile' name={field}>
+                        <h3>Phone Number</h3>
+                        <Input className='text-xl' disabled value={expert[field]} />
+                      </Form.Item>
+                      :
+                      <div key={idx} className='grid-tile'>
+                        <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
+                        <Form.Item name={field}>
+                          <Input
+                            type="text"
+                            className='mt-2'
+                            onChange={(e) => handleUpdate({ ...expert, [field]: e.target.value })}
+                            disabled={!editMode}
+                          />
+                        </Form.Item>
+                      </div>
+              ))}
+              <div className='grid-tile'>
+                <h3>Categories</h3>
+                <Form.Item name="categories">
+                  <Select
+                    mode="multiple" className='w-full mt-2'
+                    placeholder="Select Categories"
+                    onChange={(value) => handleUpdate({ ...expert, categories: value })}
+                    disabled={!editMode}
+                  >
+                    {allCategories.map((category) => (
+                      <Option key={category} value={category} />
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              <div className='grid grid-cols-4'>
+                {['score', 'repeat_score', 'calls_share', 'total_score'].map((field, idx) => (
+                  <div key={idx} className='grid-tile'>
+                    <h3>{field.split(/(?=[A-Z])/).join(' ')}</h3>
+                    <Form.Item name={field}>
                       <Input
-                        type="text"
-                        className='mt-2'
-                        value={expert[field]}
-                        onChange={(e) => handleInputChange(field, e.target.value)}
+                        onChange={(e) => handleUpdate({ ...expert, [field]: parseFloat(e.target.value) })}
                         disabled={!editMode}
                       />
-                    </div>
-            ))}
-            <div className='grid-tile'>
-              <h3>Categories</h3>
-              <Select
-                mode="multiple" className='w-full mt-2'
-                placeholder="Select Categories" value={expert.categories}
-                onChange={(value) => handleUpdate({ ...expert, categories: value })}
-                disabled={!editMode}
-              >
-                {allCategories.map((category) => (
-                  <Option key={category} value={category} />
+                    </Form.Item>
+                  </div>
                 ))}
-              </Select>
-            </div>
-            <div className='grid grid-cols-4'>
-              {['score', 'repeat_score', 'calls_share', 'total_score'].map((field, idx) => (
-                <div key={idx} className='grid-tile'>
-                  <h3>{field.split(/(?=[A-Z])/).join(' ')}</h3>
-                  <Input
-                    value={expert[field]}
-                    onChange={(e) => handleInputChange(field, parseFloat(e.target.value))}
+              </div>
+              <div className='grid-tile'>
+                <h3>Description</h3>
+                <Form.Item name="description">
+                  <Input.TextArea
+                    className='mt-2'
+                    rows={15}
+                    onChange={(e) => handleUpdate({ ...expert, description: e.target.value })}
                     disabled={!editMode}
                   />
-                </div>
-              ))}
-            </div>
-            <div className='grid-tile'>
-              <h3>Description</h3>
-              <Input.TextArea
-                className='mt-2'
-                rows={15}
-                value={expert.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
-                disabled={!editMode}
-              />
-            </div>
-            <div id='timings' className='grid-tile'>
-              <h3>Timings</h3>
-              <Table
-                components={components}
-                columns={mergedColumns}
-                dataSource={timings}
-                pagination={false}
-                rowKey={(record) => record._id}
-              />
-            </div>
-            {persona &&
-              <div className='grid-tile'>
-                <h3>Customer Persona</h3>
-                <p className='text-xl whitespace-pre-wrap'>{persona}</p>
+                </Form.Item>
               </div>
-            }
-            <div className='edit-button-container'>
-              {editMode && <button className='update-button' onClick={() => handleUpdate(expert)}>Update Details</button>}
-              {editMode ? (
-                <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
-              ) : (
-                <button className='update-button' onClick={() => setEditMode(true)}>Edit Details</button>
-              )}
-              <button className='update-button' style={{ background: 'red' }} onClick={handleDelete}>Delete Expert</button>
-            </div>
+              <div id='timings' className='grid-tile'>
+                <h3>Timings</h3>
+                <Table
+                  components={components}
+                  columns={mergedColumns}
+                  dataSource={timings}
+                  pagination={false}
+                  rowKey={(record) => record._id}
+                />
+              </div>
+              {persona &&
+                <div className='grid-tile'>
+                  <h3>Customer Persona</h3>
+                  <p className='text-xl whitespace-pre-wrap'>{persona}</p>
+                </div>
+              }
+              <div className='edit-button-container'>
+                {editMode && <Button type="primary" htmlType="submit">Update Details</Button>}
+                {editMode ? (
+                  <Button onClick={() => setEditMode(false)}>Cancel</Button>
+                ) : (
+                  <Button onClick={() => setEditMode(true)}>Edit Details</Button>
+                )}
+                <Button danger onClick={handleDelete}>Delete Expert</Button>
+              </div>
+            </Form>
           </div>
         </div>
       )}
