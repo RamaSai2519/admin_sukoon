@@ -7,9 +7,12 @@ import React, { useState, useEffect } from 'react';
 import { useCategories } from '../contexts/useData';
 import Loading from '../components/Loading/loading';
 import { raxiosFetchData } from '../services/fetchData';
+import { Edit, RefreshCw, Trash2, X } from 'lucide-react';
 import EditableTimeCell from '../components/EditableTimeCell';
+import PropertyValueRenderer from '../components/JsonRenderer';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Select, Switch, Table, Input, Form, Button } from 'antd';
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../components/ui/alertDialog";
 
 const { Option } = Select;
 
@@ -17,39 +20,23 @@ const ExpertDetails = () => {
   const { number } = useParams();
   const expertId = localStorage.getItem('expertId');
   const [expert, setExpert] = useState({
-    name: '',
-    phoneNumber: '',
-    topics: '',
-    description: '',
-    categories: [],
-    profile: '',
-    status: '',
-    languages: [],
-    score: '',
-    repeat_score: '',
-    total_score: '',
-    calls_share: ''
+    name: '', score: '', topics: '', status: '',
+    persona: {}, profile: '', categories: [], phoneNumber: '',
+    description: '', total_score: '', calls_share: '', repeat_score: ''
   });
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { allCategories, fetchCategories } = useCategories();
-  const [loading, setLoading] = useState(false);
-  const [persona, setPersona] = useState('');
-  const [timings, setTimings] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [timings, setTimings] = useState([]);
   const [form] = Form.useForm();
 
   const fetchExpertDetails = async () => {
     try {
       const response = await Raxios.get(`/actions/expert?phoneNumber=${number}`);
-      const { __v, lastModifiedBy, calls, persona, ...expertData } = response.data;
+      const { __v, lastModifiedBy, calls, ...expertData } = response.data;
       setExpert(expertData);
       form.setFieldsValue(expertData);
-      if (typeof persona === 'object') {
-        const personaString = JSON.stringify(persona, null, 2);
-        const personaWithoutQuotes = personaString.replace(/"/g, '');
-        setPersona(personaWithoutQuotes);
-      } else {
-        setPersona(persona);
-      }
       setLoading(false);
     } catch (error) {
       console.error('Error fetching expert details:', error);
@@ -66,7 +53,6 @@ const ExpertDetails = () => {
     fetchCategories();
     fetchTimings();
     fetchExpertDetails();
-
     // eslint-disable-next-line
   }, [expertId]);
 
@@ -80,10 +66,7 @@ const ExpertDetails = () => {
   }, [loading, timings]);
 
   const handleUpdate = async (updatedFormData) => {
-    console.log("🚀 ~ handleUpdate ~ updatedFormData:", updatedFormData)
-    if (updatedFormData.phoneNumber.length !== 10) {
-      return;
-    }
+    if (updatedFormData.phoneNumber.length !== 10) return;
     try {
       const response = await Raxios.post('/actions/expert', updatedFormData);
       if (response.status !== 200) {
@@ -141,7 +124,7 @@ const ExpertDetails = () => {
 
   const StatusTile = ({ title, value, switchValue, onChange }) => (
     <div className='grid-tile'>
-      <h3>{title}</h3>
+      <h3 className='text-lg'>{title}</h3>
       <div className="flex h-full justify-between items-center">
         <h2>{value}</h2>
         <Switch checked={switchValue} onChange={onChange} />
@@ -149,18 +132,52 @@ const ExpertDetails = () => {
     </div>
   );
 
+  const formFields = [
+    { name: 'status', label: 'Status', type: 'status' },
+    { name: 'name', label: 'Name', type: 'input' },
+    { name: 'phoneNumber', label: 'Phone Number', type: 'input', disabled: true },
+    { name: 'type', label: 'Type', type: 'select', options: ['expert', 'saarthi', 'internal'] },
+    { name: 'languages', label: 'Languages', type: 'input' },
+    { name: 'categories', label: 'Categories', type: 'select', options: allCategories, mode: 'multiple' },
+    { name: 'description', label: 'Description', type: 'textarea' },
+    { name: 'score', label: 'Score', type: 'input' },
+    { name: 'repeat_score', label: 'Repeat Score', type: 'input' },
+    { name: 'calls_share', label: 'Calls Share', type: 'input' },
+    { name: 'total_score', label: 'Total Score', type: 'input' },
+  ];
+
   return (
     <div>
       {expert && (
-        <div className='h3-darkgrey'>
-          <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
-            <h1>Expert Details</h1>
-            <button className='back-button' onClick={() => { window.history.back(); localStorage.removeItem('expertId') }}>
-              <FaArrowLeft className="back-icon" />
-            </button>
-          </div>
-          <div className="">
-            <Form form={form} className='grid grid-cols-2 p-5 overflow-auto' layout="vertical" onFinish={handleUpdate}>
+        <Form form={form} className='' layout="vertical" onFinish={handleUpdate}>
+          <div className='h3-darkgrey'>
+            <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
+              <h1>Expert Details</h1>
+              <div className='flex gap-5 items-center'>
+                <div className='w-full flex gap-5 items-start p-5'>
+                  {editMode &&
+                    <Button type="primary" htmlType="submit" className='flex items-center gap-2'>
+                      <RefreshCw className="w-4 h-4" /> Update Details
+                    </Button>}
+                  {editMode ? (
+                    <Button onClick={() => setEditMode(false)} className='flex items-center gap-2'>
+                      <X className="w-4 h-4" />Cancel
+                    </Button>
+                  ) : (
+                    <Button onClick={() => setEditMode(true)} className='flex items-center gap-2'>
+                      <Edit className="w-4 h-4" /> Edit Details
+                    </Button>
+                  )}
+                  <Button danger onClick={() => setShowDeleteDialog(true)} className='flex items-center gap-2'>
+                    <Trash2 className="h-4 w-4" /> Delete Expert
+                  </Button>
+                </div>
+                <button className='back-button' onClick={() => { window.history.back(); localStorage.removeItem('expertId') }}>
+                  <FaArrowLeft className="back-icon" />
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 p-5 overflow-auto">
               <div className='flex justify-between w-full h-full'>
                 <div className="grid-tile-2">
                   <S3Uploader setFileUrl={(url) => handleUpdate({ ...expert, profile: url })} finalFileUrl={expert.profile} />
@@ -209,137 +226,73 @@ const ExpertDetails = () => {
                   </Form.List>
                 </div>
               </div>
-              {['status', 'name', 'phoneNumber', 'type', 'languages'].map((field, idx) => (
-                field === 'status' ?
-                  <div className='grid grid-cols-2'>
+              {formFields.map((field, idx) => (
+                field.type === 'status' ? (
+                  <div key={idx} className='grid grid-cols-2'>
                     <StatusTile
-                      title="Status"
-                      value={expert.status === 'online' ? 'Online' : 'Offline'}
-                      switchValue={expert.status === 'online'}
-                      onChange={() => handleUpdate({ ...expert, status: expert.status === 'offline' ? 'online' : 'offline' })}
+                      title="Status" value={expert.status === 'online' ? 'Online' : 'Offline'}
+                      switchValue={expert.status === 'online'} onChange={() => handleUpdate({ ...expert, status: expert.status === 'offline' ? 'online' : 'offline' })}
                     />
                     <StatusTile
-                      title="Busy"
-                      value={expert.isBusy ? 'Busy' : 'Available'}
-                      switchValue={expert.isBusy}
-                      onChange={() => handleUpdate({ ...expert, isBusy: !expert.isBusy })}
+                      title="Busy" value={expert.isBusy ? 'Busy' : 'Available'}
+                      switchValue={expert.isBusy} onChange={() => handleUpdate({ ...expert, isBusy: !expert.isBusy })}
                     />
                     <StatusTile
-                      title="active"
-                      value={expert.active ? 'Active' : 'Inactive'}
-                      switchValue={expert.active}
-                      onChange={() => handleUpdate({ ...expert, active: !expert.active })}
+                      title="Active" value={expert.active ? 'Active' : 'Inactive'}
+                      switchValue={expert.active} onChange={() => handleUpdate({ ...expert, active: !expert.active })}
                     />
                     <StatusTile
-                      title="Profile"
-                      value={expert.profileCompleted ? 'Profile Completed' : 'Profile Incomplete'}
-                      switchValue={expert.profileCompleted}
-                      onChange={() => handleUpdate({ ...expert, profileCompleted: !expert.profileCompleted })}
+                      title="Profile" value={expert.profileCompleted ? 'Profile Completed' : 'Profile Incomplete'}
+                      switchValue={expert.profileCompleted} onChange={() => handleUpdate({ ...expert, profileCompleted: !expert.profileCompleted })}
                     />
                   </div>
-                  :
-                  field === 'type' ?
-                    <div className='grid-tile'>
-                      <h3>Type</h3>
-                      <Form.Item name="type">
-                        <Select
-                          disabled={!editMode}
-                          className='w-full mt-2'
-                          placeholder="Select Type"
-                          onChange={(value) => handleUpdate({ ...expert, type: value })}
-                        >
-                          <Option value="expert">Expert</Option>
-                          <Option value="saarthi">Sarathi</Option>
-                          <Option value="internal">Internal</Option>
-                        </Select>
-                      </Form.Item>
-                    </div>
-                    : field === "phoneNumber" ?
-                      <Form.Item key={idx} className='grid-tile' name={field}>
-                        <h3>Phone Number</h3>
-                        <Input className='text-xl' disabled value={expert[field]} />
-                      </Form.Item>
-                      :
-                      <div key={idx} className='grid-tile'>
-                        <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
-                        <Form.Item name={field}>
-                          <Input
-                            type="text"
-                            className='mt-2'
-                            onChange={(e) => handleUpdate({ ...expert, [field]: e.target.value })}
-                            disabled={!editMode}
-                          />
-                        </Form.Item>
-                      </div>
-              ))}
-              <div className='grid-tile'>
-                <h3>Categories</h3>
-                <Form.Item name="categories">
-                  <Select
-                    mode="multiple" className='w-full mt-2'
-                    placeholder="Select Categories"
-                    onChange={(value) => handleUpdate({ ...expert, categories: value })}
-                    disabled={!editMode}
-                  >
-                    {allCategories.map((category) => (
-                      <Option key={category} value={category} />
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              <div className='grid grid-cols-4'>
-                {['score', 'repeat_score', 'calls_share', 'total_score'].map((field, idx) => (
+                ) : (
                   <div key={idx} className='grid-tile'>
-                    <h3>{field.split(/(?=[A-Z])/).join(' ')}</h3>
-                    <Form.Item name={field}>
-                      <Input
-                        onChange={(e) => handleUpdate({ ...expert, [field]: parseFloat(e.target.value) })}
-                        disabled={!editMode}
-                      />
+                    <h3 className='text-lg'>{field.label}</h3>
+                    <Form.Item name={field.name}>
+                      {field.type === 'input' ? (
+                        <Input type="text" className='mt-2' disabled={!editMode || field.disabled} />
+                      ) : field.type === 'select' ? (
+                        <Select mode={field.mode} className='w-full mt-2' placeholder={`Select ${field.label}`} disabled={!editMode}>
+                          {field.options.map((option) => (<Option key={option} value={option} />))}
+                        </Select>
+                      ) : (
+                        <Input.TextArea className='mt-2' rows={15} disabled={!editMode} />
+                      )}
                     </Form.Item>
                   </div>
-                ))}
-              </div>
-              <div className='grid-tile'>
-                <h3>Description</h3>
-                <Form.Item name="description">
-                  <Input.TextArea
-                    className='mt-2'
-                    rows={15}
-                    onChange={(e) => handleUpdate({ ...expert, description: e.target.value })}
-                    disabled={!editMode}
-                  />
-                </Form.Item>
-              </div>
-              <div id='timings' className='grid-tile'>
-                <h3>Timings</h3>
-                <Table
-                  components={components}
-                  columns={mergedColumns}
-                  dataSource={timings}
-                  pagination={false}
-                  rowKey={(record) => record._id}
-                />
-              </div>
-              {persona &&
+                )
+              ))}
+              {expert.persona &&
                 <div className='grid-tile'>
-                  <h3>Customer Persona</h3>
-                  <p className='text-xl whitespace-pre-wrap'>{persona}</p>
+                  <h3 className='text-lg'>Customer Persona</h3>
+                  <PropertyValueRenderer data={expert.persona} />
                 </div>
               }
-              <div className='edit-button-container'>
-                {editMode && <Button type="primary" htmlType="submit">Update Details</Button>}
-                {editMode ? (
-                  <Button onClick={() => setEditMode(false)}>Cancel</Button>
-                ) : (
-                  <Button onClick={() => setEditMode(true)}>Edit Details</Button>
-                )}
-                <Button danger onClick={handleDelete}>Delete Expert</Button>
+              <div className='w-full'>
+                <div id='timings' className='grid-tile-2 w-full'>
+                  <h3 className='text-lg'>Timings</h3>
+                  <Table components={components} columns={mergedColumns} dataSource={timings} pagination={false} rowKey={(record) => record._id} />
+                </div>
               </div>
-            </Form>
+            </div>
           </div>
-        </div>
+        </Form>
       )}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="dark:bg-lightBlack dark:text-white bg-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the event.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button onClick={() => setShowDeleteDialog(false)}>Cancel</Button>
+            <Button onClick={handleDelete} danger type='primary' autoFocus>Delete</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
