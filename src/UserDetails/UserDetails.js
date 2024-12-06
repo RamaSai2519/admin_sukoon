@@ -7,6 +7,7 @@ import Raxios from '../services/axiosHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import { raxiosFetchData } from '../services/fetchData';
 import { DatePicker, Input, message, Switch, Table } from 'antd';
+import PropertyValueRenderer from '../components/JsonRenderer';
 
 const InputField = ({ label, value, onChange, editMode, type = "text" }) => (
   <div className='grid-tile w-full h-fit'>
@@ -54,18 +55,10 @@ const UserDetails = () => {
       setIsBusy(data.isBusy);
       setIsPaidUser(data.isPaidUser);
       setPhoneNumber(data.phoneNumber);
+      setPersona(data.customerPersona);
+      setBirthDate(dayjs(data.birthDate));
       setNumberOfCalls(data.numberOfCalls);
       setNotifications(data.notifications);
-      setBirthDate(dayjs(data.birthDate));
-
-      if (typeof data.customerPersona === 'object') {
-        const personaString = JSON.stringify(data.customerPersona, null, 2);
-        // eslint-disable-next-line
-        const personaWithoutQuotes = personaString.replace(/\"/g, '');
-        setPersona(personaWithoutQuotes);
-      } else {
-        setPersona(data.customerPersona);
-      }
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
@@ -94,6 +87,7 @@ const UserDetails = () => {
   ];
 
   const handleUpdate = async (updatedFields) => {
+    // eslint-disable-next-line
     const { phoneNumber, numberOfCalls } = updatedFields;
     if (numberOfCalls > 3) {
       message.error('Number of calls cannot be greater than 3.');
@@ -170,7 +164,7 @@ const UserDetails = () => {
           <div className='grid md:grid-cols-2 md:gap-4'>
             <div className='grid-tile h-fit'>
               <h3>Customer Persona</h3>
-              {persona && <p className='text-xl whitespace-pre-wrap'>{persona}</p>}
+              {persona && <PropertyValueRenderer data={persona} />}
             </div>
             <div id="notifications-table" className='grid-tile'>
               <h3>Notifications</h3>
