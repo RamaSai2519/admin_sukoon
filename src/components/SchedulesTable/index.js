@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Loading from "../Loading/loading";
 import { Button, Checkbox, Table } from "antd";
-import { formatTime } from "../../Utils/formatHelper";
-import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
-import GetColumnSearchProps from "../../Utils/antTableHelper";
 import { useLocation } from "react-router-dom";
 import { useFilters } from "../../contexts/useData";
+import { formatTime } from "../../Utils/formatHelper";
+import GetColumnSearchProps from "../../Utils/antTableHelper";
+import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 
 const SchedulesTable = () => {
     const location = useLocation();
@@ -28,9 +28,9 @@ const SchedulesTable = () => {
     const [responseLoading, setResponseLoading] = useState(false);
 
     const handleTableChange = (current, pageSize) => {
+        setPageSize(pageSize);
         setSchedulesPage(current);
         localStorage.setItem('schedulesPage', current);
-        setPageSize(pageSize);
     };
 
     const fetchSchedules = async () => {

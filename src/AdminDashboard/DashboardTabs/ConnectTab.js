@@ -6,6 +6,7 @@ import LazyLoad from "../../components/LazyLoad/lazyload";
 import InternalToggle from "../../components/InternalToggle";
 import SchedulesTable from "../../components/SchedulesTable";
 import { generateOptions } from "../../Utils/antSelectHelper";
+import ReSchedulesTable from "../../components/ReSchedulesTable";
 import { useUsers, useExperts, useAdmin } from "../../contexts/useData";
 import { Select, DatePicker, Form, Button, message, Switch, TimePicker } from "antd";
 
@@ -17,7 +18,9 @@ const ConnectTab = () => {
     const [disable, setDisable] = useState(false);
     const { experts, fetchExperts } = useExperts();
     const [showForm, setShowForm] = useState(false);
-    const [showReForm, setShowReForm] = useState(false);
+    const [showReForm, setShowReForm] = useState(
+        localStorage.getItem('showReForm') === 'true' ? true : false
+    );
     const [internalView, setInternalView] = useState(
         localStorage.getItem('internalView') === 'true' ? true : false
     );
@@ -179,17 +182,23 @@ const ConnectTab = () => {
     const scheduleFormFields = [userFormField, expertFormField, { name: "datetime", type: "datetime", rules: requiredRule("Please select a date and time"), }, userRequestedFormField, actionField("Schedule Call")];
     const reFormFields = [userFormField, expertFormField, timeField, frequencyField, daysField, monthDaysField, expiryField, userRequestedFormField, actionField("Schedule Repeat Call")];
 
+    const handleReFormChange = () => {
+        setShowReForm(!showReForm);
+        localStorage.setItem('showReForm', !showReForm);
+    }
 
     return (
         <LazyLoad>
             <div className="flex items-center justify-center gap-4 h-full">
                 {showForm
                     ? <PostCallForm setShowForm={setShowForm} />
-                    : <SchedulesTable />
+                    : showReForm
+                        ? <ReSchedulesTable />
+                        : <SchedulesTable />
                 }
                 <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-10 justify-center">
                     {!showReForm && <div className="flex items-center justify-end gap-2">
-                        <Switch className="w-fit mb-3" unCheckedChildren="Schedule a Repeat Call" checked={showReForm} onChange={() => setShowReForm(true)} />
+                        <Switch className="w-fit mb-3" unCheckedChildren="Schedule a Repeat Call" checked={showReForm} onChange={handleReFormChange} />
                     </div>}
                     {!showReForm ?
                         <>
@@ -207,7 +216,7 @@ const ConnectTab = () => {
                             <CallScheduleForm onFinish={onReScheduleFinish} loading={loading} fields={reFormFields} />
                             <div className="flex w-full justify-between items-center mt-4">
                                 <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
-                                <Button danger onClick={() => setShowReForm(false)}>Cancel</Button>
+                                <Button danger onClick={handleReFormChange}>Cancel</Button>
                             </div>
                         </>
                     }

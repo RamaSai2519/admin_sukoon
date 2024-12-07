@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import moment from 'moment/moment';
+import dayjs from 'dayjs';
 import { useFilters } from '../contexts/useData';
 import { formatDate } from '../Utils/formatHelper';
 import { RaxiosPost } from '../services/fetchData';
@@ -97,7 +97,7 @@ const UserEngagement = ({ setExportFileUrl }) => {
         createColumn('Calls', 'callsDone', 'callsDone', 70),
         createColumn('Last Reached', 'lastReached', 'lastReached', 200, null, null, (text, record) => (
             <DatePicker
-                value={text ? moment(text) : null}
+                value={text ? dayjs(text, 'YYYY-MM-DD') : null}
                 onChange={(date) => handleLastReachedChange(date, record)}
             />
         )),
