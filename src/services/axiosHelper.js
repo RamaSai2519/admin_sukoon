@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const FINAL_URL = 'https://6x4j0qxbmk.execute-api.ap-south-1.amazonaws.com/main';
-// export const FINAL_URL = 'https://wivq47mgh6.execute-api.ap-south-1.amazonaws.com/dev';
+// export const FINAL_URL = 'https://6x4j0qxbmk.execute-api.ap-south-1.amazonaws.com/main';
+export const FINAL_URL = 'https://wivq47mgh6.execute-api.ap-south-1.amazonaws.com/dev';
 // export const FINAL_URL = "http://localhost:8080/";
 export const MARK_URL = "https://mark.sukoonunlimited.com";
 
