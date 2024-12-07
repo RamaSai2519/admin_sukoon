@@ -26,8 +26,6 @@ const ConnectTab = () => {
     );
     const { Option } = Select;
 
-
-
     const fetchUsersAndExperts = async () => {
         setDisable(true);
         await fetchUsers();
@@ -103,12 +101,14 @@ const ConnectTab = () => {
 
     const onReScheduleFinish = async (values) => {
         const payload = {
-            name: admin.name, user_id: values.user, expert_id: values.expert, job_time: values.job_time.format('HH:mm'), job_expiry: values.job_expiry,
-            week_days: values.week_days.map(day => day.toLowerCase()), month_days: values.month_days, frequency: values.frequency.toLowerCase(),
+            ...values,
+            expert_id: values.expert, user_id: values.user,
+            name: admin.name, job_time: values.job_time.format('HH:mm'),
+            week_days: values?.week_days?.map(day => day.toLowerCase()), frequency: values.frequency.toLowerCase(),
             user_requested: values.user_requested === "Yes", job_type: 'CALL'
         }
         const response = await RaxiosPost('/actions/reschedules', payload, true, setLoading);
-        if (response.status === 200) setShowReForm(false);
+        if (response.status === 200) window.location.reload();
     };
 
     const CallScheduleForm = ({ onFinish, loading, fields }) => {
@@ -174,7 +174,7 @@ const ConnectTab = () => {
     const userRequestedFormField = { name: "user_requested", type: "select", placeholder: "Is this User Requested?", options: ["Yes", "No"], rules: requiredRule("Please select if user requested or not") };
     const daysField = { name: "week_days", type: "days", placeholder: "Select Week Days", options: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] };
     const timeField = { name: "job_time", type: "time", placeholder: "Select Time", rules: requiredRule("Please select a time") };
-    const expiryField = { name: "job_expiry", type: "datetime", placeholder: "Select Expiry Date" };
+    const expiryField = { name: "job_expiry", type: "datetime", placeholder: "Select Expiry Date", rules: requiredRule("Please select an expiry date") };
     const monthDaysField = { name: "month_days", type: "days", placeholder: "Select Month Days", options: Array.from({ length: 31 }, (_, i) => i + 1) };
     const frequencyField = { name: "frequency", type: "select", placeholder: "Select Frequency", options: ["Daily", "Weekly", "Monthly",], rules: requiredRule("Please select a frequency") };
 
@@ -193,7 +193,7 @@ const ConnectTab = () => {
                 {showForm
                     ? <PostCallForm setShowForm={setShowForm} />
                     : showReForm
-                        ? <ReSchedulesTable />
+                        ? <ReSchedulesTable reformChange={handleReFormChange} />
                         : <SchedulesTable />
                 }
                 <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-10 justify-center">

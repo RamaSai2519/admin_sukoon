@@ -7,9 +7,9 @@ import { useFilters } from "../../contexts/useData";
 import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 import GetColumnSearchProps from "../../Utils/antTableHelper";
 
-const ReSchedulesTable = () => {
+const ReSchedulesTable = ({ reformChange }) => {
     const location = useLocation();
-    const { filters = {} } = useFilters();
+    const { filters = {}, setFilters } = useFilters();
     const filter = filters[location.pathname] || {};
 
     const [job, setJob] = useState({});
@@ -54,6 +54,14 @@ const ReSchedulesTable = () => {
         ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, location.pathname, filter),
     });
 
+    const handleViewSchedules = (record) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [location.pathname]: { filter_field: 'reschedule_id', filter_value: record._id }
+        }));
+        reformChange();
+    };
+
     const columns = [
         createColumn('User', 'user', 'user'),
         createColumn('Expert', 'expert', 'expert'),
@@ -61,7 +69,12 @@ const ReSchedulesTable = () => {
         createColumn('Frequency', 'frequency', 'frequency'),
         {
             title: 'Action', key: 'action',
-            render: (_, record) => <Button onClick={() => handleSetJob(record)}>View</Button>
+            render: (_, record) => (
+                <div className="flex gap-2">
+                    <Button onClick={() => handleSetJob(record)}>Edit</Button>
+                    <Button onClick={() => handleViewSchedules(record)}>View Jobs</Button>
+                </div>
+            )
         }
     ];
 
