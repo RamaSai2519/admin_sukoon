@@ -1,21 +1,51 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Loading from "../Loading/loading";
 import { Button, Checkbox, Table } from "antd";
 import { formatTime } from "../../Utils/formatHelper";
-import { RaxiosPost } from "../../services/fetchData";
+import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 import GetColumnSearchProps from "../../Utils/antTableHelper";
+import { useLocation } from "react-router-dom";
+import { useFilters } from "../../contexts/useData";
 
-const SchedulesTable = ({ schedules, loading, setIsDeleted, isDeleted }) => {
+const SchedulesTable = () => {
+    const location = useLocation();
+    const { filters = {} } = useFilters();
+    const filter = filters[location.pathname] || {};
+
+    const [total, setTotal] = useState(0);
+    const [schedulesPage, setSchedulesPage] = useState(
+        localStorage.getItem("schedulesPage") ? parseInt(localStorage.getItem("schedulesPage")) : 1
+    );
+    const [isOld, setIsOld] = useState(false);
+    const [pageSize, setPageSize] = useState(10);
+    const [loading, setLoading] = useState(false);
+    const [schedules, setSchedules] = useState([]);
+    const [isDeleted, setIsDeleted] = useState(false);
+
     const searchInputRef = useRef(null);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [responseLoading, setResponseLoading] = useState(false);
 
-    const createColumn = (title, dataIndex, key, sorter, render) => ({
+    const handleTableChange = (current, pageSize) => {
+        setSchedulesPage(current);
+        localStorage.setItem('schedulesPage', current);
+        setPageSize(pageSize);
+    };
+
+    const fetchSchedules = async () => {
+        const optional = { isDeleted, old: isOld, ...filter };
+        raxiosFetchData(schedulesPage, pageSize, setSchedules, setTotal, '/actions/schedules', optional, setLoading);
+    };
+
+    // eslint-disable-next-line
+    useEffect(() => { fetchSchedules() }, [schedulesPage, pageSize, JSON.stringify(filter), isOld, isDeleted]);
+
+    const createColumn = (title, dataIndex, key, sorter, render, filter = true) => ({
         title,
         dataIndex,
         key,
-        ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, null, true),
+        ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, location.pathname, filter),
         ...(sorter && { sorter }),
         ...(render && { render })
     });
@@ -25,10 +55,10 @@ const SchedulesTable = ({ schedules, loading, setIsDeleted, isDeleted }) => {
         createColumn("Expert", "expert", "expert"),
         createColumn("Date & Time", "datetime", "datetime",
             (a, b) => new Date(a.datetime) - new Date(b.datetime),
-            (record) => formatTime(record)),
+            (record) => formatTime(record), false),
         createColumn("Status", "status", "status"),
         createColumn('Scheduled By', 'initiatedBy', 'initiatedBy'),
-        createColumn('Source', 'source', 'source'),
+        createColumn('Source', 'source', 'source', null, null, false),
         {
             title: "Action", key: "action",
             render: (_, record) => (
@@ -44,20 +74,28 @@ const SchedulesTable = ({ schedules, loading, setIsDeleted, isDeleted }) => {
     ];
 
     const handleDelete = async (record) => {
-        setResponseLoading(true);
-        await RaxiosPost('/actions/update_scheduled_job', {
-            scheduled_job_id: record.id,
-            action: 'DELETE'
-        }, true);
-        schedules.find(s => s.id === record.id).isDeleted = true;
-        setResponseLoading(false);
+        if (isOld) {
+            const payload = { scheduled_job_id: record.id, action: 'DELETE' }
+            await RaxiosPost('/actions/update_scheduled_job', payload, true, setResponseLoading);
+            schedules.find(s => s.id === record.id).isDeleted = true;
+        } else {
+            const payload = { _id: record._id, isDeleted: true }
+            await RaxiosPost('/actions/schedules', payload, true, setResponseLoading);
+            schedules.find(s => s._id === record._id).isDeleted = true;
+        }
     };
 
     return (
         <div className="w-4/5">
             {loading ? <Loading /> : (
                 <div className="flex flex-col gap-2">
-                    <div className="flex w-full justify-end">
+                    <div className="flex w-full justify-end gap-5">
+                        <Checkbox
+                            checked={isOld}
+                            onChange={(e) => setIsOld(e.target.checked)}
+                        >
+                            Show Old
+                        </Checkbox>
                         <Checkbox
                             checked={isDeleted}
                             onChange={(e) => setIsDeleted(e.target.checked)}
@@ -67,9 +105,16 @@ const SchedulesTable = ({ schedules, loading, setIsDeleted, isDeleted }) => {
                     </div>
                     <Table
                         scroll={{ x: 768 }}
-                        rowKey={(record) => record.id}
+                        rowKey={(record) => record._id}
                         dataSource={schedules}
                         columns={columns}
+                        pagination={{
+                            total,
+                            pageSize,
+                            showSizeChanger: true,
+                            current: schedulesPage,
+                            onChange: handleTableChange,
+                        }}
                     />
                 </div>
             )}

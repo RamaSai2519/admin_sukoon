@@ -1,33 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
+import { RaxiosPost } from "../../services/fetchData";
 import PostCallForm from "../../components/PostCallForm";
 import LazyLoad from "../../components/LazyLoad/lazyload";
 import InternalToggle from "../../components/InternalToggle";
 import SchedulesTable from "../../components/SchedulesTable";
 import { generateOptions } from "../../Utils/antSelectHelper";
-import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 import { useUsers, useExperts, useAdmin } from "../../contexts/useData";
 import { Select, DatePicker, Form, Button, message, Switch, TimePicker } from "antd";
 
 const ConnectTab = () => {
     const { admin } = useAdmin();
+
     const { users, fetchUsers } = useUsers();
     const [loading, setLoading] = useState(false);
     const [disable, setDisable] = useState(false);
     const { experts, fetchExperts } = useExperts();
-    const [schedules, setSchedules] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [rLoading, setRLoading] = useState(false);
-    const [isDeleted, setIsDeleted] = useState(false);
     const [showReForm, setShowReForm] = useState(false);
     const [internalView, setInternalView] = useState(
         localStorage.getItem('internalView') === 'true' ? true : false
     );
     const { Option } = Select;
 
-    const fetchSchedules = async () => {
-        raxiosFetchData(null, null, setSchedules, null, '/actions/schedules', { isDeleted }, setRLoading);
-    };
+
 
     const fetchUsersAndExperts = async () => {
         setDisable(true);
@@ -36,37 +32,35 @@ const ConnectTab = () => {
         setDisable(false);
     };
 
-    useEffect(() => { fetchSchedules(); }, [isDeleted]);
     useEffect(() => { fetchUsersAndExperts(); }, [internalView]);
 
     const handleCallTrigger = async (values) => {
-        setLoading(true);
         const response = await RaxiosPost('/actions/call', {
             user_id: values.user,
             expert_id: values.expert,
             user_requested: values.user_requested === "Yes"
-        }, true);
+        }, true, setLoading);
         if (response.status === 200) {
             const formData = { user_id: values.user, call_id: response.data.call_id };
             localStorage.setItem('formData', JSON.stringify(formData));
             setShowForm(true);
         }
-        setLoading(false);
     };
 
-    const checkExpertAvailability = (expertId, selectedDateTime, schedules) => {
-        const selectedTime = new Date(selectedDateTime).getTime();
-        const timeWindow = 15 * 60 * 1000;
-        const isConflict = schedules.some(schedule => {
-            const scheduleMeta = JSON.parse(schedule.requestMeta);
-            if ((scheduleMeta?.expertId || '') === expertId && !schedule.isDeleted) {
-                const scheduleTime = new Date(schedule.scheduledJobTime).getTime();
-                return Math.abs(scheduleTime - selectedTime) <= timeWindow;
-            }
-            return false;
-        });
-        return isConflict;
-    };
+
+    // TODO: Move to BACKEND
+    // const checkExpertAvailability = (expertId, selectedDateTime, schedules) => {
+    //     const selectedTime = new Date(selectedDateTime).getTime();
+    //     const timeWindow = 15 * 60 * 1000;
+    //     const isConflict = schedules.some(schedule => {
+    //         if ((schedule?.expertId || '') === expertId && !schedule.isDeleted) {
+    //             const scheduleTime = new Date(schedule.scheduledJobTime).getTime();
+    //             return Math.abs(scheduleTime - selectedTime) <= timeWindow;
+    //         }
+    //         return false;
+    //     });
+    //     return isConflict;
+    // };
 
     const onScheduleFinish = async (values) => {
         setLoading(true);
@@ -75,29 +69,30 @@ const ConnectTab = () => {
 
         if (selectedDateTime <= new Date()) {
             message.error("Selected time has already passed. Please select a future time.");
-        } else if (checkExpertAvailability(expertId, selectedDateTime, schedules)) {
-            message.error("The expert already has a schedule within 15 minutes of the selected t ime.");
+            // } else if (checkExpertAvailability(expertId, selectedDateTime, schedules)) {
+            //     message.error("The expert already has a schedule within 15 minutes of the selected t ime.");
         } else {
             const formattedDate = new Date(selectedDateTime).toISOString().split('.')[0] + "Z";
             const initiatedBy = admin.name;
-            const meta = JSON.stringify({ expertId, userId: values.user, initiatedBy });
             let status = 'WAPENDING';
             const tooLateSchedule = new Date(selectedDateTime).getTime() - new Date().getTime() < 30 * 60 * 1000;
             if (tooLateSchedule) status = 'PENDING';
 
-            const response = await RaxiosPost('/actions/create_scheduled_job',
+            const response = await RaxiosPost('/actions/schedules',
                 {
+                    initiatedBy,
                     job_type: 'CALL',
                     status: status,
-                    request_meta: meta,
+                    user_id: values.user,
+                    expert_id: expertId,
                     job_time: formattedDate,
                     user_requested: values.user_requested === "Yes"
                 },
                 true
             );
             if (response.status === 200) {
-                if (tooLateSchedule) message.warning('No notification will be sent as the call is scheduled within 30 minutes.', 20);
-                fetchSchedules();
+                if (tooLateSchedule) await message.warning('No notification will be sent as the call is scheduled within 30 minutes.', 20);
+                window.location.reload();
             }
         }
         setLoading(false);
@@ -208,7 +203,7 @@ const ConnectTab = () => {
             <div className="flex items-center justify-center gap-4 h-full">
                 {showForm
                     ? <PostCallForm setShowForm={setShowForm} />
-                    : <SchedulesTable schedules={schedules} loading={rLoading} setIsDeleted={setIsDeleted} isDeleted={isDeleted} />
+                    : <SchedulesTable />
                 }
                 <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-10 justify-center">
                     {!showReForm && <div className="flex items-center justify-end gap-2">
