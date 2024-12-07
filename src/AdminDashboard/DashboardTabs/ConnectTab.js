@@ -91,7 +91,7 @@ const ConnectTab = () => {
                 true
             );
             if (response.status === 200) {
-                if (tooLateSchedule) await message.warning('No notification will be sent as the call is scheduled within 30 minutes.', 20);
+                if (tooLateSchedule) await message.warning('No notification will be sent as the call is scheduled within 30 minutes.', 10);
                 window.location.reload();
             }
         }
@@ -99,15 +99,12 @@ const ConnectTab = () => {
     };
 
     const onReScheduleFinish = async (values) => {
-        const { days, expert, job_expiry, frequency, job_time, user, user_requested } = values;
-        const response = await RaxiosPost('/actions/upsert_reschedules', {
-            expert_id: expert, user_id: user, job_expiry,
-            days: days.map(day => day.toLowerCase()),
-            frequency: frequency.toLowerCase(),
-            job_time: job_time.format('HH:mm'),
-            user_requested: user_requested === "Yes",
-            job_type: 'CALL'
-        }, true);
+        const payload = {
+            name: admin.name, user_id: values.user, expert_id: values.expert, job_time: values.job_time.format('HH:mm'), job_expiry: values.job_expiry,
+            week_days: values.week_days.map(day => day.toLowerCase()), month_days: values.month_days, frequency: values.frequency.toLowerCase(),
+            user_requested: values.user_requested === "Yes", job_type: 'CALL'
+        }
+        const response = await RaxiosPost('/actions/reschedules', payload, true, setLoading);
         if (response.status === 200) setShowReForm(false);
     };
 
@@ -155,11 +152,11 @@ const ConnectTab = () => {
                                 ))}
                             </Select>
                         ) : field.type === "time" ? (
-                            <TimePicker className="w-full" placeholder={field.placeholder} />
+                            <TimePicker showSecond={false} className="w-full" placeholder={field.placeholder} />
                         ) : null}
                     </Form.Item>
                 ))}
-                <Button loading={loading} type="primary" htmlType="submit" className="w-full col-span-2" disabled={showReForm}>
+                <Button loading={loading} type="primary" htmlType="submit" className="w-full col-span-2">
                     {fields.find(field => field.actionText)?.actionText}
                 </Button>
             </Form>
@@ -169,34 +166,19 @@ const ConnectTab = () => {
     const requiredRule = (message) => [{ required: true, message }];
     const actionField = (actionText) => ({ actionText });
 
-    const userFormField = {
-        name: "user", type: "select", placeholder: "Select User",
-        showSearch: true, options: users, optionKey: "name", generateOption: true,
-        rules: requiredRule("Please select a user")
-    };
-    const expertFormField = {
-        name: "expert", type: "select", placeholder: "Select Expert",
-        showSearch: true, options: experts, optionKey: "name", generateOption: true,
-        rules: requiredRule("Please select an expert")
-    };
-    const daysField = {
-        name: "days", type: "days", placeholder: "Select Days",
-        options: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], rules: requiredRule("Please select days")
-    };
+    const userFormField = { name: "user", type: "select", placeholder: "Select User", showSearch: true, options: users, optionKey: "name", generateOption: true, rules: requiredRule("Please select a user") };
+    const expertFormField = { name: "expert", type: "select", placeholder: "Select Expert", showSearch: true, options: experts, optionKey: "name", generateOption: true, rules: requiredRule("Please select an expert") };
+    const userRequestedFormField = { name: "user_requested", type: "select", placeholder: "Is this User Requested?", options: ["Yes", "No"], rules: requiredRule("Please select if user requested or not") };
+    const daysField = { name: "week_days", type: "days", placeholder: "Select Week Days", options: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] };
     const timeField = { name: "job_time", type: "time", placeholder: "Select Time", rules: requiredRule("Please select a time") };
     const expiryField = { name: "job_expiry", type: "datetime", placeholder: "Select Expiry Date" };
-    const frequencyField = { name: "frequency", type: "select", placeholder: "Select Frequency", options: ["Weekly", "Monthly", "BiWeekly"], rules: requiredRule("Please select a frequency") };
-
-    const userRequestedFormField = { name: "user_requested", type: "select", placeholder: "Is this User Requested?", options: ["Yes", "No"], rules: requiredRule("Please select if user requested or not") };
+    const monthDaysField = { name: "month_days", type: "days", placeholder: "Select Month Days", options: Array.from({ length: 31 }, (_, i) => i + 1) };
+    const frequencyField = { name: "frequency", type: "select", placeholder: "Select Frequency", options: ["Daily", "Weekly", "Monthly",], rules: requiredRule("Please select a frequency") };
 
     const callFormFields = [userFormField, expertFormField, userRequestedFormField, actionField("Connect Now")];
-    const scheduleFormFields = [
-        userFormField,
-        expertFormField,
-        { name: "datetime", type: "datetime", rules: requiredRule("Please select a date and time"), },
-        userRequestedFormField, actionField("Schedule Call")
-    ];
-    const reFormFields = [userFormField, expertFormField, timeField, daysField, expiryField, frequencyField, userRequestedFormField, actionField("Schedule Call")];
+    const scheduleFormFields = [userFormField, expertFormField, { name: "datetime", type: "datetime", rules: requiredRule("Please select a date and time"), }, userRequestedFormField, actionField("Schedule Call")];
+    const reFormFields = [userFormField, expertFormField, timeField, frequencyField, daysField, monthDaysField, expiryField, userRequestedFormField, actionField("Schedule Repeat Call")];
+
 
     return (
         <LazyLoad>
