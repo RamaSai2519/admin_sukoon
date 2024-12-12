@@ -33,15 +33,15 @@ export const RaxiosPost = async (url, data, isNotify = false, setLoading = null)
         const response = await Raxios.post(url, data);
         if (isNotify) {
             if (response.status === 200) {
-                message.success(response.msg);
+                await message.success(response.msg);
             } else {
-                message.error(response.msg);
+                await message.error(response.msg);
             }
         }
         setLoading && setLoading(false);
         return response;
     } catch (error) {
-        message.error(error.response?.data?.message || 'An error occurred');
+        await message.error(error.response?.data?.message || 'An error occurred');
         setLoading && setLoading(false);
     }
 };
