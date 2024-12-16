@@ -48,21 +48,6 @@ const ConnectTab = () => {
         }
     };
 
-
-    // TODO: Move to BACKEND
-    // const checkExpertAvailability = (expertId, selectedDateTime, schedules) => {
-    //     const selectedTime = new Date(selectedDateTime).getTime();
-    //     const timeWindow = 15 * 60 * 1000;
-    //     const isConflict = schedules.some(schedule => {
-    //         if ((schedule?.expertId || '') === expertId && !schedule.isDeleted) {
-    //             const scheduleTime = new Date(schedule.scheduledJobTime).getTime();
-    //             return Math.abs(scheduleTime - selectedTime) <= timeWindow;
-    //         }
-    //         return false;
-    //     });
-    //     return isConflict;
-    // };
-
     const onScheduleFinish = async (values) => {
         setLoading(true);
         const selectedDateTime = values.datetime;
@@ -70,8 +55,6 @@ const ConnectTab = () => {
 
         if (selectedDateTime <= new Date()) {
             message.error("Selected time has already passed. Please select a future time.");
-            // } else if (checkExpertAvailability(expertId, selectedDateTime, schedules)) {
-            //     message.error("The expert already has a schedule within 15 minutes of the selected t ime.");
         } else {
             const formattedDate = new Date(selectedDateTime).toISOString().split('.')[0] + "Z";
             const initiatedBy = admin.name;
