@@ -59,7 +59,7 @@ const ConnectTab = () => {
             const formattedDate = new Date(selectedDateTime).toISOString().split('.')[0] + "Z";
             const initiatedBy = admin.name;
             let status = 'WAPENDING';
-            const tooLateSchedule = new Date(selectedDateTime).getTime() - new Date().getTime() < 30 * 60 * 1000;
+            const tooLateSchedule = new Date(selectedDateTime).getTime() - new Date().getTime() < 15 * 60 * 1000;
             if (tooLateSchedule) status = 'PENDING';
 
             const response = await RaxiosPost('/actions/schedules',
@@ -75,7 +75,7 @@ const ConnectTab = () => {
                 true
             );
             if (response.status === 200) {
-                if (tooLateSchedule) await message.warning('No notification will be sent as the call is scheduled within 30 minutes.', 10);
+                if (tooLateSchedule) await message.warning('No notification will be sent as the call is scheduled within 15 minutes.', 10);
                 window.location.reload();
             }
         }
