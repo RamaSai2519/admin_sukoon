@@ -106,7 +106,7 @@ export const fetchCalls = async (setCalls, internal = false) => {
 export const fetchExperts = async (setExperts, internal) => {
     try {
         const response = await Raxios.get('/actions/expert', {
-            params: { internal }
+            params: { internal, platform: 'admin' }
         });
         setExperts(response.data);
     } catch (error) {
