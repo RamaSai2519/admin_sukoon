@@ -66,6 +66,7 @@ const ExpertDetails = () => {
   }, [loading, timings]);
 
   const handleUpdate = async (updatedFormData) => {
+    updatedFormData = { ...updatedFormData, sub_category: [] };
     if (updatedFormData.phoneNumber.length !== 10) return;
     try {
       const response = await Raxios.post('/actions/expert', updatedFormData);
