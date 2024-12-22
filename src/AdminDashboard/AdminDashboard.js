@@ -17,6 +17,7 @@ import ThemeToggle from '../components/ThemeToggle/toggle'
 import ApplicationsTab from './DashboardTabs/ApplicationsTab'
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, LayoutDashboard, Users, PhoneCall, Calendar, Club, FileCode, LogOut } from 'lucide-react'
+import PlatformCategory from '../components/PlatformCategory'
 
 const menuItems = [
   {
@@ -35,6 +36,7 @@ const menuItems = [
       { href: 'users list', component: <UserList /> },
       { href: 'experts list', component: <SaarthisTab /> },
       { href: 'applications', component: <ApplicationsTab /> },
+      { href: 'Platform Category', component: <PlatformCategory /> },
     ],
   },
   {

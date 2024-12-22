@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import Raxios from '../services/axiosHelper';
 import S3Uploader from '../components/Upload';
-import { RaxiosPost } from '../services/fetchData';
+import { fetchPlatfromsCategoriesAndSubCategories, RaxiosPost } from '../services/fetchData';
 import React, { useState, useEffect } from 'react';
 import { useCategories } from '../contexts/useData';
 import Loading from '../components/Loading/loading';
@@ -28,6 +28,7 @@ const ExpertDetails = () => {
   const { allCategories, fetchCategories } = useCategories();
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [platformCategories, setPlatformCategories] = useState([]);
   const [timings, setTimings] = useState([]);
   const [form] = Form.useForm();
 
@@ -48,8 +49,14 @@ const ExpertDetails = () => {
     setTimings(timings);
   };
 
+  const fetchPlatformCategories = async () => {
+    const fetchPlatformCategories = await fetchPlatfromsCategoriesAndSubCategories();
+    setPlatformCategories(fetchPlatformCategories);
+  }
+
   useEffect(() => {
     setLoading(true);
+    fetchPlatformCategories();
     fetchCategories();
     fetchTimings();
     fetchExpertDetails();
@@ -140,6 +147,7 @@ const ExpertDetails = () => {
     { name: 'type', label: 'Type', type: 'select', options: ['expert', 'saarthi', 'internal'] },
     { name: 'languages', label: 'Languages', type: 'input' },
     { name: 'categories', label: 'Categories', type: 'select', options: allCategories, mode: 'multiple' },
+    { name: 'platform_categories', label: 'Platform Categories', type: 'select', options: allCategories, mode: 'multiple' },
     { name: 'description', label: 'Description', type: 'textarea' },
     { name: 'score', label: 'Score', type: 'input' },
     { name: 'repeat_score', label: 'Repeat Score', type: 'input' },
@@ -147,10 +155,43 @@ const ExpertDetails = () => {
     { name: 'total_score', label: 'Total Score', type: 'input' },
   ];
 
+  
+  const HandleObjectInSelect =   () => {
+    
+    const handleUpdate = async (updatedFormData) => {
+      if(expert.phoneNumber && updatedFormData.sub_category?.length> 0) {
+        let postObject = {
+          phoneNumber: expert.phoneNumber,
+          sub_category: updatedFormData.sub_category
+        }
+        await RaxiosPost('/actions/expert', postObject, true);
+      }
+    }
+    return (
+      <Form onFinish={handleUpdate}>
+        <Form.Item name="sub_category" label="Platform Categories">
+          <Select
+            mode={'multiple'}
+            className="w-full mt-2"
+            placeholder={`Select  Platform`}
+            disabled={!editMode}
+          >
+            {platformCategories.map((option) => (
+              <Option key={option._id} value={option._id} >{option.name}</Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Button type="primary" title='Submit' htmlType="submit" className='flex items-center gap-2' >Submit</Button>      
+        </Form>
+    );
+  };
+
   return (
     <div>
+       <HandleObjectInSelect />
       {expert && (
         <Form form={form} className='' layout="vertical" onFinish={handleUpdate}>
+        
           <div className='h3-darkgrey'>
             <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
               <h1>Expert Details</h1>
