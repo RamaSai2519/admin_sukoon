@@ -22,13 +22,17 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                 setShowSignUpModal(true);
                 return;
             }
-            const { access_token, refresh_token, user } = response.data;
-            localStorage.setItem('access_token', access_token);
-            localStorage.setItem('refresh_token', refresh_token);
-            setAdmin(user);
-            setIsLoggedIn(true);
-            localStorage.setItem('isLoggedIn', 'true');
-            navigate('/admin/dashboard');
+            if (response.status !== 200) {
+                message.error(response.msg);
+            } else {
+                const { access_token, refresh_token, user } = response.data;
+                localStorage.setItem('access_token', access_token);
+                localStorage.setItem('refresh_token', refresh_token);
+                setAdmin(user);
+                setIsLoggedIn(true);
+                localStorage.setItem('isLoggedIn', 'true');
+                navigate('/admin/dashboard');
+            }
         } catch (error) {
             console.error('Login failed', error);
             alert('Login failed, Please recheck your credentials. If the problem persists, please contact your IT Administrator.');
