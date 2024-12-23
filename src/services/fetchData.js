@@ -114,16 +114,6 @@ export const fetchExperts = async (setExperts, internal) => {
     }
 };
 
-export const fetchPlatfromsCategoriesAndSubCategories = async (setExperts, internal) => {
-    try {
-        const response = await Raxios.get('/actions/platform_category?type=main');
-       return getSubCategories(response.data.data);
-    } catch (error) {
-        message.error('Error fetching experts:', error);
-    }
-};
-
-
 export const fetchEngagementData = async (page, size) => {
     try {
         const response = await Raxios.get('/actions/user/engagementData', {
@@ -137,20 +127,3 @@ export const fetchEngagementData = async (page, size) => {
 };
 
 
-function getSubCategories(arr) {
-    let tempArr = [];
-    let n = arr.length;
-  
-    for (let i = 0; i < Math.ceil(n / 2); i++) {
-      // Add sub_categories from the start of the array
-      if (arr[i]?.sub_categories?.length > 0) {
-        tempArr.push(...arr[i].sub_categories);
-      }
-      // Add sub_categories from the end of the array, avoiding duplicates for the middle element
-      if (i !== n - i - 1 && arr[n - i - 1]?.sub_categories?.length > 0) {
-        tempArr.push(...arr[n - i - 1].sub_categories);
-      }
-    }
-  
-    return tempArr;
-  }

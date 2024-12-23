@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, List, Card, Row, Col, message } from 'antd';
-import axios from 'axios';
 import Raxios from '../../services/axiosHelper';
 import { RaxiosPost } from "../../services/fetchData";
+import { Form, Input, Button, List, Card, Row, Col, message } from 'antd';
+
+
 const PlatformCategory = () => {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState({});
   const [form] = Form.useForm();
 
-  // Fetch categories from the API
   const fetchPlatformCategories = async () => {
     try {
       const response = await Raxios.get('/actions/platform_category?type=main');
@@ -34,17 +34,14 @@ const PlatformCategory = () => {
     }
   };
 
-  // Add a new category manually
   const addCategory = (values) => {
     setCategories([...categories, values.category]);
     setSubCategories({ ...subCategories, [values.category]: [] });
     form.resetFields();
   };
 
-  // Add a new sub-category to an existing category
   const addSubCategory = async (category, subCategory) => {
-    debugger;
-     await RaxiosPost('/actions/platform_category', {  name: category, sub_category: subCategory }, true);
+    await RaxiosPost('/actions/platform_category', { name: category, sub_category: subCategory }, true);
 
     setSubCategories({
       ...subCategories,
@@ -52,14 +49,12 @@ const PlatformCategory = () => {
     });
   };
 
-  // Fetch categories on component mount
   useEffect(() => {
     fetchPlatformCategories();
   }, []);
 
   return (
-    <div>
-      {/* Form to add a new category */}
+    <div className='py-5'>
       <Form form={form} layout="inline" onFinish={addCategory}>
         <Form.Item
           name="category"
@@ -74,7 +69,6 @@ const PlatformCategory = () => {
         </Form.Item>
       </Form>
 
-      {/* Render categories and subcategories */}
       <Row gutter={16} style={{ marginTop: 20 }}>
         {categories.map((category) => (
           <Col span={8} key={category}>
