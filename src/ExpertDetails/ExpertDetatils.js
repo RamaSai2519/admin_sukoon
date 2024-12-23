@@ -22,12 +22,13 @@ const ExpertDetails = () => {
   const [expert, setExpert] = useState({
     name: '', score: '', topics: '', status: '',
     persona: {}, profile: '', categories: [], phoneNumber: '',
-    description: '', total_score: '', calls_share: '', repeat_score: ''
+    description: '', total_score: '', calls_share: '', repeat_score: '', sub_category: []
   });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { allCategories, fetchCategories } = useCategories();
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [platformCategories, setPlatformCategories] = useState([]);
   const [timings, setTimings] = useState([]);
   const [form] = Form.useForm();
 
@@ -35,6 +36,9 @@ const ExpertDetails = () => {
     try {
       const response = await Raxios.get(`/actions/expert?phoneNumber=${number}`);
       const { __v, lastModifiedBy, calls, ...expertData } = response.data;
+      if (typeof expertData.sub_category === 'string') {
+        expertData.sub_category = [expertData.sub_category];
+      }
       setExpert(expertData);
       form.setFieldsValue(expertData);
       setLoading(false);
@@ -48,11 +52,33 @@ const ExpertDetails = () => {
     setTimings(timings);
   };
 
+  function getSubCategories(arr) {
+    let tempArr = [];
+    let n = arr.length;
+    for (let i = 0; i < Math.ceil(n / 2); i++) {
+      if (arr[i]?.sub_categories?.length > 0) { tempArr.push(...arr[i].sub_categories); }
+      if (i !== n - i - 1 && arr[n - i - 1]?.sub_categories?.length > 0) {
+        tempArr.push(...arr[n - i - 1].sub_categories);
+      }
+    }
+    return tempArr;
+  }
+
+  const fetchPlatformCategories = async (setExperts, internal) => {
+    try {
+      const response = await Raxios.get('/actions/platform_category?type=main');
+      return setPlatformCategories(getSubCategories(response.data.data))
+    } catch (error) {
+      message.error('Error fetching experts:', error);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
+    fetchPlatformCategories();
+    fetchExpertDetails();
     fetchCategories();
     fetchTimings();
-    fetchExpertDetails();
     // eslint-disable-next-line
   }, [expertId]);
 
@@ -66,7 +92,6 @@ const ExpertDetails = () => {
   }, [loading, timings]);
 
   const handleUpdate = async (updatedFormData) => {
-    updatedFormData = { ...updatedFormData, sub_category: [] };
     if (updatedFormData.phoneNumber.length !== 10) return;
     try {
       const response = await Raxios.post('/actions/expert', updatedFormData);
@@ -140,6 +165,7 @@ const ExpertDetails = () => {
     { name: 'type', label: 'Type', type: 'select', options: ['expert', 'saarthi', 'internal'] },
     { name: 'languages', label: 'Languages', type: 'input' },
     { name: 'categories', label: 'Categories', type: 'select', options: allCategories, mode: 'multiple' },
+    { name: 'sub_category', label: 'Platform Categories', type: 'platform_categories' },
     { name: 'description', label: 'Description', type: 'textarea' },
     { name: 'score', label: 'Score', type: 'input' },
     { name: 'repeat_score', label: 'Repeat Score', type: 'input' },
@@ -151,6 +177,7 @@ const ExpertDetails = () => {
     <div>
       {expert && (
         <Form form={form} className='' layout="vertical" onFinish={handleUpdate}>
+
           <div className='h3-darkgrey'>
             <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
               <h1>Expert Details</h1>
@@ -256,6 +283,17 @@ const ExpertDetails = () => {
                       ) : field.type === 'select' ? (
                         <Select mode={field.mode} className='w-full mt-2' placeholder={`Select ${field.label}`} disabled={!editMode}>
                           {field.options.map((option) => (<Option key={option} value={option} />))}
+                        </Select>
+                      ) : field.type === 'platform_categories' ? (
+                        <Select
+                          mode={'multiple'}
+                          className="w-full mt-2"
+                          placeholder={`Select Platform`}
+                          disabled={!editMode}
+                        >
+                          {platformCategories.map((option) => (
+                            <Option key={option._id} value={option._id} >{option.name}</Option>
+                          ))}
                         </Select>
                       ) : (
                         <Input.TextArea className='mt-2' rows={15} disabled={!editMode} />

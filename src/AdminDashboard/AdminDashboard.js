@@ -15,6 +15,7 @@ import ReferralsTab from './DashboardTabs/ReferralsTab'
 import DashboardTab from './DashboardTabs/DashboardTab'
 import ThemeToggle from '../components/ThemeToggle/toggle'
 import ApplicationsTab from './DashboardTabs/ApplicationsTab'
+import PlatformCategory from '../components/PlatformCategory'
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, LayoutDashboard, Users, PhoneCall, Calendar, Club, FileCode, LogOut } from 'lucide-react'
 
@@ -35,6 +36,7 @@ const menuItems = [
       { href: 'users list', component: <UserList /> },
       { href: 'experts list', component: <SaarthisTab /> },
       { href: 'applications', component: <ApplicationsTab /> },
+      { href: 'app categories', component: <PlatformCategory /> },
     ],
   },
   {
