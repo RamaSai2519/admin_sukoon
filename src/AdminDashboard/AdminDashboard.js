@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { cn } from "../lib/utils"
+import ARKTab from './DashboardTabs/ARKTab'
 import UserList from '../UserList/UserList'
 import CallsTable from '../CallList/CallList'
 import UsersTab from './DashboardTabs/UsersTab'
@@ -45,6 +46,7 @@ const menuItems = [
     items: [
       { href: 'Connect', component: <ConnectTab /> },
       { href: 'whatsapp', component: <WhatsappTab /> },
+      { href: 'ark', component: <ARKTab /> },
     ],
   },
   {
