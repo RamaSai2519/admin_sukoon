@@ -74,8 +74,10 @@ const SchedulesTable = () => {
 
     const handleDelete = async (record) => {
         const payload = { _id: record._id, isDeleted: true }
-        await RaxiosPost('/actions/schedules', payload, true, setResponseLoading);
-        schedules.find(s => s._id === record._id).isDeleted = true;
+        const response = await RaxiosPost('/actions/schedules', payload, true, setResponseLoading);
+        if (response.status === 200) {
+            schedules.find(s => s._id === record._id).isDeleted = true;
+        }
     };
 
     return (
