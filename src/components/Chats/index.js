@@ -56,7 +56,7 @@ const Chats = () => {
 
     const columns = [
         { title: 'Name', key: 'name', render: (record) => (record.user?.name ? `${record.user.name} (${record.phoneNumber})` : record.phoneNumber) },
-        { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt' }
+        { title: 'Date', dataIndex: 'createdAt', key: 'createdAt', width: '107px' }
     ];
 
     const handleRefresh = async () => {
