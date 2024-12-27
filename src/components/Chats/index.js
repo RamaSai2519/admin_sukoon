@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Loading from '../Loading/loading'
+import { formatTime } from '../../Utils/formatHelper'
 import { Table, Button, Form, Input, Select } from 'antd'
 import { raxiosFetchData } from '../../services/fetchData'
 
@@ -44,7 +45,8 @@ const Chats = () => {
         return content.replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
     };
 
-    function formatTime(timeStr, minutesToAdd = 660) {
+    function formatTimeStr(timeStr, minutesToAdd = 660) {
+        if (timeStr.endsWith('Z')) return formatTime(timeStr);
         timeStr = timeStr.replace(' ', 'T');
         const date = new Date(timeStr);
         date.setMinutes(date.getMinutes() + minutesToAdd);
@@ -124,7 +126,7 @@ const Chats = () => {
                                         <div key={index} className='flex flex-col px-3 py-2 justify-start w-4/5 rounded-2xl rounded-bl-none bg-lightBlack'>
                                             <span className='text-gray-500'>{message.role}</span>
                                             <span className='p-2 rounded-lg' dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}></span>
-                                            {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTime(message.timestamp)}</span>}
+                                            {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTimeStr(message.timestamp)}</span>}
                                         </div>
                                     ) : message.role === 'assistant' ? (
                                         <>
@@ -137,7 +139,7 @@ const Chats = () => {
                                                                 <p>Called tool <b>{call.function.name}</b> with arguments <b>{truncateContent(call.function.arguments, 200)}</b></p>
                                                             </div>
                                                         ))}
-                                                        {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTime(message.timestamp)}</span>}
+                                                        {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTimeStr(message.timestamp)}</span>}
                                                     </> :
                                                         <>
                                                             <span className='text-gray-500'>{message.role} made a tool call</span>
@@ -148,7 +150,7 @@ const Chats = () => {
                                                 <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-br-none bg-lightBlack w-4/5 ml-auto'>
                                                     <span className='text-gray-500'>{message.role}</span>
                                                     <span className='p-2 rounded-lg text-left w-full' dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}></span>
-                                                    {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTime(message.timestamp)}</span>}
+                                                    {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTimeStr(message.timestamp)}</span>}
                                                 </div>
                                             )}
                                         </>
@@ -157,7 +159,7 @@ const Chats = () => {
                                             {viewTools ? <>
                                                 <span className='text-gray-500'>{message.role} response</span>
                                                 <span className='p-2 rounded-lg' dangerouslySetInnerHTML={{ __html: formatContent(truncateContent(message.content, 250)) }}></span>
-                                                {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTime(message.timestamp)}</span>}
+                                                {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTimeStr(message.timestamp)}</span>}
                                             </> : <>
                                                 <span className='text-gray-500'>{message.role} returned a response</span>
                                             </>}
