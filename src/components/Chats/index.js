@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Loading from '../Loading/loading'
+import { useNavigate } from 'react-router-dom'
 import { formatTime } from '../../Utils/formatHelper'
 import { Table, Button, Form, Input, Select } from 'antd'
 import { raxiosFetchData } from '../../services/fetchData'
@@ -20,6 +21,7 @@ const Chats = () => {
         localStorage.getItem('chatsPage') ? parseInt(localStorage.getItem('chatsPage')) : 1
     )
     const [selectedChat, setSelectedChat] = useState(null)
+    const navigate = useNavigate()
 
     const fetchChats = async () => {
         await raxiosFetchData(page, size, setHistories, setTotal, '/actions/histories', filters, setLoading)
@@ -72,6 +74,10 @@ const Chats = () => {
         }
     }, [selectedChat]);
 
+    const handleUserView = (record) => {
+        navigate(`/admin/users/${record.user._id}`);
+    }
+
     if (loading) return <Loading />;
 
     return (
@@ -79,7 +85,7 @@ const Chats = () => {
             <div className='w-1/4 flex flex-col'>
                 <Form className='flex w-full justify-center items-center gap-2' onFinish={(values) => setFilters(values)} initialValues={filters}>
                     <Form.Item name='filter_value' required>
-                        <Input />
+                        <Input placeholder='Search...' />
                     </Form.Item>
                     <Form.Item name='filter_field' required>
                         <Select defaultValue='phoneNumber'>
@@ -105,13 +111,16 @@ const Chats = () => {
                     onRow={(record) => ({
                         onClick: () => setSelectedChat(record),
                     })}
+                    rowClassName={'cursor-pointer'}
                 />
             </div>
             <div className='w-3/4'>
                 {selectedChat ? (
                     <div className='h-[88vh] overflow-auto no-scrollbar border border-lightBlack rounded-2xl' id='chat-view'>
                         <div className='p-5 flex items-center justify-between w-full bg-lightBlack sticky top-0' id='chat-header'>
-                            <span>{selectedChat.user?.name || selectedChat.phoneNumber}</span>
+                            <span className='cursor-pointer' onClick={() => handleUserView(selectedChat)}>
+                                {selectedChat.user?.name || selectedChat.phoneNumber} <span className='text-gray-500'>({selectedChat.context === 'wa_webhook' ? 'Whatsapp': selectedChat.context})</span>
+                            </span>
                             <div className='flex gap-5'>
                                 <Button onClick={handleRefresh}>Refresh</Button>
                                 <Button onClick={() => setViewTools(!viewTools)}>
