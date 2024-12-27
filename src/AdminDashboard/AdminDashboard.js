@@ -3,6 +3,7 @@ import { cn } from "../lib/utils"
 import ARKTab from './DashboardTabs/ARKTab'
 import UserList from '../UserList/UserList'
 import CallsTable from '../CallList/CallList'
+import { useAdmin } from '../contexts/useData'
 import UsersTab from './DashboardTabs/UsersTab'
 import EventsTab from './DashboardTabs/EventsTab'
 import OffersTab from './DashboardTabs/OffersTab'
@@ -20,59 +21,63 @@ import PlatformCategory from '../components/PlatformCategory'
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, LayoutDashboard, Users, PhoneCall, Calendar, Club, FileCode, LogOut } from 'lucide-react'
 
-const menuItems = [
-  {
-    href: 'dashboards',
-    icon: <LayoutDashboard className="h-4 w-4" />,
-    items: [
-      { href: 'dashboard', component: <DashboardTab /> },
-      { href: 'users', component: <UsersTab /> },
-    ],
-  },
-  {
-    href: 'lists',
-    icon: <Users className="h-4 w-4" />,
-    items: [
-      { href: 'calls list', component: <CallsTable /> },
-      { href: 'users list', component: <UserList /> },
-      { href: 'experts list', component: <SaarthisTab /> },
-      { href: 'applications', component: <ApplicationsTab /> },
-      { href: 'app categories', component: <PlatformCategory /> },
-    ],
-  },
-  {
-    href: 'communication',
-    icon: <PhoneCall className="h-4 w-4" />,
-    items: [
-      { href: 'Connect', component: <ConnectTab /> },
-      { href: 'whatsapp', component: <WhatsappTab /> },
-      { href: 'ark', component: <ARKTab /> },
-    ],
-  },
-  {
-    href: 'events',
-    icon: <Calendar className="h-4 w-4" />,
-    items: [
-      { href: 'events', component: <EventsTab /> },
-      { href: 'contribute', component: <EventsTab contribute={true} /> }
-    ],
-  },
-  {
-    href: 'offers',
-    icon: <Club className="h-4 w-4" />,
-    items: [
-      { href: 'club', component: <ClubSukoon /> },
-      { href: 'offers', component: <OffersTab /> },
-      { href: 'referrals', component: <ReferralsTab /> },
-    ],
-  },
-  { href: 'content', icon: <FileCode className="h-4 w-4" />, component: <ContentTab /> },
-]
 
 const AdminDashboard = ({ onLogout }) => {
+  const { admin } = useAdmin()
   const [showMenu, setShowMenu] = useState(false)
   const [openGroups, setOpenGroups] = useState([])
   const location = useLocation()
+  const menuItems = [
+    {
+      href: 'dashboards',
+      icon: <LayoutDashboard className="h-4 w-4" />,
+      items: [
+        { href: 'dashboard', component: <DashboardTab /> },
+        { href: 'users', component: <UsersTab /> },
+      ],
+    },
+    {
+      href: 'lists',
+      icon: <Users className="h-4 w-4" />,
+      items: [
+        { href: 'calls list', component: <CallsTable /> },
+        { href: 'users list', component: <UserList /> },
+        { href: 'experts list', component: <SaarthisTab /> },
+        { href: 'applications', component: <ApplicationsTab /> },
+        { href: 'app categories', component: <PlatformCategory /> },
+      ],
+    },
+    {
+      href: 'communication',
+      icon: <PhoneCall className="h-4 w-4" />,
+      items: [
+        { href: 'Connect', component: <ConnectTab /> },
+        { href: 'whatsapp', component: <WhatsappTab /> },
+        ...(admin.access_level === 'super' || admin.access_level === 'admin' ? [
+          { href: 'ark', component: <ARKTab /> },
+          // { href: 'chats', component: <Chats /> }
+        ] : [])
+      ],
+    },
+    {
+      href: 'events',
+      icon: <Calendar className="h-4 w-4" />,
+      items: [
+        { href: 'events', component: <EventsTab /> },
+        { href: 'contribute', component: <EventsTab contribute={true} /> }
+      ],
+    },
+    {
+      href: 'offers',
+      icon: <Club className="h-4 w-4" />,
+      items: [
+        { href: 'club', component: <ClubSukoon /> },
+        { href: 'offers', component: <OffersTab /> },
+        { href: 'referrals', component: <ReferralsTab /> },
+      ],
+    },
+    { href: 'content', icon: <FileCode className="h-4 w-4" />, component: <ContentTab /> },
+  ]
 
   useEffect(() => {
     const activeTab = location.pathname.split('/').pop()
