@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Select, Input, Button } from 'antd';
+import Chats from "../../components/Chats";
 import Loading from "../../components/Loading/loading";
+import { Modal, Select, Input, Button, Flex, Radio } from 'antd';
 import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 
 const { Option } = Select;
 
 const ARKTab = () => {
+    const [tab, setTab] = useState(
+        localStorage.getItem('arkTab') === 'prompts' ? 'prompts' : 'chats'
+    );
     const [prompts, setPrompts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newContext, setNewContext] = useState("");
@@ -58,50 +62,69 @@ const ARKTab = () => {
 
     return (
         <div className="py-5 w-full flex-col justify-center items-center">
-            <div className="flex gap-3">
-                <Select
-                    className="w-72"
-                    placeholder="Select a prompt"
-                    onChange={(value) => {
-                        const prompt = prompts.find(p => p.context === value);
-                        setSelectedPrompt(prompt);
-                    }}
-                    value={selectedPrompt?.context}
-                >
-                    {prompts.map(prompt => (
-                        <Option key={prompt.context} value={prompt.context}>
-                            {prompt.context}
-                        </Option>
-                    ))}
-                </Select>
-
-                <Button type="primary" onClick={showModal}>
-                    Add New Prompt
-                </Button>
-                <Modal
-                    title="Add New Prompt"
-                    open={isModalVisible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                >
-                    <Input
-                        placeholder="Enter context"
-                        value={newContext}
-                        onChange={(e) => setNewContext(e.target.value)}
-                    />
-                </Modal>
+            <div className="flex w-full justify-between items-center gap-2">
+                <Flex vertical>
+                    <Radio.Group
+                        value={tab}
+                        onChange={(e) => {
+                            localStorage.setItem('arkTab', e.target.value);
+                            setTab(e.target.value);
+                        }}
+                    >
+                        <Radio.Button value="chats">Chats</Radio.Button>
+                        <Radio.Button value="prompts">System Prompts</Radio.Button>
+                    </Radio.Group>
+                </Flex>
             </div>
-            {selectedPrompt && (
-                <div className="mt-6 w-full">
-                    <Input.TextArea
-                        rows={30}
-                        value={selectedPrompt.content}
-                        onChange={(e) => setSelectedPrompt({ ...selectedPrompt, content: e.target.value })}
-                    />
-                    <Button type="primary" onClick={updatePrompt} className="mt-4">
-                        Update Prompt
-                    </Button>
-                </div>
+            {tab === 'chats' && <Chats />}
+            {tab === 'prompts' && (
+                <>
+                    <div className="flex gap-3">
+                        <Select
+                            className="w-72"
+                            placeholder="Select a prompt"
+                            onChange={(value) => {
+                                const prompt = prompts.find(p => p.context === value);
+                                setSelectedPrompt(prompt);
+                            }}
+                            value={selectedPrompt?.context}
+                        >
+                            {prompts.map(prompt => (
+                                <Option key={prompt.context} value={prompt.context}>
+                                    {prompt.context}
+                                </Option>
+                            ))}
+                        </Select>
+
+                        <Button type="primary" onClick={showModal}>
+                            Add New Prompt
+                        </Button>
+                        <Modal
+                            title="Add New Prompt"
+                            open={isModalVisible}
+                            onOk={handleOk}
+                            onCancel={handleCancel}
+                        >
+                            <Input
+                                placeholder="Enter context"
+                                value={newContext}
+                                onChange={(e) => setNewContext(e.target.value)}
+                            />
+                        </Modal>
+                    </div>
+                    {selectedPrompt && (
+                        <div className="mt-6 w-full" id="prompt-content">
+                            <Input.TextArea
+                                rows={30}
+                                value={selectedPrompt.content}
+                                onChange={(e) => setSelectedPrompt({ ...selectedPrompt, content: e.target.value })}
+                            />
+                            <Button type="primary" onClick={updatePrompt} className="mt-4">
+                                Update Prompt
+                            </Button>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );
