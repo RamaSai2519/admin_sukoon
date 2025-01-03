@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Chats from "../../components/Chats";
+import RefTexts from "../../components/RefTexts";
 import Loading from "../../components/Loading/loading";
 import { Modal, Select, Input, Button, Flex, Radio } from 'antd';
 import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
@@ -7,14 +8,12 @@ import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 const { Option } = Select;
 
 const ARKTab = () => {
-    const [tab, setTab] = useState(
-        localStorage.getItem('arkTab') === 'prompts' ? 'prompts' : 'chats'
-    );
     const [prompts, setPrompts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newContext, setNewContext] = useState("");
     const [selectedPrompt, setSelectedPrompt] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [tab, setTab] = useState(localStorage.getItem('arkTab') || 'chats');
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -73,10 +72,12 @@ const ARKTab = () => {
                     >
                         <Radio.Button value="chats">Chats</Radio.Button>
                         <Radio.Button value="prompts">System Prompts</Radio.Button>
+                        <Radio.Button value="ref_texts">Referral Messages</Radio.Button>
                     </Radio.Group>
                 </Flex>
             </div>
             {tab === 'chats' && <Chats />}
+            {tab === 'ref_texts' && <RefTexts />}
             {tab === 'prompts' && (
                 <>
                     <div className="flex gap-3">
