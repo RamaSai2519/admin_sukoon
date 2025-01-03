@@ -57,7 +57,7 @@ const CallGraph = () => {
 
   const processChartData = (callData) => {
     const aggregatedData = callData.reduce((acc, curr) => {
-      const date = formatDate(curr.initiatedTime, true); // Include year in the date format
+      const date = formatDate(curr.initiatedTime);
       acc[date] = (acc[date] || 0) + 1;
       return acc;
     }, {});
