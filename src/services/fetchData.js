@@ -55,6 +55,23 @@ export const fetchCategories = async (setCategories) => {
     }
 };
 
+export const fetchPlatformCategories = async (setPlatformCategories) => {
+    function getSubCategories(arr) {
+        let tempArr = []; let n = arr.length;
+        for (let i = 0; i < Math.ceil(n / 2); i++) {
+            if (arr[i]?.sub_categories?.length > 0) { tempArr.push(...arr[i].sub_categories); }
+            if (i !== n - i - 1 && arr[n - i - 1]?.sub_categories?.length > 0) tempArr.push(...arr[n - i - 1].sub_categories);
+        }
+        return tempArr;
+    }
+    try {
+        const response = await Raxios.get('/actions/platform_category?type=main');
+        return setPlatformCategories(getSubCategories(response.data.data))
+    } catch (error) {
+        message.error('Error fetching experts:', error);
+    }
+}
+
 export const fetchStats = async (setStats, internal = false) => {
     try {
         const response = await Raxios.get('/actions/dashboard_stats', {

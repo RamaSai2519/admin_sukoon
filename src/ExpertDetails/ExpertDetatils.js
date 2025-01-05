@@ -4,13 +4,13 @@ import Raxios from '../services/axiosHelper';
 import S3Uploader from '../components/Upload';
 import { RaxiosPost } from '../services/fetchData';
 import React, { useState, useEffect } from 'react';
-import { useCategories } from '../contexts/useData';
 import Loading from '../components/Loading/loading';
 import { raxiosFetchData } from '../services/fetchData';
 import { Edit, RefreshCw, Trash2, X } from 'lucide-react';
 import EditableTimeCell from '../components/EditableTimeCell';
 import PropertyValueRenderer from '../components/JsonRenderer';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { useCategories, usePlatformCategories } from '../contexts/useData';
 import { message, Select, Switch, Table, Input, Form, Button } from 'antd';
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../components/ui/alertDialog";
 
@@ -24,11 +24,11 @@ const ExpertDetails = () => {
     persona: {}, profile: '', categories: [], phoneNumber: '',
     description: '', total_score: '', calls_share: '', repeat_score: '', sub_category: []
   });
+  const { platformCategories, fetchPlatformCategories } = usePlatformCategories();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { allCategories, fetchCategories } = useCategories();
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [platformCategories, setPlatformCategories] = useState([]);
   const [timings, setTimings] = useState([]);
   const [form] = Form.useForm();
 
@@ -50,27 +50,6 @@ const ExpertDetails = () => {
   const fetchTimings = async () => {
     const timings = await raxiosFetchData(null, null, null, null, '/actions/timings', { expert: expertId });
     setTimings(timings);
-  };
-
-  function getSubCategories(arr) {
-    let tempArr = [];
-    let n = arr.length;
-    for (let i = 0; i < Math.ceil(n / 2); i++) {
-      if (arr[i]?.sub_categories?.length > 0) { tempArr.push(...arr[i].sub_categories); }
-      if (i !== n - i - 1 && arr[n - i - 1]?.sub_categories?.length > 0) {
-        tempArr.push(...arr[n - i - 1].sub_categories);
-      }
-    }
-    return tempArr;
-  }
-
-  const fetchPlatformCategories = async (setExperts, internal) => {
-    try {
-      const response = await Raxios.get('/actions/platform_category?type=main');
-      return setPlatformCategories(getSubCategories(response.data.data))
-    } catch (error) {
-      message.error('Error fetching experts:', error);
-    }
   };
 
   useEffect(() => {
@@ -288,7 +267,7 @@ const ExpertDetails = () => {
                         <Select
                           mode={'multiple'}
                           className="w-full mt-2"
-                          placeholder={`Select Platform`}
+                          placeholder={`Select Platform Categories`}
                           disabled={!editMode}
                         >
                           {platformCategories.map((option) => (

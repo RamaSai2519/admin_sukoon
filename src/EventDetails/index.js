@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
-import { useFilters } from '../contexts/useData';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
 import { Card, CardContent } from "../components/ui/card";
@@ -8,6 +7,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import EventUsersTable from '../components/EventUsersTable';
 import { raxiosFetchData, RaxiosPost } from '../services/fetchData';
 import CreateEventPopup from '../components/Popups/CreateEventPopup';
+import { useFilters, usePlatformCategories } from '../contexts/useData';
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../components/ui/alertDialog";
 
 const EventDetails = ({ contribute }) => {
@@ -19,6 +19,7 @@ const EventDetails = ({ contribute }) => {
     const [data, setData] = useState({});
     const [users, setUsers] = useState([]);
     const [editMode, setEditMode] = useState(false);
+    const { fetchPlatformCategories } = usePlatformCategories();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const contribute_dict = contribute ? { events_type: 'contribute' } : {};
 
@@ -30,7 +31,7 @@ const EventDetails = ({ contribute }) => {
     const fetchUsers = async () => await raxiosFetchData(null, null, setUsers, null, '/actions/list_event_users', { slug, ...filter, ...contribute_dict });
 
     // eslint-disable-next-line
-    useEffect(() => { fetchEventDetails(); fetchUsers(); }, [slug, editMode, JSON.stringify(filter)]);
+    useEffect(() => { fetchEventDetails(); fetchUsers(); fetchPlatformCategories(); }, [slug, editMode, JSON.stringify(filter)]);
 
     const toggleEditMode = () => setEditMode(!editMode);
     const DeleteEvent = async () => {
