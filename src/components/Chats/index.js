@@ -132,7 +132,7 @@ const Chats = () => {
                             <div className='flex flex-col gap-2'>
                                 {selectedChat.history.map((message, index) => (
                                     message.role === 'user' ? (
-                                        <div key={index} className='flex flex-col px-3 py-2 justify-start w-4/5 rounded-2xl rounded-bl-none bg-lightBlack'>
+                                        <div key={index} className='flex flex-col px-3 py-2 justify-start max-w-[80%] mr-auto rounded-2xl rounded-bl-none bg-lightBlack'>
                                             <span className='text-gray-500'>{message.role}</span>
                                             <span className='p-2 rounded-lg' dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}></span>
                                             {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTimeStr(message.timestamp)}</span>}
@@ -140,7 +140,7 @@ const Chats = () => {
                                     ) : message.role === 'assistant' ? (
                                         <>
                                             {message.tool_calls ? (
-                                                <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-b-none bg-lightBlack w-3/5 ml-auto'>
+                                                <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-b-none bg-lightBlack max-w-[60%] ml-auto'>
                                                     {viewTools ? <>
                                                         <span className='text-gray-500'>{message.role} tool call</span>
                                                         {message.tool_calls.map((call, index) => (
@@ -156,7 +156,7 @@ const Chats = () => {
                                                     }
                                                 </div>
                                             ) : (
-                                                <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-br-none bg-lightBlack w-4/5 ml-auto'>
+                                                <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-br-none bg-lightBlack max-w-[80%] ml-auto'>
                                                     <span className='text-gray-500'>{message.role}</span>
                                                     <span className='p-2 rounded-lg text-left w-full' dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}></span>
                                                     {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTimeStr(message.timestamp)}</span>}
@@ -164,7 +164,7 @@ const Chats = () => {
                                             )}
                                         </>
                                     ) : message.role === 'tool' ? (
-                                        <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-b-none bg-lightBlack w-3/5 ml-auto'>
+                                        <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-b-none bg-lightBlack max-w-[60%] ml-auto'>
                                             {viewTools ? <>
                                                 <span className='text-gray-500'>{message.role} response</span>
                                                 <span className='p-2 rounded-lg' dangerouslySetInnerHTML={{ __html: formatContent(truncateContent(message.content, 250)) }}></span>
