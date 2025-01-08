@@ -119,7 +119,7 @@ const Chats = () => {
                     <div className='h-[88vh] overflow-auto no-scrollbar border border-lightBlack rounded-2xl' id='chat-view'>
                         <div className='p-5 flex items-center justify-between w-full bg-lightBlack sticky top-0' id='chat-header'>
                             <span className='cursor-pointer' onClick={() => handleUserView(selectedChat)}>
-                                {selectedChat.user?.name || selectedChat.phoneNumber} <span className='text-gray-500'>({selectedChat.context === 'wa_webhook' ? 'Whatsapp': selectedChat.context})</span>
+                                {selectedChat.user?.name || selectedChat.phoneNumber} <span className='text-gray-500'>({selectedChat.context === 'wa_webhook' ? 'Whatsapp' : selectedChat.context})</span>
                             </span>
                             <div className='flex gap-5'>
                                 <Button onClick={handleRefresh}>Refresh</Button>
@@ -128,8 +128,8 @@ const Chats = () => {
                                 </Button>
                             </div>
                         </div>
-                        <div className='mt-5 p-2'>
-                            <div className='flex flex-col gap-5'>
+                        <div className='p-2'>
+                            <div className='flex flex-col gap-2'>
                                 {selectedChat.history.map((message, index) => (
                                     message.role === 'user' ? (
                                         <div key={index} className='flex flex-col px-3 py-2 justify-start w-4/5 rounded-2xl rounded-bl-none bg-lightBlack'>
@@ -175,6 +175,11 @@ const Chats = () => {
                                         </div>
                                     ) : <></>
                                 ))}
+                                <div className='flex p-2 flex-col justify-end items-end rounded-2xl bg-lightBlack ml-auto'>
+                                    <span>
+                                        {selectedChat.status === 'inprogress' ? "Typing..." : "Done"}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
