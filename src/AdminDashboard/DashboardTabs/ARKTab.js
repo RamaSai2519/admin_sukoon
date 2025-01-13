@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Chats from "../../components/Chats";
 import RefTexts from "../../components/RefTexts";
+import { useAdmin } from "../../contexts/useData";
 import Loading from "../../components/Loading/loading";
 import { Modal, Select, Input, Button, Flex, Radio } from 'antd';
 import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
@@ -8,6 +9,8 @@ import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 const { Option } = Select;
 
 const ARKTab = () => {
+    const { admin } = useAdmin();
+    const [auth, setAuth] = useState(1);
     const [prompts, setPrompts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newContext, setNewContext] = useState("");
@@ -33,22 +36,29 @@ const ARKTab = () => {
     const fetchPrompts = async () => {
         const response = await raxiosFetchData(null, null, null, null, '/actions/system_prompts', null, setLoading);
         setPrompts(response)
+        setTimeout(() => {
+            if (selectedPrompt) {
+                setSelectedPrompt(response.find(p => p.context === selectedPrompt.context));
+            }
+        }, 1000);
     }
 
     useEffect(() => {
         fetchPrompts();
+        setAuth(admin?.prompt_auth || 1);
+        // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
         if (prompts.length > 0 && !selectedPrompt) {
-            setSelectedPrompt(prompts[0]);
+            setSelectedPrompt(prompts.find(p => p.context === 'wa_webhook'));
         }
     }, [prompts, selectedPrompt]);
 
     const updatePrompt = async () => {
         if (selectedPrompt) {
-            await RaxiosPost('/actions/system_prompts', { context: selectedPrompt.context, content: selectedPrompt.content }, true, setLoading);
-            fetchPrompts();
+            await RaxiosPost('/actions/system_prompts', { context: selectedPrompt.context, content: selectedPrompt.content, auth }, true, setLoading);
+            await fetchPrompts();
         }
     }
 
@@ -99,6 +109,9 @@ const ARKTab = () => {
 
                         <Button type="primary" onClick={showModal}>
                             Add New Prompt
+                        </Button>
+                        <Button type="primary" disabled>
+                            {selectedPrompt?.approved ? "Approved" : "Pending Approval"}
                         </Button>
                         <Modal
                             title="Add New Prompt"

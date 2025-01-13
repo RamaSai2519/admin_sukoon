@@ -141,7 +141,7 @@ const ExpertDetails = () => {
     { name: 'status', label: 'Status', type: 'status' },
     { name: 'name', label: 'Name', type: 'input' },
     { name: 'phoneNumber', label: 'Phone Number', type: 'input', disabled: true },
-    { name: 'type', label: 'Type', type: 'select', options: ['expert', 'saarthi', 'internal'] },
+    { name: 'type', label: 'Type', type: 'select', options: ['expert', 'saarthi', 'internal', 'agent'] },
     { name: 'languages', label: 'Languages', type: 'input' },
     { name: 'categories', label: 'Categories', type: 'select', options: allCategories, mode: 'multiple' },
     { name: 'sub_category', label: 'Platform Categories', type: 'platform_categories' },
