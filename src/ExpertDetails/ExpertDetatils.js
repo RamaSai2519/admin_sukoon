@@ -21,7 +21,7 @@ const ExpertDetails = () => {
   const expertId = localStorage.getItem('expertId');
   const [expert, setExpert] = useState({
     name: '', score: '', topics: '', status: '',
-    persona: {}, profile: '', categories: [], phoneNumber: '',
+    persona: {}, profile: '', categories: [], phoneNumber: '', escalation_level: 0,
     description: '', total_score: '', calls_share: '', repeat_score: '', sub_category: []
   });
   const { platformCategories, fetchPlatformCategories } = usePlatformCategories();
@@ -72,6 +72,10 @@ const ExpertDetails = () => {
 
   const handleUpdate = async (updatedFormData) => {
     if (updatedFormData.phoneNumber.length !== 10) return;
+    if (updatedFormData.escalation_level > 5) {
+      message.error('Escalation level cannot be greater than 5');
+      return;
+    }
     try {
       const response = await Raxios.post('/actions/expert', updatedFormData);
       if (response.status !== 200) {
@@ -150,6 +154,7 @@ const ExpertDetails = () => {
     { name: 'repeat_score', label: 'Repeat Score', type: 'input' },
     { name: 'calls_share', label: 'Calls Share', type: 'input' },
     { name: 'total_score', label: 'Total Score', type: 'input' },
+    { name: 'escalation_level', label: 'Escalation Level', type: 'input' },
   ];
 
   return (
