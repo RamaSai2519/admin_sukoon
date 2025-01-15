@@ -4,6 +4,7 @@ import ARKTab from './DashboardTabs/ARKTab'
 import UserList from '../UserList/UserList'
 import CallsTable from '../CallList/CallList'
 import { useAdmin } from '../contexts/useData'
+import PlansTab from './DashboardTabs/PlansTab'
 import UsersTab from './DashboardTabs/UsersTab'
 import EventsTab from './DashboardTabs/EventsTab'
 import OffersTab from './DashboardTabs/OffersTab'
@@ -55,7 +56,6 @@ const AdminDashboard = ({ onLogout }) => {
         { href: 'whatsapp', component: <WhatsappTab /> },
         ...(admin.access_level === 'super' || admin.access_level === 'admin' ? [
           { href: 'ark', component: <ARKTab /> },
-          // { href: 'chats', component: <Chats /> }
         ] : [])
       ],
     },
@@ -71,6 +71,7 @@ const AdminDashboard = ({ onLogout }) => {
       href: 'offers',
       icon: <Club className="h-4 w-4" />,
       items: [
+        { href: 'plans', component: <PlansTab /> },
         { href: 'club', component: <ClubSukoon /> },
         { href: 'offers', component: <OffersTab /> },
         { href: 'referrals', component: <ReferralsTab /> },
