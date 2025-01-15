@@ -37,7 +37,7 @@ const ConnectTab = () => {
 
     const handleCallTrigger = async (values) => {
         const response = await RaxiosPost('/actions/call', {
-            user_id: values.user,
+            user_id: values.user, wait: false,
             expert_id: values.expert,
             user_requested: values.user_requested === "Yes"
         }, true, setLoading);
