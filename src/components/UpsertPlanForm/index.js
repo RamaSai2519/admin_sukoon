@@ -20,8 +20,8 @@ const UpsertPlanForm = ({ plan, setPlan }) => {
     const handleUpsert = async (values) => {
         const response = await RaxiosPost('/actions/sub_plans', values);
         if (response.status === 200) {
-            message.success(response.msg);
-            setPlan({});
+            await message.success(response.msg);
+            window.location.reload();
         } else {
             message.error(response.msg);
         }
