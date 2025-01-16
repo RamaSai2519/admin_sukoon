@@ -41,7 +41,7 @@ export const RaxiosPost = async (url, data, isNotify = false, setLoading = null)
         setLoading && setLoading(false);
         return response;
     } catch (error) {
-        await message.error(error.response?.data?.message || 'An error occurred');
+        await message.error(error.response?.data?.output_message || 'An error occurred');
         setLoading && setLoading(false);
     }
 };
