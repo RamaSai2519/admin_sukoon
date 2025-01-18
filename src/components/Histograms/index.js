@@ -17,10 +17,9 @@ const Histograms = ({ usersData }) => {
         }
     }, [usersData]);
 
-    // Function to calculate users per city
     const calculateUsersPerCity = (users) => {
         const cityCounts = {};
-        const othersCities = []; // Array to store cities grouped into "Others"
+        const othersCities = [];
 
         users.forEach(user => {
             const city = user.city || 'Unknown';
@@ -33,7 +32,7 @@ const Histograms = ({ usersData }) => {
             .filter(city => {
                 if (cityCounts[city] === 1) {
                     othersCount += 1;
-                    othersCities.push(city); // Store cities grouped into "Others"
+                    othersCities.push(city);
                     delete cityCounts[city];
                     return false;
                 }

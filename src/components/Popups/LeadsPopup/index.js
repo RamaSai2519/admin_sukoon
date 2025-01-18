@@ -1,34 +1,49 @@
-import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import Loading from '../../Loading/loading';
 import { Table, Button, message } from 'antd';
 import EditableCell from '../../EditableCell';
-import { RaxiosPost } from '../../../services/fetchData';
+import { Link, useLocation } from 'react-router-dom';
+import { useFilters } from '../../../contexts/useData';
 import { formatDate } from '../../../Utils/formatHelper';
 import GetColumnSearchProps from '../../../Utils/antTableHelper';
+import { raxiosFetchData, RaxiosPost } from '../../../services/fetchData';
 
-const LeadsPopup = ({ onClose, leads }) => {
+const LeadsPopup = ({ onClose }) => {
+    const location = useLocation();
+    const { filters = {} } = useFilters();
+    const filter = filters[location.pathname] || {};
+
+    const [data, setData] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(
+        localStorage.getItem('leadsPage') ? parseInt(localStorage.getItem('leadsPage')) : 1
+    );
+    const [pageSize, setPageSize] = useState(9);
+    const [loading, setLoading] = useState(false);
+
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [data, setData] = useState(leads);
     const searchInputRef = useRef(null);
 
-    const createColumn = (title, dataIndex, key, render, editable) => {
-        return {
-            title,
-            dataIndex,
-            key,
-            ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef),
-            ...(editable && { editable }),
-            ...(render && { render }),
-        };
+
+    const fetchData = async () => {
+        await raxiosFetchData(page, pageSize, setData, setTotal, '/actions/leads', filter, setLoading);
     };
+
+    // eslint-disable-next-line
+    useEffect(() => { fetchData() }, [page, pageSize, JSON.stringify(filter)]);
+
+    const createColumn = (title, dataIndex, key, render, sorter, filter = true) => ({
+        title, dataIndex, key, ...(sorter && { sorter }), ...(render && { render }),
+        ...GetColumnSearchProps(dataIndex, title, searchText, setSearchText, searchedColumn, setSearchedColumn, searchInputRef, location.pathname, filter),
+    });
 
     const columns = [
         createColumn('Name', 'name', 'name'),
         createColumn('Contact', 'phoneNumber', 'phoneNumber'),
         createColumn('City', 'city', 'city'),
-        createColumn('Date of Birth', 'birthDate', 'birthDate', (birthDate) => formatDate(birthDate)),
-        createColumn('Date of Lead', 'createdDate', 'createdDate', (createdDate) => formatDate(createdDate)),
+        { title: 'DOB', dataIndex: 'birthDate', key: 'birthDate', render: (date) => formatDate(date), sorter: (a, b) => new Date(a.birthDate) - new Date(b.birthDate) },
+        { title: 'Joined Date', dataIndex: 'createdDate', key: 'createdDate', render: (date) => formatDate(date), sorter: (a, b) => new Date(a.createdDate) - new Date(b.createdDate) },
         createColumn('Lead Source', 'leadSource', 'leadSource'),
         createColumn('Source', 'source', 'source'),
         createColumn('Remarks', 'remarks', 'remarks', null, true),
@@ -77,19 +92,28 @@ const LeadsPopup = ({ onClose, leads }) => {
         };
     });
 
+    if (loading) { return <Loading /> }
+
     return (
         <div className="fixed left-0 top-0 overflow-auto w-full h-full bg-black bg-opacity-50 ">
             <div className="p-10 rounded-5 rounded-10 shadow-md min-w-1/2 max-w-90 max-h-90 overflow-y-auto relative">
                 <div className='w-fit mx-auto h-auto'>
-                    <div className="flex flex-row m-5 justify-end">
-                        <button className="pback-button" onClick={onClose}>X</button>
-                    </div>
                     {data.length > 0 ? (
                         <Table
                             components={components}
                             dataSource={data}
                             columns={mergedColumns}
                             rowKey={(user) => user._id}
+                            pagination={{
+                                total: total,
+                                current: page,
+                                pageSize: pageSize,
+                                onChange: (current, pageSize) => {
+                                    setPage(current);
+                                    localStorage.setItem('leadsPage', current);
+                                    setPageSize(pageSize);
+                                }
+                            }}
                         />
                     ) : (
                         <p>No users to display</p>
