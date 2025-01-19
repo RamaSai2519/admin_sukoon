@@ -18,7 +18,7 @@ const { Option } = Select;
 
 const ExpertDetails = () => {
   const { number } = useParams();
-  const expertId = localStorage.getItem('expertId');
+  const [expertId, setExpertId] = useState(null);
   const [expert, setExpert] = useState({
     name: '', score: '', topics: '', status: '',
     persona: {}, profile: '', categories: [], phoneNumber: '', escalation_level: 0,
@@ -34,12 +34,15 @@ const ExpertDetails = () => {
 
   const fetchExpertDetails = async () => {
     try {
-      const response = await Raxios.get(`/actions/expert?phoneNumber=${number}`);
-      const { __v, lastModifiedBy, calls, ...expertData } = response.data;
+      const response = await Raxios.get(`/actions/expert`, {
+        params: { phoneNumber: number, req_calls: 'false' }
+      });
+      const { __v, lastModifiedBy, ...expertData } = response.data;
       if (typeof expertData.sub_category === 'string') {
         expertData.sub_category = [expertData.sub_category];
       }
       setExpert(expertData);
+      setExpertId(expertData._id);
       form.setFieldsValue(expertData);
       setLoading(false);
     } catch (error) {
@@ -54,12 +57,15 @@ const ExpertDetails = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetchPlatformCategories();
     fetchExpertDetails();
+    if (!expertId) return;
+    fetchPlatformCategories();
     fetchCategories();
     fetchTimings();
     // eslint-disable-next-line
   }, [expertId]);
+
+
 
   useEffect(() => {
     if (!loading && window.location.hash === '#timings') {
