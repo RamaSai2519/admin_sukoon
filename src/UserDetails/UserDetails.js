@@ -8,6 +8,7 @@ import LazyLoad from '../components/LazyLoad/lazyload';
 import { raxiosFetchData } from '../services/fetchData';
 import { DatePicker, Input, message, Switch, Table } from 'antd';
 import PropertyValueRenderer from '../components/JsonRenderer';
+import { formatTime } from '../Utils/formatHelper';
 
 const InputField = ({ label, value, onChange, editMode, type = "text" }) => (
   <div className='grid-tile w-full h-fit'>
@@ -81,7 +82,7 @@ const UserDetails = () => {
   const columns = [
     { title: 'Message', dataIndex: 'body', key: 'body', },
     { title: 'Template', dataIndex: 'templateName', key: 'templateName', },
-    { title: 'Date', dataIndex: 'createdAt', key: 'createdAt', },
+    { title: 'Date', dataIndex: 'createdAt', key: 'createdAt', render: (date) => formatTime(date), },
     { title: 'Status', dataIndex: 'status', key: 'status', },
     { title: "Type", dataIndex: "type", key: "type", }
   ];
