@@ -117,7 +117,7 @@ const Chats = () => {
             <div className='w-3/4'>
                 {selectedChat ? (
                     <div className='h-[88vh] overflow-auto no-scrollbar border border-lightBlack rounded-2xl' id='chat-view'>
-                        <div className='p-5 flex items-center justify-between w-full border bg-white dark:bg-lightBlack sticky top-0' id='chat-header'>
+                        <div className='p-5 flex items-center justify-between w-full border dark:border-lightBlack bg-white dark:bg-lightBlack sticky top-0' id='chat-header'>
                             <span className='cursor-pointer' onClick={() => handleUserView(selectedChat)}>
                                 {selectedChat.user?.name || selectedChat.phoneNumber} <span className='text-gray-500'>({selectedChat.context === 'wa_webhook' ? 'Whatsapp' : selectedChat.context})</span>
                             </span>
@@ -140,7 +140,7 @@ const Chats = () => {
                                     ) : message.role === 'assistant' ? (
                                         <>
                                             {message.tool_calls ? (
-                                                <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-b-none border dark:bg-lightBlack max-w-[60%] ml-auto'>
+                                                <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-b-none border dark:border-lightBlack dark:bg-lightBlack max-w-[60%] ml-auto'>
                                                     {viewTools ? <>
                                                         <span className='text-gray-500'>{message.role} tool call</span>
                                                         {message.tool_calls.map((call, index) => (
@@ -156,7 +156,7 @@ const Chats = () => {
                                                     }
                                                 </div>
                                             ) : (
-                                                <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-br-none border dark:bg-lightBlack max-w-[80%] ml-auto'>
+                                                <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-br-none border dark:border-lightBlack dark:bg-lightBlack max-w-[80%] ml-auto'>
                                                     <span className='text-gray-500'>{message.role}</span>
                                                     <span className='p-2 rounded-lg text-left w-full' dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}></span>
                                                     {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTimeStr(message.timestamp)}</span>}
@@ -164,7 +164,7 @@ const Chats = () => {
                                             )}
                                         </>
                                     ) : message.role === 'tool' ? (
-                                        <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-b-none border dark:bg-lightBlack max-w-[60%] ml-auto'>
+                                        <div className='flex px-3 py-2 flex-col justify-end items-end rounded-2xl rounded-b-none border dark:border-lightBlack dark:bg-lightBlack max-w-[60%] ml-auto'>
                                             {viewTools ? <>
                                                 <span className='text-gray-500'>{message.role} response</span>
                                                 <span className='p-2 rounded-lg' dangerouslySetInnerHTML={{ __html: formatContent(truncateContent(message.content, 250)) }}></span>
@@ -175,7 +175,7 @@ const Chats = () => {
                                         </div>
                                     ) : <></>
                                 ))}
-                                <div className='flex p-2 flex-col justify-end items-end rounded-2xl border dark:bg-lightBlack ml-auto'>
+                                <div className='flex p-2 flex-col justify-end items-end rounded-2xl border dark:border-lightBlack dark:bg-lightBlack ml-auto'>
                                     <span>
                                         {selectedChat.status === 'inprogress' ? "Typing..." : "Done"}
                                     </span>
