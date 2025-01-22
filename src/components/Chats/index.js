@@ -132,7 +132,7 @@ const Chats = () => {
                             <div className='flex flex-col gap-2'>
                                 {selectedChat.history.map((message, index) => (
                                     message.role === 'user' ? (
-                                        <div key={index} className='flex flex-col px-3 py-2 justify-start max-w-[80%] mr-auto rounded-2xl rounded-bl-none border dark:bg-lightBlack'>
+                                        <div key={index} className='flex flex-col px-3 py-2 justify-start max-w-[80%] mr-auto rounded-2xl rounded-bl-none border dark:border-lightBlack dark:bg-lightBlack'>
                                             <span className='text-gray-500'>{message.role}</span>
                                             <span className='p-2 rounded-lg' dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}></span>
                                             {message.timestamp && <span className='text-gray-500 text-right text-xs'>{formatTimeStr(message.timestamp)}</span>}
