@@ -31,7 +31,8 @@ const UpsertPlanForm = ({ plan, setPlan }) => {
 
     const formItems = [
         createFormItem("Name", "name", <Form.Item name="name"><Input /></Form.Item>, [{ required: true, message: 'Please enter the name' }]),
-        createFormItem("Price", "price", <Form.Item name="price"><InputNumber accept="" /></Form.Item>, [{ required: true, message: 'Please enter the price' }])
+        createFormItem("Price", "price", <Form.Item name="price"><InputNumber accept="" /></Form.Item>, [{ required: true, message: 'Please enter the price' }]),
+        createFormItem("Meta", "meta", <Form.Item name="meta"><Input.TextArea /></Form.Item>, [{ required: true, message: 'Please enter the meta' }])
     ]
     const formItems1 = [
         createFormItem("Free Events", "free_events", <Form.Item name="free_events"><InputNumber /></Form.Item>, [{ required: true, message: 'Please enter the free events' }]),
