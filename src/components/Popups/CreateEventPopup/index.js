@@ -85,7 +85,7 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
             <Select.Option value="not_event">Not Event</Select.Option>
             <Select.Option value="challenge">Challenge</Select.Option>
         </Select>, [{ required: true, message: 'Please select the event type' }]),
-        createFormItem("Description", "description", <Input.TextArea />, [{ max: 125 }]),
+        createFormItem("Description", "description", <Input.TextArea />, []),
         createFormItem("Category", "category", <Select>
             <Select.Option value="support_groups">Support Groups</Select.Option>
             <Select.Option value="active_together">Active Together</Select.Option>

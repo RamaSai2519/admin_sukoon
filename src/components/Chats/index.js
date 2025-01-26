@@ -44,7 +44,7 @@ const Chats = () => {
     };
 
     const formatContent = (content) => {
-        return content.replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        return content?.replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
     };
 
     function formatTimeStr(timeStr, minutesToAdd = 660) {
