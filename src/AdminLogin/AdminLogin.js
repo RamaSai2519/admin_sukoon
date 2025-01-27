@@ -7,6 +7,8 @@ import './AdminLogin.css';
 
 const AdminLogin = ({ setIsLoggedIn }) => {
     const navigate = useNavigate();
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect');
     const { setAdmin } = useAdmin();
     const [loading, setLoading] = useState(false);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -22,13 +24,18 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                 setShowSignUpModal(true);
                 return;
             }
-            const { access_token, refresh_token, user } = response.data;
-            localStorage.setItem('access_token', access_token);
-            localStorage.setItem('refresh_token', refresh_token);
-            setAdmin(user);
-            setIsLoggedIn(true);
-            localStorage.setItem('isLoggedIn', 'true');
-            navigate('/admin/dashboard');
+            if (response.status !== 200) {
+                message.error(response.msg);
+            } else {
+                const { access_token, refresh_token, user } = response.data;
+                localStorage.setItem('access_token', access_token);
+                localStorage.setItem('refresh_token', refresh_token);
+                setAdmin(user);
+                setIsLoggedIn(true);
+                localStorage.setItem('isLoggedIn', 'true');
+                if (redirect) { navigate(redirect) } else { navigate('/admin/dashboard') }
+
+            }
         } catch (error) {
             console.error('Login failed', error);
             alert('Login failed, Please recheck your credentials. If the problem persists, please contact your IT Administrator.');

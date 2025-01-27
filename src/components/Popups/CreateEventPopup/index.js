@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import S3Uploader from '../../Upload';
-import { useAdmin } from '../../../contexts/useData';
 import { RaxiosPost } from '../../../services/fetchData';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { useAdmin, usePlatformCategories } from '../../../contexts/useData';
 import { Form, Input, Button, message, Select, DatePicker, InputNumber } from 'antd';
 
 const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
     const { admin } = useAdmin();
     const [form] = Form.useForm();
     const [image, setImage] = useState(data?.image || data?.imageUrl || null);
+    const { platformCategories } = usePlatformCategories();
 
     const initialData = (
         contribute
@@ -27,6 +28,7 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
                 phoneNumber: data?.phoneNumber,
                 description: data?.description,
                 locationType: data?.locationType,
+                sub_category: data?.sub_category,
                 validUpto: data?.validUpto ? dayjs(data?.validUpto) : undefined,
                 startDate: data?.startDate ? dayjs(data?.startDate) : undefined,
             }
@@ -48,6 +50,7 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
                 repeat: data?.repeat,
                 registrationAllowedTill: data?.registrationAllowedTill ? dayjs(data?.registrationAllowedTill) : undefined,
                 imageUrl: data?.imageUrl,
+                sub_category: data?.sub_category,
                 isPremiumUserOnly: data?.isPremiumUserOnly,
             }
     );
@@ -82,7 +85,7 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
             <Select.Option value="not_event">Not Event</Select.Option>
             <Select.Option value="challenge">Challenge</Select.Option>
         </Select>, [{ required: true, message: 'Please select the event type' }]),
-        createFormItem("Description", "description", <Input.TextArea />, [{ max: 125 }]),
+        createFormItem("Description", "description", <Input.TextArea />, []),
         createFormItem("Category", "category", <Select>
             <Select.Option value="support_groups">Support Groups</Select.Option>
             <Select.Option value="active_together">Active Together</Select.Option>
@@ -188,6 +191,19 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
 
     const submitFormItem = createFormItem('', 'submit', <Button type="primary" htmlType="submit">{data ? 'Update' : 'Create'}</Button>, []);
 
+    const platformCategoriesItem = createFormItem('Platform Categories', 'sub_category',
+        <Select
+            mode={'multiple'}
+            className="w-full mt-2"
+            placeholder={`Select Platform`}
+            disabled={!editMode}
+        >
+            {platformCategories.map((option) => (
+                <Select.Option key={option._id} value={option._id} >{option.name}</Select.Option>
+            ))}
+        </Select>
+    )
+
     const formItems = contribute ? contributeEventItems : standardEventItems;
 
     const RenderFormItem = ({ item }) => (
@@ -211,11 +227,12 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
                     layout="vertical"
                     form={form}
                     initialValues={initialData}
-                    className="w-full "
+                    className="w-full"
                 >
                     <div className='grid md:grid-cols-4 gap-4 justify-center'>
                         {formItems.map((item) => RenderFormItem({ item }))}
                     </div>
+                    {RenderFormItem({ item: platformCategoriesItem })}
                     <div className='flex justify-between'>
                         {contribute && RenderFormItem({ item: highlightsFormItem })}
                         {RenderFormItem({ item: imageFormItem })}

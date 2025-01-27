@@ -9,10 +9,8 @@ const CallGraph = () => {
   const [chart, setChart] = useState(null);
   const [timeframe, setTimeframe] = useState('year');
 
-  useEffect(() => {
-    renderChart(calls);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calls, timeframe, type]);
+  // eslint-disable-next-line
+  useEffect(() => { renderChart(calls) }, [calls, timeframe, type]);
 
   const filterCallsByTimeframe = (callData) => {
     let startDate = new Date();
@@ -59,7 +57,7 @@ const CallGraph = () => {
 
   const processChartData = (callData) => {
     const aggregatedData = callData.reduce((acc, curr) => {
-      const date = formatDate(curr.initiatedTime, false);
+      const date = formatDate(curr.initiatedTime);
       acc[date] = (acc[date] || 0) + 1;
       return acc;
     }, {});

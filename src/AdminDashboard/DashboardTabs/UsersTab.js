@@ -1,142 +1,48 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import LeadsPopup from '../../components/Popups/LeadsPopup';
 import DashboardTile from '../../components/DashboardTile';
-import { useUsers, useCalls } from '../../contexts/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import Loading from '../../components/Loading/loading';
-import { formatDate } from '../../Utils/formatHelper';
 import Histograms from '../../components/Histograms';
+import { useUsers } from '../../contexts/useData';
 import Popup from '../../components/Popups/Popup';
 import Raxios from '../../services/axiosHelper';
 import { Link } from 'react-router-dom';
+import { message } from 'antd';
 
 const UsersTab = () => {
   const { users, fetchUsers } = useUsers();
-  const { calls, fetchCalls } = useCalls();
-  const [leads, setLeads] = useState([]);
+  const [counts, setCounts] = useState({});
   const [loading, setLoading] = useState(false);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [currentDayTotalUsers, setCurrentDayTotalUsers] = useState(0);
-  const [oneCallUsers, setOneCallUsers] = useState([]);
-  const [twoCallsUsers, setTwoCallsUsers] = useState([]);
-  const [moreThanTwoCallsUsers, setMoreThanTwoCallsUsers] = useState([]);
-  const [currentDayPartialSignups, setCurrentDayPartialSignups] = useState(0);
-  const [popupContent, setPopupContent] = useState({
-    title: localStorage.getItem('popupTitle') || '',
-    users: []
-  });
+  const [users_type, setUsersType] = useState(null);
+  const [graphsLoading, setGraphsLoading] = useState(false);
 
-  const fetchLeads = async () => {
-    try {
-      const response = await Raxios.get('/actions/leads', {
-        params: {
-          data: true,
-        },
-      });
-      setLeads(response.data.data);
-      setTotalUsers(response.data.non_leads);
-    } catch (error) {
-      console.error('Error fetching leads:', error);
-    }
-  };
-
-  const fetchData = async () => {
+  const fetchCounts = async () => {
     setLoading(true);
-    await Promise.all([fetchUsers(), fetchLeads()]);
+    const response = await Raxios.get('/actions/leads_count');
+    if (response.status === 200) { setCounts(response.data) } else { message.error(response.msg) }
     setLoading(false);
-    fetchCalls();
-  };
-
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line
-  }, []);
-
-  const calculateCurrentDayUsers = () => {
-    const utcTimeString = new Date().toUTCString();
-    const currentIstDate = formatDate(utcTimeString);
-    const currentDayTotalUsersCount = users.filter(user => formatDate(user.createdDate) === currentIstDate && user.profileCompleted === true).length;
-    const currentDayPartialSignupsCount = leads.filter(lead => formatDate(lead.createdDate) === currentIstDate && lead.profileCompleted === false).length;
-    setCurrentDayPartialSignups(currentDayPartialSignupsCount);
-    setCurrentDayTotalUsers(currentDayTotalUsersCount);
-  };
-
-  const calculateCallCounts = () => {
-    const callCounts = {};
-    calls.forEach(call => {
-      const userId = call.user;
-      if (call.status === 'successful' && call.failedReason === '') {
-        callCounts[userId] = (callCounts[userId] || 0) + 1;
-      }
-    });
-
-    const oneCallUsersList = users.filter(user => callCounts[user._id] === 1);
-    const twoCallsUsersList = users.filter(user => callCounts[user._id] === 2);
-    const moreThanTwoCallsUsersList = users.filter(user => callCounts[user._id] > 2);
-
-    setOneCallUsers(oneCallUsersList);
-    setTwoCallsUsers(twoCallsUsersList);
-    setMoreThanTwoCallsUsers(moreThanTwoCallsUsersList);
-  };
-
-  useEffect(() => {
-    calculateCurrentDayUsers();
-    calculateCallCounts();
-
-    if (popupContent.title) {
-      fetchPopupUsers(popupContent.title);
-    }
-    // eslint-disable-next-line
-  }, [users, calls, leads]);
-
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.key === 'Escape') {
-        closePopup();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, []);
-
-  const fetchPopupUsers = (title) => {
-    let usersToSet = [];
-    switch (title) {
-      case 'Users with One Call':
-        usersToSet = oneCallUsers;
-        break;
-      case 'Users with Two Calls':
-        usersToSet = twoCallsUsers;
-        break;
-      case 'Users with More than Two Calls':
-        usersToSet = moreThanTwoCallsUsers;
-        break;
-      case 'Partial Signups':
-        usersToSet = leads;
-        break;
-      default:
-        usersToSet = [];
-    }
-    setPopupContent({ title, users: usersToSet });
-  };
-
-  const openPopup = (title) => {
-    localStorage.setItem('popupTitle', title);
-    fetchPopupUsers(title);
-  };
-
-  const closePopup = () => {
-    setPopupContent({ title: '', users: [] });
-    localStorage.removeItem('popupTitle');
-  };
-
-  if (loading) {
-    return <Loading />;
   }
+  const fetchData = async () => {
+    fetchCounts();
+    setGraphsLoading(true);
+    await fetchUsers();
+    setGraphsLoading(false);
+  };
+
+  const closePopup = () => { setUsersType(null); localStorage.removeItem('users_type') };
+  const openPopup = (type) => { setUsersType(type); localStorage.setItem('users_type', type) };
+
+  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    const handleKeyPress = (event) => { if (event.key === 'Escape') { closePopup() } };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => { window.removeEventListener('keydown', handleKeyPress); };
+  }, []);
+  useEffect(() => { if (localStorage.getItem('users_type')) { setUsersType(localStorage.getItem('users_type')) } }, []);
+
+  if (loading) { return <Loading /> }
 
   return (
     <LazyLoad>
@@ -147,42 +53,37 @@ const UsersTab = () => {
               <Link to="/admin/home/users%20list">
                 <DashboardTile title="Registered Users">
                   <div className='flex justify-between items-center w-full'>
-                    <h1>{totalUsers}</h1>
-                    <h4>Today: {currentDayTotalUsers}</h4>
+                    <h1>{counts.non_leads}</h1>
+                    <h4>Today: {counts.today_non_leads}</h4>
                   </div>
                 </DashboardTile>
               </Link>
-              <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('Users with One Call')}>
-                <h1 className='cursor-pointer'>{oneCallUsers.length}</h1>
+              <DashboardTile title="One Call Users" pointer='pointer' onClick={() => openPopup('one_call_users')}>
+                <h1 className='cursor-pointer'>{counts.one_call_users}</h1>
               </DashboardTile>
-              <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('Users with Two Calls')}>
-                <h1 className='cursor-pointer'>{twoCallsUsers.length}</h1>
+              <DashboardTile title="Two Calls Users" pointer='pointer' onClick={() => openPopup('two_call_users')}>
+                <h1 className='cursor-pointer'>{counts.two_call_users}</h1>
               </DashboardTile>
-              <DashboardTile title="Repeat Users" pointer='pointer' onClick={() => openPopup('Users with More than Two Calls')}>
-                <h1 className='cursor-pointer'>{moreThanTwoCallsUsers.length}</h1>
+              <DashboardTile title="Repeat Users" pointer='pointer' onClick={() => openPopup('repeat_users')}>
+                <h1 className='cursor-pointer'>{counts.repeat_users}</h1>
               </DashboardTile>
-              <DashboardTile title="Leads" pointer='pointer' onClick={() => openPopup('Partial Signups')}>
+              <DashboardTile title="Leads" pointer='pointer' onClick={() => openPopup('leads')}>
                 <div className='flex justify-between items-center w-full'>
-                  <h1>{leads.length}</h1>
-                  <h4>Today: {currentDayPartialSignups}</h4>
+                  <h1>{counts.total_leads}</h1>
+                  <h4>Today: {counts.todat_leads}</h4>
                 </div>
               </DashboardTile>
             </div>
           </div>
         </div >
-        <Histograms usersData={users} />
+        {graphsLoading ? <Loading /> : <Histograms usersData={users} />}
         {
-          popupContent.title && (
-            popupContent.title === 'Partial Signups' ? (
-              <LeadsPopup
-                title={popupContent.title}
-                leads={leads}
-                onClose={closePopup}
-              />
+          users_type && (
+            users_type === 'leads' ? (
+              <LeadsPopup onClose={closePopup} />
             ) : (
               <Popup
-                title={popupContent.title}
-                users={popupContent.users}
+                users_type={users_type}
                 onClose={closePopup}
               />
             )

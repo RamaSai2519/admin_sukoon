@@ -4,13 +4,13 @@ import Raxios from '../services/axiosHelper';
 import S3Uploader from '../components/Upload';
 import { RaxiosPost } from '../services/fetchData';
 import React, { useState, useEffect } from 'react';
-import { useCategories } from '../contexts/useData';
 import Loading from '../components/Loading/loading';
 import { raxiosFetchData } from '../services/fetchData';
 import { Edit, RefreshCw, Trash2, X } from 'lucide-react';
 import EditableTimeCell from '../components/EditableTimeCell';
 import PropertyValueRenderer from '../components/JsonRenderer';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { useCategories, usePlatformCategories } from '../contexts/useData';
 import { message, Select, Switch, Table, Input, Form, Button } from 'antd';
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../components/ui/alertDialog";
 
@@ -18,12 +18,13 @@ const { Option } = Select;
 
 const ExpertDetails = () => {
   const { number } = useParams();
-  const expertId = localStorage.getItem('expertId');
+  const [expertId, setExpertId] = useState(null);
   const [expert, setExpert] = useState({
     name: '', score: '', topics: '', status: '',
-    persona: {}, profile: '', categories: [], phoneNumber: '',
-    description: '', total_score: '', calls_share: '', repeat_score: ''
+    persona: {}, profile: '', categories: [], phoneNumber: '', escalation_level: 0,
+    description: '', total_score: '', calls_share: '', repeat_score: '', sub_category: []
   });
+  const { platformCategories, fetchPlatformCategories } = usePlatformCategories();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { allCategories, fetchCategories } = useCategories();
   const [editMode, setEditMode] = useState(false);
@@ -33,9 +34,15 @@ const ExpertDetails = () => {
 
   const fetchExpertDetails = async () => {
     try {
-      const response = await Raxios.get(`/actions/expert?phoneNumber=${number}`);
-      const { __v, lastModifiedBy, calls, ...expertData } = response.data;
+      const response = await Raxios.get(`/actions/expert`, {
+        params: { phoneNumber: number, req_calls: 'false' }
+      });
+      const { __v, lastModifiedBy, ...expertData } = response.data;
+      if (typeof expertData.sub_category === 'string') {
+        expertData.sub_category = [expertData.sub_category];
+      }
       setExpert(expertData);
+      setExpertId(expertData._id);
       form.setFieldsValue(expertData);
       setLoading(false);
     } catch (error) {
@@ -50,11 +57,15 @@ const ExpertDetails = () => {
 
   useEffect(() => {
     setLoading(true);
+    fetchExpertDetails();
+    if (!expertId) return;
+    fetchPlatformCategories();
     fetchCategories();
     fetchTimings();
-    fetchExpertDetails();
     // eslint-disable-next-line
   }, [expertId]);
+
+
 
   useEffect(() => {
     if (!loading && window.location.hash === '#timings') {
@@ -67,6 +78,10 @@ const ExpertDetails = () => {
 
   const handleUpdate = async (updatedFormData) => {
     if (updatedFormData.phoneNumber.length !== 10) return;
+    if (updatedFormData.escalation_level > 5) {
+      message.error('Escalation level cannot be greater than 5');
+      return;
+    }
     try {
       const response = await Raxios.post('/actions/expert', updatedFormData);
       if (response.status !== 200) {
@@ -136,20 +151,23 @@ const ExpertDetails = () => {
     { name: 'status', label: 'Status', type: 'status' },
     { name: 'name', label: 'Name', type: 'input' },
     { name: 'phoneNumber', label: 'Phone Number', type: 'input', disabled: true },
-    { name: 'type', label: 'Type', type: 'select', options: ['expert', 'saarthi', 'internal'] },
+    { name: 'type', label: 'Type', type: 'select', options: ['expert', 'saarthi', 'internal', 'agent'] },
     { name: 'languages', label: 'Languages', type: 'input' },
     { name: 'categories', label: 'Categories', type: 'select', options: allCategories, mode: 'multiple' },
+    { name: 'sub_category', label: 'Platform Categories', type: 'platform_categories' },
     { name: 'description', label: 'Description', type: 'textarea' },
     { name: 'score', label: 'Score', type: 'input' },
     { name: 'repeat_score', label: 'Repeat Score', type: 'input' },
     { name: 'calls_share', label: 'Calls Share', type: 'input' },
     { name: 'total_score', label: 'Total Score', type: 'input' },
+    { name: 'escalation_level', label: 'Escalation Level', type: 'input' },
   ];
 
   return (
     <div>
       {expert && (
         <Form form={form} className='' layout="vertical" onFinish={handleUpdate}>
+
           <div className='h3-darkgrey'>
             <div className='flex flex-row justify-between items-center p-5 overflow-auto'>
               <h1>Expert Details</h1>
@@ -255,6 +273,17 @@ const ExpertDetails = () => {
                       ) : field.type === 'select' ? (
                         <Select mode={field.mode} className='w-full mt-2' placeholder={`Select ${field.label}`} disabled={!editMode}>
                           {field.options.map((option) => (<Option key={option} value={option} />))}
+                        </Select>
+                      ) : field.type === 'platform_categories' ? (
+                        <Select
+                          mode={'multiple'}
+                          className="w-full mt-2"
+                          placeholder={`Select Platform Categories`}
+                          disabled={!editMode}
+                        >
+                          {platformCategories.map((option) => (
+                            <Option key={option._id} value={option._id} >{option.name}</Option>
+                          ))}
                         </Select>
                       ) : (
                         <Input.TextArea className='mt-2' rows={15} disabled={!editMode} />

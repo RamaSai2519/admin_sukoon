@@ -4,11 +4,12 @@ import './index.css';
 
 const EditableCell = ({
     title,
+    record,
     editable,
     children,
     dataIndex,
-    record,
     handleSave,
+    keyField = '_id',
     ...restProps
 }) => {
     const [editing, setEditing] = useState(false);
@@ -23,8 +24,7 @@ const EditableCell = ({
         try {
             const values = await form.validateFields();
             toggleEdit();
-            // Pass the edited field and value to handleSave
-            handleSave({ key: record._id, field: dataIndex, value: values[dataIndex] });
+            handleSave({ key: record[keyField], field: dataIndex, value: values[dataIndex] });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }

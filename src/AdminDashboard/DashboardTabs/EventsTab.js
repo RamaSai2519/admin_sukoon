@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useFilters } from '../../contexts/useData';
+import { useFilters, usePlatformCategories } from '../../contexts/useData';
 import { Link, useLocation } from 'react-router-dom';
 import { RaxiosPost } from '../../services/fetchData';
 import Loading from '../../components/Loading/loading';
@@ -29,6 +29,7 @@ const EventsTab = ({ contribute }) => {
         localStorage.getItem('eventsTable') === 'users' ? 'users' : 'events'
     );
 
+    const { fetchPlatformCategories } = usePlatformCategories();
     const [eventsPage, setEventsPage] = useState(
         localStorage.getItem('eventsPage') ? parseInt(localStorage.getItem('eventsPage')) : 1
     );
@@ -55,7 +56,7 @@ const EventsTab = ({ contribute }) => {
     };
 
     // eslint-disable-next-line
-    useEffect(() => { fetchEvents() }, [eventsPage, eventsPageSize, usersPage, usersPageSize, table, JSON.stringify(filter), contribute]);
+    useEffect(() => { fetchEvents(); fetchPlatformCategories(); }, [eventsPage, eventsPageSize, usersPage, usersPageSize, table, JSON.stringify(filter), contribute]);
 
     const createColumn = (title, dataIndex, key, render, width, editable, filter = true) => {
         return {

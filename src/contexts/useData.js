@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import {
+    fetchPlatformCategories,
     fetchCategories,
     fetchStats,
     fetchInsights,
@@ -9,6 +10,7 @@ import {
     fetchExperts,
 } from '../services/fetchData';
 
+const PlatformCategoriesContext = createContext();
 const CategoriesContext = createContext();
 const InsightsContext = createContext();
 const FiltersContext = createContext();
@@ -17,6 +19,7 @@ const StatsContext = createContext();
 const UsersContext = createContext();
 const CallsContext = createContext();
 
+export const usePlatformCategories = () => useContext(PlatformCategoriesContext);
 export const useCategories = () => useContext(CategoriesContext);
 export const useInsights = () => useContext(InsightsContext);
 export const useExperts = () => useContext(ExpertsContext);
@@ -51,6 +54,7 @@ export const DataProvider = ({ children }) => {
     const [insights, setInsights] = useState({});
     const [allCategories, setCategories] = useState([]);
     const [stats, setStats] = useState({ onlineSarathis: [] });
+    const [platformCategories, setPlatformCategories] = useState([]);
 
     const contextValues = {
         filters: { filters, setFilters },
@@ -60,23 +64,26 @@ export const DataProvider = ({ children }) => {
         experts: { experts, fetchExperts: (internal) => fetchExperts(setExperts, internal) },
         allCategories: { allCategories, fetchCategories: () => fetchCategories(setCategories) },
         insights: { insights, fetchInsights: (internal) => fetchInsights(setInsights, internal) },
+        platformCategories: { platformCategories, fetchPlatformCategories: () => fetchPlatformCategories(setPlatformCategories) },
     };
 
     return (
-        <CategoriesContext.Provider value={contextValues.allCategories}>
-            <StatsContext.Provider value={contextValues.stats}>
-                <InsightsContext.Provider value={contextValues.insights}>
-                    <UsersContext.Provider value={contextValues.users}>
-                        <CallsContext.Provider value={contextValues.calls}>
-                            <ExpertsContext.Provider value={contextValues.experts}>
-                                <FiltersContext.Provider value={contextValues.filters}>
-                                    {children}
-                                </FiltersContext.Provider>
-                            </ExpertsContext.Provider>
-                        </CallsContext.Provider>
-                    </UsersContext.Provider>
-                </InsightsContext.Provider>
-            </StatsContext.Provider>
-        </CategoriesContext.Provider>
+        <PlatformCategoriesContext.Provider value={contextValues.platformCategories}>
+            <CategoriesContext.Provider value={contextValues.allCategories}>
+                <StatsContext.Provider value={contextValues.stats}>
+                    <InsightsContext.Provider value={contextValues.insights}>
+                        <UsersContext.Provider value={contextValues.users}>
+                            <CallsContext.Provider value={contextValues.calls}>
+                                <ExpertsContext.Provider value={contextValues.experts}>
+                                    <FiltersContext.Provider value={contextValues.filters}>
+                                        {children}
+                                    </FiltersContext.Provider>
+                                </ExpertsContext.Provider>
+                            </CallsContext.Provider>
+                        </UsersContext.Provider>
+                    </InsightsContext.Provider>
+                </StatsContext.Provider>
+            </CategoriesContext.Provider>
+        </PlatformCategoriesContext.Provider>
     );
 };

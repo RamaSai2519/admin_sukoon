@@ -33,15 +33,15 @@ export const RaxiosPost = async (url, data, isNotify = false, setLoading = null)
         const response = await Raxios.post(url, data);
         if (isNotify) {
             if (response.status === 200) {
-                message.success(response.msg);
+                await message.success(response.msg);
             } else {
-                message.error(response.msg);
+                await message.error(response.msg);
             }
         }
         setLoading && setLoading(false);
         return response;
     } catch (error) {
-        message.error(error.response?.data?.message || 'An error occurred');
+        await message.error(error.response?.data?.output_message || 'An error occurred');
         setLoading && setLoading(false);
     }
 };
@@ -54,6 +54,23 @@ export const fetchCategories = async (setCategories) => {
         message.error('Error fetching categories:', error);
     }
 };
+
+export const fetchPlatformCategories = async (setPlatformCategories) => {
+    function getSubCategories(arr) {
+        let tempArr = []; let n = arr.length;
+        for (let i = 0; i < Math.ceil(n / 2); i++) {
+            if (arr[i]?.sub_categories?.length > 0) { tempArr.push(...arr[i].sub_categories); }
+            if (i !== n - i - 1 && arr[n - i - 1]?.sub_categories?.length > 0) tempArr.push(...arr[n - i - 1].sub_categories);
+        }
+        return tempArr;
+    }
+    try {
+        const response = await Raxios.get('/actions/platform_category?type=main');
+        return setPlatformCategories(getSubCategories(response.data.data))
+    } catch (error) {
+        message.error('Error fetching experts:', error);
+    }
+}
 
 export const fetchStats = async (setStats, internal = false) => {
     try {
@@ -106,14 +123,13 @@ export const fetchCalls = async (setCalls, internal = false) => {
 export const fetchExperts = async (setExperts, internal) => {
     try {
         const response = await Raxios.get('/actions/expert', {
-            params: { internal }
+            params: { internal, platform: 'admin' }
         });
         setExperts(response.data);
     } catch (error) {
         message.error('Error fetching experts:', error);
     }
 };
-
 
 export const fetchEngagementData = async (page, size) => {
     try {
@@ -126,3 +142,5 @@ export const fetchEngagementData = async (page, size) => {
         window.alert('Error fetching engagement data');
     }
 };
+
+

@@ -27,7 +27,6 @@ const PostCallForm = ({ setShowForm }) => {
     };
 
     const onFinish = (values) => {
-        console.log("🚀 ~ onFinish ~ values:", values);
         Object.keys(values).forEach(field => {
             handleSave({ key: formData?.user_id || "Hello", field, value: values[field] });
         });

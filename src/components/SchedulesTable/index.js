@@ -16,7 +16,6 @@ const SchedulesTable = () => {
     const [schedulesPage, setSchedulesPage] = useState(
         localStorage.getItem("schedulesPage") ? parseInt(localStorage.getItem("schedulesPage")) : 1
     );
-    const [isOld, setIsOld] = useState(false);
     const [pageSize, setPageSize] = useState(10);
     const [loading, setLoading] = useState(false);
     const [schedules, setSchedules] = useState([]);
@@ -34,12 +33,12 @@ const SchedulesTable = () => {
     };
 
     const fetchSchedules = async () => {
-        const optional = { isDeleted, old: isOld, ...filter };
+        const optional = { isDeleted, ...filter };
         raxiosFetchData(schedulesPage, pageSize, setSchedules, setTotal, '/actions/schedules', optional, setLoading);
     };
 
     // eslint-disable-next-line
-    useEffect(() => { fetchSchedules() }, [schedulesPage, pageSize, JSON.stringify(filter), isOld, isDeleted]);
+    useEffect(() => { fetchSchedules() }, [schedulesPage, pageSize, JSON.stringify(filter), isDeleted]);
 
     const createColumn = (title, dataIndex, key, sorter, render, filter = true) => ({
         title,
@@ -74,13 +73,9 @@ const SchedulesTable = () => {
     ];
 
     const handleDelete = async (record) => {
-        if (isOld) {
-            const payload = { scheduled_job_id: record.id, action: 'DELETE' }
-            await RaxiosPost('/actions/update_scheduled_job', payload, true, setResponseLoading);
-            schedules.find(s => s.id === record.id).isDeleted = true;
-        } else {
-            const payload = { _id: record._id, isDeleted: true }
-            await RaxiosPost('/actions/schedules', payload, true, setResponseLoading);
+        const payload = { _id: record._id, isDeleted: true }
+        const response = await RaxiosPost('/actions/schedules', payload, true, setResponseLoading);
+        if (response.status === 200) {
             schedules.find(s => s._id === record._id).isDeleted = true;
         }
     };
@@ -90,12 +85,6 @@ const SchedulesTable = () => {
             {loading ? <Loading /> : (
                 <div className="flex flex-col gap-2">
                     <div className="flex w-full justify-end gap-5">
-                        <Checkbox
-                            checked={isOld}
-                            onChange={(e) => setIsOld(e.target.checked)}
-                        >
-                            Show Old
-                        </Checkbox>
                         <Checkbox
                             checked={isDeleted}
                             onChange={(e) => setIsDeleted(e.target.checked)}
