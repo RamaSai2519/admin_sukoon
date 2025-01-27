@@ -44,6 +44,7 @@ const PlansTab = () => {
 
     const columns = [
         createColumn('Name', 'name', 'name'),
+        createColumn('Type', 'type', 'type'),
         createColumn('Price', 'price', 'price'),
         createColumn('Free Events', 'free_events', 'free_events'),
         createColumn('Paid Events', 'paid_events', 'paid_events'),

@@ -15,7 +15,7 @@ import CallList from './CallList/CallList';
 import EventDetails from './EventDetails';
 
 const App = () => {
-  const appVersion = '6.0.9';
+  const appVersion = '6.2.5';
   const { darkMode } = useDarkMode();
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
