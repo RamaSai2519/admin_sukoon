@@ -17,6 +17,7 @@ const UpsertPlanForm = ({ plan, setPlan }) => {
         fetchPlans();
         form.setFieldsValue({
             name: plan?.name,
+            meta: plan?.meta,
             type: plan?.type,
             price: plan?.price,
             free_events: plan?.free_events,
