@@ -6,7 +6,6 @@ const LOCAL_URL = 'http://localhost:8080';
 const ENV = process.env.REACT_APP_ENV;
 
 const FINAL_URL = ENV === 'dev' ? DEV_URL : ENV === 'local' ? LOCAL_URL : PROD_URL;
-console.log("🚀 ~ FINAL_URL:", FINAL_URL)
 export const MARK_URL = "https://mark.sukoonunlimited.com";
 
 export const Raxios = axios.create({ baseURL: FINAL_URL });
