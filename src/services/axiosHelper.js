@@ -1,8 +1,12 @@
 import axios from "axios";
 
-export const FINAL_URL = 'https://6x4j0qxbmk.execute-api.ap-south-1.amazonaws.com/main';
-// export const FINAL_URL = 'https://wivq47mgh6.execute-api.ap-south-1.amazonaws.com/dev';
-// export const FINAL_URL = "http://localhost:8080/";
+const PROD_URL = 'https://6x4j0qxbmk.execute-api.ap-south-1.amazonaws.com/main';
+const DEV_URL = 'https://wivq47mgh6.execute-api.ap-south-1.amazonaws.com/dev';
+const LOCAL_URL = 'http://localhost:8080';
+const ENV = process.env.REACT_APP_ENV;
+
+const FINAL_URL = ENV === 'dev' ? DEV_URL : ENV === 'local' ? LOCAL_URL : PROD_URL;
+console.log("🚀 ~ FINAL_URL:", FINAL_URL)
 export const MARK_URL = "https://mark.sukoonunlimited.com";
 
 export const Raxios = axios.create({ baseURL: FINAL_URL });
