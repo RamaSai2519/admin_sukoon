@@ -10,7 +10,10 @@
                 "start"
             ],
             "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
+            "internalConsoleOptions": "neverOpen",
+            "env": {
+                "REACT_APP_ENV": "local"
+            }
         }
     ]
 }
