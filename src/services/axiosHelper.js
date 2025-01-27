@@ -21,7 +21,8 @@ Raxios.interceptors.request.use(
 
 const logout_user = () => {
   localStorage.clear();
-  window.location.href = '/';
+  const currentLocation = window.location.pathname;
+  window.location.href = `/?redirect=${currentLocation}`;
 };
 
 const refreshFaxiosAccessToken = async () => {

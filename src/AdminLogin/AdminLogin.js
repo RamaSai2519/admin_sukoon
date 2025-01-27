@@ -7,6 +7,8 @@ import './AdminLogin.css';
 
 const AdminLogin = ({ setIsLoggedIn }) => {
     const navigate = useNavigate();
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect');
     const { setAdmin } = useAdmin();
     const [loading, setLoading] = useState(false);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -31,7 +33,8 @@ const AdminLogin = ({ setIsLoggedIn }) => {
                 setAdmin(user);
                 setIsLoggedIn(true);
                 localStorage.setItem('isLoggedIn', 'true');
-                navigate('/admin/dashboard');
+                if (redirect) { navigate(redirect) } else { navigate('/admin/dashboard') }
+
             }
         } catch (error) {
             console.error('Login failed', error);
