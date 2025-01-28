@@ -3,6 +3,7 @@ import Chats from "../../components/Chats";
 import RefTexts from "../../components/RefTexts";
 import { useAdmin } from "../../contexts/useData";
 import Loading from "../../components/Loading/loading";
+import BetaTesters from "../../components/BetaTesters";
 import { Modal, Select, Input, Button, Flex, Radio } from 'antd';
 import { raxiosFetchData, RaxiosPost } from "../../services/fetchData";
 
@@ -82,12 +83,14 @@ const ARKTab = () => {
                     >
                         <Radio.Button value="chats">Chats</Radio.Button>
                         <Radio.Button value="prompts">System Prompts</Radio.Button>
+                        <Radio.Button value="beta_testers">Beta Testers</Radio.Button>
                         <Radio.Button value="ref_texts">Referral Messages</Radio.Button>
                     </Radio.Group>
                 </Flex>
             </div>
             {tab === 'chats' && <Chats />}
             {tab === 'ref_texts' && <RefTexts />}
+            {tab === 'beta_testers' && <BetaTesters />}
             {tab === 'prompts' && (
                 <>
                     <div className="flex gap-3">
