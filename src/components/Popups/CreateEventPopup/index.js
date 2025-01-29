@@ -19,12 +19,13 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
                 name: data?.name,
                 image: data?.image,
                 email: data?.email,
+                isPaid: data?.isPaid,
                 company: data?.company,
                 website: data?.website,
                 stipend: data?.stipend,
-                isPaid: data?.isPaid,
-                highlights: data?.highlights,
+                isSukoon: data?.isSukoon,
                 isDeleted: data?.isDeleted,
+                highlights: data?.highlights,
                 phoneNumber: data?.phoneNumber,
                 description: data?.description,
                 locationType: data?.locationType,
@@ -119,6 +120,10 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
         createFormItem('Website', 'website', <Input />, []),
         createFormItem('Stipend', 'stipend', <InputNumber className="w-full" />, []),
         createFormItem('Paid Opportunity', 'isPaid', <Select>
+            <Select.Option value={true}>Yes</Select.Option>
+            <Select.Option value={false}>No</Select.Option>
+        </Select>, []),
+        createFormItem('Sukoon Opportunity', 'isSukoon', <Select>
             <Select.Option value={true}>Yes</Select.Option>
             <Select.Option value={false}>No</Select.Option>
         </Select>, []),
