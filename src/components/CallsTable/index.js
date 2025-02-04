@@ -51,6 +51,7 @@ const CallsTableComponent = ({
         createColumn('Status', 'status', 'status'),
         createColumn('Reason', 'failedReason', 'failedReason'),
         createColumn('Source', 'source', 'source'),
+        createColumn('Direction', 'direction', 'direction'),
         createColumn('Score', 'conversationScore', 'score'),
         ...(admin.access_level !== 'basic' ? [{
             title: 'Details',
