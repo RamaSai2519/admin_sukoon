@@ -4,7 +4,6 @@ import InternalToggle from '../InternalToggle';
 import { RaxiosPost } from '../../services/fetchData';
 import React, { useEffect, useState } from 'react';
 import { calculateCallStats, columns } from './helper';
-import { downloadExcel } from '../../Utils/exportHelper';
 import { useExperts, useCalls } from '../../contexts/useData';
 import SingleInputPopup from '../Popups/SingleInputPopup';
 
@@ -12,11 +11,9 @@ const ExpertsList = () => {
     const navigate = useNavigate();
     const { calls, fetchCalls } = useCalls();
     const [loading, setLoading] = useState(false);
+    const { experts, fetchExperts } = useExperts();
     const [categoryVisible, setCategoryVisible] = useState(false);
     const [expertVisible, setExpertVisible] = useState(false);
-    const { experts, fetchExperts } = useExperts();
-    const [buttonLoading, setButtonLoading] = useState(false);
-
     const [internalView, setInternalView] = useState(
         localStorage.getItem('internalView') === 'true' ? true : false
     );
@@ -46,7 +43,7 @@ const ExpertsList = () => {
             utilization: stats.utilization + '%',
             avgCallsPerDay: stats.avgCallsPerDay,
             hoursSpoken: stats.hoursSpoken + ' h',
-            score: (expert?.score * 20 || 0) + '%',
+            score: (expert?.score * 20 || 0).toFixed(2) + '%',
             name: expert.name || expert.phoneNumber,
             uniqueDaysSpoken: stats.uniqueDaysSpoken,
             failedCallsCent: stats.failedCallsCent + '%',
@@ -58,12 +55,6 @@ const ExpertsList = () => {
             avgSuccessfulCallDuration: stats.avgSuccessfulCallDuration + ' min',
         };
     }).sort((a, b) => (a.name.replace('Sarathi ', '')).localeCompare(b.name.replace('Sarathi ', '')));
-
-    const exportToExcel = async () => {
-        setButtonLoading(true);
-        await downloadExcel(dataSource, 'experts.xlsx');
-        setButtonLoading(false);
-    };
 
     const handleCreateCategory = async (name) => {
         await RaxiosPost('/actions/categories', { name, action: 'post' }, true);
