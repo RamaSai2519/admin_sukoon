@@ -58,26 +58,19 @@ const ConnectTab = () => {
         } else {
             const formattedDate = new Date(selectedDateTime).toISOString().split('.')[0] + "Z";
             const initiatedBy = admin.name;
-            let status = 'WAPENDING';
-            const tooLateSchedule = new Date(selectedDateTime).getTime() - new Date().getTime() < 15 * 60 * 1000;
-            if (tooLateSchedule) status = 'PENDING';
 
             const response = await RaxiosPost('/actions/schedules',
                 {
                     initiatedBy,
                     job_type: 'CALL',
-                    status: status,
+                    status: 'WAPENDING',
                     user_id: values.user,
                     expert_id: expertId,
                     job_time: formattedDate,
                     user_requested: values.user_requested === "Yes"
-                },
-                true
+                }, true
             );
-            if (response.status === 200) {
-                if (tooLateSchedule) await message.warning('No notification will be sent as the call is scheduled within 15 minutes.', 10);
-                window.location.reload();
-            }
+            if (response.status === 200) window.location.reload()
         }
         setLoading(false);
     };
