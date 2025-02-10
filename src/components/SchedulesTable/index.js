@@ -20,6 +20,7 @@ const SchedulesTable = () => {
     const [loading, setLoading] = useState(false);
     const [schedules, setSchedules] = useState([]);
     const [isDeleted, setIsDeleted] = useState(false);
+    const [fromToday, setFromToday] = useState(false);
 
     const searchInputRef = useRef(null);
     const [searchText, setSearchText] = useState('');
@@ -33,12 +34,12 @@ const SchedulesTable = () => {
     };
 
     const fetchSchedules = async () => {
-        const optional = { isDeleted, ...filter };
+        const optional = { fromToday, isDeleted, ...filter };
         raxiosFetchData(schedulesPage, pageSize, setSchedules, setTotal, '/actions/schedules', optional, setLoading);
     };
 
     // eslint-disable-next-line
-    useEffect(() => { fetchSchedules() }, [schedulesPage, pageSize, JSON.stringify(filter), isDeleted]);
+    useEffect(() => { fetchSchedules() }, [schedulesPage, pageSize, JSON.stringify(filter), isDeleted, fromToday]);
 
     const createColumn = (title, dataIndex, key, sorter, render, filter = true) => ({
         title,
@@ -85,6 +86,12 @@ const SchedulesTable = () => {
             {loading ? <Loading /> : (
                 <div className="flex flex-col gap-2">
                     <div className="flex w-full justify-end gap-5">
+                        <Checkbox
+                            checked={fromToday}
+                            onChange={(e) => setFromToday(e.target.checked)}
+                        >
+                            From Today
+                        </Checkbox>
                         <Checkbox
                             checked={isDeleted}
                             onChange={(e) => setIsDeleted(e.target.checked)}
