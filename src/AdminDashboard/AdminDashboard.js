@@ -16,6 +16,7 @@ import WhatsappTab from './DashboardTabs/WhatsappTab'
 import LazyLoad from '../components/LazyLoad/lazyload'
 import ReferralsTab from './DashboardTabs/ReferralsTab'
 import DashboardTab from './DashboardTabs/DashboardTab'
+import VacationsTab from './DashboardTabs/VacationsTab'
 import ThemeToggle from '../components/ThemeToggle/toggle'
 import ApplicationsTab from './DashboardTabs/ApplicationsTab'
 import PlatformCategory from '../components/PlatformCategory'
@@ -44,6 +45,7 @@ const AdminDashboard = ({ onLogout }) => {
         { href: 'calls list', component: <CallsTable /> },
         { href: 'users list', component: <UserList /> },
         { href: 'experts list', component: <SaarthisTab /> },
+        { href: 'vacations', component: <VacationsTab /> },
         { href: 'applications', component: <ApplicationsTab /> },
         { href: 'app categories', component: <PlatformCategory /> },
       ],
