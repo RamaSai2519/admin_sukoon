@@ -44,7 +44,7 @@ const S3Uploader = ({ setFileUrl, finalFileUrl, show = true, disabled = false })
                 showUploadList={false}
             >
                 <Button disabled={disabled} icon={<UploadOutlined />} loading={uploading}>
-                    {show && (uploading ? 'Uploading...' : 'Upload File')}
+                    {show && (uploading ? 'Uploading...' : 'Upload Image')}
                 </Button>
             </Upload>
             {(finalFileUrl && show) && <img src={finalFileUrl} alt="File Uploaded" className='w-full mt-2 max-h-52' />}
