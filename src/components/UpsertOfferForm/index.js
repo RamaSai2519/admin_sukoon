@@ -37,6 +37,7 @@ const UpsertOfferForm = ({ offer, setOffer }) => {
         if (response.status === 200) {
             message.success(response.msg);
             setOffer({});
+            window.location.reload();
         } else {
             message.error(response.msg);
         }
