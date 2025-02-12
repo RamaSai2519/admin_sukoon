@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 const UpsertOfferForm = ({ offer, setOffer }) => {
     const { admin } = useAdmin();
-    const [imageUrl, setImageUrl] = useState(offer?.imageUrl || '');
+    const [imageUrl, setImageUrl] = useState('');
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -25,6 +25,7 @@ const UpsertOfferForm = ({ offer, setOffer }) => {
             flatDiscount: offer?.flatDiscount,
             discountPercentage: offer?.discountPercentage,
         });
+        setImageUrl(offer?.imageUrl);
     }, [offer, admin, form]);
 
     const handleUpsert = async (values) => {
