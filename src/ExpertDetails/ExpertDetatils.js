@@ -27,6 +27,7 @@ const ExpertDetails = () => {
   const { platformCategories, fetchPlatformCategories } = usePlatformCategories();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { allCategories, fetchCategories } = useCategories();
+  console.log("🚀 ~ ExpertDetails ~ allCategories:", allCategories)
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [timings, setTimings] = useState([]);
@@ -153,7 +154,7 @@ const ExpertDetails = () => {
     { name: 'phoneNumber', label: 'Phone Number', type: 'input', disabled: true },
     { name: 'type', label: 'Type', type: 'select', options: ['expert', 'saarthi', 'internal', 'agent'] },
     { name: 'languages', label: 'Languages', type: 'input' },
-    { name: 'categories', label: 'Categories', type: 'select', options: allCategories, mode: 'multiple' },
+    { name: 'categories', label: 'Categories', type: 'categories' },
     { name: 'sub_category', label: 'Platform Categories', type: 'platform_categories' },
     { name: 'description', label: 'Description', type: 'textarea' },
     { name: 'score', label: 'Score', type: 'input' },
@@ -283,6 +284,17 @@ const ExpertDetails = () => {
                         >
                           {platformCategories.map((option) => (
                             <Option key={option._id} value={option._id} >{option.name}</Option>
+                          ))}
+                        </Select>
+                      ) : field.type === 'categories' ? (
+                        <Select
+                          mode={'multiple'}
+                          className="w-full mt-2"
+                          placeholder={`Select Categories`}
+                          disabled={!editMode}
+                        >
+                          {allCategories.map((option) => (
+                            <Option key={option._id} value={option._id}>{option.name}</Option>
                           ))}
                         </Select>
                       ) : (
