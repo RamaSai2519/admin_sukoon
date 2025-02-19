@@ -25,7 +25,10 @@ const UpsertOfferForm = ({ offer, setOffer }) => {
             flatDiscount: offer?.flatDiscount,
             discountPercentage: offer?.discountPercentage,
         });
-        setImageUrl(offer?.imageUrl);
+        
+        if (offer?.imageUrl) {
+            setImageUrl(offer.imageUrl);
+        }
     }, [offer, admin, form]);
 
     const handleUpsert = async (values) => {
@@ -102,7 +105,8 @@ const UpsertOfferForm = ({ offer, setOffer }) => {
                 onFinish={handleUpsert}
                 form={form}
             >
-                <S3Uploader setFileUrl={setImageUrl} finalFileUrl={imageUrl} />
+                <S3Uploader setFileUrl={setImageUrl} key={'aaa'} finalFileUrl={imageUrl}  />
+                <h1 style={{color:"yellow", fontSize:12, textAlign:"center"}}>{imageUrl}</h1>
                 {imageUrl && <>
                     <div className="grid grid-cols-2 gap-4">
                         {formItems1.map((item) => RenderFormItem({ item }))}
