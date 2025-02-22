@@ -55,11 +55,11 @@ const AdminDashboard = ({ onLogout }) => {
       href: 'communication',
       icon: <PhoneCall className="h-4 w-4" />,
       items: [
-        { href: 'Connect', component: <ConnectTab /> },
-        { href: 'whatsapp', component: <WhatsappTab /> },
         ...(admin.access_level === 'super' || admin.access_level === 'admin' ? [
           { href: 'ark', component: <ARKTab /> },
         ] : []),
+        { href: 'Connect', component: <ConnectTab /> },
+        { href: 'whatsapp', component: <WhatsappTab /> },
         { href: 'Referral Texts', component: <RefTexts /> },
       ],
     },
