@@ -31,9 +31,7 @@ const S3Uploader = ({ setFileUrl, finalFileUrl, show = true, disabled = false })
           'image/jpeg',
           'image/jpg',
           'image/webp',
-          'text/csv',
-          'application/vnd.ms-excel',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'text/csv'
         ];
         const maxSize = 1 * 1024 * 1024; 
 
