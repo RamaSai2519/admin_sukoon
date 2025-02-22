@@ -26,7 +26,15 @@ const S3Uploader = ({ setFileUrl, finalFileUrl, show = true, disabled = false })
             message.error('No file selected.');
             return;
         }
-        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+        const allowedTypes = [
+          'image/png',
+          'image/jpeg',
+          'image/jpg',
+          'image/webp',
+          'text/csv',
+          'application/vnd.ms-excel',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ];
         const maxSize = 1 * 1024 * 1024; 
 
         if (!allowedTypes.includes(file.type)) {
