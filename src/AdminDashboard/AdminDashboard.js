@@ -22,6 +22,7 @@ import ApplicationsTab from './DashboardTabs/ApplicationsTab'
 import PlatformCategory from '../components/PlatformCategory'
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, LayoutDashboard, Users, PhoneCall, Calendar, Club, FileCode, LogOut } from 'lucide-react'
+import RefTexts from '../components/RefTexts'
 
 
 const AdminDashboard = ({ onLogout }) => {
@@ -58,7 +59,8 @@ const AdminDashboard = ({ onLogout }) => {
         { href: 'whatsapp', component: <WhatsappTab /> },
         ...(admin.access_level === 'super' || admin.access_level === 'admin' ? [
           { href: 'ark', component: <ARKTab /> },
-        ] : [])
+        ] : []),
+        { href: 'Referral Texts', component: <RefTexts /> },
       ],
     },
     {

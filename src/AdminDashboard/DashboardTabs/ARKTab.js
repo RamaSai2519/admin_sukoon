@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Chats from "../../components/Chats";
-import RefTexts from "../../components/RefTexts";
 import { useAdmin } from "../../contexts/useData";
 import Loading from "../../components/Loading/loading";
 import BetaTesters from "../../components/BetaTesters";
@@ -89,7 +88,6 @@ const ARKTab = () => {
                 </Flex>
             </div>
             {tab === 'chats' && <Chats />}
-            {tab === 'ref_texts' && <RefTexts />}
             {tab === 'beta_testers' && <BetaTesters />}
             {tab === 'prompts' && (
                 <>
