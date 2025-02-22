@@ -47,6 +47,7 @@ const EventsTab = ({ contribute }) => {
 
     const fetchEvents = async () => {
         const optional = filter;
+        optional['sort_order'] = '-1';
         if (contribute) optional['events_type'] = 'contribute';
         if (table === 'events') {
             raxiosFetchData(eventsPage, eventsPageSize, setEvents, setEventsTotal, '/actions/list_events', optional, setLoading);
