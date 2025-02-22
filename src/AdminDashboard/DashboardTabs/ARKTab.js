@@ -83,7 +83,6 @@ const ARKTab = () => {
                         <Radio.Button value="chats">Chats</Radio.Button>
                         <Radio.Button value="prompts">System Prompts</Radio.Button>
                         <Radio.Button value="beta_testers">Beta Testers</Radio.Button>
-                        <Radio.Button value="ref_texts">Referral Messages</Radio.Button>
                     </Radio.Group>
                 </Flex>
             </div>
