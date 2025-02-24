@@ -49,7 +49,7 @@ const RefTexts = () => {
     };
 
     const columns = [
-        createColumn('Source', 'source', 'source'),
+        createColumn('Source', 'source', 'source', null, null, false),
         createColumn('Message', 'message', 'message')
     ];
 
