@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useStats } from '../../contexts/useData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import DashboardTile from '../../components/DashboardTile';
@@ -11,6 +11,13 @@ import OnlineSaarthisTable from '../../components/OnlineSaarthisTable/OnlineSaar
 
 const DashboardTab = () => {
   const { stats } = useStats();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      window.location.reload();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <LazyLoad>
