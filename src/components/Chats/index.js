@@ -21,6 +21,7 @@ const Chats = () => {
         localStorage.getItem('chatsPage') ? parseInt(localStorage.getItem('chatsPage')) : 1
     )
     const [selectedChat, setSelectedChat] = useState(null)
+    const [buttonLoading, setButtonLoading] = useState(false)
     const navigate = useNavigate()
 
     const fetchChats = async (single = false) => {
@@ -62,9 +63,11 @@ const Chats = () => {
     ];
 
     const handleRefresh = async () => {
+        setButtonLoading(true);
         const selectedChatId = selectedChat._id;
         await fetchChats(true);
         setSelectedChat(histories.find((history) => history._id === selectedChatId));
+        setButtonLoading(false);
     }
 
     useEffect(() => {
@@ -135,7 +138,7 @@ const Chats = () => {
                                 {selectedChat.user?.name || selectedChat.phoneNumber} <span className='text-gray-500'>({selectedChat.context === 'wa_webhook' ? 'Whatsapp' : selectedChat.context})</span>
                             </span>
                             <div className='flex gap-5'>
-                                <Button onClick={handleRefresh}>Refresh</Button>
+                                <Button loading={buttonLoading} onClick={handleRefresh}>Refresh</Button>
                                 <Button onClick={() => setViewTools(!viewTools)}>
                                     {viewTools ? 'Hide Tool Calls' : 'View Tool Calls'}
                                 </Button>
@@ -189,7 +192,7 @@ const Chats = () => {
                                     ) : <></>
                                 ))}
                                 <div className='flex p-2 flex-col justify-end items-end rounded-2xl border dark:border-lightBlack dark:bg-lightBlack ml-auto'>
-                                    <span>
+                                    <span className='text-gray-500 text-right'>
                                         {selectedChat.status === 'inprogress' ? "Ark is typing, the chat will refresh every 10 seconds till ARK responds" : "Done"}
                                     </span>
                                 </div>
