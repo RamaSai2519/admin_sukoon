@@ -23,8 +23,8 @@ const Chats = () => {
     const [selectedChat, setSelectedChat] = useState(null)
     const navigate = useNavigate()
 
-    const fetchChats = async () => {
-        await raxiosFetchData(page, size, setHistories, setTotal, '/actions/histories', filters, setLoading)
+    const fetchChats = async (single = false) => {
+        await raxiosFetchData(page, size, setHistories, setTotal, '/actions/histories', filters, !single ? setLoading : null)
     }
 
     // eslint-disable-next-line
@@ -63,7 +63,7 @@ const Chats = () => {
 
     const handleRefresh = async () => {
         const selectedChatId = selectedChat._id;
-        await fetchChats();
+        await fetchChats(true);
         setSelectedChat(histories.find((history) => history._id === selectedChatId));
     }
 
@@ -72,6 +72,19 @@ const Chats = () => {
             const chatView = document.getElementById('chat-view');
             chatView.scrollTop = chatView.scrollHeight;
         }
+    }, [selectedChat]);
+
+    useEffect(() => {
+        let interval;
+        if (selectedChat?.status === 'inprogress') {
+            interval = setInterval(() => {
+                handleRefresh();
+            }, 10000);
+        } else if (interval) {
+            clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+        // eslint-disable-next-line
     }, [selectedChat]);
 
     const handleUserView = (record) => {
@@ -177,7 +190,7 @@ const Chats = () => {
                                 ))}
                                 <div className='flex p-2 flex-col justify-end items-end rounded-2xl border dark:border-lightBlack dark:bg-lightBlack ml-auto'>
                                     <span>
-                                        {selectedChat.status === 'inprogress' ? "Typing..." : "Done"}
+                                        {selectedChat.status === 'inprogress' ? "Ark is typing, the chat will refresh every 10 seconds till ARK responds" : "Done"}
                                     </span>
                                 </div>
                             </div>
