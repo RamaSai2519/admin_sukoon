@@ -4,8 +4,9 @@ import React, { useEffect, useState } from 'react'
 import Loading from '../Loading/loading'
 import { useNavigate } from 'react-router-dom'
 import { formatTime } from '../../Utils/formatHelper'
-import { Table, Button, Form, Input, Select } from 'antd'
+import { Table, Button, Form, Input, Select, message } from 'antd'
 import { raxiosFetchData } from '../../services/fetchData'
+import Raxios from '../../services/axiosHelper'
 
 const Chats = () => {
     const [viewTools, setViewTools] = useState(false)
@@ -30,6 +31,22 @@ const Chats = () => {
 
     // eslint-disable-next-line
     useEffect(() => { fetchChats() }, [page, size, filters])
+
+    const resetChat = async () => {
+        const response = await Raxios.delete('/actions/histories', {
+            params: {
+                createdAt: selectedChat.createdAt,
+                phoneNumber: selectedChat.phoneNumber,
+                context: selectedChat.context
+            }
+        });
+        if (response.status === 200) {
+            setSelectedChat(null);
+            await fetchChats();
+        } else {
+            message.error(response.msg);
+        }
+    }
 
     const handlListChange = (current, pageSize) => {
         setPage(current);
@@ -138,6 +155,7 @@ const Chats = () => {
                                 {selectedChat.user?.name || selectedChat.phoneNumber} <span className='text-gray-500'>({selectedChat.context === 'wa_webhook' ? 'Whatsapp' : selectedChat.context})</span>
                             </span>
                             <div className='flex gap-5'>
+                                <Button onClick={resetChat}>Reset</Button>
                                 <Button loading={buttonLoading} onClick={handleRefresh}>Refresh</Button>
                                 <Button onClick={() => setViewTools(!viewTools)}>
                                     {viewTools ? 'Hide Tool Calls' : 'View Tool Calls'}
