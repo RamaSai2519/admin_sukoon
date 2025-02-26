@@ -22,6 +22,9 @@ const LatestCallsTable = () => {
   const [internalView, setInternalView] = useState(
     localStorage.getItem('internalView') === 'true' ? true : false
   );
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(localStorage.getItem('currentPage')) || 1
+  );
 
   const fetchData = async () => {
     setLoading(true);
@@ -42,6 +45,11 @@ const LatestCallsTable = () => {
     // eslint-disable-next-line
   }, [internalView]);
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    localStorage.setItem('currentPage', page);
+  };
+
   return (
     <LazyLoad>
       <div className='flex w-full items-center justify-between'>
@@ -56,7 +64,7 @@ const LatestCallsTable = () => {
         size={"middle"}
         loading={loading}
         searchText={searchText}
-        pagination={{ pageSize: 5 }}
+        pagination={{ pageSize: 5, current: currentPage, onChange: handlePageChange }}
         setSearchText={setSearchText}
         searchedColumn={searchedColumn}
         searchInputRef={searchInputRef}
