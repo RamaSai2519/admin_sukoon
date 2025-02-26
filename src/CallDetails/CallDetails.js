@@ -107,6 +107,10 @@ const CallDetails = () => {
                         <p>Duration: {call.duration}</p>
                     </div>
                 </div>
+                {call.inappropriateContent && <div className="details-box">
+                    <h2>Inappropriate Content</h2>
+                    <p>{formatValue(call.inappropriateContent)}</p>
+                </div>}
                 {call.Summary && <div className="details-box">
                     <h2>Summary</h2>
                     <p>{formatValue(call.Summary)}</p>

@@ -6,6 +6,10 @@
     padding: 20px;
 }
 
+.whole-container h2 {
+    color: rgb(107, 114, 128);
+}
+
 .small-tiles {
     display: flex;
     flex-direction: column;
