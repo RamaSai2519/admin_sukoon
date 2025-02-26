@@ -202,7 +202,7 @@ const AdminDashboard = ({ onLogout }) => {
             </div>
           </div>
         )}
-        <div className="flex-1 px-10 min-h-screen overflow-auto">
+        <div className="flex-1 pl-10 min-h-screen overflow-auto">
           <Routes>
             {pages.map(({ href, component }) => (
               <Route key={href} path={href} element={component} />
