@@ -23,7 +23,7 @@ const LatestCallsTable = () => {
     localStorage.getItem('internalView') === 'true' ? true : false
   );
   const [currentPage, setCurrentPage] = useState(
-    parseInt(localStorage.getItem('currentPage')) || 1
+    parseInt(localStorage.getItem('latestCallsPage')) || 1
   );
 
   const fetchData = async () => {
@@ -47,7 +47,7 @@ const LatestCallsTable = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    localStorage.setItem('currentPage', page);
+    localStorage.setItem('latestCallsPage', page);
   };
 
   return (
