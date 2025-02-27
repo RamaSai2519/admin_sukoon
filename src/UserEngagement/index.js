@@ -94,7 +94,12 @@ const UserEngagement = ({ setExportFileUrl }) => {
         )),
         createColumn('Contact', 'phoneNumber', 'phoneNumber', 120, null, null, null, true),
         createColumn('City', 'city', 'city', 150, null, true, null, true),
-        createColumn('DOB', 'birthDate', 'birthDate', 130, null, null, (record) => formatDate(record)),
+        createColumn('DOB', 'birthDate', 'birthDate', 200, null, null, (text, record) => (
+            <DatePicker
+                value={text ? dayjs(text, 'YYYY-MM-DD') : null}
+                onChange={(date) => handleLastReachedChange(date, record, 'birthDate')}
+            />
+        )),
         createColumn('Gender', 'gender', 'gender', 120, null, true, null, true),
         createColumn('Last Call Date', 'lastCallDate', 'lastCallDate', 135, null, null, (record) => formatDate(record)),
         createColumn('Call Age', 'callAge', 'callAge', 90),
@@ -163,9 +168,9 @@ const UserEngagement = ({ setExportFileUrl }) => {
         await handleSave({ key: record._id, field: 'userStatus', value });
     };
 
-    const handleLastReachedChange = async (date, record) => {
+    const handleLastReachedChange = async (date, record, field = 'lastReached') => {
         const value = date ? date.toISOString() : null;
-        await handleSave({ key: record._id, field: 'lastReached', value });
+        await handleSave({ key: record._id, field, value });
     };
 
     const components = {
