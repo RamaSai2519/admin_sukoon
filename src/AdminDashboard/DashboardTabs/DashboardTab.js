@@ -11,11 +11,11 @@ import HourCallChart from '../../components/HourCallChart/HourCallChart';
 import OnlineSaarthisTable from '../../components/OnlineSaarthisTable/OnlineSaarthisTable';
 
 const DashboardTab = () => {
-  const { stats } = useStats();
+  const [countdownEnabled, setCountdownEnabled] = useState(() => localStorage.getItem('countdownEnabled') === 'true');
   const [countdown, setCountdown] = useState(() => parseInt(localStorage.getItem('countdown') || '30'));
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newCountdown, setNewCountdown] = useState(countdown);
-  const [countdownEnabled, setCountdownEnabled] = useState(() => localStorage.getItem('countdownEnabled') === 'true');
+  const { stats } = useStats();
 
   useEffect(() => {
     if (countdownEnabled) {
