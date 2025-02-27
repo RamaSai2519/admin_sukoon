@@ -15,10 +15,10 @@ const DashboardTab = () => {
   const [countdown, setCountdown] = useState(() => parseInt(localStorage.getItem('countdown') || '30'));
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newCountdown, setNewCountdown] = useState(countdown);
-  const [neverCountdown, setNeverCountdown] = useState(() => localStorage.getItem('neverCountdown') === 'true');
+  const [countdownEnabled, setCountdownEnabled] = useState(() => localStorage.getItem('countdownEnabled') === 'true');
 
   useEffect(() => {
-    if (!neverCountdown) {
+    if (countdownEnabled) {
       const interval = setInterval(() => {
         setCountdown(prevCountdown => prevCountdown > 0 ? prevCountdown - 1 : newCountdown);
         if (countdown === 0) {
@@ -27,7 +27,7 @@ const DashboardTab = () => {
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [countdown, newCountdown, neverCountdown]);
+  }, [countdown, newCountdown, countdownEnabled]);
 
   const handleCircleClick = () => {
     setIsModalVisible(true);
@@ -35,7 +35,7 @@ const DashboardTab = () => {
 
   const handleOk = () => {
     localStorage.setItem('countdown', newCountdown);
-    localStorage.setItem('neverCountdown', neverCountdown);
+    localStorage.setItem('countdownEnabled', countdownEnabled);
     setCountdown(newCountdown);
     setIsModalVisible(false);
   };
@@ -48,11 +48,13 @@ const DashboardTab = () => {
     <LazyLoad>
       <div id='dashboardTab' className='min-h-screen'>
         <div className='fixed top-4 right-4 z-50' onClick={handleCircleClick}>
-          <Progress type="circle" percent={(countdown / newCountdown) * 100} format={() => countdown} width={30} />
+          <Progress type="circle" percent={(countdown / newCountdown) * 100} format={() => countdown} size={30} />
         </div>
-        <Modal title="Set Countdown Timer" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-          <InputNumber min={1} value={newCountdown} onChange={setNewCountdown} />
-          <Checkbox checked={neverCountdown} onChange={e => setNeverCountdown(e.target.checked)}>Never Countdown</Checkbox>
+        <Modal title="Set Countdown Timer" open={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+          <div className='flex flex-col gap-2'>
+            <InputNumber min={1} value={newCountdown} onChange={setNewCountdown} />
+            <Checkbox checked={countdownEnabled} onChange={e => setCountdownEnabled(e.target.checked)}>Countdown</Checkbox>
+          </div>
         </Modal>
         <div id='parent-grid' className='flex flex-col w-full h-full'>
           <div id='stats-grid' className='grid grid-cols-5'>
