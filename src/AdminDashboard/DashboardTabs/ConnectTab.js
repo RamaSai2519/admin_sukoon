@@ -172,7 +172,7 @@ const ConnectTab = () => {
                         ? <ReSchedulesTable reformChange={handleReFormChange} />
                         : <SchedulesTable />
                 }
-                <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-10 justify-center">
+                <div className="flex flex-col h-full border-l-2 dark:border-lightBlack p-10 justify-center">
                     {!showReForm && <div className="flex items-center justify-end gap-2">
                         <Switch className="w-fit mb-3" unCheckedChildren="Schedule a Repeat Call" checked={showReForm} onChange={handleReFormChange} />
                     </div>}
