@@ -3,8 +3,10 @@ import { cn } from "../lib/utils"
 import ARKTab from './DashboardTabs/ARKTab'
 import UserList from '../UserList/UserList'
 import CallsTable from '../CallList/CallList'
+import RefTexts from '../components/RefTexts'
 import { useAdmin } from '../contexts/useData'
 import PlansTab from './DashboardTabs/PlansTab'
+import GamesTab from './DashboardTabs/GamesTab'
 import UsersTab from './DashboardTabs/UsersTab'
 import EventsTab from './DashboardTabs/EventsTab'
 import OffersTab from './DashboardTabs/OffersTab'
@@ -22,7 +24,6 @@ import ApplicationsTab from './DashboardTabs/ApplicationsTab'
 import PlatformCategory from '../components/PlatformCategory'
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, LayoutDashboard, Users, PhoneCall, Calendar, Club, FileCode, LogOut } from 'lucide-react'
-import RefTexts from '../components/RefTexts'
 
 
 const AdminDashboard = ({ onLogout }) => {
@@ -81,7 +82,14 @@ const AdminDashboard = ({ onLogout }) => {
         { href: 'referrals', component: <ReferralsTab /> },
       ],
     },
-    { href: 'content', icon: <FileCode className="h-4 w-4" />, component: <ContentTab /> },
+    {
+      href: 'content',
+      icon: <FileCode className="h-4 w-4" />,
+      items: [
+        { href: 'content', component: <ContentTab /> },
+        { href: 'games', component: <GamesTab /> },
+      ]
+    },
   ]
 
   useEffect(() => {

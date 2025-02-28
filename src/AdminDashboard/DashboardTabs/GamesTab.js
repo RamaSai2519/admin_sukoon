@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Radio, Input, Cascader, Select, Button, message, Tooltip } from 'antd';
+import { Form, Radio, Input, Cascader, Select, Button, Tooltip } from 'antd';
+import { raxiosFetchData, RaxiosPost } from '../../services/fetchData';
 import LazyLoad from '../../components/LazyLoad/lazyload';
 import Loading from '../../components/Loading/loading';
-import Gamelinks from '../../components/Gamelinks';
-import Raxios from '../../services/axiosHelper';
 import S3Uploader from '../../components/Upload';
 
 const GamesTab = () => {
@@ -11,32 +10,17 @@ const GamesTab = () => {
     const [options, setOptions] = useState([]);
     const [questions, setQuestions] = useState([]);
     const [uploadedImageUrl, setUploadedImageUrl] = useState('');
-    const [ready, setReady] = useState(false);
 
-    useEffect(() => {
-        Raxios.get('/actions/games/quizQuestions')
-            .then((res) => {
-                setQuestions(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, []);
+    const fetchData = async () => {
+        await raxiosFetchData(null, null, setQuestions, null, '/actions/quiz_questions');
+    };
 
-    const onFormSubmit = (values) => {
-        const formData = {
-            ...values,
-            imageUrl: uploadedImageUrl
-        };
+    useEffect(() => { fetchData() }, []);
 
-        Raxios.post('/actions/games/addQuestion', formData)
-            .then((res) => {
-                window.location.reload();
-            })
-            .catch((err) => {
-                alert(err.response.data.message);
-                console.log(err);
-            });
+    const onFormSubmit = async (values) => {
+        const formData = { ...values, imageUrl: uploadedImageUrl };
+        const response = await RaxiosPost('/actions/quiz_questions', formData);
+        if (response.status === 200) { window.location.reload(); }
     };
 
     const handleOptionChange = (index, value) => {
@@ -44,17 +28,6 @@ const GamesTab = () => {
         newOptions[index] = value;
         setOptions(newOptions);
     };
-
-    const handleChange = (info) => {
-        if (info.file.status === 'done') {
-            setUploadedImageUrl(info.file.response.file_url);
-            message.success(`${info.file.name} file uploaded successfully`);
-            setReady(true);
-        } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
-        }
-    };
-
     const uniqueLevels = [...new Set(questions.map(question => question.level))];
 
     return (
@@ -114,34 +87,41 @@ const GamesTab = () => {
                                     </Form.Item>
                                 ))}
                             </div>
-                            <Form.Item
-                                label="Correct Answer"
-                                name="correctAnswer"
-                                rules={[{ required: true }]}
-                                shouldUpdate={(prevValues, currentValues) =>
-                                    prevValues.options !== currentValues.options
-                                }
-                            >
-                                <Select
-                                    placeholder="Select Correct Answer"
-                                    disabled={options.length < 4}
+                            <div className="grid grid-cols-2 gap-2">
+                                <Form.Item
+                                    label="Correct Answer"
+                                    name="correctAnswer"
+                                    rules={[{ required: true }]}
+                                    shouldUpdate={(prevValues, currentValues) =>
+                                        prevValues.options !== currentValues.options
+                                    }
                                 >
-                                    {options.map((option, index) => (
-                                        <Select.Option key={index} value={option}>
-                                            {option}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
+                                    <Select
+                                        placeholder="Select Correct Answer"
+                                        disabled={options.length < 4}
+                                    >
+                                        {options.map((option, index) => (
+                                            <Select.Option key={index} value={option}>
+                                                {option}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item
+                                    label="Category"
+                                    name="category"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input placeholder="Enter category" />
+                                </Form.Item>
+                            </div>
                             <Form.Item
-                                label="Image"
-                                name="image"
-                                rules={[{ required: true, message: 'Please upload an image' }]}
+                                label="Image" name="image"
                             >
                                 <S3Uploader setFileUrl={setUploadedImageUrl} finalFileUrl={uploadedImageUrl} />
                             </Form.Item>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" disabled={!ready}>
+                                <Button type="primary" htmlType="submit">
                                     Submit
                                 </Button>
                             </Form.Item>
@@ -219,9 +199,6 @@ const GamesTab = () => {
                         }
                     </div>
                 </div>)}
-                {game === "games" &&
-                    <Gamelinks />
-                }
             </div>
         </LazyLoad>
     );
