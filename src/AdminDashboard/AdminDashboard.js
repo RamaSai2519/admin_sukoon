@@ -24,6 +24,7 @@ import ApplicationsTab from './DashboardTabs/ApplicationsTab'
 import PlatformCategory from '../components/PlatformCategory'
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, LayoutDashboard, Users, PhoneCall, Calendar, Club, FileCode, LogOut } from 'lucide-react'
+import LeaderBoard from '../components/LeaderBoard'
 
 
 const AdminDashboard = ({ onLogout }) => {
@@ -88,6 +89,7 @@ const AdminDashboard = ({ onLogout }) => {
       items: [
         { href: 'content', component: <ContentTab /> },
         { href: 'games', component: <GamesTab /> },
+        { href: 'leaderboard', component: <LeaderBoard /> },
       ]
     },
   ]
