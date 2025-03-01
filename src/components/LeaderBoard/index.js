@@ -19,21 +19,9 @@ const LeaderBoard = () => {
     if (loading) return <Loading />;
 
     const columns = [
-        {
-            title: 'Position',
-            key: 'position',
-            render: (text, record, index) => index + 1,
-        },
-        {
-            title: 'User Name',
-            dataIndex: 'user_name',
-            key: 'user_name',
-        },
-        {
-            title: 'Highest Score',
-            dataIndex: 'highest_score',
-            key: 'highest_score',
-        },
+        { title: 'Position', key: 'position', render: (text, record, index) => index + 1 },
+        { title: 'User Name', dataIndex: 'user_name', key: 'user_name' },
+        { title: 'Total Score', dataIndex: 'total_score', key: 'total_score' },
     ];
 
     return (
