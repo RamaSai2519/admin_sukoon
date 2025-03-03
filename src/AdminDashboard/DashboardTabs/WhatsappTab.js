@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Radio } from 'antd';
-import SendWAForm from '../../components/SendWAForm';
+// import SendWAForm from '../../components/SendWAForm';
 import WaWhHistory from '../../components/WaWhHistory';
 import WaFeedbacks from '../../components/WaFeedbacks';
 import { raxiosFetchData } from '../../services/fetchData';
@@ -28,7 +28,7 @@ const WhatsappTab = () => {
 
     return (
         <div className='min-h-screen p-5 w-full overflow-auto flex md:flex-row flex-col h-max '>
-            <div className='flex flex-col md:w-1/2 mr-2'>
+            <div className='flex flex-col mr-2'>
                 <div className='flex w-full justify-between items-center gap-2 mb-2'>
                     <Flex vertical>
                         <Radio.Group
@@ -63,9 +63,9 @@ const WhatsappTab = () => {
                     />
                 )}
             </div>
-            <div className='flex md:mt-0 mt-5 md:w-1/2 pl-2 md:border-l-2 dark:md:border-lightBlack'>
+            {/* <div className='flex md:mt-0 mt-5 md:w-1/2 pl-2 md:border-l-2 dark:md:border-lightBlack'>
                 <SendWAForm />
-            </div>
+            </div> */}
         </div>
     );
 };

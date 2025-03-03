@@ -25,8 +25,8 @@ const Chats = () => {
     const [buttonLoading, setButtonLoading] = useState(false)
     const navigate = useNavigate()
 
-    const fetchChats = async (single = false) => {
-        await raxiosFetchData(page, size, setHistories, setTotal, '/actions/histories', filters, !single ? setLoading : null)
+    const fetchChats = async () => {
+        await raxiosFetchData(page, size, setHistories, setTotal, '/actions/histories', filters, setLoading);
     }
 
     // eslint-disable-next-line
@@ -82,7 +82,7 @@ const Chats = () => {
     const handleRefresh = async () => {
         setButtonLoading(true);
         const selectedChatId = selectedChat._id;
-        await fetchChats(true);
+        await fetchChats();
         setSelectedChat(histories.find((history) => history._id === selectedChatId));
         setButtonLoading(false);
     }
