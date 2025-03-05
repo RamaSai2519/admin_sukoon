@@ -36,6 +36,7 @@ const UserDetails = () => {
   const [isBusy, setIsBusy] = useState(false);
   const [birthDate, setBirthDate] = useState('');
   const [editMode, setEditMode] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isPaidUser, setIsPaidUser] = useState(false);
   const [numberOfCalls, setNumberOfCalls] = useState('');
@@ -44,16 +45,13 @@ const UserDetails = () => {
   const fetchData = async () => {
     const phoneNumber = localStorage.getItem('userNumber');
     let payload = {};
-    if (userId) {
-      payload = { user_id: userId };
-    } else {
-      payload = { phoneNumber };
-    }
+    if (userId) { payload = { user_id: userId }; } else { payload = { phoneNumber }; }
     try {
       const data = await raxiosFetchData(null, null, null, null, '/actions/user', payload, null);
       setName(data.name);
       setCity(data.city);
       setIsBusy(data.isBusy);
+      setIsBlocked(data.isBlocked);
       setIsPaidUser(data.isPaidUser);
       setPhoneNumber(data.phoneNumber);
       setPersona(data.customerPersona);
@@ -111,11 +109,9 @@ const UserDetails = () => {
 
   const handleSwitchChange = (field, value) => {
     const updatedFields = { phoneNumber, [field]: value };
-    if (field === 'isPaidUser') {
-      setIsPaidUser(value);
-    } else if (field === 'isBusy') {
-      setIsBusy(value);
-    }
+    if (field === 'isPaidUser') { setIsPaidUser(value) } else if (field === 'isBusy') {
+      setIsBusy(value)
+    } else if (field === 'isBlocked') { setIsBlocked(value) }
     handleUpdate(updatedFields);
   };
 
@@ -155,6 +151,7 @@ const UserDetails = () => {
             <div className='edit-button-container'>
               <InputField label="Number of Calls" value={numberOfCalls} onChange={(e) => setNumberOfCalls(e.target.value)} editMode={editMode} type="number" />
               {editMode && <button className='update-button' onClick={() => handleUpdate({ phoneNumber, name, city, isBusy, isPaidUser, birthDate, numberOfCalls })}>Update Details</button>}
+              <button className='update-button' onClick={() => handleSwitchChange('isBlocked', !isBlocked)}>{isBlocked ? 'Unblock User' : 'Block User'}</button>
               {editMode ? (
                 <button className='update-button' onClick={() => setEditMode(false)}>Cancel</button>
               ) : (
