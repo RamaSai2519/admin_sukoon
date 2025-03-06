@@ -20,7 +20,9 @@ const UserEngagement = ({ setExportFileUrl }) => {
     const [currentPage, setCurrentPage] = useState(
         localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1
     );
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(
+        localStorage.getItem('pageSize') ? parseInt(localStorage.getItem('pageSize')) : 10
+    );
     const [loading, setLoading] = useState(false);
     const [totalItems, setTotalItems] = useState(0);
     const [searchText, setSearchText] = useState('');
@@ -147,6 +149,7 @@ const UserEngagement = ({ setExportFileUrl }) => {
         setCurrentPage(current);
         localStorage.setItem('currentPage', current);
         setPageSize(pageSize);
+        localStorage.setItem('pageSize', pageSize);
     };
 
     const handleSave = async ({ key, field, value }) => {
