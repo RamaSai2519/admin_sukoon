@@ -16,7 +16,9 @@ const WaWhHistory = ({ data, currentPage, pageSize, totalItems, handleTableChang
         { title: "User Name", dataIndex: "userName", key: "userName" },
         { title: "Phone Number", dataIndex: "userNumber", key: "userNumber" },
         { title: "Message", dataIndex: "body", key: "body" },
-        {title: "FC Done", dataIndex: "fc_done", key: "fc_done"},
+        { title: "Status", dataIndex: "user_status", key: "user_status" },
+        { title: "FC Done", dataIndex: "fc_done", key: "fc_done" },
+        { title: "Last Internal Call", dataIndex: "last_in_call", key: "last_in_call" },
         {
             title: "Received At", dataIndex: "createdAt", key: "createdAt",
             render: (time) => time ? formatTime(time) : ''
