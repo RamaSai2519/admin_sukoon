@@ -9,6 +9,7 @@ import { generateOptions } from "../../Utils/antSelectHelper";
 import ReSchedulesTable from "../../components/ReSchedulesTable";
 import { useUsers, useExperts, useAdmin } from "../../contexts/useData";
 import { Select, DatePicker, Form, Button, message, Switch, TimePicker } from "antd";
+import { get_balance_type, get_token } from "../../services/token_helper";
 
 const ConnectTab = () => {
     const { admin } = useAdmin();
@@ -36,11 +37,17 @@ const ConnectTab = () => {
     useEffect(() => { fetchUsersAndExperts(); }, [internalView]);
 
     const handleCallTrigger = async (values) => {
+        const balance_type = await get_balance_type(values.expert);
+        const token = await get_token(values.user, balance_type);
+        if (!token) {
+            message.error("User does not have enough balance to make a call.");
+            return;
+        }
         const response = await RaxiosPost('/actions/call', {
             user_id: values.user, wait: false,
             expert_id: values.expert,
             user_requested: values.user_requested === "Yes"
-        }, true, setLoading);
+        }, true, setLoading, { Authorization: `Bearer ${token}` });
         if (response.status === 200) {
             const formData = { user_id: values.user, call_id: response.data.call_id };
             localStorage.setItem('formData', JSON.stringify(formData));

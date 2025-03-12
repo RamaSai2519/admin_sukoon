@@ -27,10 +27,10 @@ export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, o
     }
 };
 
-export const RaxiosPost = async (url, data, isNotify = false, setLoading = null) => {
+export const RaxiosPost = async (url, data, isNotify = false, setLoading = null, headers = {}) => {
     setLoading && setLoading(true);
     try {
-        const response = await Raxios.post(url, data);
+        const response = await Raxios.post(url, data, { headers });
         if (isNotify) {
             if (response.status === 200) {
                 await message.success(response.msg);
