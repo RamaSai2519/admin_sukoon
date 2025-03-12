@@ -37,6 +37,7 @@ const ConnectTab = () => {
     useEffect(() => { fetchUsersAndExperts(); }, [internalView]);
 
     const handleCallTrigger = async (values) => {
+        setLoading(true);
         const balance_type = await get_balance_type(values.expert);
         const token = await get_token(values.user, balance_type);
         if (!token) {
