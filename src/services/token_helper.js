@@ -16,7 +16,7 @@ export const get_token = async (user, balance) => {
 export const get_balance_type = async (expert_id) => {
     try {
         const response = await Raxios.get('/actions/expert', {
-            params: { expert_id }
+            params: { expert_id ,req_calls: false }
         });
         return response.data.type === 'expert' ? 'expert_calls' : 'sarathi_calls';
     } catch (error) {
