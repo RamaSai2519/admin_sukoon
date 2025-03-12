@@ -10,6 +10,7 @@ import ReSchedulesTable from "../../components/ReSchedulesTable";
 import { useUsers, useExperts, useAdmin } from "../../contexts/useData";
 import { Select, DatePicker, Form, Button, message, Switch, TimePicker } from "antd";
 import { get_balance_type, get_token } from "../../services/token_helper";
+import BulkSchedulePopup from "../../components/Popups/BulkSchedulePopup";
 
 const ConnectTab = () => {
     const { admin } = useAdmin();
@@ -19,6 +20,7 @@ const ConnectTab = () => {
     const [disable, setDisable] = useState(false);
     const { experts, fetchExperts } = useExperts();
     const [showForm, setShowForm] = useState(false);
+    const [bulkVisible, setBulkVisible] = useState(false);
     const [showReForm, setShowReForm] = useState(
         localStorage.getItem('showReForm') === 'true' ? true : false
     );
@@ -180,19 +182,22 @@ const ConnectTab = () => {
                         ? <ReSchedulesTable reformChange={handleReFormChange} />
                         : <SchedulesTable />
                 }
-                <div className="flex flex-col h-full border-l-2 dark:border-lightBlack p-10 justify-center">
+                <div className="flex flex-col h-full border-l-2 dark:border-lightBlack pl-5 justify-center">
                     {!showReForm && <div className="flex items-center justify-end gap-2">
                         <Switch className="w-fit mb-3" unCheckedChildren="Schedule a Repeat Call" checked={showReForm} onChange={handleReFormChange} />
                     </div>}
                     {!showReForm ?
                         <>
                             <div className="flex w-full justify-between items-center gap-5">
-                                <h1 className="text-xl font-bold">Connect Call</h1>
+                                <h1 className="text-xl font-bold">Connect</h1>
                                 <InternalToggle internalView={internalView} setInternalView={setInternalView} disable={disable} />
                             </div>
                             <CallScheduleForm onFinish={handleCallTrigger} loading={loading} fields={callFormFields} />
 
-                            <h1 className="text-xl font-bold mt-4">Schedule Call</h1>
+                            <div className="flex w-full justify-between items-center gap-10 mt-5">
+                                <h1 className="text-xl font-bold">Schedule</h1>
+                                <Button onClick={() => setBulkVisible(true)}>Bulk Schedule</Button>
+                            </div>
                             <CallScheduleForm onFinish={onScheduleFinish} loading={loading} fields={scheduleFormFields} />
                         </> :
                         <>
@@ -206,6 +211,7 @@ const ConnectTab = () => {
                     }
                 </div>
             </div>
+            <BulkSchedulePopup visible={bulkVisible} setVisible={setBulkVisible} />
         </LazyLoad>
     );
 };

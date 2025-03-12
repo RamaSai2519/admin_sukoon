@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import Raxios from './axiosHelper';
+import Raxios, { Maxios } from './axiosHelper';
 
 export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, optional, setLoading, notify = false) => {
     setLoading && setLoading(true);
@@ -31,6 +31,26 @@ export const RaxiosPost = async (url, data, isNotify = false, setLoading = null,
     setLoading && setLoading(true);
     try {
         const response = await Raxios.post(url, data, { headers });
+        if (isNotify) {
+            if (response.status === 200) {
+                await message.success(response.msg);
+            } else {
+                await message.error(response.msg);
+            }
+        }
+        setLoading && setLoading(false);
+        return response;
+    } catch (error) {
+        await message.error(error.response?.data?.output_message || 'An error occurred');
+        setLoading && setLoading(false);
+    }
+};
+
+export const MaxiosPost = async (url, data, isNotify = false, setLoading = null, headers = {}) => {
+    setLoading && setLoading(true);
+    try {
+        const response = await Maxios.post(url, data, { headers });
+        console.log("🚀 ~ MaxiosPost ~ response:", response)
         if (isNotify) {
             if (response.status === 200) {
                 await message.success(response.msg);

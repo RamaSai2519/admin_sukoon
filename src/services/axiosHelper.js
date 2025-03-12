@@ -17,7 +17,10 @@ if (ENV === 'dev') {
   FINAL_URL = PROD_URL
 }
 
-export const MARK_URL = "https://mark.sukoonunlimited.com";
+const PROD_MARK_URL = 'https://mark.sukoonunlimited.com';
+const LOCAL_MARK_URL = 'http://localhost:8081';
+
+export const MARK_URL = ENV === 'local' ? LOCAL_MARK_URL : PROD_MARK_URL;
 
 export const Raxios = axios.create({ baseURL: FINAL_URL });
 export const Maxios = axios.create({ baseURL: MARK_URL });
@@ -68,6 +71,12 @@ const format_response = async (response) => {
   }
   return response;
 }
+
+Maxios.interceptors.response.use(
+  (response) => {
+    return format_response(response);
+  }
+);
 
 Raxios.interceptors.response.use(
   (response) => {
