@@ -27,7 +27,6 @@ const ExpertDetails = () => {
   const { platformCategories, fetchPlatformCategories } = usePlatformCategories();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { allCategories, fetchCategories } = useCategories();
-  console.log("🚀 ~ ExpertDetails ~ allCategories:", allCategories)
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [timings, setTimings] = useState([]);
