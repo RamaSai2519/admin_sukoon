@@ -22,7 +22,7 @@ export const raxiosFetchData = async (page, size, setData, setTotal, endpoint, o
             return response.data;
         }
     } catch (error) {
-        message.error(error.response?.data?.message || 'An error occurred');
+        message.error(error.response?.data?.output_message || 'An error occurred');
         setLoading && setLoading(false);
     }
 };

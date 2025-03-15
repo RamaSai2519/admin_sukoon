@@ -161,9 +161,9 @@ const EventsTab = ({ contribute }) => {
 
     return (
         <LazyLoad>
-            <div className="min-h-screen overflow-auto">
+            <div className="min-h-screen overflow-auto pr-5">
                 {!visible ?
-                    <div className='flex justify-between my-2'>
+                    <div className='flex justify-between py-2'>
                         <Flex className='gap-2 justify-center items-center '>
                             <Radio.Group
                                 value={table}

@@ -35,7 +35,9 @@ const EventDetails = ({ contribute }) => {
 
     const toggleEditMode = () => setEditMode(!editMode);
     const DeleteEvent = async () => {
-        const response = await RaxiosPost('/actions/upsert_event', { slug, isDeleted: true });
+        const response = await RaxiosPost(
+            contribute ? '/actions/upsert_contribute' : '/actions/upsert_event'
+            , { slug, isDeleted: true });
         if (response.status === 200) window.history.back();
     }
 

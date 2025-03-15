@@ -77,7 +77,7 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
         ]),
         createFormItem("Sub Title", "subTitle", <Input.TextArea />, [{ max: 130, message: 'Max length is 130' }]),
         createFormItem("Hosted By", "hostedBy", <Input />, []),
-        createFormItem("Slug", "slug", <Input disabled={editMode} />, [{ required: true, message: 'Please enter the slug' }]),
+        createFormItem("Slug", "slug", <Input disabled={true} />),
         createFormItem("Start Event Date", "startEventDate", <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss" showTime />, []),
         createFormItem("Valid Upto", "validUpto", <DatePicker className='w-full' format="YYYY-MM-DD HH:mm:ss" showTime />, [{ required: true, message: 'Please select the valid upto' }]),
         createFormItem("Event Type", "eventType", <Select>
@@ -114,8 +114,8 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
 
     const contributeEventItems = [
         createFormItem('Name', 'name', <Input />, [{ required: true, message: 'Please enter the name' }]),
-        createFormItem("Slug", "slug", <Input disabled={editMode} />, [{ required: true, message: 'Please enter the slug' }]),
-        createFormItem('Email', 'email', <Input type="email" />, [{ required: true, message: 'Please enter a valid email' }]),
+        createFormItem("Slug", "slug", <Input disabled={true} />),
+        createFormItem('Email', 'email', <Input />, [{ required: true, message: 'Please enter a valid email' }]),
         createFormItem('Company', 'company', <Input />, []),
         createFormItem('Website', 'website', <Input />, []),
         createFormItem('Stipend', 'stipend', <InputNumber className="w-full" />, []),
@@ -131,7 +131,7 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
         createFormItem('Description', 'description', <Input.TextArea />, []),
         createFormItem('Location Type', 'locationType', <Select>
             <Select.Option value="remote">Remote</Select.Option>
-            <Select.Option value="onsite">Onsite</Select.Option>
+            <Select.Option value="on-site">Onsite</Select.Option>
         </Select>, []),
         createFormItem('Start Date', 'startDate', <DatePicker className="w-full" format="YYYY-MM-DD" />, []),
         createFormItem('Valid Upto', 'validUpto', <DatePicker className="w-full" format="YYYY-MM-DD" />, []),
