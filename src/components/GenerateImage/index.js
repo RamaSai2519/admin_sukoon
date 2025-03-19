@@ -1,16 +1,18 @@
 import React from "react";
-import { Button, Input, message } from "antd";
-import { raxiosFetchData } from "../../services/fetchData";
 import axios from "axios";
+import { Button, Input, message } from "antd";
+import { useAdmin } from "../../contexts/useData";
+import { raxiosFetchData } from "../../services/fetchData";
 
 const GenerateImage = () => {
+    const { admin } = useAdmin();
     const [image, setImage] = React.useState("");
     const [auth, setAuth] = React.useState(false);
     const [prompt, setPrompt] = React.useState("");
     const [loading, setLoading] = React.useState(false);
 
     const generateImage = async () => {
-        const response = await raxiosFetchData(null, null, null, null, '/actions/dall_image', { prompt }, setLoading, true);
+        const response = await raxiosFetchData(null, null, null, null, '/actions/dall_image', { prompt, context: 'dall_image', phoneNumber: admin.phoneNumber }, setLoading, true);
         if (!response.url) return;
         setImage(response.url);
     }
