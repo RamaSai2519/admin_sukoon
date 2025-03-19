@@ -62,6 +62,12 @@ const ConnectTab = () => {
         setLoading(true);
         const selectedDateTime = values.datetime;
         const expertId = values.expert;
+        const balance_type = await get_balance_type(values.expert);
+        const token = await get_token(values.user, balance_type);
+        if (!token) {
+            message.error("User does not have enough balance to make a call.");
+            return;
+        }
 
         if (selectedDateTime <= new Date()) {
             message.error("Selected time has already passed. Please select a future time.");
@@ -78,7 +84,7 @@ const ConnectTab = () => {
                     expert_id: expertId,
                     job_time: formattedDate,
                     user_requested: values.user_requested === "Yes"
-                }, true
+                }, true, null, { Authorization: `Bearer ${token}` }
             );
             if (response.status === 200) window.location.reload()
         }
