@@ -12,7 +12,8 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "env": {
-                "REACT_APP_ENV": "main"
+                "REACT_APP_ENV": "main",
+                "REACT_APP_GEN_PASS": "2519"
             }
         }
     ]
