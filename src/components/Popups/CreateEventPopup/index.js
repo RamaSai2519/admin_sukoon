@@ -5,7 +5,8 @@ import { RaxiosPost } from '../../../services/fetchData';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useAdmin, usePlatformCategories } from '../../../contexts/useData';
 import { Form, Input, Button, message, Select, DatePicker, InputNumber } from 'antd';
-
+import { createMeetingForEvent } from '../../../lib/utils';
+import {format, parseISO,addHours,addMinutes} from 'date-fns'
 const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
     const { admin } = useAdmin();
     const [form] = Form.useForm();
@@ -57,8 +58,23 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
     );
 
     const handleCreate = async (values) => {
+
+        let eventDateTime = values.startEventDate.toISOString();
+        let houradded = addHours(values.startEventDate.toISOString(), 5)
+        let finalDateTime = addMinutes(houradded, 30)
+        let meetingDetails = await createMeetingForEvent({
+            topic:values.mainTitle,
+            duration:90,
+            isPublic:true,
+            recordingEnabled:true,
+            startTime: finalDateTime
+        })
+       let meetingDetailsForZoom = meetingDetails?.output_details;
+       let meetingId = meetingDetailsForZoom?.meeting_id
+       let meetingLink = meetingDetailsForZoom?.start_url
+
         const endpoint = `/actions/${contribute ? 'upsert_contribute' : 'upsert_event'}`;
-        const response = await RaxiosPost(endpoint, values);
+        const response = await RaxiosPost(endpoint, { ...values, meeting_id: meetingId, meetingLink: meetingLink, passcode: '0000' });
         if (response.status === 200) {
             message.success(response.msg);
             setVisible(false);
@@ -95,9 +111,9 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
         createFormItem("Max Visitors Allowed", "maxVisitorsAllowed", <InputNumber className='w-full' />, []),
         createFormItem("Prize Money", "prizeMoney", <InputNumber className='w-full' />, []),
         createFormItem("Guest Speaker", "guestSpeaker", <Input />, [{ required: true, message: 'Please select the guest speaker' }]),
-        createFormItem("Meeting Link", "meetingLink", <Input />, []),
-        createFormItem("Meeting ID", "meeting_id", <Input />, []),
-        createFormItem("Meeting Passcode", "passcode", <Input />, []),
+        // createFormItem("Meeting Link", "meetingLink", <Input />, []),
+        // createFormItem("Meeting ID", "meeting_id", <Input />, []),
+        // createFormItem("Meeting Passcode", "passcode", <Input />, []),
         createFormItem("Event Price", "eventPrice", <InputNumber className='w-full' />, []),
         createFormItem("Repeat", "repeat", <Select>
             <Select.Option value="once">Once</Select.Option>
