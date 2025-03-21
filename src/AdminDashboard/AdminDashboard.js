@@ -12,6 +12,7 @@ import EventsTab from './DashboardTabs/EventsTab'
 import OffersTab from './DashboardTabs/OffersTab'
 import ConnectTab from './DashboardTabs/ConnectTab'
 import ContentTab from './DashboardTabs/ContentTab'
+import LeaderBoard from '../components/LeaderBoard'
 import ClubSukoon from './DashboardTabs/ClubSukoon'
 import SaarthisTab from './DashboardTabs/ExpertsTab'
 import WhatsappTab from './DashboardTabs/WhatsappTab'
@@ -22,9 +23,9 @@ import VacationsTab from './DashboardTabs/VacationsTab'
 import ThemeToggle from '../components/ThemeToggle/toggle'
 import ApplicationsTab from './DashboardTabs/ApplicationsTab'
 import PlatformCategory from '../components/PlatformCategory'
+import PushNotification from '../components/PushNotification'
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, LayoutDashboard, Users, PhoneCall, Calendar, Club, FileCode, LogOut } from 'lucide-react'
-import LeaderBoard from '../components/LeaderBoard'
 
 
 const AdminDashboard = ({ onLogout }) => {
@@ -63,6 +64,7 @@ const AdminDashboard = ({ onLogout }) => {
         { href: 'Connect', component: <ConnectTab /> },
         { href: 'whatsapp', component: <WhatsappTab /> },
         { href: 'Referral Texts', component: <RefTexts /> },
+        { href: 'Push Notifications', component: <PushNotification /> },
       ],
     },
     {
