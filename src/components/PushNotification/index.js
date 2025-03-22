@@ -128,7 +128,6 @@ const PushNotification = () => {
     const getPreview = async () => {
         const values = form.getFieldsValue();
         const payload = prep_payload(values);
-        console.log("🚀 ~ getPreview ~ payload:", payload)
         const response = await MaxiosPost('/flask/send_fcm_msgs', payload, false, setButtonLoading);
         if (response) { setUsersCount(response.data.count); }
     };
