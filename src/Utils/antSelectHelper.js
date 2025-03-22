@@ -12,6 +12,14 @@ export const generateOptions = (data, key) => data.map(item => {
     )
 });
 
+export const generateNewOptions = (data, key) => data.map(item => {
+    return (
+        <Option key={item._id} value={item._id}>
+            {item[key]}
+        </Option>
+    )
+});
+
 export const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
