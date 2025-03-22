@@ -50,7 +50,6 @@ export const MaxiosPost = async (url, data, isNotify = false, setLoading = null,
     setLoading && setLoading(true);
     try {
         const response = await Maxios.post(url, data, { headers });
-        console.log("🚀 ~ MaxiosPost ~ response:", response)
         if (isNotify) {
             if (response.status === 200) {
                 await message.success(response.msg);

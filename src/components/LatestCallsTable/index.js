@@ -35,9 +35,9 @@ const LatestCallsTable = () => {
     );
     setLoading(false);
     await fetchInsights(internalView);
-    await fetchCalls(internalView);
     await fetchExperts(internalView);
     setDisable(false);
+    await fetchCalls(internalView);
   };
 
   useEffect(() => {
