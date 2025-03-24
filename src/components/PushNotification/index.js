@@ -3,7 +3,7 @@ import Loading from '../Loading/loading';
 import LazyLoad from '../LazyLoad/lazyload';
 import { generateNewOptions } from '../../Utils/antSelectHelper';
 import { MaxiosPost, raxiosFetchData } from '../../services/fetchData';
-import { Form, Input, InputNumber, Select, DatePicker, Button } from 'antd';
+import { Form, Input, InputNumber, Select, DatePicker, Button, Modal } from 'antd';
 
 const { RangePicker } = DatePicker;
 
@@ -11,6 +11,7 @@ const PushNotification = () => {
     const [form] = Form.useForm();
     const [slugs, setSlugs] = useState([]);
     const [cities, setCities] = useState([]);
+    const [output, setOutput] = useState(null);
     const [loading, setLoading] = useState(false);
     const [usersCount, setUsersCount] = useState(null);
     const [buttonLoading, setButtonLoading] = useState(false);
@@ -23,7 +24,6 @@ const PushNotification = () => {
     };
 
     useEffect(() => { fetchData() }, []);
-
 
     const formItems1 = [
         { name: 'event_id', label: 'Select Event Slug', type: 'select_events', options: slugs },
@@ -119,10 +119,11 @@ const PushNotification = () => {
         return payload;
     };
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         const payload = prep_payload(values);
         payload.action = 'send';
-        MaxiosPost('/flask/send_fcm_msgs', payload, true, setButtonLoading);
+        const response = await MaxiosPost('/flask/send_fcm_msgs', payload, true, setButtonLoading);
+        if (response) { setOutput(response.data); }
     };
 
     const getPreview = async () => {
@@ -182,6 +183,18 @@ const PushNotification = () => {
                     </div>
                 </Form>
             </div>
+            {output && (
+                <Modal
+                    title="Notification Output"
+                    open={true}
+                    onOk={() => window.location.reload()}
+                    onCancel={() => window.location.reload()}
+                >
+                    <p><b>Success:</b> {output.success}</p>
+                    <p><b>Failure:</b> {output.failure}</p>
+                    <p><b>Order ID:</b> {output.order_id}</p>
+                </Modal>
+            )}
         </LazyLoad>
     );
 };
