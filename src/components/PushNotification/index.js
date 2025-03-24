@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Loading from '../Loading/loading';
 import LazyLoad from '../LazyLoad/lazyload';
+import { useAdmin } from '../../contexts/useData';
 import { generateNewOptions } from '../../Utils/antSelectHelper';
 import { MaxiosPost, raxiosFetchData } from '../../services/fetchData';
 import { Form, Input, InputNumber, Select, DatePicker, Button, Modal } from 'antd';
@@ -8,6 +9,7 @@ import { Form, Input, InputNumber, Select, DatePicker, Button, Modal } from 'ant
 const { RangePicker } = DatePicker;
 
 const PushNotification = () => {
+    const { admin } = useAdmin();
     const [form] = Form.useForm();
     const [slugs, setSlugs] = useState([]);
     const [cities, setCities] = useState([]);
@@ -106,6 +108,7 @@ const PushNotification = () => {
 
     const prep_payload = (payload) => {
         payload.action = 'preview';
+        payload.sender = admin.name;
         if (!payload.body || !payload.title) {
             payload.body = 'This is a test body';
             payload.title = 'This is a test title';
