@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, message } from 'antd';
-import Raxios, { Maxios } from '../services/axiosHelper';
+import { Maxios } from '../services/axiosHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
 import { Card, CardContent } from "../components/ui/card";
