@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import S3Uploader from '../../Upload';
+import { addHours, addMinutes } from 'date-fns'
 import { RaxiosPost } from '../../../services/fetchData';
+import { createMeetingForEvent } from '../../../lib/utils';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useAdmin, usePlatformCategories } from '../../../contexts/useData';
 import { Form, Input, Button, message, Select, DatePicker, InputNumber } from 'antd';
-import { createMeetingForEvent } from '../../../lib/utils';
-import {format, parseISO,addHours,addMinutes} from 'date-fns'
+
+
 const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
     const { admin } = useAdmin();
     const [form] = Form.useForm();
@@ -59,19 +61,18 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
 
     const handleCreate = async (values) => {
 
-        let eventDateTime = values.startEventDate.toISOString();
         let houradded = addHours(values.startEventDate.toISOString(), 5)
         let finalDateTime = addMinutes(houradded, 30)
         let meetingDetails = await createMeetingForEvent({
-            topic:values.mainTitle,
-            duration:90,
-            isPublic:true,
-            recordingEnabled:true,
+            topic: values.mainTitle,
+            duration: 90,
+            isPublic: true,
+            recordingEnabled: true,
             startTime: finalDateTime
         })
-       let meetingDetailsForZoom = meetingDetails?.output_details;
-       let meetingId = meetingDetailsForZoom?.meeting_id
-       let meetingLink = meetingDetailsForZoom?.join_url
+        let meetingDetailsForZoom = meetingDetails?.output_details;
+        let meetingId = meetingDetailsForZoom?.meeting_id
+        let meetingLink = meetingDetailsForZoom?.join_url
 
         const endpoint = `/actions/${contribute ? 'upsert_contribute' : 'upsert_event'}`;
         const response = await RaxiosPost(endpoint, { ...values, meeting_id: meetingId, meetingLink: meetingLink, passcode: '0000' });

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
+import Raxios, { Maxios } from '../services/axiosHelper';
 import LazyLoad from '../components/LazyLoad/lazyload';
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
 import { Card, CardContent } from "../components/ui/card";
@@ -7,7 +8,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import EventUsersTable from '../components/EventUsersTable';
 import { raxiosFetchData, RaxiosPost } from '../services/fetchData';
 import CreateEventPopup from '../components/Popups/CreateEventPopup';
-import { useFilters, usePlatformCategories } from '../contexts/useData';
+import { useAdmin, useFilters, usePlatformCategories } from '../contexts/useData';
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../components/ui/alertDialog";
 
 const EventDetails = ({ contribute }) => {
@@ -15,11 +16,13 @@ const EventDetails = ({ contribute }) => {
     const { filters = {} } = useFilters();
     const filter = filters[location.pathname] || {};
 
+    const { admin } = useAdmin();
     const { slug } = useParams();
     const [data, setData] = useState({});
     const [users, setUsers] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const { fetchPlatformCategories } = usePlatformCategories();
+    const [reminderLoading, setReminderLoading] = useState(null);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const contribute_dict = contribute ? { events_type: 'contribute' } : {};
 
@@ -40,6 +43,32 @@ const EventDetails = ({ contribute }) => {
             , { slug, isDeleted: true });
         if (response.status === 200) window.history.back();
     }
+
+    const sendReminder = async () => {
+        setReminderLoading(true);
+        const currentTime = new Date();
+        const validUptoTime = new Date(data.validUpto);
+        const minutes = Math.floor((validUptoTime - currentTime) / (1000 * 60));
+
+        const response = await Maxios.post('/flask/queue_wa_msgs', {
+            action: 'send',
+            params: {
+                minutes: minutes,
+                user_name: 'User',
+                event_name: data.mainTitle,
+                meeting_link: data.meetingLink
+            },
+            event_id: data.slug,
+            initiatedBy: admin.name,
+            template: 'EVENT_REMINDER_MINUTES',
+        });
+        if (response.status === 200) message.success("Reminders are being sent");
+        else {
+            console.log(response);
+            message.error("Error sending reminders");
+        }
+        setReminderLoading(false);
+    };
 
     return (
         <LazyLoad>
@@ -93,6 +122,13 @@ const EventDetails = ({ contribute }) => {
                                     >
                                         <Trash2 className="h-4 w-4" />
                                         Delete Event
+                                    </Button>
+                                    <Button
+                                        loading={reminderLoading}
+                                        onClick={sendReminder}
+                                        className="flex items-center gap-2"
+                                    >
+                                        Send Reminder
                                     </Button>
                                 </div>
                             </div>
