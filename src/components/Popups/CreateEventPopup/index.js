@@ -71,7 +71,7 @@ const CreateEventPopup = ({ setVisible, data, editMode, contribute }) => {
         })
        let meetingDetailsForZoom = meetingDetails?.output_details;
        let meetingId = meetingDetailsForZoom?.meeting_id
-       let meetingLink = meetingDetailsForZoom?.start_url
+       let meetingLink = meetingDetailsForZoom?.join_url
 
         const endpoint = `/actions/${contribute ? 'upsert_contribute' : 'upsert_event'}`;
         const response = await RaxiosPost(endpoint, { ...values, meeting_id: meetingId, meetingLink: meetingLink, passcode: '0000' });
