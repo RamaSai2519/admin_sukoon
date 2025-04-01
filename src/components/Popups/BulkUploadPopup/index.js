@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import S3Uploader from '../../Upload';
 import { Modal, Button } from 'antd';
-import { RaxiosPost } from '../../../services/fetchData';
+import { MaxiosPost } from '../../../services/fetchData';
 
 const BulkUploadPopup = ({ visible, setVisible }) => {
     const [fileUrl, setFileUrl] = useState("");
@@ -10,7 +10,7 @@ const BulkUploadPopup = ({ visible, setVisible }) => {
 
     const handleSubmit = async () => {
         try {
-            await RaxiosPost('/pandas/bulk_users', { file_url: fileUrl }, true, setLoading);
+            await MaxiosPost('/flask/bulk_users', { file_url: fileUrl }, true, setLoading);
             setVisible(false);
         } catch (error) {
             console.log(error);
