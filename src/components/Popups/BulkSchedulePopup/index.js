@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import S3Uploader from '../../Upload';
 import { MaxiosPost } from '../../../services/fetchData';
-import { Modal, Button, Form, Input, DatePicker, message } from 'antd';
+import { Modal, Button, Form, DatePicker, message, InputNumber } from 'antd';
 
 const BulkSchedulePopup = ({ visible, setVisible }) => {
     const [fileUrl, setFileUrl] = useState("");
@@ -45,7 +45,7 @@ const BulkSchedulePopup = ({ visible, setVisible }) => {
                         name="call_duration"
                         rules={[{ required: true, message: 'Please input the call duration!' }]}
                     >
-                        <Input type="number" placeholder="30/60 minutes" />
+                        <InputNumber className='w-full' placeholder='30/60 minutes' min={30} max={60} />
                     </Form.Item>
                     <Form.Item
                         label="Start Time"
