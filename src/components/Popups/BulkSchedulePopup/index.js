@@ -52,7 +52,7 @@ const BulkSchedulePopup = ({ visible, setVisible }) => {
                         name="start_time"
                         rules={[{ required: true, message: 'Select start time!' }]}
                     >
-                        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                        <DatePicker showTime />
                     </Form.Item>
                 </div>
                 <Form.Item>
